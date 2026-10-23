@@ -16,7 +16,7 @@ export const routes: Routes = [
       { path: 'accusa', loadComponent: () => import('./squadra/altre').then((m) => m.AccusaVista), title: "L'accusa" },
     ],
   },
-  { path: 'schermo', canMatch: [soloPer('schermo')], loadComponent: () => import('./schermo/schermo').then((m) => m.Schermo), title: 'Proiettore' },
+  { path: 'schermo', canMatch: [soloPer('schermo', 'regia')], loadComponent: () => import('./schermo/schermo').then((m) => m.Schermo), title: 'Proiettore' },
   {
     path: 'regia',
     canMatch: [soloPer('regia')],

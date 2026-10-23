@@ -16,7 +16,9 @@ import { RegiaStato, SquadraR, TIPI_SCENA } from './stato';
     .anteprima.nero .luna { display: none; }
     .anteprima strong { position: relative; font-family: var(--gotico); font-size: clamp(18px, 2.4vw, 28px); line-height: 1; max-width: 46%; }
     .anteprima small { position: relative; color: var(--osso-2); max-width: 46%; }
-    .anteprima .stato { position: absolute; left: 10px; top: 10px; }
+    .anteprima .stato { position: absolute; left: 10px; top: 10px; z-index: 1; }
+    .media-onda { position: absolute; inset: 0; width: 100%; height: 100%; object-fit: contain; background: var(--notte); }
+    .vedi { display: flex; justify-content: flex-end; }
     .prossima { display: flex; justify-content: space-between; align-items: center; gap: 12px; font-size: 15px; color: var(--osso-2); }
     .prossima b { color: var(--osso); font-weight: 600; }
     .comandi { display: grid; grid-template-columns: repeat(auto-fit, minmax(150px, 1fr)); gap: 10px; }
@@ -70,12 +72,19 @@ import { RegiaStato, SquadraR, TIPI_SCENA } from './stato';
           <div class="r-scheda">
             <div class="anteprima" [class.nero]="s.schermo_nero">
               <span class="r-pillola r-pillola--zucca stato">{{ s.schermo_nero ? 'Schermo nero' : 'In onda' }}</span>
-              <span class="luna" aria-hidden="true"></span>
-              @if (!s.schermo_nero) {
+              @if (!s.schermo_nero && scenaInOnda()?.allegato_key && scenaInOnda()!.tipo === 'immagine') {
+                <img class="media-onda" [src]="'/api/file/' + scenaInOnda()!.allegato_key" alt="">
+              } @else if (!s.schermo_nero && scenaInOnda()?.allegato_key && scenaInOnda()!.tipo === 'video') {
+                <video class="media-onda" [src]="'/api/file/' + scenaInOnda()!.allegato_key + '#t=0.5'" muted playsinline preload="metadata"></video>
+              } @else {
+                <span class="luna" aria-hidden="true"></span>
+              }
+              @if (!s.schermo_nero && !haMedia()) {
                 <strong>{{ scenaInOnda()?.titolo || nomeTipo(scenaInOnda()?.tipo ?? 'attesa') }}</strong>
                 @if (scenaInOnda()?.titolo) { <small>{{ nomeTipo(scenaInOnda()!.tipo) }}</small> }
               }
             </div>
+            @if (haMedia() && !s.schermo_nero && scenaInOnda()?.titolo) { <p class="secondario" style="font-size:14px">{{ scenaInOnda()!.titolo }}</p> }
             <div class="prossima">
               <span>Poi: <b>{{ prossimaScena()?.titolo || (prossimaScena() ? nomeTipo(prossimaScena()!.tipo) : 'nessuna scena') }}</b></span>
               <span>{{ posizione() }}</span>
@@ -84,6 +93,7 @@ import { RegiaStato, SquadraR, TIPI_SCENA } from './stato';
               <button class="bottone bottone--pieno" type="button" (click)="successiva()" [disabled]="!prossimaScena()"><app-icona nome="avanti" />Scena successiva</button>
               <button class="bottone" type="button" (click)="nero(!s.schermo_nero)">{{ s.schermo_nero ? 'Riaccendi' : 'Schermo nero' }}</button>
             </div>
+            <div class="vedi"><a class="r-link" href="/schermo" target="_blank" rel="noopener">Apri il proiettore in un'altra scheda</a></div>
             @if (t.scene.length) {
               <div class="scelta-scene" role="group" aria-label="Manda in onda una scena">
                 @for (sc of t.scene; track sc.id) {
@@ -187,6 +197,10 @@ export class DirettaVista {
   readonly scenaInOnda = computed(() => {
     const t = this.st.t();
     return t?.scene.find((s) => s.id === t.serata.scena_in_onda) ?? null;
+  });
+  readonly haMedia = computed(() => {
+    const sc = this.scenaInOnda();
+    return !!sc?.allegato_key && (sc.tipo === 'immagine' || sc.tipo === 'video');
   });
   readonly prossimaScena = computed(() => {
     const t = this.st.t();

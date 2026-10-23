@@ -35,11 +35,11 @@ export class Sessione {
 }
 
 /** Lascia entrare solo chi ha il ruolo giusto; gli altri vanno all'accesso o alla propria pagina. */
-export const soloPer = (ruolo: Ruolo): CanMatchFn => async () => {
+export const soloPer = (...ruoli: Ruolo[]): CanMatchFn => async () => {
   const s = inject(Sessione);
   const router = inject(Router);
   const io = await s.carica();
   if (!io) return router.parseUrl('/accesso');
-  if (io.ruolo !== ruolo) return router.parseUrl(s.pagina(io.ruolo));
+  if (!ruoli.includes(io.ruolo)) return router.parseUrl(s.pagina(io.ruolo));
   return true;
 };

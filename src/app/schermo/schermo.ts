@@ -60,11 +60,14 @@ export class Schermo implements OnInit, OnDestroy {
     effect(() => {
       if (this.api.sessioneScaduta()) this.router.navigateByUrl('/accesso');
     });
+    let ultimaScena: number | undefined;
     effect(() => {
-      // Al cambio di scena il media riparte da capo, se lo schermo è stato attivato con un tocco.
+      // Il media riparte da capo solo quando cambia la scena, non a ogni aggiornamento dello stato.
       const m = this.media()?.nativeElement;
-      this.s()?.scena.id;
-      if (m && this.attivo()) { m.currentTime = 0; m.play().catch(() => undefined); }
+      const id = this.s()?.scena.id;
+      if (!m || id === ultimaScena) return;
+      ultimaScena = id;
+      if (this.attivo()) { m.currentTime = 0; m.play().catch(() => undefined); }
     });
   }
 
