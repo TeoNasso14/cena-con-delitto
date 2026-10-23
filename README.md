@@ -24,7 +24,7 @@ Modi diversi sono alternative, e ognuno può valere per tutte le squadre o per u
 
 - Angular 21 (standalone, signals, zoneless) in `src/`
 - Netlify Functions in `netlify/functions/api.mts`, logica in `server/`
-- Netlify Database (Postgres), schema in `netlify/database/migrations/`
+- Postgres esterno (oggi Neon, piano gratuito), indirizzo in `CENA_DB_URL`; lo schema è in `server/migrazioni.ts` e il sito lo applica da solo alla prima richiesta
 - Netlify Blobs per foto, audio, video e PDF caricati dalla regia
 
 ## Pubblicare su Netlify
@@ -33,11 +33,12 @@ Modi diversi sono alternative, e ognuno può valere per tutte le squadre o per u
 2. Imposta le variabili d'ambiente, con ambito che includa le Functions:
    - `SESSION_SECRET`: una stringa casuale di almeno 32 caratteri (`openssl rand -base64 48`).
    - `SETUP_CODE`: il codice per creare la regia al primo avvio.
-3. Pubblica. Netlify crea il database e applica le migrazioni.
+   - `CENA_DB_URL`: l'indirizzo di un database Postgres (per esempio Neon gratuito, con `sslmode=require`).
+   - `CENA_DB_MAX`: connessioni per istanza, 3 va bene.
+3. Pubblica. Alla prima richiesta il sito crea le tabelle.
 4. Apri il sito, vai su "Crea l'account regia" e usa il `SETUP_CODE`.
 5. Se la regia la gestisce un'altra persona: consegnale l'accesso e falle cambiare nome utente e password da Regia, Strumenti. Da quel momento il vecchio accesso non vale più.
 
-Netlify Database richiede un piano a crediti.
 
 ## In locale
 

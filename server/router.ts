@@ -1,5 +1,5 @@
 import * as A from "./accesso.ts";
-import { apriDb, Db, Errore, json } from "./base.ts";
+import { apriDb, Db, Errore, json, migra } from "./base.ts";
 import * as F from "./file.ts";
 import * as R from "./regia.ts";
 import * as S from "./squadra.ts";
@@ -57,7 +57,21 @@ const rotte: Array<[string, RegExp, Gestore]> = [
   ["POST", /^\/api\/regia\/allegati$/, (r, db) => F.carica(r, db)],
 ];
 
-export async function gestisci(req: Request, db: Db = apriDb()): Promise<Response> {
+const pronti = new WeakSet<Db>();
+
+export async function gestisci(req: Request, dbDato?: Db): Promise<Response> {
+  let db: Db;
+  try {
+    db = dbDato ?? apriDb();
+    if (!pronti.has(db)) {
+      await migra(db);
+      pronti.add(db);
+    }
+  } catch (e) {
+    if (e instanceof Errore) return json({ errore: e.message, codice: e.codice }, e.stato);
+    console.error(e);
+    return json({ errore: "Il database non risponde. Riprova tra poco.", codice: "database" }, 503);
+  }
   const path = new URL(req.url).pathname.replace(/\/+$/, "");
   let metodoSbagliato = false;
   for (const [metodo, re, g] of rotte) {

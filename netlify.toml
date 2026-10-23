@@ -2,6 +2,10 @@
   command = "npm run build"
   publish = "dist/cena/browser"
 
+[build.environment]
+  NODE_VERSION = "22"
+  NG_CLI_ANALYTICS = "false"
+
 [functions]
   directory = "netlify/functions"
 

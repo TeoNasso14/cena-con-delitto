@@ -1,3 +1,11 @@
+/**
+ * Schema del database, applicato dal sito stesso alla prima richiesta.
+ * Per cambiare lo schema aggiungi una voce in fondo, non modificare quelle già applicate.
+ */
+export const MIGRAZIONI: Array<{ nome: string; sql: string }> = [
+  {
+    nome: "20261023120000_schema_iniziale",
+    sql: String.raw`
 -- Cena con delitto: schema iniziale.
 -- Una serata contiene tutto il resto. Il contenuto del caso lo inserisce la regia.
 
@@ -160,3 +168,6 @@ CREATE TABLE evento (
   ora        TIMESTAMPTZ NOT NULL DEFAULT NOW()
 );
 CREATE INDEX evento_serata_ora ON evento (serata_id, ora DESC);
+`,
+  },
+];

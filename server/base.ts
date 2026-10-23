@@ -1,4 +1,3 @@
-import { getDatabase } from "@netlify/database";
 import pg from "pg";
 import { createHmac, randomBytes, randomInt, scrypt as scryptCb, timingSafeEqual } from "node:crypto";
 import { promisify } from "node:util";
@@ -59,22 +58,42 @@ function avvolgi(es: Esecutore, pool?: { connect(): Promise<Esecutore & { releas
 let cache: Db | undefined;
 type Pool = Esecutore & { connect(): Promise<Esecutore & { release(): void }>; end?(): Promise<void> };
 
-/** In locale e nei test il database di prova accetta una connessione alla volta: CENA_DB_MAX=1. */
-function poolLocale(connectionString: string): Pool {
-  return new pg.Pool({ connectionString, max: Number(env("CENA_DB_MAX") ?? 1) }) as unknown as Pool;
+function nuovoPool(connectionString: string): Pool {
+  return new pg.Pool({
+    connectionString,
+    max: Number(env("CENA_DB_MAX") ?? 1),
+    idleTimeoutMillis: 10_000,
+    connectionTimeoutMillis: 10_000,
+  }) as unknown as Pool;
 }
 
 export function apriDb(connectionString?: string): Db {
   if (connectionString) {
-    const pool = poolLocale(connectionString);
+    const pool = nuovoPool(connectionString);
     return avvolgi(pool, pool);
   }
   if (!cache) {
     const url = env("CENA_DB_URL");
-    const pool = url ? poolLocale(url) : (getDatabase().pool as unknown as Pool);
+    if (!url) throw new Errore(500, "Il sito non è configurato: manca CENA_DB_URL.", "configurazione");
+    const pool = nuovoPool(url);
     cache = avvolgi(pool, pool);
   }
   return cache;
+}
+
+/** Applica le migrazioni mancanti. Un lock impedisce che due istanze lo facciano insieme. */
+export async function migra(db: Db) {
+  const { MIGRAZIONI } = await import("./migrazioni.ts");
+  await db.transazione(async (t) => {
+    await t.q("SELECT pg_advisory_xact_lock(7342001)");
+    await t.q("CREATE TABLE IF NOT EXISTS migrazione (nome TEXT PRIMARY KEY, applicata TIMESTAMPTZ NOT NULL DEFAULT NOW())");
+    const fatte = new Set((await t.q<{ nome: string }>("SELECT nome FROM migrazione")).map((r) => r.nome));
+    for (const m of MIGRAZIONI) {
+      if (fatte.has(m.nome)) continue;
+      await t.q(m.sql);
+      await t.q("INSERT INTO migrazione (nome) VALUES ($1)", [m.nome]);
+    }
+  });
 }
 
 /** Segnala ai telefoni e al proiettore che qualcosa è cambiato. */

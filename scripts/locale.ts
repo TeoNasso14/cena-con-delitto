@@ -13,7 +13,6 @@ process.env.CENA_ARCHIVIO_MEMORIA = "1";
 
 const pg = new NetlifyDB({ directory: ".locale-db" });
 const cs = await pg.start();
-await pg.applyMigrations("./netlify/database/migrations").catch((e: Error) => console.log("Migrazioni:", e.message));
 process.env.CENA_DB_URL = cs;
 const { gestisci } = await import("../server/router.ts");
 

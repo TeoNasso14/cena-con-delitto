@@ -1,6 +1,6 @@
 import { NetlifyDB } from "@netlify/database-dev";
 import { afterAll, beforeAll, describe, expect, test } from "vitest";
-import { apriDb, Db } from "../base.ts";
+import { apriDb, Db, migra } from "../base.ts";
 import { combacia } from "../regia.ts";
 import { gestisci } from "../router.ts";
 
@@ -13,8 +13,9 @@ let db: Db;
 beforeAll(async () => {
   pg = new NetlifyDB();
   const cs = await pg.start();
-  await pg.applyMigrations("./netlify/database/migrations");
   db = apriDb(cs);
+  await migra(db);
+  await migra(db);
 }, 60_000);
 afterAll(async () => {
   await db.fine?.();
