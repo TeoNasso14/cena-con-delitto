@@ -1,0 +1,36 @@
+import { Routes } from '@angular/router';
+import { soloPer } from './sessione';
+
+export const routes: Routes = [
+  { path: '', pathMatch: 'full', redirectTo: 'accesso' },
+  { path: 'accesso', loadComponent: () => import('./pagine/accesso').then((m) => m.Accesso), title: 'Cena con delitto' },
+  { path: 'avvio', loadComponent: () => import('./pagine/accesso').then((m) => m.Avvio), title: 'Primo avvio' },
+  {
+    path: 'squadra',
+    canMatch: [soloPer('squadra')],
+    loadComponent: () => import('./squadra/squadra').then((m) => m.SquadraShell),
+    children: [
+      { path: '', loadComponent: () => import('./squadra/prove').then((m) => m.ProveVista), title: 'Le prove' },
+      { path: 'personaggi', loadComponent: () => import('./squadra/altre').then((m) => m.PersonaggiVista), title: 'I personaggi' },
+      { path: 'taccuino', loadComponent: () => import('./squadra/altre').then((m) => m.TaccuinoVista), title: 'Il taccuino' },
+      { path: 'accusa', loadComponent: () => import('./squadra/altre').then((m) => m.AccusaVista), title: "L'accusa" },
+    ],
+  },
+  { path: 'schermo', canMatch: [soloPer('schermo')], loadComponent: () => import('./schermo/schermo').then((m) => m.Schermo), title: 'Proiettore' },
+  {
+    path: 'regia',
+    canMatch: [soloPer('regia')],
+    loadComponent: () => import('./regia/regia').then((m) => m.RegiaShell),
+    children: [
+      { path: '', loadComponent: () => import('./regia/diretta').then((m) => m.DirettaVista), title: 'Regia, in diretta' },
+      { path: 'scene', loadComponent: () => import('./regia/altre').then((m) => m.SceneRegia), title: 'Regia, scene' },
+      { path: 'caso', loadComponent: () => import('./regia/caso').then((m) => m.CasoVista), title: 'Regia, il caso' },
+      { path: 'personaggi', loadComponent: () => import('./regia/caso').then((m) => m.PersonaggiRegia), title: 'Regia, personaggi' },
+      { path: 'prove', loadComponent: () => import('./regia/prove').then((m) => m.ProveRegia), title: 'Regia, prove e codici' },
+      { path: 'squadre', loadComponent: () => import('./regia/altre').then((m) => m.SquadreRegia), title: 'Regia, squadre e accessi' },
+      { path: 'accuse', loadComponent: () => import('./regia/altre').then((m) => m.AccuseRegia), title: 'Regia, accuse' },
+      { path: 'strumenti', loadComponent: () => import('./regia/altre').then((m) => m.Strumenti), title: 'Regia, strumenti' },
+    ],
+  },
+  { path: '**', redirectTo: 'accesso' },
+];

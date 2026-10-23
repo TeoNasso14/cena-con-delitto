@@ -1,0 +1,38 @@
+{
+  "formato": "cena-con-delitto/1",
+  "serata": {
+    "titolo": "La notte di Villa Corvina",
+    "premessa": "Caso dimostrativo, da cancellare prima della serata vera.\nIl conte non è sceso a cena. Lo hanno trovato in biblioteca, la porta chiusa da dentro. Scoprite chi, come e perché prima della mezzanotte.",
+    "colpevole": "La governante",
+    "movente": "L'eredità",
+    "arma": "Veleno nel porto"
+  },
+  "fasi": [
+    { "numero": 1, "nome": "Prologo", "durata_minuti": 20 },
+    { "numero": 2, "nome": "Le confessioni", "durata_minuti": 15 },
+    { "numero": 3, "nome": "Il buio", "durata_minuti": 15 },
+    { "numero": 4, "nome": "Rivelazione", "durata_minuti": null }
+  ],
+  "personaggi": [
+    { "nome": "Agata Morelli", "ruolo": "La governante", "scheda": "Serve a Villa Corvina da trent'anni. Conosce ogni chiave della casa.", "note_regia": "Mente sull'ora in cui è scesa in cantina.", "ordine": 1 },
+    { "nome": "Ettore Corvina", "ruolo": "Il nipote", "scheda": "Arrivato da Milano la sera stessa, con molti debiti.", "note_regia": "Pista falsa: ha litigato col conte ma era in giardino.", "ordine": 2 },
+    { "nome": "Dottor Valli", "ruolo": "Il medico di famiglia", "scheda": "Ha firmato il certificato di morte in fretta.", "note_regia": "Sa del veleno ma tace per paura.", "ordine": 3 }
+  ],
+  "scene": [
+    { "ordine": 10, "tipo": "attesa", "titolo": "", "testo": "", "fase_numero": null, "avvio_automatico": false },
+    { "ordine": 20, "tipo": "narrazione", "titolo": "Mezzanotte in biblioteca", "testo": "La porta era chiusa da dentro. Eppure qualcuno è uscito, lasciando il fuoco acceso e un bicchiere ancora pieno.", "fase_numero": 1, "avvio_automatico": true },
+    { "ordine": 30, "tipo": "conto", "titolo": "alla fine del prologo", "testo": "", "fase_numero": null, "avvio_automatico": false },
+    { "ordine": 40, "tipo": "narrazione", "titolo": "Le confessioni", "testo": "Ognuno ha qualcosa da nascondere. Ascoltate bene: chi parla troppo, chi tace.", "fase_numero": 2, "avvio_automatico": true },
+    { "ordine": 50, "tipo": "avanzamento", "titolo": "Chi è più vicino alla verità", "testo": "", "fase_numero": null, "avvio_automatico": false },
+    { "ordine": 60, "tipo": "annuncio", "titolo": "Attenzione", "testo": "", "fase_numero": null, "avvio_automatico": false },
+    { "ordine": 70, "tipo": "rivelazione", "titolo": "La verità", "testo": "", "fase_numero": 4, "avvio_automatico": true }
+  ],
+  "prove": [
+    { "numero": 1, "titolo": "Lettera bruciacchiata", "tipo": "documento", "testo": "Si leggono solo poche parole: «...stanotte, prima che cambi il testamento...».", "nota_sigillo": "", "regole": [{ "tipo": "fase", "fase_numero": 1, "gruppo": 1 }] },
+    { "numero": 2, "titolo": "La chiave della cantina", "tipo": "oggetto", "testo": "Una chiave di ferro, ancora calda. Sul cartellino di cuoio qualcuno ha inciso un numero: 6613.", "nota_sigillo": "Il codice è sotto un piatto", "regole": [{ "tipo": "pin", "pin": "1031", "gruppo": 1 }] },
+    { "numero": 3, "titolo": "Il registro della cantina", "tipo": "documento", "testo": "Tre bottiglie di porto mancano dallo scaffale più alto. La firma di chi le ha prese è stata grattata via.", "nota_sigillo": "", "regole": [{ "tipo": "prova", "prova_richiesta": 2, "gruppo": 1 }, { "tipo": "pin", "pin": "6613", "gruppo": 1 }] },
+    { "numero": 4, "titolo": "La bottiglia vuota", "tipo": "oggetto", "testo": "Trovata dietro la credenza. Il fondo ha un odore amaro.", "nota_sigillo": "", "regole": [{ "tipo": "prova", "prova_richiesta": 3, "gruppo": 1 }] },
+    { "numero": 5, "titolo": "Il diario del medico", "tipo": "testimonianza", "testo": "«Il polso era debole già alle dieci. Ho detto che era il cuore. Non era il cuore.»", "nota_sigillo": "", "regole": [{ "tipo": "fase", "fase_numero": 2, "gruppo": 1 }] },
+    { "numero": 6, "titolo": "Il testamento nuovo", "tipo": "documento", "testo": "Firmato la mattina stessa: tutto alla governante, nulla al nipote.", "nota_sigillo": "Lo custodisce il nipote", "regole": [{ "tipo": "pin", "pin": "CORVO", "gruppo": 1 }] }
+  ]
+}

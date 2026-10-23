@@ -1,0 +1,55 @@
+<title>Cena con delitto</title>
+<meta name="claude:viewport-fit-sides" content="cover">
+<link rel="stylesheet" href="tema.css">
+<style>
+  /* Layout: una sola colonna, tre porte verso le tre superfici della serata. Mondo unico e scuro, come la sala. */
+  :root { color-scheme: dark; }
+  body { background: var(--notte); color: var(--osso); padding-left: max(16px, env(safe-area-inset-left, 0px)); padding-right: max(16px, env(safe-area-inset-right, 0px)); }
+  .pagina { max-width: 880px; margin: 0 auto; padding-block: 56px 72px; display: grid; gap: 40px; }
+  .apertura { display: grid; gap: 16px; }
+  .apertura h1 { font-family: var(--gotico); font-weight: 700; font-size: clamp(44px, 9vw, 84px); line-height: 0.95; }
+  .apertura p { color: var(--osso-2); font-size: 18px; max-width: 58ch; }
+  .porte { display: grid; gap: 14px; }
+  .porta { display: grid; grid-template-columns: auto minmax(0, 1fr) auto; align-items: center; gap: 20px; padding: 20px 22px; border: 1px solid var(--filetto); border-radius: 2px; background: var(--notte-2); color: var(--osso); text-decoration: none; transition: border-color 160ms ease, background-color 160ms ease; }
+  .porta:hover { border-color: var(--zucca); background: var(--notte-3); color: var(--osso); }
+  .porta .luna { width: 48px; height: 48px; border-radius: 50%; background: var(--zucca); }
+  .porta--tel .luna { background: var(--cera); border: 2px solid var(--cera-luce); }
+  .porta--regia .luna { background: transparent; border: 5px solid var(--zucca); }
+  .porta h2 { font-family: var(--gotico); font-weight: 700; font-size: 30px; line-height: 1.05; }
+  .porta p { color: var(--osso-2); font-size: 16px; margin-top: 4px; }
+  .porta .freccia { width: 24px; height: 24px; stroke: var(--zucca); stroke-width: 1.75; fill: none; stroke-linecap: round; stroke-linejoin: round; }
+  .note { border-top: 1px solid var(--filetto); padding-top: 20px; display: grid; gap: 8px; color: var(--osso-2); font-size: 16px; max-width: 64ch; }
+  .note b { color: var(--osso); }
+  @media (max-width: 520px) { .porta { grid-template-columns: minmax(0, 1fr) auto; } .porta .luna { display: none; } }
+</style>
+
+<main class="pagina">
+  <header class="apertura">
+    <h1>La notte di Villa Corvina</h1>
+    <p>Prototipo delle tre superfici della cena con delitto, in stile Halloween classico. Il caso è dimostrativo: trama, prove e codici veri li inserirà l'organizzatore dalla regia.</p>
+  </header>
+
+  <nav class="porte" aria-label="Superfici">
+    <a class="porta" href="proiettore.html">
+      <span class="luna" aria-hidden="true"></span>
+      <span><h2>Proiettore</h2><p>Lo schermo della sala: narrazione, conto alla rovescia, squadre a confronto, rivelazione finale.</p></span>
+      <svg class="freccia" viewBox="0 0 24 24" aria-hidden="true"><path d="M5 12h14M13 6l6 6-6 6"/></svg>
+    </a>
+    <a class="porta porta--tel" href="telefono.html">
+      <span class="luna" aria-hidden="true"></span>
+      <span><h2>Telefono di squadra</h2><p>Le prove trovate e quelle sigillate. Tocca la prova n. 3 e rompi il sigillo.</p></span>
+      <svg class="freccia" viewBox="0 0 24 24" aria-hidden="true"><path d="M5 12h14M13 6l6 6-6 6"/></svg>
+    </a>
+    <a class="porta porta--regia" href="regia.html">
+      <span class="luna" aria-hidden="true"></span>
+      <span><h2>Regia</h2><p>La sala di controllo dell'organizzatore: scena in onda, squadre, registro, consegne e annunci.</p></span>
+      <svg class="freccia" viewBox="0 0 24 24" aria-hidden="true"><path d="M5 12h14M13 6l6 6-6 6"/></svg>
+    </a>
+  </nav>
+
+  <section class="note" aria-label="Come provarlo">
+    <p><b>Proiettore:</b> clic o frecce per cambiare scena. Va visto a tutto schermo.</p>
+    <p><b>Telefono:</b> codice <b>1031</b> per la prova n. 3; dentro trovi il codice della n. 4.</p>
+    <p><b>Regia:</b> per ora i comandi non agiscono, mostrano solo come sarà la sala di controllo.</p>
+  </section>
+</main>

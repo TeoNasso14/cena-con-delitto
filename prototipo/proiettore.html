@@ -1,0 +1,183 @@
+<!doctype html>
+<html lang="it">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>La notte di Villa Corvina, proiettore</title>
+<link rel="stylesheet" href="tema.css">
+<style>
+  html, body { height: 100%; overflow: hidden; }
+  body { cursor: default; }
+  .schermo { position: relative; height: 100%; width: 100%; overflow: hidden; display: grid; grid-template-rows: auto 1fr auto; padding: 4.2vh 5vw 4vh; }
+
+  .luna { position: absolute; z-index: 0; overflow: hidden; border: 0 solid var(--zucca); border-radius: 50%; background: var(--zucca); width: 86vh; height: 86vh; left: 71vw; top: 52%; transform: translate(-20%, -50%); transition: left 900ms var(--curva-cassetto), top 900ms var(--curva-cassetto), width 900ms var(--curva-cassetto), height 900ms var(--curva-cassetto), transform 900ms var(--curva-cassetto), background-color 900ms ease, border-width 900ms var(--curva-cassetto); }
+  .luna i { position: absolute; background: #f47318; border-radius: 47% 53% 41% 59% / 55% 44% 56% 45%; }
+  .luna i:nth-child(1) { width: 19%; height: 14%; left: 20%; top: 26%; transform: rotate(-12deg); }
+  .luna i:nth-child(2) { width: 7%; height: 9%; left: 56%; top: 16%; }
+  .luna i:nth-child(3) { width: 27%; height: 19%; left: 30%; top: 58%; transform: rotate(18deg); }
+  .luna i:nth-child(4) { width: 11%; height: 7%; left: 62%; top: 40%; transform: rotate(-30deg); }
+
+  [data-scena="conto"] .luna { left: 50%; transform: translate(-50%, -54%); width: 74vh; height: 74vh; }
+  [data-scena="avanzamento"] .luna { left: 87vw; top: 74%; width: 34vh; height: 34vh; transform: translate(-50%, -50%); }
+  [data-scena="rivelazione"] .luna { left: 50%; top: 47%; width: 84vh; height: 84vh; transform: translate(-50%, -50%); background: var(--notte); border-width: 1.2vh; }
+  [data-scena="rivelazione"] .luna i, [data-scena="conto"] .ramo, [data-scena="avanzamento"] .ramo, [data-scena="rivelazione"] .ramo { opacity: 0; }
+  .luna i { transition: opacity 600ms ease; }
+  .ramo { position: absolute; inset: 0; width: 100%; height: 100%; transition: opacity 700ms ease; }
+  [data-scena="attesa"] .luna { left: 70vw; transform: translate(-30%, -50%); }
+
+  .testa { position: relative; z-index: 2; display: flex; justify-content: space-between; align-items: baseline; gap: 2vw; font-size: clamp(18px, 2.8vh, 36px); color: var(--osso-2); font-weight: 500; }
+  .testa .gotico { color: var(--osso); font-size: clamp(22px, 3.2vh, 40px); }
+
+  .scene { position: relative; z-index: 1; min-height: 0; }
+  .scena { position: absolute; inset: 0; display: flex; flex-direction: column; justify-content: center; opacity: 0; visibility: hidden; transition: opacity 600ms ease, visibility 0s linear 600ms; }
+  .scena.attiva { opacity: 1; visibility: visible; transition: opacity 700ms ease 250ms, visibility 0s; }
+
+  .titolo { font-family: var(--gotico); font-weight: 700; line-height: 0.95; letter-spacing: 0; color: var(--osso); }
+
+  .narrazione { max-width: 60vw; gap: 4vh; }
+  .narrazione .titolo { font-size: clamp(64px, 16vh, 190px); }
+  .narrazione p { font-size: clamp(22px, 3.6vh, 44px); line-height: 1.38; color: var(--osso); max-width: 30ch; }
+
+  .conto { align-items: center; text-align: center; gap: 1.6vh; }
+  .orologio { font-family: var(--testo); font-weight: 700; font-size: 20vh; line-height: 1; color: var(--notte); letter-spacing: -0.02em; }
+  .conto .sotto { font-family: var(--gotico); font-weight: 700; font-size: 4.6vh; max-width: 56vh; color: var(--notte); line-height: 1; }
+
+  .avanzamento { gap: 6vh; max-width: 68vw; }
+  .avanzamento .titolo { font-size: clamp(48px, 10vh, 120px); }
+  .classifica { display: grid; gap: 4vh; }
+  .riga { display: grid; grid-template-columns: minmax(0, 16ch) minmax(0, 1fr) auto; align-items: center; gap: 3vw; font-size: clamp(24px, 4vh, 48px); font-weight: 600; }
+  .barra { height: 2.4vh; border-radius: 999px; background: var(--notte-3); overflow: hidden; }
+  .barra span { display: block; height: 100%; border-radius: 999px; background: var(--zucca); transform-origin: left; transition: transform 1100ms var(--curva-uscita); }
+  .avanzamento:not(.attiva) .barra span { transform: scaleX(0); }
+  .riga .quante { color: var(--osso-2); font-weight: 500; }
+
+  .rivelazione { align-items: center; text-align: center; gap: 3vh; }
+  .rivelazione .titolo { font-size: 10vh; color: var(--osso); max-width: 64vh; }
+  .rivelazione .dettagli { display: grid; gap: 0.6vh; font-size: 3.6vh; font-weight: 600; color: var(--zucca); }
+  .rivelazione .vince { font-size: 2.8vh; max-width: 60vh; color: var(--osso-2); font-weight: 500; }
+
+  .attesa { max-width: 56vw; gap: 3vh; }
+  .attesa .titolo { font-size: clamp(64px, 16vh, 190px); }
+  .attesa p { font-size: clamp(24px, 4vh, 48px); color: var(--osso-2); font-weight: 500; }
+
+  .fasi { position: relative; z-index: 2; list-style: none; margin: 0; padding: 2.4vh 0 0; display: flex; flex-wrap: wrap; gap: 1vh 3.2vw; font-size: clamp(16px, 2.4vh, 30px); font-weight: 600; color: var(--osso-2); }
+  .fasi li { display: flex; align-items: center; gap: 0.6em; }
+  .fasi li::before { content: ""; width: 0.55em; height: 0.55em; border-radius: 50%; border: 2px solid currentColor; }
+  .fasi .passata { text-decoration: line-through; text-decoration-thickness: 2px; }
+  .fasi .passata::before { background: currentColor; }
+  .fasi .corrente { color: var(--zucca); }
+  .fasi .corrente::before { background: var(--zucca); }
+
+  .aiuto { position: absolute; z-index: 3; right: 1.6vw; bottom: 1.2vh; font-size: 14px; color: var(--osso-2); background: var(--notte); padding: 4px 10px; border-radius: 999px; }
+</style>
+</head>
+<body>
+<div class="schermo" id="schermo" data-scena="narrazione">
+  <div class="luna" aria-hidden="true"><i></i><i></i><i></i><i></i>
+    <svg class="ramo" viewBox="0 0 1000 1000" aria-hidden="true">
+      <g fill="none" stroke="#0e0b14" stroke-linecap="round" stroke-linejoin="round">
+        <path stroke-width="58" d="M1060 820C930 790 840 735 760 700S600 650 470 668"/>
+        <path stroke-width="34" d="M470 668C400 676 330 660 250 690S120 740 40 735"/>
+        <path stroke-width="26" d="M760 700C735 640 742 585 790 520S840 430 830 360"/>
+        <path stroke-width="16" d="M830 360C820 300 850 250 900 205"/>
+        <path stroke-width="12" d="M800 505C760 470 700 462 650 430"/>
+        <path stroke-width="18" d="M600 664C580 610 540 585 520 535S505 455 470 410"/>
+        <path stroke-width="9" d="M520 535C480 530 450 508 420 470"/>
+        <path stroke-width="14" d="M330 664C320 615 285 590 270 545"/>
+        <path stroke-width="8" d="M270 545C255 512 260 480 285 450"/>
+        <path stroke-width="8" d="M250 690C210 665 165 668 130 640"/>
+        <path stroke-width="6" d="M900 205C915 180 940 168 965 165M650 430C630 400 600 392 575 395M285 450C300 425 300 400 290 380"/>
+      </g>
+      <g fill="#0e0b14">
+        <path d="M600 662c-6-30 6-58 32-72 18-10 36-8 50-2 8-16 24-24 40-20l26 2-24 9c6 16 2 34-12 48-14 14-34 22-54 26l-38 16-26 26c-4-10 0-20 6-33Z"/>
+        <path stroke="#0e0b14" stroke-width="5" d="M650 650l-4 18M666 646l2 20"/>
+        <path d="M262 690c-4-22 6-42 26-52 14-7 27-5 38 0 6-12 18-18 30-15l20 2-18 7c4 12 1 25-9 36-11 10-26 16-41 19l-28 12-20 20c-3-8 0-16 2-29Z"/>
+      </g>
+    </svg>
+  </div>
+
+  <header class="testa">
+    <span class="gotico">La notte di Villa Corvina</span>
+    <span id="etichetta-fase">Fase 2 · Le confessioni</span>
+  </header>
+
+  <main class="scene" aria-live="polite">
+    <section class="scena narrazione attiva" data-nome="narrazione">
+      <h1 class="titolo">Mezzanotte in biblioteca</h1>
+      <p>La porta era chiusa da dentro. Eppure qualcuno è uscito, lasciando il fuoco acceso e un bicchiere ancora pieno.</p>
+    </section>
+
+    <section class="scena conto" data-nome="conto">
+      <div class="orologio" id="orologio">14:32</div>
+      <h1 class="sotto">alla fine delle confessioni</h1>
+    </section>
+
+    <section class="scena avanzamento" data-nome="avanzamento">
+      <h1 class="titolo">Chi è più vicino alla verità</h1>
+      <div class="classifica">
+        <div class="riga"><span>Gufi</span><div class="barra"><span style="transform: scaleX(0.833)"></span></div><span class="quante">5 su 6</span></div>
+        <div class="riga"><span>Corvi</span><div class="barra"><span style="transform: scaleX(0.5)"></span></div><span class="quante">3 su 6</span></div>
+        <div class="riga"><span>Pipistrelli</span><div class="barra"><span style="transform: scaleX(0.333)"></span></div><span class="quante">2 su 6</span></div>
+      </div>
+    </section>
+
+    <section class="scena rivelazione" data-nome="rivelazione" data-fase="5">
+      <h1 class="titolo">È stata la governante</h1>
+      <div class="dettagli"><span>Per l'eredità</span><span>Con il veleno nel porto</span></div>
+      <p class="vince">L'hanno scoperto i Gufi, alle 23:41</p>
+    </section>
+
+    <section class="scena attesa" data-nome="attesa" data-fase="0">
+      <h1 class="titolo">La notte di Villa Corvina</h1>
+      <p>Si comincia alle 21. Prendete posto.</p>
+    </section>
+  </main>
+
+  <ol class="fasi" aria-label="Fasi della serata">
+    <li class="passata">Prologo</li>
+    <li class="corrente" aria-current="step">Le confessioni</li>
+    <li>Il buio</li>
+    <li>L'ultima prova</li>
+    <li>Rivelazione</li>
+  </ol>
+
+  <p class="aiuto">Bozza: clic o frecce per cambiare scena</p>
+</div>
+
+<script>
+(() => {
+  const schermo = document.getElementById('schermo');
+  const scene = [...document.querySelectorAll('.scena')];
+  const ordine = scene.map((s) => s.dataset.nome);
+  let i = 0;
+  function mostra(n) {
+    i = (n + ordine.length) % ordine.length;
+    schermo.dataset.scena = ordine[i];
+    scene.forEach((s, k) => s.classList.toggle('attiva', k === i));
+    const f = Number(scene[i].dataset.fase || 2);
+    const nomi = [...document.querySelectorAll('.fasi li')];
+    nomi.forEach((li, k) => {
+      li.classList.toggle('passata', k + 1 < f);
+      li.classList.toggle('corrente', k + 1 === f);
+      if (k + 1 === f) li.setAttribute('aria-current', 'step'); else li.removeAttribute('aria-current');
+    });
+    document.getElementById('etichetta-fase').textContent = f === 0 ? 'Prima di cominciare' : 'Fase ' + f + ' · ' + nomi[f - 1].textContent;
+  }
+  document.addEventListener('click', () => mostra(i + 1));
+  document.addEventListener('keydown', (e) => {
+    if (e.key === 'ArrowRight' || e.key === ' ') mostra(i + 1);
+    if (e.key === 'ArrowLeft') mostra(i - 1);
+  });
+  const p = new URLSearchParams(location.search).get('scena');
+  if (p && ordine.includes(p)) mostra(ordine.indexOf(p));
+
+  let resto = 14 * 60 + 32;
+  const orologio = document.getElementById('orologio');
+  setInterval(() => {
+    resto = Math.max(0, resto - 1);
+    orologio.textContent = String(Math.floor(resto / 60)).padStart(2, '0') + ':' + String(resto % 60).padStart(2, '0');
+  }, 1000);
+})();
+</script>
+</body>
+</html>

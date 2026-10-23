@@ -1,0 +1,68 @@
+:host { display: block; height: 100dvh; overflow: hidden; cursor: default; }
+.schermo { position: relative; height: 100%; width: 100%; overflow: hidden; display: grid; grid-template-rows: auto 1fr auto; padding: 4.2vh 5vw 4vh; }
+
+.luna { position: absolute; z-index: 0; overflow: hidden; border: 0 solid var(--zucca); border-radius: 50%; background: var(--zucca);
+  width: 86vh; height: 86vh; left: 71vw; top: 52%; transform: translate(-20%, -50%);
+  transition: left 900ms var(--curva-cassetto), top 900ms var(--curva-cassetto), width 900ms var(--curva-cassetto), height 900ms var(--curva-cassetto),
+    transform 900ms var(--curva-cassetto), background-color 900ms ease, border-width 900ms var(--curva-cassetto), opacity 600ms ease; }
+.luna i { position: absolute; background: var(--cratere); border-radius: 47% 53% 41% 59% / 55% 44% 56% 45%; transition: opacity 600ms ease; }
+.luna i:nth-child(1) { width: 19%; height: 14%; left: 20%; top: 26%; transform: rotate(-12deg); }
+.luna i:nth-child(2) { width: 7%; height: 9%; left: 56%; top: 16%; }
+.luna i:nth-child(3) { width: 27%; height: 19%; left: 30%; top: 58%; transform: rotate(18deg); }
+.luna i:nth-child(4) { width: 11%; height: 7%; left: 62%; top: 40%; transform: rotate(-30deg); }
+.ramo { position: absolute; inset: 0; width: 100%; height: 100%; transition: opacity 700ms ease; }
+
+[data-scena="conto"] .luna { left: 50%; transform: translate(-50%, -54%); width: 74vh; height: 74vh; }
+[data-scena="avanzamento"] .luna { left: 87vw; top: 74%; width: 34vh; height: 34vh; transform: translate(-50%, -50%); }
+[data-scena="rivelazione"] .luna { left: 50%; top: 47%; width: 84vh; height: 84vh; transform: translate(-50%, -50%); background: var(--notte); border-width: 1.2vh; }
+[data-scena="immagine"] .luna, [data-scena="video"] .luna, [data-scena="nero"] .luna { opacity: 0; }
+[data-scena="rivelazione"] .luna i, [data-scena="conto"] .ramo, [data-scena="avanzamento"] .ramo, [data-scena="rivelazione"] .ramo { opacity: 0; }
+[data-scena="nero"] .testa, [data-scena="nero"] .fasi { opacity: 0; }
+
+.testa { position: relative; z-index: 2; display: flex; justify-content: space-between; align-items: baseline; gap: 2vw; font-size: clamp(18px, 2.8vh, 36px); color: var(--osso-2); font-weight: 500; transition: opacity 400ms ease; }
+.testa .gotico { color: var(--osso); font-size: clamp(22px, 3.2vh, 40px); }
+
+.scene { position: relative; z-index: 1; min-height: 0; display: grid; }
+.scena { grid-area: 1 / 1; display: flex; flex-direction: column; justify-content: center; animation: entra 700ms ease both; min-height: 0; }
+@keyframes entra { from { opacity: 0; } to { opacity: 1; } }
+.titolo { font-family: var(--gotico); font-weight: 700; line-height: 0.95; color: var(--osso); }
+
+.narrazione { max-width: 60vw; gap: 4vh; }
+.narrazione .titolo { font-size: clamp(56px, 14vh, 190px); }
+.narrazione p { font-size: clamp(22px, 3.6vh, 44px); line-height: 1.38; max-width: 32ch; white-space: pre-line; }
+
+.media { align-items: center; gap: 2vh; }
+.media img, .media video { max-width: 100%; max-height: 72vh; border-radius: 2px; object-fit: contain; }
+.didascalia { font-size: clamp(20px, 3vh, 36px); color: var(--osso-2); }
+
+.conto { align-items: center; text-align: center; gap: 1.6vh; }
+.orologio { font-weight: 700; font-size: 20vh; line-height: 1; color: var(--notte); letter-spacing: -0.02em; }
+.conto .sotto { font-family: var(--gotico); font-size: 4.6vh; max-width: 56vh; color: var(--notte); line-height: 1; }
+.conto .sotto-testo { font-size: 2.6vh; color: var(--notte); max-width: 52vh; font-weight: 600; }
+
+.avanzamento { gap: 6vh; max-width: 68vw; }
+.avanzamento .titolo { font-size: clamp(48px, 10vh, 120px); }
+.classifica { display: grid; gap: 4vh; }
+.riga { display: grid; grid-template-columns: minmax(0, 16ch) minmax(0, 1fr) auto; align-items: center; gap: 3vw; font-size: clamp(24px, 4vh, 48px); font-weight: 600; }
+.barra { height: 2.4vh; border-radius: 999px; background: var(--notte-3); overflow: hidden; }
+.barra span { display: block; height: 100%; border-radius: 999px; transform-origin: left; transition: transform 1100ms var(--curva-uscita); }
+.quante { color: var(--osso-2); font-weight: 500; }
+
+.rivelazione { align-items: center; text-align: center; gap: 3vh; }
+.rivelazione .titolo { font-size: 10vh; max-width: 64vh; }
+.dettagli { display: grid; gap: 0.6vh; font-size: 3.6vh; font-weight: 600; color: var(--zucca); max-width: 60vh; }
+.vince { font-size: 2.8vh; max-width: 60vh; color: var(--osso-2); }
+
+.attesa { max-width: 60vw; gap: 3vh; }
+.attesa .titolo { font-size: clamp(64px, 15vh, 190px); }
+.attesa p { font-size: clamp(24px, 4vh, 48px); color: var(--osso-2); font-weight: 500; }
+
+.fasi { position: relative; z-index: 2; list-style: none; margin: 0; padding: 2.4vh 0 0; display: flex; flex-wrap: wrap; gap: 1vh 3.2vw; font-size: clamp(16px, 2.4vh, 30px); font-weight: 600; color: var(--osso-2); transition: opacity 400ms ease; }
+.fasi li { display: flex; align-items: center; gap: 0.6em; }
+.fasi li::before { content: ""; width: 0.55em; height: 0.55em; border-radius: 50%; border: 2px solid currentColor; }
+.fasi .passata { text-decoration: line-through; text-decoration-thickness: 2px; }
+.fasi .passata::before { background: currentColor; }
+.fasi .corrente { color: var(--zucca); }
+.fasi .corrente::before { background: var(--zucca); }
+
+.attiva { position: absolute; z-index: 3; right: 2vw; bottom: 2vh; min-height: 44px; padding: 0 18px; border-radius: 999px; border: 1px solid var(--filetto); background: var(--notte); color: var(--osso-2); font-size: 15px; }

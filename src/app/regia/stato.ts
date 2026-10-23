@@ -1,0 +1,79 @@
+import { inject, Injectable, signal } from '@angular/core';
+import { Api, ErroreApi, ripeti } from '../api';
+
+export interface Regola { id?: number; tipo: 'pin' | 'prova' | 'fase'; pin?: string | null; prova_richiesta_id?: number | null; fase_numero?: number | null; squadra_id?: number | null; gruppo: number }
+export interface ProvaR { id: number; numero: number; titolo: string; tipo: string; testo: string; allegato_key: string | null; allegato_tipo: string | null; nota_sigillo: string; regole: Regola[] }
+export interface ScenaR { id: number; ordine: number; tipo: string; titolo: string; testo: string; allegato_key: string | null; allegato_tipo: string | null; fase_numero: number | null; avvio_automatico: boolean; in_onda_dal: string | null }
+export interface PersonaggioR { id: number; nome: string; ruolo: string; scheda: string; note_regia: string; foto_key: string | null; ordine: number }
+export interface SquadraR { id: number; nome: string; colore: string; account_id: number | null; username: string | null; ultimo_accesso: string | null; aperte: number; ultima_prova: string | null; codici_sbagliati: number; prove_aperte: number[] }
+export interface Fase { numero: number; nome: string; durata_minuti: number | null; avviata_alle: string | null }
+export interface Serata { id: number; titolo: string; premessa: string; stato: 'bozza' | 'in_corso' | 'in_pausa' | 'chiusa'; fase_corrente: number; scena_in_onda: number | null; schermo_nero: boolean; colpevole: string; movente: string; arma: string; rivelata: boolean }
+export interface AccusaR { squadra_id: number; squadra: string; colpevole: string; movente: string; arma: string; spiegazione: string; consegnata_alle: string; punteggio: number | null }
+
+export interface Tutto {
+  io: { username: string };
+  serata: Serata;
+  fasi: Fase[];
+  totaleProve: number;
+  squadre: SquadraR[];
+  schermi: Array<{ id: number; username: string; ultimo_accesso: string | null }>;
+  personaggi: PersonaggioR[];
+  prove: ProvaR[];
+  scene: ScenaR[];
+  annunci: Array<{ id: number; testo: string; ora: string; squadra: string | null }>;
+  accuse: AccusaR[];
+  eventi: Array<{ id: number; tipo: string; testo: string; ora: string }>;
+}
+
+export const TIPI_PROVA: Record<string, string> = {
+  documento: 'Documento', oggetto: 'Oggetto', testimonianza: 'Testimonianza', foto: 'Fotografia', audio: 'Registrazione', video: 'Filmato',
+};
+export const TIPI_SCENA: Record<string, string> = {
+  narrazione: 'Narrazione', immagine: 'Immagine', video: 'Video', audio: 'Audio con testo', conto: 'Conto alla rovescia',
+  avanzamento: 'Squadre a confronto', annuncio: 'Ultimo annuncio', rivelazione: 'Rivelazione', attesa: 'Attesa',
+};
+
+@Injectable({ providedIn: 'root' })
+export class RegiaStato {
+  private api = inject(Api);
+  readonly t = signal<Tutto | null>(null);
+  readonly avviso = signal<{ testo: string; errore: boolean } | null>(null);
+  private ferma?: () => void;
+  private timerAvviso?: ReturnType<typeof setTimeout>;
+
+  avvia() {
+    this.ferma?.();
+    this.ferma = ripeti(() => this.aggiorna(), 4000);
+  }
+  arresta() { this.ferma?.(); }
+
+  async aggiorna() {
+    this.t.set(await this.api.get<Tutto>('/api/regia'));
+  }
+
+  dimmi(testo: string, errore = false) {
+    this.avviso.set({ testo, errore });
+    clearTimeout(this.timerAvviso);
+    this.timerAvviso = setTimeout(() => this.avviso.set(null), errore ? 7000 : 3500);
+  }
+
+  /** Esegue un'azione della regia, aggiorna lo stato e mostra l'esito. */
+  async fai<T>(azione: () => Promise<T>, fatto?: string): Promise<T | undefined> {
+    try {
+      const r = await azione();
+      await this.aggiorna().catch(() => undefined);
+      if (fatto) this.dimmi(fatto);
+      return r;
+    } catch (e) {
+      this.dimmi(e instanceof ErroreApi ? e.message : 'Operazione non riuscita.', true);
+      return undefined;
+    }
+  }
+
+  numeroProva(id: number | null | undefined) {
+    return this.t()?.prove.find((p) => p.id === id)?.numero;
+  }
+  nomeSquadra(id: number | null | undefined) {
+    return this.t()?.squadre.find((s) => s.id === id)?.nome;
+  }
+}

@@ -1,0 +1,244 @@
+import { NetlifyDB } from "@netlify/database-dev";
+import { afterAll, beforeAll, describe, expect, test } from "vitest";
+import { apriDb, Db } from "../base.ts";
+import { combacia } from "../regia.ts";
+import { gestisci } from "../router.ts";
+
+process.env.SESSION_SECRET = "segreto-di-prova-lungo-almeno-trentadue-caratteri";
+process.env.SETUP_CODE = "codice-avvio";
+
+let pg: NetlifyDB;
+let db: Db;
+
+beforeAll(async () => {
+  pg = new NetlifyDB();
+  const cs = await pg.start();
+  await pg.applyMigrations("./netlify/database/migrations");
+  db = apriDb(cs);
+}, 60_000);
+afterAll(async () => {
+  await db.fine?.();
+  await pg.stop();
+});
+
+async function chiama(metodo: string, path: string, body?: unknown, cookie?: string) {
+  const headers: Record<string, string> = {};
+  if (body !== undefined) headers["content-type"] = "application/json";
+  if (cookie) headers.cookie = cookie;
+  const res = await gestisci(new Request(`https://cena.test${path}`, { method: metodo, headers, body: body === undefined ? undefined : JSON.stringify(body) }), db);
+  const set = res.headers.get("set-cookie");
+  return { stato: res.status, dati: (await res.json()) as any, cookie: set ? set.split(";")[0] : undefined };
+}
+
+const ids: Record<string, number> = {};
+let regia = "";
+let corvi = "";
+let gufi = "";
+let schermo = "";
+let credCorvi = { username: "", password: "" };
+
+describe("primo avvio e accesso", () => {
+  test("serve il codice di primo avvio e funziona una sola volta", async () => {
+    expect((await chiama("GET", "/api/avvio")).dati.configurato).toBe(false);
+    const no = await chiama("POST", "/api/avvio", { codice: "sbagliato", username: "regia", password: "una-password-lunga" });
+    expect(no.stato).toBe(403);
+    const corta = await chiama("POST", "/api/avvio", { codice: "codice-avvio", username: "regia", password: "corta" });
+    expect(corta.stato).toBe(400);
+    const ok = await chiama("POST", "/api/avvio", { codice: "codice-avvio", username: "Regia", password: "una-password-lunga", titolo: "La notte di Villa Corvina" });
+    expect(ok.stato).toBe(201);
+    regia = ok.cookie!;
+    const di_nuovo = await chiama("POST", "/api/avvio", { codice: "codice-avvio", username: "altro", password: "una-password-lunga" });
+    expect(di_nuovo.stato).toBe(409);
+    expect((await chiama("GET", "/api/io", undefined, regia)).dati).toMatchObject({ ruolo: "regia", username: "regia" });
+  });
+
+  test("senza sessione la regia è chiusa", async () => {
+    expect((await chiama("GET", "/api/regia")).stato).toBe(401);
+    expect((await chiama("GET", "/api/regia", undefined, "cena_sessione=falso.falso")).stato).toBe(401);
+  });
+});
+
+describe("la regia prepara la serata", () => {
+  test("caso, fasi, squadre, proiettore", async () => {
+    expect((await chiama("PUT", "/api/regia/caso", {
+      titolo: "La notte di Villa Corvina", premessa: "Il conte non è sceso a cena.",
+      colpevole: "La governante", movente: "L'eredità", arma: "Veleno nel porto",
+    }, regia)).stato).toBe(200);
+    expect((await chiama("PUT", "/api/regia/fasi", { fasi: [{ nome: "Prologo" }, { nome: "Le confessioni", durata_minuti: 15 }, { nome: "Il buio" }] }, regia)).stato).toBe(200);
+
+    const c = await chiama("POST", "/api/regia/squadre", { nome: "Corvi", colore: "#ff7a1a" }, regia);
+    expect(c.stato).toBe(201);
+    expect(c.dati.username).toBe("corvi");
+    expect(c.dati.password).toMatch(/^[a-z]+-[a-z]+-\d{2}$/);
+    credCorvi = { username: c.dati.username, password: c.dati.password };
+    ids.corvi = c.dati.id;
+    const g = await chiama("POST", "/api/regia/squadre", { nome: "Gufi", colore: "#7b4bc9" }, regia);
+    ids.gufi = g.dati.id;
+    expect((await chiama("POST", "/api/regia/squadre", { nome: "corvi" }, regia)).stato).toBe(409);
+
+    corvi = (await chiama("POST", "/api/accesso", credCorvi)).cookie!;
+    gufi = (await chiama("POST", "/api/accesso", { username: g.dati.username, password: g.dati.password })).cookie!;
+    const sc = await chiama("POST", "/api/regia/schermi", {}, regia);
+    schermo = (await chiama("POST", "/api/accesso", { username: sc.dati.username, password: sc.dati.password })).cookie!;
+    expect(corvi && gufi && schermo).toBeTruthy();
+  });
+
+  test("prove con regole diverse", async () => {
+    const crea = async (numero: number, titolo: string, regole: unknown[]) => {
+      const r = await chiama("POST", "/api/regia/prove", { numero, titolo, testo: `Testo di ${titolo}`, regole }, regia);
+      expect(r.stato, JSON.stringify(r.dati)).toBe(201);
+      ids[`p${numero}`] = r.dati.id;
+    };
+    await crea(1, "Lettera bruciacchiata", [{ tipo: "fase", fase_numero: 1 }]);
+    await crea(2, "La chiave della cantina", [{ tipo: "pin", pin: "1031" }]);
+    await crea(3, "Il registro della cantina", [{ tipo: "prova", prova_richiesta_id: ids.p2 }, { tipo: "pin", pin: "6613" }]);
+    await crea(4, "La bottiglia vuota", [{ tipo: "prova", prova_richiesta_id: ids.p3 }]);
+    await crea(5, "Il diario del medico", [{ tipo: "fase", fase_numero: 2 }]);
+    await crea(6, "Segreto di squadra", [
+      { tipo: "pin", pin: "aaa1", squadra_id: ids.corvi, gruppo: 1 },
+      { tipo: "pin", pin: "bbb2", squadra_id: ids.gufi, gruppo: 2 },
+    ]);
+    await crea(7, "Solo per i Gufi", [{ tipo: "pin", pin: "xyz9", squadra_id: ids.gufi }, { tipo: "prova", prova_richiesta_id: ids.p1 }]);
+    await crea(8, "La consegna la regia", []);
+    const doppio = await chiama("POST", "/api/regia/prove", { numero: 9, titolo: "Doppione", regole: [{ tipo: "pin", pin: "1031" }] }, regia);
+    expect(doppio.stato).toBe(409);
+  });
+
+  test("scene", async () => {
+    const a = await chiama("POST", "/api/regia/scene", { tipo: "narrazione", titolo: "Mezzanotte in biblioteca", ordine: 1, fase_numero: 1, avvio_automatico: true }, regia);
+    ids.scenaUno = a.dati.id;
+    await chiama("POST", "/api/regia/scene", { tipo: "avanzamento", titolo: "Chi è più vicino alla verità", ordine: 2 }, regia);
+    await chiama("POST", "/api/regia/scene", { tipo: "rivelazione", titolo: "La verità", ordine: 3 }, regia);
+  });
+});
+
+describe("la serata", () => {
+  test("prima dell'inizio i sigilli sono fermi e la squadra non vede nulla", async () => {
+    const s = await chiama("GET", "/api/squadra/stato", undefined, corvi);
+    expect(s.stato).toBe(200);
+    expect(s.dati.prove.every((p: any) => !p.aperta && p.titolo === undefined)).toBe(true);
+    expect(s.dati.prove.find((p: any) => p.numero === 2).motivo).toBe("Serve un codice");
+    expect(s.dati.prove.find((p: any) => p.numero === 4).motivo).toBe("Si apre dopo la prova 3");
+    expect((await chiama("POST", "/api/squadra/codice", { codice: "1031" }, corvi)).stato).toBe(409);
+    expect((await chiama("GET", "/api/regia", undefined, corvi)).stato).toBe(403);
+  });
+
+  test("la fase 1 apre le prove di fase e manda in onda la sua scena", async () => {
+    expect((await chiama("POST", "/api/regia/fase", { numero: 1 }, regia)).stato).toBe(200);
+    const s = await chiama("GET", "/api/squadra/stato", undefined, corvi);
+    expect(s.dati.serata.stato).toBe("in_corso");
+    expect(s.dati.prove.find((p: any) => p.numero === 1)).toMatchObject({ aperta: true, titolo: "Lettera bruciacchiata", via: "fase" });
+    const sc = await chiama("GET", "/api/schermo/stato", undefined, schermo);
+    expect(sc.dati.scena).toMatchObject({ tipo: "narrazione", titolo: "Mezzanotte in biblioteca" });
+    expect(sc.dati.fase.nome).toBe("Prologo");
+  });
+
+  test("codici: in ordine sbagliato, poi la catena", async () => {
+    expect((await chiama("POST", "/api/squadra/codice", { codice: "6613" }, corvi)).dati.esito).toBe("non_ancora");
+    const due = await chiama("POST", "/api/squadra/codice", { codice: " 10 31 " }, corvi);
+    expect(due.dati).toEqual({ esito: "aperta", prove: [ids.p2] });
+    expect((await chiama("POST", "/api/squadra/codice", { codice: "1031" }, corvi)).dati.esito).toBe("gia_aperta");
+    const tre = await chiama("POST", "/api/squadra/codice", { codice: "6613" }, corvi);
+    expect(tre.dati).toEqual({ esito: "aperta", prove: [ids.p3] });
+    const s = await chiama("GET", "/api/squadra/stato", undefined, corvi);
+    expect(s.dati.prove.find((p: any) => p.numero === 4)).toMatchObject({ aperta: true, via: "catena" });
+    const g = await chiama("GET", "/api/squadra/stato", undefined, gufi);
+    expect(g.dati.prove.find((p: any) => p.numero === 2).aperta).toBe(false);
+  });
+
+  test("codici riservati a una squadra", async () => {
+    expect((await chiama("POST", "/api/squadra/codice", { codice: "AAA1" }, corvi)).dati.esito).toBe("aperta");
+    expect((await chiama("POST", "/api/squadra/codice", { codice: "bbb2" }, corvi)).dati.esito).toBe("sbagliato");
+    expect((await chiama("POST", "/api/squadra/codice", { codice: "bbb2" }, gufi)).dati.esito).toBe("aperta");
+    const s = await chiama("GET", "/api/squadra/stato", undefined, corvi);
+    expect(s.dati.prove.find((p: any) => p.numero === 7).aperta).toBe(false);
+    expect((await chiama("POST", "/api/squadra/codice", { codice: "xyz9" }, gufi)).dati.esito).toBe("aperta");
+  });
+
+  test("troppi codici sbagliati bloccano la squadra per due minuti", async () => {
+    for (let i = 0; i < 4; i++) {
+      const r = await chiama("POST", "/api/squadra/codice", { codice: `000${i}` }, gufi);
+      expect(r.dati.esito).toBe("sbagliato");
+    }
+    const quinto = await chiama("POST", "/api/squadra/codice", { codice: "0009" }, gufi);
+    expect(quinto.dati.esito).toBe("bloccato");
+    expect(quinto.dati.secondi).toBeGreaterThan(100);
+    const anche_giusto = await chiama("POST", "/api/squadra/codice", { codice: "1031" }, gufi);
+    expect(anche_giusto.dati.esito).toBe("bloccato");
+  });
+
+  test("consegna dalla regia, annunci, fase 2", async () => {
+    expect((await chiama("POST", "/api/regia/consegna", { prova_id: ids.p8, squadra_id: ids.gufi }, regia)).stato).toBe(200);
+    await chiama("POST", "/api/regia/annunci", { testo: "Il maggiordomo accetta domande." }, regia);
+    await chiama("POST", "/api/regia/annunci", { testo: "Solo per voi.", squadra_id: ids.gufi }, regia);
+    await chiama("POST", "/api/regia/fase", { numero: 2 }, regia);
+    const g = await chiama("GET", "/api/squadra/stato", undefined, gufi);
+    expect(g.dati.prove.find((p: any) => p.numero === 8)).toMatchObject({ aperta: true, via: "regia" });
+    expect(g.dati.prove.find((p: any) => p.numero === 5).aperta).toBe(true);
+    expect(g.dati.annunci.map((a: any) => a.testo)).toEqual(["Solo per voi.", "Il maggiordomo accetta domande."]);
+    const c = await chiama("GET", "/api/squadra/stato", undefined, corvi);
+    expect(c.dati.annunci).toHaveLength(1);
+    expect(c.dati.fase).toMatchObject({ numero: 2, nome: "Le confessioni", totale: 3 });
+  });
+
+  test("proiettore: scena successiva e avanzamento", async () => {
+    await chiama("POST", "/api/regia/onda/successiva", {}, regia);
+    const sc = await chiama("GET", "/api/schermo/stato", undefined, schermo);
+    expect(sc.dati.scena.tipo).toBe("avanzamento");
+    expect(sc.dati.scena.totaleProve).toBe(8);
+    expect(sc.dati.scena.squadre[0].aperte).toBeGreaterThan(0);
+    expect((await chiama("GET", "/api/schermo/stato", undefined, corvi)).stato).toBe(403);
+  });
+
+  test("nuova password: la vecchia sessione si chiude", async () => {
+    const t = await chiama("GET", "/api/regia", undefined, regia);
+    const acc = t.dati.squadre.find((s: any) => s.nome === "Corvi").account_id;
+    const r = await chiama("POST", `/api/regia/account/${acc}/password`, {}, regia);
+    expect(r.stato).toBe(200);
+    expect((await chiama("GET", "/api/squadra/stato", undefined, corvi)).stato).toBe(401);
+    expect((await chiama("POST", "/api/accesso", credCorvi)).stato).toBe(401);
+    corvi = (await chiama("POST", "/api/accesso", { username: credCorvi.username, password: r.dati.password })).cookie!;
+    expect((await chiama("GET", "/api/squadra/stato", undefined, corvi)).stato).toBe(200);
+  });
+
+  test("accuse, rivelazione e punteggi", async () => {
+    expect((await chiama("POST", "/api/squadra/accusa", { colpevole: "la governante", movente: "l'eredita", arma: "il veleno" }, corvi)).stato).toBe(201);
+    expect((await chiama("POST", "/api/squadra/accusa", { colpevole: "x", movente: "y", arma: "z" }, corvi)).stato).toBe(409);
+    await chiama("POST", "/api/squadra/accusa", { colpevole: "Il maggiordomo", movente: "Gelosia", arma: "Pugnale" }, gufi);
+    expect((await chiama("POST", "/api/regia/rivela", {}, regia)).stato).toBe(200);
+    const t = await chiama("GET", "/api/regia", undefined, regia);
+    const pt = Object.fromEntries(t.dati.accuse.map((a: any) => [a.squadra, a.punteggio]));
+    expect(pt).toEqual({ Corvi: 3, Gufi: 0 });
+    const sc = await chiama("GET", "/api/schermo/stato", undefined, schermo);
+    expect(sc.dati.scena).toMatchObject({ tipo: "rivelazione", rivelata: true });
+    expect(sc.dati.scena.vincitori.map((v: any) => v.nome)).toEqual(["Corvi"]);
+  });
+
+  test("esporta e reimporta il caso, poi azzera", async () => {
+    const e = await chiama("GET", "/api/regia/esporta", undefined, regia);
+    expect(e.dati.prove).toHaveLength(8);
+    expect(e.dati.prove[2].regole).toEqual([
+      { tipo: "prova", pin: null, prova_richiesta: 2, fase_numero: null, gruppo: 1 },
+      { tipo: "pin", pin: "6613", prova_richiesta: null, fase_numero: null, gruppo: 1 },
+    ]);
+    expect((await chiama("POST", "/api/regia/azzera", { conferma: "no" }, regia)).stato).toBe(400);
+    expect((await chiama("POST", "/api/regia/azzera", { conferma: "AZZERA" }, regia)).stato).toBe(200);
+    expect((await chiama("POST", "/api/regia/importa", { conferma: "SOSTITUISCI", caso: e.dati }, regia)).stato).toBe(200);
+    const s = await chiama("GET", "/api/squadra/stato", undefined, corvi);
+    expect(s.dati.prove).toHaveLength(8);
+    expect(s.dati.prove.find((p: any) => p.numero === 7).motivo).toBe("La consegna la regia");
+    expect(s.dati.prove.every((p: any) => !p.aperta)).toBe(true);
+    expect(s.dati.serata.stato).toBe("bozza");
+  });
+
+  test("blocco dell'accesso dopo troppe password sbagliate", async () => {
+    for (let i = 0; i < 8; i++) await chiama("POST", "/api/accesso", { username: "gufi", password: "sbagliata" });
+    expect((await chiama("POST", "/api/accesso", { username: "gufi", password: "sbagliata" })).stato).toBe(429);
+  });
+});
+
+test("confronto delle risposte", () => {
+  expect(combacia("la Governante!", "Governante")).toBe(true);
+  expect(combacia("Il maggiordomo", "La governante")).toBe(false);
+  expect(combacia("", "x")).toBe(false);
+});

@@ -1,0 +1,374 @@
+<!doctype html>
+<html lang="it">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+<meta name="theme-color" content="#0e0b14">
+<title>Squadra dei Corvi</title>
+<link rel="stylesheet" href="tema.css">
+<style>
+  body { min-height: 100dvh; }
+  .app { max-width: 480px; margin: 0 auto; min-height: 100dvh; display: flex; flex-direction: column; padding-bottom: calc(84px + env(safe-area-inset-bottom)); }
+
+  .testata { position: sticky; top: 0; z-index: 5; background: var(--notte); display: flex; align-items: center; justify-content: space-between; gap: 12px; padding: 14px 20px; border-bottom: 1px solid var(--notte-3); }
+  .squadra { display: flex; align-items: center; gap: 10px; font-weight: 600; }
+  .stemma { width: 34px; height: 34px; border-radius: 50%; background: var(--zucca); color: var(--notte); display: grid; place-items: center; }
+  .stemma svg { width: 20px; height: 20px; stroke: currentColor; stroke-width: 1.75; fill: none; stroke-linecap: round; stroke-linejoin: round; }
+  .fase { font-size: 14px; color: var(--osso-2); text-align: right; line-height: 1.3; }
+  .fase strong { display: block; color: var(--osso); font-weight: 600; font-size: 15px; }
+
+  .caso { padding: 32px 20px 0; display: grid; gap: 12px; }
+  .caso h1 { font-family: var(--gotico); font-weight: 700; font-size: clamp(38px, 11vw, 48px); line-height: 1; }
+  .caso p { color: var(--osso-2); font-size: 16px; max-width: 60ch; }
+
+  .annuncio { margin: 24px 20px 0; padding: 16px; border-radius: 14px; background: var(--notte-2); display: flex; gap: 14px; align-items: flex-start; }
+  .annuncio .icona { color: var(--zucca); margin-top: 2px; }
+  .annuncio small { display: block; color: var(--osso-2); font-size: 14px; }
+  .annuncio p { font-size: 16px; }
+
+  .inventario { padding: 40px 20px 0; display: grid; gap: 16px; }
+  .inventario-testa { display: flex; align-items: baseline; justify-content: space-between; gap: 12px; }
+  .inventario h2 { font-family: var(--gotico); font-weight: 700; font-size: 30px; line-height: 1.05; }
+  .conta { color: var(--osso-2); font-size: 15px; }
+  .griglia { display: grid; grid-template-columns: repeat(2, minmax(0, 1fr)); gap: 12px; }
+
+  .reperto { position: relative; min-height: 164px; padding: 0 0 14px; border-radius: 2px; display: flex; flex-direction: column; gap: 12px; text-align: left; text-decoration: none; color: var(--osso); border: 1px solid var(--filetto); background: var(--notte-2); }
+  .reperto > div:last-child { padding: 0 14px; margin-top: auto; }
+  .reperto--aperto { border-color: var(--osso-2); }
+  .reperto--sigillato { background: var(--notte); }
+  button.reperto { width: 100%; font: inherit; }
+  button.reperto--sigillato { border-color: var(--zucca); }
+  @media (hover: hover) { button.reperto:hover { background: var(--notte-3); } a.reperto:hover { background: var(--notte-3); color: var(--osso); } }
+  .reperto-titolo { font-weight: 600; font-size: 16px; line-height: 1.25; }
+  .reperto-nota { font-size: 14px; color: var(--osso-2); line-height: 1.35; }
+  .reperto--sigillato .reperto-nota { color: var(--osso); }
+  .reperto .icona { color: var(--zucca); width: 26px; height: 26px; }
+  .numero { font-size: 13px; color: var(--osso-2); font-weight: 600; letter-spacing: 0.04em; }
+  .testa-reperto { display: flex; justify-content: space-between; align-items: center; gap: 8px; padding: 8px 14px; border-bottom: 1px solid var(--filetto); min-height: 52px; }
+  .reperto--aperto .testa-reperto { border-bottom-color: var(--osso-2); }
+  .nuova { font-size: 13px; font-weight: 700; color: var(--notte); background: var(--zucca); border-radius: 2px; padding: 1px 7px; }
+  .sigillo-mini { width: 40px; height: 40px; }
+
+  .schede { position: fixed; bottom: 0; left: 0; right: 0; z-index: 6; background: var(--notte); border-top: 1px solid var(--notte-3); padding-bottom: env(safe-area-inset-bottom); }
+  .schede ul { max-width: 480px; margin: 0 auto; padding: 6px 8px; list-style: none; display: grid; grid-template-columns: repeat(4, minmax(0, 1fr)); }
+  .schede a { min-height: 60px; display: flex; flex-direction: column; align-items: center; justify-content: center; gap: 4px; font-size: 13px; font-weight: 500; color: var(--osso-2); text-decoration: none; border-radius: 12px; }
+  .schede a[aria-current="page"] { color: var(--zucca); font-weight: 700; }
+  @media (hover: hover) { .schede a:hover { color: var(--osso); } }
+
+  .nota-bozza { margin: 40px 20px 0; font-size: 14px; color: var(--osso-2); }
+
+  /* Foglio del sigillo */
+  .velo { position: fixed; inset: 0; z-index: 20; background: rgb(14 11 20 / 0.78); opacity: 0; pointer-events: none; transition: opacity 240ms ease; }
+  .velo.aperto { opacity: 1; pointer-events: auto; }
+  .foglio { visibility: hidden; position: fixed; z-index: 21; left: 0; right: 0; bottom: 0; max-width: 480px; margin: 0 auto; max-height: 94dvh; overflow-y: auto; background: var(--notte-2); border-radius: 22px 22px 0 0; padding: 10px 24px calc(24px + env(safe-area-inset-bottom)); transform: translateY(105%); transition: transform 420ms var(--curva-cassetto), visibility 0s linear 420ms; }
+  .foglio.aperto { transform: translateY(0); visibility: visible; transition: transform 420ms var(--curva-cassetto), visibility 0s; }
+  .maniglia { width: 44px; height: 5px; border-radius: 3px; background: var(--filetto); margin: 0 auto 6px; }
+  .chiudi { position: absolute; right: 14px; top: 12px; width: 44px; height: 44px; border-radius: 50%; border: 0; background: transparent; color: var(--osso-2); display: grid; place-items: center; }
+  @media (hover: hover) { .chiudi:hover { color: var(--osso); background: var(--notte-3); } }
+
+  .palco { position: relative; height: 150px; display: grid; place-items: center; margin-top: 8px; }
+  .sigillo { width: 132px; height: 132px; position: relative; }
+  .sigillo svg { position: absolute; inset: 0; width: 100%; height: 100%; }
+  .sigillo .meta-s, .sigillo .meta-d { opacity: 0; }
+  .sigillo .meta-s { clip-path: polygon(0 0, 52% 0, 46% 28%, 55% 47%, 44% 66%, 51% 100%, 0 100%); }
+  .sigillo .meta-d { clip-path: polygon(52% 0, 100% 0, 100% 100%, 51% 100%, 44% 66%, 55% 47%, 46% 28%); }
+  .sigillo.rotto .intero { opacity: 0; }
+  .sigillo.rotto .meta-s { animation: rompi-s 620ms var(--curva-uscita) forwards; }
+  .sigillo.rotto .meta-d { animation: rompi-d 620ms var(--curva-uscita) forwards; }
+  @keyframes rompi-s { 0% { opacity: 1; transform: none; } 55% { opacity: 1; } 100% { opacity: 0; transform: translate(-46px, 18px) rotate(-24deg); } }
+  @keyframes rompi-d { 0% { opacity: 1; transform: none; } 55% { opacity: 1; } 100% { opacity: 0; transform: translate(46px, 22px) rotate(20deg); } }
+  .sigillo.trema { animation: trema 380ms var(--curva-uscita); }
+  @keyframes trema { 0%, 100% { transform: translateX(0); } 20% { transform: translateX(-9px) rotate(-3deg); } 45% { transform: translateX(7px) rotate(2deg); } 70% { transform: translateX(-4px); } }
+
+  .foglio h2 { font-family: var(--gotico); font-weight: 700; font-size: 34px; line-height: 1.05; text-align: center; margin-top: 4px; }
+  .foglio .spiega { text-align: center; color: var(--osso-2); margin: 10px auto 0; max-width: 34ch; font-size: 16px; }
+
+  .caselle { display: flex; justify-content: center; gap: 12px; margin: 26px 0 0; }
+  .casella { width: 58px; height: 68px; border-radius: 12px; border: 1.5px solid var(--filetto); display: grid; place-items: center; font-size: 30px; font-weight: 600; transition: border-color 160ms ease; }
+  .casella.piena { border-color: var(--zucca); }
+  .caselle.errore .casella { border-color: var(--sangue); }
+
+  .esito { min-height: 52px; display: grid; place-items: center; text-align: center; font-size: 15px; color: var(--osso-2); padding: 8px 0; }
+  .esito.errore { color: var(--sangue); font-weight: 600; }
+
+  .tastiera { display: grid; grid-template-columns: repeat(3, minmax(0, 1fr)); gap: 10px; }
+  .tasto { min-height: 64px; border-radius: 16px; border: 0; background: var(--notte-3); font-size: 28px; font-weight: 600; color: var(--osso); }
+  @media (hover: hover) { .tasto:hover:not(:disabled) { background: var(--filetto); } }
+  .tasto--leggero { background: transparent; font-size: 16px; color: var(--osso-2); }
+  .tasto--apri { background: var(--zucca); color: var(--notte); font-size: 17px; font-weight: 700; }
+  .tasto--apri:disabled, .tasto:disabled { background: var(--notte-3); color: var(--osso-2); opacity: 0.6; }
+  @media (hover: hover) { .tasto--apri:hover:not(:disabled) { background: var(--zucca-chiara); } }
+
+  .rivelata { display: none; text-align: center; }
+  .rivelata h2 { padding: 6px 44px 0; }
+  .rivelata.visibile { display: grid; gap: 14px; justify-items: center; animation: sale 520ms var(--curva-cassetto) both; }
+  @keyframes sale { from { opacity: 0; transform: translateY(24px); } to { opacity: 1; transform: none; } }
+  .documento { position: relative; margin-top: 6px; width: 100%; text-align: left; background: var(--osso); color: var(--notte); border-radius: 2px; padding: 0 18px 22px; display: grid; gap: 10px; }
+  .documento .intestazione { display: flex; justify-content: space-between; gap: 10px; padding: 12px 0 10px; border-bottom: 1.5px solid var(--notte); font-size: 13px; font-weight: 700; letter-spacing: 0.04em; }
+  .documento p { padding-bottom: 6px; border-bottom: 1px solid #c9bfae; }
+  .timbro { position: absolute; right: 14px; bottom: 16px; transform: rotate(-9deg); border: 2px solid var(--cera); color: var(--cera); font-weight: 700; font-size: 14px; letter-spacing: 0.08em; padding: 2px 8px; border-radius: 2px; }
+  .documento strong { font-family: var(--gotico); font-size: 28px; line-height: 1.05; font-weight: 700; margin-top: 6px; }
+  .documento p { font-size: 16px; line-height: 1.5; }
+  .documento .codice { font-weight: 700; font-size: 18px; letter-spacing: 0.08em; }
+  .bottone.largo { width: 100%; margin-top: 8px; }
+  .bloccata .tastiera { display: none; }
+</style>
+</head>
+<body>
+<svg width="0" height="0" style="position:absolute" aria-hidden="true">
+  <defs>
+    <symbol id="cera" viewBox="0 0 100 100">
+      <path fill="#8e1b24" d="M50 4c6 0 9 5 14 6s11-2 15 2 2 10 5 14 9 6 9 12-5 9-5 14 4 10 1 15-10 4-13 8-3 10-8 12-11-1-16 0-9 6-15 3-6-9-11-12-12-2-14-7 3-10 1-15-8-8-6-13 8-7 9-12-2-12 3-15 11 0 15-3 6-9 11-10Z"/>
+      <circle cx="50" cy="50" r="29" fill="none" stroke="#b8323c" stroke-width="2.5"/>
+      <path fill="none" stroke="#e7a39a" stroke-width="3" stroke-linecap="round" d="M57 34a17 17 0 1 0 0 32 13 13 0 1 1 0-32Z"/>
+    </symbol>
+    <symbol id="i-documento" viewBox="0 0 24 24"><path d="M6 3h8l4 4v14H6z"/><path d="M14 3v4h4"/><path d="M9 12h6M9 16h6"/></symbol>
+    <symbol id="i-voce" viewBox="0 0 24 24"><path d="M5 17V7a2 2 0 0 1 2-2h10a2 2 0 0 1 2 2v7a2 2 0 0 1-2 2H9l-4 4Z"/><path d="M9 10h6"/></symbol>
+    <symbol id="i-chiave" viewBox="0 0 24 24"><circle cx="8" cy="15" r="4"/><path d="M11 12l8-8"/><path d="M16 7l3 3"/></symbol>
+    <symbol id="i-candela" viewBox="0 0 24 24"><path d="M12 3c-1.6 2-2.2 3.4-2.2 4.4a2.2 2.2 0 0 0 4.4 0c0-1-.6-2.4-2.2-4.4Z"/><rect x="8" y="11" width="8" height="10" rx="1"/></symbol>
+    <symbol id="i-prove" viewBox="0 0 24 24"><rect x="3" y="6" width="18" height="13" rx="1.5"/><path d="M3 7l9 6 9-6"/><circle cx="12" cy="15.5" r="2.2"/></symbol>
+    <symbol id="i-volti" viewBox="0 0 24 24"><circle cx="9" cy="8" r="3.2"/><path d="M3 20c.8-3.4 3.2-5.4 6-5.4s5.2 2 6 5.4"/><circle cx="17" cy="9" r="2.4"/><path d="M16 14.6c2.4.2 4.2 2 5 5"/></symbol>
+    <symbol id="i-taccuino" viewBox="0 0 24 24"><path d="M6 3h12v18H6z"/><path d="M9 8h6M9 12h6M9 16h3"/></symbol>
+    <symbol id="i-accusa" viewBox="0 0 24 24"><path d="M5 20 15 10"/><path d="M13 4l7 7-3 3-7-7z"/><path d="M3 21h8"/></symbol>
+    <symbol id="i-corvo" viewBox="0 0 24 24"><path d="M3 15c3-1 5-4 6-7 1.5 1.5 3 2 5 2l3-3 1 3 3 1-3 2c0 4-3 6-7 6-3 0-5-1-6-3l-2 1Z"/></symbol>
+    <symbol id="i-chiudi" viewBox="0 0 24 24"><path d="M6 6l12 12M18 6 6 18"/></symbol>
+  </defs>
+</svg>
+
+<div class="app">
+  <header class="testata">
+    <div class="squadra">
+      <span class="stemma" aria-hidden="true"><svg><use href="#i-corvo"/></svg></span>
+      Squadra dei Corvi
+    </div>
+    <div class="fase">Fase 2 di 5<strong>Le confessioni</strong></div>
+  </header>
+
+  <main>
+    <section class="caso" aria-labelledby="titolo-caso">
+      <h1 id="titolo-caso">La notte di Villa Corvina</h1>
+      <p>Il conte non è sceso a cena. Lo hanno trovato in biblioteca, la porta chiusa da dentro. Scoprite chi, come e perché prima dello scoccare della mezzanotte.</p>
+    </section>
+
+    <aside class="annuncio" aria-live="polite">
+      <svg class="icona" aria-hidden="true"><use href="#i-candela"/></svg>
+      <div><small>Dalla regia, 21:42</small><p>Il maggiordomo ora accetta domande. Cercatelo vicino al camino.</p></div>
+    </aside>
+
+    <section class="inventario" aria-labelledby="titolo-prove">
+      <div class="inventario-testa">
+        <h2 id="titolo-prove">Le prove</h2>
+        <span class="conta" id="conta">2 trovate su 6</span>
+      </div>
+      <div class="griglia" id="griglia">
+        <a class="reperto reperto--aperto" href="#">
+          <div class="testa-reperto"><svg class="icona" aria-hidden="true"><use href="#i-documento"/></svg><span class="numero">N. 1</span></div>
+          <div><div class="reperto-titolo">Lettera bruciacchiata</div><div class="reperto-nota">Documento, trovata alle 20:58</div></div>
+        </a>
+        <a class="reperto reperto--aperto" href="#">
+          <div class="testa-reperto"><svg class="icona" aria-hidden="true"><use href="#i-voce"/></svg><span class="numero">N. 2</span></div>
+          <div><div class="reperto-titolo">La governante</div><div class="reperto-nota">Testimonianza, 21:15</div></div>
+        </a>
+        <button class="reperto reperto--sigillato" type="button" id="r3" data-pin="1031">
+          <div class="testa-reperto"><svg class="sigillo-mini" aria-hidden="true"><use href="#cera"/></svg><span class="numero">N. 3</span></div>
+          <div><div class="reperto-titolo">Sigillata</div><div class="reperto-nota">Serve un codice trovato in sala</div></div>
+        </button>
+        <div class="reperto reperto--sigillato" id="r4">
+          <div class="testa-reperto"><svg class="sigillo-mini" aria-hidden="true"><use href="#cera"/></svg><span class="numero">N. 4</span></div>
+          <div><div class="reperto-titolo">Sigillata</div><div class="reperto-nota">Si apre dopo la prova 3</div></div>
+        </div>
+        <div class="reperto reperto--sigillato">
+          <div class="testa-reperto"><svg class="sigillo-mini" aria-hidden="true"><use href="#cera"/></svg><span class="numero">N. 5</span></div>
+          <div><div class="reperto-titolo">Sigillata</div><div class="reperto-nota">Si apre con la fase 3</div></div>
+        </div>
+        <div class="reperto reperto--sigillato">
+          <div class="testa-reperto"><svg class="sigillo-mini" aria-hidden="true"><use href="#cera"/></svg><span class="numero">N. 6</span></div>
+          <div><div class="reperto-titolo">Sigillata</div><div class="reperto-nota">La consegna un personaggio</div></div>
+        </div>
+      </div>
+    </section>
+
+    <p class="nota-bozza">Caso dimostrativo. Codici di prova: 1031, poi quello che trovate nella prova 3.</p>
+  </main>
+</div>
+
+<nav class="schede" aria-label="Sezioni">
+  <ul>
+    <li><a href="#" aria-current="page"><svg class="icona" aria-hidden="true"><use href="#i-prove"/></svg>Prove</a></li>
+    <li><a href="#"><svg class="icona" aria-hidden="true"><use href="#i-volti"/></svg>Personaggi</a></li>
+    <li><a href="#"><svg class="icona" aria-hidden="true"><use href="#i-taccuino"/></svg>Taccuino</a></li>
+    <li><a href="#"><svg class="icona" aria-hidden="true"><use href="#i-accusa"/></svg>Accusa</a></li>
+  </ul>
+</nav>
+
+<div class="velo" id="velo"></div>
+<section class="foglio" id="foglio" role="dialog" aria-modal="true" aria-labelledby="titolo-foglio" aria-hidden="true">
+  <div class="maniglia" aria-hidden="true"></div>
+  <button class="chiudi" type="button" id="chiudi" aria-label="Chiudi"><svg class="icona" aria-hidden="true"><use href="#i-chiudi"/></svg></button>
+
+  <div id="fase-codice">
+    <div class="palco">
+      <div class="sigillo" id="sigillo" aria-hidden="true">
+        <svg class="intero" viewBox="0 0 100 100"><use href="#cera"/></svg>
+        <svg class="meta-s" viewBox="0 0 100 100"><use href="#cera"/></svg>
+        <svg class="meta-d" viewBox="0 0 100 100"><use href="#cera"/></svg>
+      </div>
+    </div>
+    <h2 id="titolo-foglio">Rompi il sigillo</h2>
+    <p class="spiega" id="spiega">Inserite il codice a quattro cifre. Ogni tentativo arriva alla regia.</p>
+    <div class="caselle" id="caselle" aria-hidden="true">
+      <div class="casella"></div><div class="casella"></div><div class="casella"></div><div class="casella"></div>
+    </div>
+    <p class="esito" id="esito" role="status">5 tentativi a disposizione</p>
+    <div class="tastiera" id="tastiera"></div>
+  </div>
+
+  <div class="rivelata" id="rivelata">
+    <h2 id="titolo-rivelata">La chiave della cantina</h2>
+    <div class="documento" id="documento">
+      <strong>Prova n. 3</strong>
+      <p>Una chiave di ferro, ancora calda. Sul cartellino di cuoio qualcuno ha inciso un numero:</p>
+      <p class="codice">6613</p>
+    </div>
+    <button class="bottone bottone--pieno largo" type="button" id="conserva">Metti tra le prove</button>
+  </div>
+</section>
+
+<script>
+(() => {
+  const foglio = document.getElementById('foglio');
+  const velo = document.getElementById('velo');
+  const sigillo = document.getElementById('sigillo');
+  const caselle = document.getElementById('caselle');
+  const esito = document.getElementById('esito');
+  const tastiera = document.getElementById('tastiera');
+  const faseCodice = document.getElementById('fase-codice');
+  const rivelata = document.getElementById('rivelata');
+  const documento = document.getElementById('documento');
+  const titoloRivelata = document.getElementById('titolo-rivelata');
+  const conta = document.getElementById('conta');
+
+  const CONTENUTI = {
+    '1031': { n: 3, titolo: 'La chiave della cantina', icona: 'i-chiave', tipo: 'Oggetto', testo: '<div class="intestazione"><span>FASCICOLO N. 3</span><span>VILLA CORVINA</span></div><strong>Oggetto</strong><p>Una chiave di ferro, ancora calda. Sul cartellino di cuoio qualcuno ha inciso un numero:</p><p class="codice">6613</p><span class="timbro">AGLI ATTI</span>' },
+    '6613': { n: 4, titolo: 'Il registro della cantina', icona: 'i-documento', tipo: 'Documento', testo: '<div class="intestazione"><span>FASCICOLO N. 4</span><span>VILLA CORVINA</span></div><strong>Documento</strong><p>Tre bottiglie mancano dallo scaffale più alto. Accanto, la firma di chi le ha prese è stata grattata via.</p><span class="timbro">AGLI ATTI</span>' }
+  };
+
+  let codice = '', tentativi = 5, attivo = null, trovate = 2, ultimoFocus = null;
+
+  const tasti = ['1','2','3','4','5','6','7','8','9','canc','0','apri'];
+  tasti.forEach((t) => {
+    const b = document.createElement('button');
+    b.type = 'button';
+    b.className = 'tasto' + (t === 'canc' ? ' tasto--leggero' : '') + (t === 'apri' ? ' tasto--apri' : '');
+    b.textContent = t === 'canc' ? 'Cancella' : t === 'apri' ? 'Apri' : t;
+    if (t === 'canc') b.setAttribute('aria-label', 'Cancella ultima cifra');
+    if (t === 'apri') { b.id = 'apri'; b.disabled = true; }
+    b.addEventListener('click', () => premi(t));
+    tastiera.appendChild(b);
+  });
+  const apri = document.getElementById('apri');
+
+  function disegna() {
+    [...caselle.children].forEach((c, i) => {
+      c.textContent = i < codice.length ? '•' : '';
+      c.classList.toggle('piena', i < codice.length);
+    });
+    apri.disabled = codice.length < 4 || tentativi === 0;
+  }
+
+  function premi(t) {
+    if (tentativi === 0) return;
+    caselle.classList.remove('errore');
+    if (t === 'canc') { codice = codice.slice(0, -1); disegna(); return; }
+    if (t === 'apri') { verifica(); return; }
+    if (codice.length < 4) { codice += t; disegna(); }
+  }
+
+  function verifica() {
+    if (codice === attivo.dataset.pin) {
+      sigillo.classList.add('rotto');
+      esito.textContent = 'Sigillo rotto';
+      esito.classList.remove('errore');
+      const c = CONTENUTI[codice];
+      setTimeout(() => {
+        faseCodice.hidden = true;
+        titoloRivelata.textContent = c.titolo;
+        documento.innerHTML = c.testo;
+        rivelata.classList.add('visibile');
+        document.getElementById('conserva').focus();
+      }, 520);
+      return;
+    }
+    tentativi -= 1;
+    codice = '';
+    disegna();
+    caselle.classList.add('errore');
+    esito.classList.add('errore');
+    sigillo.classList.remove('trema'); void sigillo.offsetWidth; sigillo.classList.add('trema');
+    if (tentativi === 0) {
+      esito.textContent = 'Troppi tentativi. Il sigillo si riapre tra 2 minuti.';
+      tastiera.querySelectorAll('button').forEach((b) => b.disabled = true);
+    } else {
+      esito.textContent = 'Codice sbagliato. Restano ' + tentativi + (tentativi === 1 ? ' tentativo.' : ' tentativi.');
+    }
+  }
+
+  function apriFoglio(reperto) {
+    attivo = reperto; codice = ''; tentativi = 5; ultimoFocus = reperto;
+    sigillo.classList.remove('rotto', 'trema');
+    faseCodice.hidden = false;
+    rivelata.classList.remove('visibile');
+    esito.textContent = '5 tentativi a disposizione';
+    esito.classList.remove('errore');
+    caselle.classList.remove('errore');
+    tastiera.querySelectorAll('button').forEach((b) => b.disabled = false);
+    disegna();
+    velo.classList.add('aperto');
+    foglio.classList.add('aperto');
+    foglio.setAttribute('aria-hidden', 'false');
+    setTimeout(() => tastiera.querySelector('button').focus(), 60);
+  }
+
+  function chiudiFoglio() {
+    velo.classList.remove('aperto');
+    foglio.classList.remove('aperto');
+    foglio.setAttribute('aria-hidden', 'true');
+    if (ultimoFocus) ultimoFocus.focus();
+  }
+
+  function conserva() {
+    const c = CONTENUTI[attivo.dataset.pin];
+    const nuovo = document.createElement('a');
+    nuovo.className = 'reperto reperto--aperto';
+    nuovo.href = '#';
+    nuovo.innerHTML = '<div class="testa-reperto"><svg class="icona" aria-hidden="true"><use href="#' + c.icona + '"/></svg><span class="nuova">Nuova</span></div><div><div class="reperto-titolo">' + c.titolo + '</div><div class="reperto-nota">' + c.tipo + ', appena aperta</div></div>';
+    attivo.replaceWith(nuovo);
+    trovate += 1;
+    conta.textContent = trovate + ' trovate su 6';
+    if (c.n === 3) {
+      const r4 = document.getElementById('r4');
+      const b = document.createElement('button');
+      b.type = 'button'; b.className = 'reperto reperto--sigillato'; b.dataset.pin = '6613';
+      b.innerHTML = r4.innerHTML.replace('Si apre dopo la prova 3', 'Serve il numero inciso sul cartellino');
+      b.addEventListener('click', () => apriFoglio(b));
+      r4.replaceWith(b);
+      ultimoFocus = b;
+    } else { ultimoFocus = nuovo; }
+    chiudiFoglio();
+  }
+
+  document.getElementById('r3').addEventListener('click', (e) => apriFoglio(e.currentTarget));
+  document.getElementById('chiudi').addEventListener('click', chiudiFoglio);
+  document.getElementById('conserva').addEventListener('click', conserva);
+  velo.addEventListener('click', chiudiFoglio);
+  document.addEventListener('keydown', (e) => {
+    if (!foglio.classList.contains('aperto')) return;
+    if (e.key === 'Escape') chiudiFoglio();
+    if (/^[0-9]$/.test(e.key)) premi(e.key);
+    if (e.key === 'Backspace') premi('canc');
+    if (e.key === 'Enter' && !apri.disabled && !faseCodice.hidden) premi('apri');
+  });
+})();
+</script>
+</body>
+</html>

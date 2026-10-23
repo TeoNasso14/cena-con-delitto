@@ -1,0 +1,20 @@
+[build]
+  command = "npm run build"
+  publish = "dist/cena/browser"
+
+[functions]
+  directory = "netlify/functions"
+
+# Le API sono servite dalla funzione api (config.path = "/api/*"), che ha la precedenza.
+[[redirects]]
+  from = "/*"
+  to = "/index.html"
+  status = 200
+
+[[headers]]
+  for = "/*"
+  [headers.values]
+    X-Content-Type-Options = "nosniff"
+    Referrer-Policy = "same-origin"
+    X-Frame-Options = "DENY"
+    Permissions-Policy = "camera=(), microphone=(), geolocation=()"

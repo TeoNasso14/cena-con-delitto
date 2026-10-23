@@ -1,0 +1,402 @@
+{
+  "schemaVersion": 2,
+  "generatedAt": "2026-10-23T10:03:13+00:00",
+  "title": "Design System: La notte di Villa Corvina",
+  "extensions": {
+    "colorMeta": {
+      "notte": {
+        "role": "neutral",
+        "displayName": "Notte",
+        "canonical": "oklch(15.8% 0.019 299.5)",
+        "tonalRamp": [
+          "#0c0912",
+          "#25222c",
+          "#413e49",
+          "#5f5b67",
+          "#7f7b87",
+          "#a09ca9",
+          "#c6c2cf",
+          "#f0ecfa"
+        ]
+      },
+      "notte-2": {
+        "role": "neutral",
+        "displayName": "Notte velata",
+        "canonical": "oklch(19.5% 0.027 301.6)",
+        "tonalRamp": [
+          "#0d0815",
+          "#26212f",
+          "#423d4c",
+          "#605a6b",
+          "#807a8b",
+          "#a19bad",
+          "#c7c0d3",
+          "#f1ebfe"
+        ]
+      },
+      "notte-3": {
+        "role": "neutral",
+        "displayName": "Notte fonda viola",
+        "canonical": "oklch(24.1% 0.037 303.1)",
+        "tonalRamp": [
+          "#0e0718",
+          "#282033",
+          "#443b50",
+          "#62596f",
+          "#817890",
+          "#a399b2",
+          "#c9bfd8",
+          "#f2eafe"
+        ]
+      },
+      "filetto": {
+        "role": "neutral",
+        "displayName": "Filetto",
+        "canonical": "oklch(32.8% 0.046 304.2)",
+        "tonalRamp": [
+          "#0f061a",
+          "#291e36",
+          "#453a53",
+          "#635773",
+          "#837794",
+          "#a498b6",
+          "#cabddd",
+          "#f2eafe"
+        ]
+      },
+      "osso": {
+        "role": "neutral",
+        "displayName": "Osso",
+        "canonical": "oklch(92.7% 0.023 84.6)",
+        "tonalRamp": [
+          "#100a02",
+          "#292317",
+          "#453f32",
+          "#645d4f",
+          "#847c6e",
+          "#a59e8f",
+          "#cbc3b4",
+          "#f6eede"
+        ]
+      },
+      "osso-2": {
+        "role": "neutral",
+        "displayName": "Osso spento",
+        "canonical": "oklch(76.6% 0.033 306.1)",
+        "tonalRamp": [
+          "#0f0716",
+          "#282031",
+          "#443b4e",
+          "#62596d",
+          "#82798d",
+          "#a39aaf",
+          "#c9bfd5",
+          "#f3eaff"
+        ]
+      },
+      "zucca": {
+        "role": "primary",
+        "displayName": "Zucca di luna",
+        "canonical": "oklch(72.4% 0.187 48.9)",
+        "tonalRamp": [
+          "#180600",
+          "#3c1803",
+          "#682c00",
+          "#93440c",
+          "#c25c13",
+          "#f77205",
+          "#ffae84",
+          "#feeae0"
+        ]
+      },
+      "zucca-chiara": {
+        "role": "primary",
+        "displayName": "Zucca accesa",
+        "canonical": "oklch(77.8% 0.151 55.4)",
+        "tonalRamp": [
+          "#170600",
+          "#391b04",
+          "#623002",
+          "#8c4a10",
+          "#b96418",
+          "#e48131",
+          "#fcb17d",
+          "#feeadd"
+        ]
+      },
+      "cera": {
+        "role": "secondary",
+        "displayName": "Ceralacca",
+        "canonical": "oklch(42.4% 0.150 22.8)",
+        "tonalRamp": [
+          "#1e0102",
+          "#49040b",
+          "#7c0015",
+          "#a12f33",
+          "#c75252",
+          "#ed7472",
+          "#feaba7",
+          "#fde9e7"
+        ]
+      },
+      "cera-luce": {
+        "role": "secondary",
+        "displayName": "Riflesso di cera",
+        "canonical": "oklch(52.5% 0.170 21.4)",
+        "tonalRamp": [
+          "#1e0002",
+          "#49030c",
+          "#780e1c",
+          "#a82130",
+          "#cf484e",
+          "#f66c6e",
+          "#ffaaa7",
+          "#fee9e8"
+        ]
+      },
+      "sangue": {
+        "role": "tertiary",
+        "displayName": "Sangue",
+        "canonical": "oklch(68.9% 0.200 22.4)",
+        "tonalRamp": [
+          "#1e0102",
+          "#48060c",
+          "#7b0418",
+          "#ac172a",
+          "#db3642",
+          "#fa6769",
+          "#fcaca8",
+          "#ffe9e7"
+        ]
+      }
+    },
+    "typographyMeta": {
+      "display": {
+        "displayName": "Display",
+        "purpose": "Titolo della scena sul proiettore, entro due righe."
+      },
+      "headline": {
+        "displayName": "Headline",
+        "purpose": "Titoli delle scene di avanzamento e rivelazione sul proiettore."
+      },
+      "title": {
+        "displayName": "Title",
+        "purpose": "Titolo del caso sul telefono e della fase in regia."
+      },
+      "title-sm": {
+        "displayName": "Title piccolo",
+        "purpose": "Titoli di sezione, titolo del foglio del sigillo, tipo di prova sul documento."
+      },
+      "body-sala": {
+        "displayName": "Body sala",
+        "purpose": "Testo della scena sul proiettore, leggibile dal fondo della sala, entro 30ch."
+      },
+      "body": {
+        "displayName": "Body",
+        "purpose": "Testo corrente di telefono e regia, cifre tabulari."
+      },
+      "body-sm": {
+        "displayName": "Body piccolo",
+        "purpose": "Metadati, registro, stato delle squadre."
+      },
+      "label": {
+        "displayName": "Label",
+        "purpose": "Numero di catalogo della prova e intestazione stampata del documento."
+      },
+      "orologio": {
+        "displayName": "Orologio",
+        "purpose": "Conto alla rovescia sul proiettore, notte sopra la luna."
+      }
+    },
+    "shadows": [],
+    "overlays": [
+      {
+        "name": "velo",
+        "value": "rgb(14 11 20 / 0.78)",
+        "purpose": "Velo di notte dietro il foglio del sigillo; unico livello traslucido del sistema."
+      }
+    ],
+    "motion": [
+      {
+        "name": "curva-cassetto",
+        "value": "cubic-bezier(0.32, 0.72, 0, 1)",
+        "purpose": "Ciò che entra: foglio che sale (420ms), prova rivelata che sale (520ms), luna che cambia posto tra le scene (900ms)."
+      },
+      {
+        "name": "curva-uscita",
+        "value": "cubic-bezier(0.23, 1, 0.32, 1)",
+        "purpose": "Risposte e pressioni: scala dei bottoni, sigillo che si spacca (620ms) e trema (380ms), barre di avanzamento (1100ms)."
+      },
+      {
+        "name": "tocco",
+        "value": "120ms",
+        "purpose": "Durata della pressione dei bottoni (scala 0.97)."
+      },
+      {
+        "name": "dissolvenza-scena",
+        "value": "opacity 700ms ease 250ms",
+        "purpose": "Cambio di scena sul proiettore: la nuova entra dopo che la vecchia è uscita in 600ms."
+      },
+      {
+        "name": "riduci-movimento",
+        "value": "1ms",
+        "purpose": "Con prefers-reduced-motion tutte le animazioni e transizioni si riducono a 1ms."
+      }
+    ],
+    "breakpoints": [
+      {
+        "name": "telefono-colonna",
+        "value": "480px",
+        "purpose": "Larghezza massima della colonna del telefono; sotto 479px i comandi della regia vanno in colonna."
+      },
+      {
+        "name": "regia-menu",
+        "value": "900px",
+        "purpose": "Sotto 899px il menu della regia passa sopra il centro."
+      }
+    ]
+  },
+  "components": [
+    {
+      "name": "Bottone pieno",
+      "kind": "button",
+      "refersTo": "bottone-pieno",
+      "description": "Comando principale, uno per gruppo di azioni: zucca su notte, a pillola.",
+      "html": "<button class=\"ds-bottone ds-bottone--pieno\" type=\"button\">Metti tra le prove</button>",
+      "css": ":host{--notte:#0e0b14;--notte-2:#17121f;--notte-3:#231b2e;--filetto:#3a2f48;--osso:#eee6d6;--osso-2:#b8aec4;--zucca:#ff7a1a;--zucca-chiara:#ff9a4d;--cera:#8e1b24;--cera-luce:#b8323c;--sangue:#ff5a5f;--gotico:'Grenze Gotisch',serif;--testo:'Barlow',system-ui,sans-serif;--curva-uscita:cubic-bezier(0.23,1,0.32,1);--curva-cassetto:cubic-bezier(0.32,0.72,0,1);}.ds-bottone{min-height:48px;padding:0 22px;border-radius:999px;border:1px solid var(--filetto,#3a2f48);background:transparent;color:var(--osso,#eee6d6);font-family:var(--testo,'Barlow',system-ui,sans-serif);font-weight:600;font-size:16px;display:inline-flex;align-items:center;justify-content:center;gap:10px;cursor:pointer;transition:transform 120ms cubic-bezier(0.23,1,0.32,1),background-color 160ms ease,border-color 160ms ease;}.ds-bottone:hover{border-color:var(--osso-2,#b8aec4);}.ds-bottone:active{transform:scale(0.97);}.ds-bottone:focus-visible{outline:2px solid var(--zucca,#ff7a1a);outline-offset:3px;}.ds-bottone--pieno{background:var(--zucca,#ff7a1a);border-color:var(--zucca,#ff7a1a);color:var(--notte,#0e0b14);}.ds-bottone--pieno:hover{background:var(--zucca-chiara,#ff9a4d);border-color:var(--zucca-chiara,#ff9a4d);}"
+    },
+    {
+      "name": "Bottone a contorno",
+      "kind": "button",
+      "refersTo": "bottone",
+      "description": "Comando secondario: contorno filetto, testo osso.",
+      "html": "<button class=\"ds-bottone\" type=\"button\">Schermo nero</button>",
+      "css": ":host{--notte:#0e0b14;--notte-2:#17121f;--notte-3:#231b2e;--filetto:#3a2f48;--osso:#eee6d6;--osso-2:#b8aec4;--zucca:#ff7a1a;--zucca-chiara:#ff9a4d;--cera:#8e1b24;--cera-luce:#b8323c;--sangue:#ff5a5f;--gotico:'Grenze Gotisch',serif;--testo:'Barlow',system-ui,sans-serif;--curva-uscita:cubic-bezier(0.23,1,0.32,1);--curva-cassetto:cubic-bezier(0.32,0.72,0,1);}.ds-bottone{min-height:48px;padding:0 22px;border-radius:999px;border:1px solid var(--filetto,#3a2f48);background:transparent;color:var(--osso,#eee6d6);font-family:var(--testo,'Barlow',system-ui,sans-serif);font-weight:600;font-size:16px;display:inline-flex;align-items:center;justify-content:center;gap:10px;cursor:pointer;transition:transform 120ms cubic-bezier(0.23,1,0.32,1),background-color 160ms ease,border-color 160ms ease;}.ds-bottone:hover{border-color:var(--osso-2,#b8aec4);}.ds-bottone:active{transform:scale(0.97);}.ds-bottone:focus-visible{outline:2px solid var(--zucca,#ff7a1a);outline-offset:3px;}"
+    },
+    {
+      "name": "Campo",
+      "kind": "input",
+      "refersTo": "campo",
+      "description": "Campo e select della regia su fondo notte.",
+      "html": "<textarea class=\"ds-campo\" rows=\"3\" placeholder=\"Tra dieci minuti si spengono le luci.\"></textarea>",
+      "css": ":host{--notte:#0e0b14;--notte-2:#17121f;--notte-3:#231b2e;--filetto:#3a2f48;--osso:#eee6d6;--osso-2:#b8aec4;--zucca:#ff7a1a;--zucca-chiara:#ff9a4d;--cera:#8e1b24;--cera-luce:#b8323c;--sangue:#ff5a5f;--gotico:'Grenze Gotisch',serif;--testo:'Barlow',system-ui,sans-serif;--curva-uscita:cubic-bezier(0.23,1,0.32,1);--curva-cassetto:cubic-bezier(0.32,0.72,0,1);}.ds-campo{width:100%;min-height:48px;border-radius:10px;border:1px solid var(--filetto,#3a2f48);background:var(--notte,#0e0b14);color:var(--osso,#eee6d6);padding:10px 14px;font:400 17px/1.5 var(--testo,'Barlow',system-ui,sans-serif);caret-color:var(--zucca,#ff7a1a);}.ds-campo::placeholder{color:var(--osso-2,#b8aec4);}.ds-campo:focus-visible{outline:2px solid var(--zucca,#ff7a1a);outline-offset:3px;}"
+    },
+    {
+      "name": "Barra a schede",
+      "kind": "nav",
+      "refersTo": "schede",
+      "description": "Navigazione del telefono: quattro voci con icona a tratto, corrente in zucca.",
+      "html": "<nav class=\"ds-schede\"><a href=\"#\" aria-current=\"page\"><svg viewBox=\"0 0 24 24\"><rect x=\"3\" y=\"6\" width=\"18\" height=\"13\" rx=\"1.5\"/><path d=\"M3 7l9 6 9-6\"/><circle cx=\"12\" cy=\"15.5\" r=\"2.2\"/></svg>Prove</a><a href=\"#\"><svg viewBox=\"0 0 24 24\"><circle cx=\"9\" cy=\"8\" r=\"3.2\"/><path d=\"M3 20c.8-3.4 3.2-5.4 6-5.4s5.2 2 6 5.4\"/><circle cx=\"17\" cy=\"9\" r=\"2.4\"/><path d=\"M16 14.6c2.4.2 4.2 2 5 5\"/></svg>Personaggi</a><a href=\"#\"><svg viewBox=\"0 0 24 24\"><path d=\"M6 3h12v18H6z\"/><path d=\"M9 8h6M9 12h6M9 16h3\"/></svg>Taccuino</a><a href=\"#\"><svg viewBox=\"0 0 24 24\"><path d=\"M5 20 15 10\"/><path d=\"M13 4l7 7-3 3-7-7z\"/><path d=\"M3 21h8\"/></svg>Accusa</a></nav>",
+      "css": ":host{--notte:#0e0b14;--notte-2:#17121f;--notte-3:#231b2e;--filetto:#3a2f48;--osso:#eee6d6;--osso-2:#b8aec4;--zucca:#ff7a1a;--zucca-chiara:#ff9a4d;--cera:#8e1b24;--cera-luce:#b8323c;--sangue:#ff5a5f;--gotico:'Grenze Gotisch',serif;--testo:'Barlow',system-ui,sans-serif;--curva-uscita:cubic-bezier(0.23,1,0.32,1);--curva-cassetto:cubic-bezier(0.32,0.72,0,1);}.ds-schede{display:grid;grid-template-columns:repeat(4,minmax(0,1fr));padding:6px 8px;background:var(--notte,#0e0b14);border-top:1px solid var(--notte-3,#231b2e);}.ds-schede a{min-height:60px;display:flex;flex-direction:column;align-items:center;justify-content:center;gap:4px;font:500 13px var(--testo,'Barlow',system-ui,sans-serif);color:var(--osso-2,#b8aec4);text-decoration:none;border-radius:12px;}.ds-schede a:hover{color:var(--osso,#eee6d6);}.ds-schede a[aria-current=page]{color:var(--zucca,#ff7a1a);font-weight:700;}.ds-schede a:focus-visible{outline:2px solid var(--zucca,#ff7a1a);outline-offset:3px;}.ds-schede svg{width:22px;height:22px;stroke:currentColor;stroke-width:1.75;fill:none;stroke-linecap:round;stroke-linejoin:round;}"
+    },
+    {
+      "name": "Prova d'inventario",
+      "kind": "card",
+      "refersTo": "reperto-aperto",
+      "description": "Scheda del fascicolo, aperta e sigillata: angoli netti, filetto, numero di catalogo.",
+      "html": "<div class=\"ds-griglia\"><a class=\"ds-reperto ds-reperto--aperto\" href=\"#\"><div class=\"ds-reperto-testa\"><svg class=\"ds-icona\" viewBox=\"0 0 24 24\"><path d=\"M6 3h8l4 4v14H6z\"/><path d=\"M14 3v4h4\"/><path d=\"M9 12h6M9 16h6\"/></svg><span class=\"ds-numero\">N. 1</span></div><div class=\"ds-reperto-corpo\"><div class=\"ds-reperto-titolo\">Lettera bruciacchiata</div><div class=\"ds-reperto-nota\">Documento, trovata alle 20:58</div></div></a><button class=\"ds-reperto ds-reperto--sigillato\" type=\"button\"><div class=\"ds-reperto-testa\"><svg width=\"40\" height=\"40\" viewBox=\"0 0 100 100\"><path fill=\"#8e1b24\" d=\"M50 4c6 0 9 5 14 6s11-2 15 2 2 10 5 14 9 6 9 12-5 9-5 14 4 10 1 15-10 4-13 8-3 10-8 12-11-1-16 0-9 6-15 3-6-9-11-12-12-2-14-7 3-10 1-15-8-8-6-13 8-7 9-12-2-12 3-15 11 0 15-3 6-9 11-10Z\"/><circle cx=\"50\" cy=\"50\" r=\"29\" fill=\"none\" stroke=\"#b8323c\" stroke-width=\"2.5\"/></svg><span class=\"ds-numero\">N. 3</span></div><div class=\"ds-reperto-corpo\"><div class=\"ds-reperto-titolo\">Sigillata</div><div class=\"ds-reperto-nota\">Serve un codice trovato in sala</div></div></button></div>",
+      "css": ":host{--notte:#0e0b14;--notte-2:#17121f;--notte-3:#231b2e;--filetto:#3a2f48;--osso:#eee6d6;--osso-2:#b8aec4;--zucca:#ff7a1a;--zucca-chiara:#ff9a4d;--cera:#8e1b24;--cera-luce:#b8323c;--sangue:#ff5a5f;--gotico:'Grenze Gotisch',serif;--testo:'Barlow',system-ui,sans-serif;--curva-uscita:cubic-bezier(0.23,1,0.32,1);--curva-cassetto:cubic-bezier(0.32,0.72,0,1);}.ds-griglia{display:grid;grid-template-columns:repeat(2,minmax(0,1fr));gap:12px;max-width:420px;}.ds-reperto{min-height:164px;padding:0 0 14px;border-radius:2px;display:flex;flex-direction:column;gap:12px;text-align:left;text-decoration:none;color:var(--osso,#eee6d6);border:1px solid var(--filetto,#3a2f48);background:var(--notte-2,#17121f);font-family:var(--testo,'Barlow',system-ui,sans-serif);cursor:pointer;}.ds-reperto:hover{background:var(--notte-3,#231b2e);}.ds-reperto:focus-visible{outline:2px solid var(--zucca,#ff7a1a);outline-offset:3px;}.ds-reperto--aperto{border-color:var(--osso-2,#b8aec4);}.ds-reperto--aperto .ds-reperto-testa{border-bottom-color:var(--osso-2,#b8aec4);}.ds-reperto--sigillato{background:var(--notte,#0e0b14);border-color:var(--zucca,#ff7a1a);}.ds-reperto-testa{display:flex;justify-content:space-between;align-items:center;gap:8px;padding:8px 14px;min-height:52px;border-bottom:1px solid var(--filetto,#3a2f48);}.ds-reperto-corpo{padding:0 14px;margin-top:auto;}.ds-reperto-titolo{font-weight:600;font-size:16px;line-height:1.25;}.ds-reperto-nota{font-size:14px;line-height:1.35;color:var(--osso-2,#b8aec4);}.ds-reperto--sigillato .ds-reperto-nota{color:var(--osso,#eee6d6);}.ds-numero{font-size:13px;font-weight:600;letter-spacing:0.04em;color:var(--osso-2,#b8aec4);}.ds-icona{width:26px;height:26px;stroke:var(--zucca,#ff7a1a);stroke-width:1.75;fill:none;stroke-linecap:round;stroke-linejoin:round;}"
+    },
+    {
+      "name": "Tastierino del sigillo",
+      "kind": "custom",
+      "refersTo": "tasto",
+      "description": "Caselle del PIN e tastierino 3 per 4; Apri in zucca resta spento finché le cifre non sono quattro.",
+      "html": "<div class=\"ds-pin\"><div class=\"ds-caselle\"><div class=\"ds-casella ds-piena\">&bull;</div><div class=\"ds-casella ds-piena\">&bull;</div><div class=\"ds-casella\"></div><div class=\"ds-casella\"></div></div><div class=\"ds-tastiera\"><button class=\"ds-tasto\">1</button><button class=\"ds-tasto\">2</button><button class=\"ds-tasto\">3</button><button class=\"ds-tasto ds-tasto--leggero\">Cancella</button><button class=\"ds-tasto\">0</button><button class=\"ds-tasto ds-tasto--apri\">Apri</button></div></div>",
+      "css": ":host{--notte:#0e0b14;--notte-2:#17121f;--notte-3:#231b2e;--filetto:#3a2f48;--osso:#eee6d6;--osso-2:#b8aec4;--zucca:#ff7a1a;--zucca-chiara:#ff9a4d;--cera:#8e1b24;--cera-luce:#b8323c;--sangue:#ff5a5f;--gotico:'Grenze Gotisch',serif;--testo:'Barlow',system-ui,sans-serif;--curva-uscita:cubic-bezier(0.23,1,0.32,1);--curva-cassetto:cubic-bezier(0.32,0.72,0,1);}.ds-pin{display:grid;gap:22px;max-width:360px;font-family:var(--testo,'Barlow',system-ui,sans-serif);}.ds-caselle{display:flex;justify-content:center;gap:12px;}.ds-casella{width:58px;height:68px;border-radius:12px;border:1.5px solid var(--filetto,#3a2f48);display:grid;place-items:center;font-size:30px;font-weight:600;color:var(--osso,#eee6d6);}.ds-piena{border-color:var(--zucca,#ff7a1a);}.ds-tastiera{display:grid;grid-template-columns:repeat(3,minmax(0,1fr));gap:10px;}.ds-tasto{min-height:64px;border-radius:16px;border:0;background:var(--notte-3,#231b2e);font:600 28px var(--testo,'Barlow',system-ui,sans-serif);color:var(--osso,#eee6d6);cursor:pointer;transition:transform 120ms cubic-bezier(0.23,1,0.32,1),background-color 160ms ease;}.ds-tasto:hover{background:var(--filetto,#3a2f48);}.ds-tasto:active{transform:scale(0.97);}.ds-tasto:focus-visible{outline:2px solid var(--zucca,#ff7a1a);outline-offset:3px;}.ds-tasto--leggero{background:transparent;font-size:16px;color:var(--osso-2,#b8aec4);}.ds-tasto--apri{background:var(--zucca,#ff7a1a);color:var(--notte,#0e0b14);font-size:17px;font-weight:700;}.ds-tasto--apri:hover{background:var(--zucca-chiara,#ff9a4d);}"
+    },
+    {
+      "name": "Documento rivelato",
+      "kind": "card",
+      "refersTo": "documento",
+      "description": "Il foglio di carta della prova aperta, con intestazione stampata e timbro di ceralacca.",
+      "html": "<div class=\"ds-documento\"><div class=\"ds-intestazione\"><span>FASCICOLO N. 3</span><span>VILLA CORVINA</span></div><strong>Oggetto</strong><p>Una chiave di ferro, ancora calda. Sul cartellino di cuoio qualcuno ha inciso un numero:</p><p class=\"ds-codice\">6613</p><span class=\"ds-timbro\">AGLI ATTI</span></div>",
+      "css": ":host{--notte:#0e0b14;--notte-2:#17121f;--notte-3:#231b2e;--filetto:#3a2f48;--osso:#eee6d6;--osso-2:#b8aec4;--zucca:#ff7a1a;--zucca-chiara:#ff9a4d;--cera:#8e1b24;--cera-luce:#b8323c;--sangue:#ff5a5f;--gotico:'Grenze Gotisch',serif;--testo:'Barlow',system-ui,sans-serif;--curva-uscita:cubic-bezier(0.23,1,0.32,1);--curva-cassetto:cubic-bezier(0.32,0.72,0,1);}.ds-documento{position:relative;max-width:380px;background:var(--osso,#eee6d6);color:var(--notte,#0e0b14);border-radius:2px;padding:0 18px 22px;display:grid;gap:10px;font-family:var(--testo,'Barlow',system-ui,sans-serif);}.ds-intestazione{display:flex;justify-content:space-between;gap:10px;padding:12px 0 10px;border-bottom:1.5px solid var(--notte,#0e0b14);font-size:13px;font-weight:700;letter-spacing:0.04em;}.ds-documento strong{font-family:var(--gotico,'Grenze Gotisch',serif);font-size:28px;line-height:1.05;font-weight:700;margin-top:6px;}.ds-documento p{margin:0;font-size:16px;line-height:1.5;padding-bottom:6px;border-bottom:1px solid #c9bfae;}.ds-codice{font-weight:700;font-size:18px !important;letter-spacing:0.08em;}.ds-timbro{position:absolute;right:14px;bottom:16px;transform:rotate(-9deg);border:2px solid var(--cera,#8e1b24);color:var(--cera,#8e1b24);font-weight:700;font-size:14px;letter-spacing:0.08em;padding:2px 8px;border-radius:2px;}"
+    },
+    {
+      "name": "Scheda squadra della regia",
+      "kind": "card",
+      "refersTo": "scheda-regia",
+      "description": "Stato di una squadra: tacche delle prove, ultima attività, allarme in sangue se ferma.",
+      "html": "<div class=\"ds-squadra ds-ferma\"><div class=\"ds-squadra-testa\"><b>Pipistrelli</b><span>2 prove su 6</span></div><div class=\"ds-tacche\"><i class=\"ds-si\"></i><i class=\"ds-si\"></i><i></i><i></i><i></i><i></i></div><small>Ferma da 14 minuti</small><button class=\"ds-aiutino\" type=\"button\">Manda un aiutino</button></div>",
+      "css": ":host{--notte:#0e0b14;--notte-2:#17121f;--notte-3:#231b2e;--filetto:#3a2f48;--osso:#eee6d6;--osso-2:#b8aec4;--zucca:#ff7a1a;--zucca-chiara:#ff9a4d;--cera:#8e1b24;--cera-luce:#b8323c;--sangue:#ff5a5f;--gotico:'Grenze Gotisch',serif;--testo:'Barlow',system-ui,sans-serif;--curva-uscita:cubic-bezier(0.23,1,0.32,1);--curva-cassetto:cubic-bezier(0.32,0.72,0,1);}.ds-squadra{max-width:420px;background:var(--notte-2,#17121f);border-radius:14px;padding:14px 16px;display:grid;gap:10px;color:var(--osso,#eee6d6);font-family:var(--testo,'Barlow',system-ui,sans-serif);}.ds-squadra-testa{display:flex;justify-content:space-between;align-items:baseline;gap:12px;}.ds-squadra-testa b{font-size:17px;}.ds-squadra-testa span{color:var(--osso-2,#b8aec4);font-size:15px;}.ds-tacche{display:grid;grid-template-columns:repeat(6,minmax(0,1fr));gap:4px;}.ds-tacche i{height:8px;border-radius:4px;background:var(--notte-3,#231b2e);}.ds-tacche i.ds-si{background:var(--zucca,#ff7a1a);}.ds-squadra small{font-size:14px;color:var(--osso-2,#b8aec4);}.ds-ferma small{color:var(--sangue,#ff5a5f);font-weight:600;}.ds-aiutino{justify-self:start;min-height:40px;padding:0 16px;border-radius:999px;border:1px solid var(--filetto,#3a2f48);background:transparent;color:var(--osso,#eee6d6);font:600 15px var(--testo,'Barlow',system-ui,sans-serif);cursor:pointer;}.ds-aiutino:hover{border-color:var(--osso-2,#b8aec4);}.ds-aiutino:focus-visible{outline:2px solid var(--zucca,#ff7a1a);outline-offset:3px;}"
+    }
+  ],
+  "narrative": {
+    "northStar": "La sala di proiezione e il fascicolo",
+    "overview": "La serata è un film horror classico proiettato in sala, e le prove sono i file di un videogioco investigativo. Il mondo è una notte viola-nera piena, su cui sorge una sola luna arancio zucca piatta: è l'unica fonte di colore che urla. Il testo è color osso, la ceralacca è rosso cupo, il sangue compare solo quando qualcosa va storto. Il canone di Halloween eseguito alla lettera e senza ironia, al livello di finitura delle locandine horror e delle schede indizi dei videogiochi, non della festa di paese.\n\nLe tre superfici parlano la stessa lingua con densità diverse. Il proiettore è scena pura: titoli gotici enormi, testo grande leggibile dal fondo della sala, la luna come scenografia che cambia posto e misura da scena a scena. Il telefono e la regia sono strumenti: ereditano la notte, l'osso, la zucca e il gotico per i nomi, ma con misura, con obiettivi di tocco ampi e una gerarchia che si legge al buio con un'occhiata.\n\nLa profondità non viene dalle ombre ma dalla notte a strati e dai filetti sottili. La forma distingue gli oggetti del mondo (schede prova, documenti, timbri: angoli quasi netti, carta e inchiostro) dai comandi da toccare (pillole e tasti morbidi). La firma del sistema è il sigillo di ceralacca: si spacca in due quando il codice è giusto, trema una volta quando è sbagliato.",
+    "keyCharacteristics": [
+      "Fondo notte pieno (`notte`), mai bianco, mai gradienti.",
+      "Un solo colore saturo, la zucca, per ciò che è vivo o in corso: luna, fase corrente, comando principale, prova nuova.",
+      "Gotico leggibile solo per i nomi (titoli, nomi di scene, intestazioni di sezione); Barlow per tutto il resto.",
+      "Nessuna ombra: livelli tonali e filetti da 1px.",
+      "Oggetti del mondo ad angoli netti (2px), comandi arrotondati.",
+      "Movimento a cassetto e uscita morbida, sempre ridotto con \"riduci movimento\"."
+    ],
+    "rules": [
+      {
+        "name": "The Luna Sola Rule",
+        "body": "La zucca è l'unico colore saturo dell'interfaccia. Se una seconda cosa vuole attenzione, prende l'osso, non un nuovo colore.",
+        "section": "colors"
+      },
+      {
+        "name": "The Sangue Rule",
+        "body": "Il rosso sangue significa errore, e solo errore. Mai decorazione, mai Halloween di contorno.",
+        "section": "colors"
+      },
+      {
+        "name": "The Cera Rule",
+        "body": "La ceralacca vive sugli oggetti del fascicolo (sigillo, timbro). Non diventa colore di bottoni, bordi o testi d'interfaccia.",
+        "section": "colors"
+      },
+      {
+        "name": "The Due Caratteri Rule",
+        "body": "Grenze Gotisch e Barlow, nessun terzo carattere, nessun carattere di sistema per i titoli.",
+        "section": "typography"
+      },
+      {
+        "name": "The Gotico per i Nomi Rule",
+        "body": "Il gotico nomina (scene, casi, sezioni, oggetti). Non porta mai frasi lunghe, numeri, orari, bottoni o etichette; quelli sono Barlow.",
+        "section": "typography"
+      },
+      {
+        "name": "The Due Righe Rule",
+        "body": "Ogni titolo sta entro due righe, con `text-wrap: balance`. Se non ci sta, si accorcia il titolo, non il corpo.",
+        "section": "typography"
+      },
+      {
+        "name": "The Notte a Strati Rule",
+        "body": "Si sale di livello cambiando tono, non aggiungendo ombra. Tre notti bastano; una quarta non serve.",
+        "section": "elevation"
+      },
+      {
+        "name": "The Niente Ombre Rule",
+        "body": "Nessun elemento fermo porta un'ombra, né morbida né netta. Neppure la luna ha alone: è un disco piatto.",
+        "section": "elevation"
+      },
+      {
+        "name": "The Carta e Dito Rule",
+        "body": "Se è un oggetto del caso, angolo netto (2px). Se si tocca, angolo morbido. Una prova non diventa mai una pillola; un bottone non diventa mai un cartoncino.",
+        "section": "shapes"
+      }
+    ],
+    "dos": [
+      "**Do** tenere ogni superficie su `notte` e salire di livello solo con `notte-2` e `notte-3`.",
+      "**Do** usare la zucca (`zucca`) per una cosa viva per volta: la fase corrente, il comando principale, la prova da aprire. Testo sopra la zucca sempre `notte`.",
+      "**Do** dare ai titoli Grenze Gotisch 700 entro due righe e a tutto il resto Barlow, con cifre tabulari.",
+      "**Do** costruire le prove come schede d'inventario: raggio 2px, filetto 1px, testata con numero di catalogo, nota che dice perché è sigillata.",
+      "**Do** garantire obiettivi di tocco di almeno 44px (bottoni e campi 48px, tasti del PIN 64px).",
+      "**Do** muovere le cose con `--curva-cassetto` (cubic-bezier(0.32, 0.72, 0, 1)) per ciò che entra e `--curva-uscita` (cubic-bezier(0.23, 1, 0.32, 1)) per risposte e pressioni, e ridurre tutto con \"riduci movimento\".",
+      "**Do** dimensionare i testi del proiettore in vh perché si leggano dal fondo della sala (corpo almeno 22px, titoli fino a 190px)."
+    ],
+    "donts": [
+      "**Don't** usare gradienti, aloni o ombre su elementi fermi: la luna è un disco piatto e la profondità è tonale.",
+      "**Don't** introdurre un terzo carattere o un carattere che gocciola, sbava o imita la scrittura a mano.",
+      "**Don't** mettere etichette o occhielli sopra i titoli; il maiuscolo spaziato vive solo nell'intestazione stampata del documento e nel timbro.",
+      "**Don't** usare il rosso `sangue` per altro che errori, e non usare la ceralacca per l'interfaccia.",
+      "**Don't** disegnare zucche, fantasmi o clip art di Halloween, e non usare emoji: le icone sono SVG a tratto 1.75 in `currentColor`.",
+      "**Don't** arrotondare le prove a pillola né squadrare i bottoni a cartoncino.",
+      "**Don't** usare trattini lunghi nei testi."
+    ]
+  }
+}

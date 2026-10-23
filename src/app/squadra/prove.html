@@ -1,0 +1,126 @@
+@let s = st.stato();
+@if (s) {
+  <section class="caso" aria-labelledby="titolo-caso">
+    <h1 id="titolo-caso">{{ s.serata.titolo }}</h1>
+    @if (s.serata.premessa) { <p>{{ s.serata.premessa }}</p> }
+  </section>
+
+  @if (ultimoAnnuncio(); as a) {
+    <aside class="annuncio" aria-live="polite">
+      <app-icona nome="candela" />
+      <div><small>Dalla regia, {{ ora(a.ora) }}</small><p>{{ a.testo }}</p></div>
+    </aside>
+  }
+
+  <section class="inventario" aria-labelledby="titolo-prove">
+    <div class="inventario-testa">
+      <h2 id="titolo-prove">Le prove</h2>
+      <span class="conta">{{ trovate() }} trovate su {{ s.prove.length }}</span>
+    </div>
+    <button class="bottone bottone--pieno codice-btn" type="button" (click)="apriCodice()">
+      <app-icona nome="lucchetto" />Ho trovato un codice
+    </button>
+    @if (s.prove.length === 0) {
+      <p class="vuoto">La regia non ha ancora preparato le prove. Tenete d'occhio questa pagina.</p>
+    }
+    <div class="griglia">
+      @for (p of s.prove; track p.id) {
+        @if (p.aperta) {
+          <button type="button" class="reperto reperto--aperto" (click)="apriDocumento(p.id)">
+            <span class="testa-reperto">
+              <app-icona [nome]="p.tipo" [misura]="26" />
+              @if (nuova(p)) { <span class="nuova">Nuova</span> } @else { <span class="numero">N. {{ p.numero }}</span> }
+            </span>
+            <span class="corpo-reperto">
+              <span class="reperto-titolo">{{ p.titolo }}</span>
+              <span class="reperto-nota">{{ tipo(p.tipo) }}, {{ ora(p.ora) }}</span>
+            </span>
+          </button>
+        } @else if (p.conCodice) {
+          <button type="button" class="reperto reperto--sigillato reperto--apribile" (click)="apriCodice()">
+            <span class="testa-reperto"><app-sigillo class="sigillo-mini" /><span class="numero">N. {{ p.numero }}</span></span>
+            <span class="corpo-reperto"><span class="reperto-titolo">Sigillata</span><span class="reperto-nota">{{ p.motivo }}</span></span>
+          </button>
+        } @else {
+          <div class="reperto reperto--sigillato">
+            <span class="testa-reperto"><app-sigillo class="sigillo-mini" /><span class="numero">N. {{ p.numero }}</span></span>
+            <span class="corpo-reperto"><span class="reperto-titolo">Sigillata</span><span class="reperto-nota">{{ p.motivo }}</span></span>
+          </div>
+        }
+      }
+    </div>
+  </section>
+} @else if (!st.errore()) {
+  <p class="vuoto" role="status">Apro il fascicolo…</p>
+}
+
+<div class="velo" [class.aperto]="modo() !== 'chiuso'" (click)="chiudi()"></div>
+<section class="foglio" [class.aperto]="modo() !== 'chiuso'" role="dialog" aria-modal="true" aria-labelledby="titolo-foglio" [attr.aria-hidden]="modo() === 'chiuso'">
+  <div class="maniglia" aria-hidden="true"></div>
+  <button #chiudiBtn class="chiudi" type="button" aria-label="Chiudi" (click)="chiudi()"><app-icona nome="chiudi" /></button>
+
+  @if (modo() === 'codice') {
+    <div class="palco">
+      @let n = trema();
+      <div class="sigillo" [class.rotto]="rotto()" [class.trema]="n % 2 === 1" [class.trema-bis]="n > 0 && n % 2 === 0">
+        <app-sigillo class="intero" /><app-sigillo class="meta-s" /><app-sigillo class="meta-d" />
+      </div>
+    </div>
+    <h2 id="titolo-foglio">Rompi il sigillo</h2>
+    <p class="spiega">Inserite il codice trovato in sala o rivelato da un personaggio. Ogni tentativo arriva alla regia.</p>
+    @if (conLettere()) {
+      <form class="lettere" (submit)="$event.preventDefault(); premi('apri')">
+        <label class="sr" for="codice-lettere">Codice con lettere</label>
+        <input id="codice-lettere" class="campo" autocomplete="off" autocapitalize="characters" spellcheck="false" placeholder="Scrivete il codice"
+          [value]="cifre()" (input)="scrivi($any($event.target).value)" [disabled]="fermo() || bloccato()">
+        <button class="bottone bottone--pieno" type="submit" [disabled]="cifre().length < 2 || attesa() || fermo() || bloccato()">Apri</button>
+      </form>
+    } @else {
+      <div class="caselle" [class.errore]="esito().errore" aria-hidden="true">
+        @for (piena of caselle(); track $index) { <div class="casella" [class.piena]="piena">{{ piena ? '•' : '' }}</div> }
+      </div>
+    }
+    <p class="sr" aria-live="polite">{{ cifre().length }} cifre inserite</p>
+    <p class="esito" [class.errore]="esito().errore" role="status">{{ esito().testo }}</p>
+    @if (!conLettere()) {
+    <div class="tastiera">
+      @for (t of tasti; track t; let primo = $first) {
+        @if (t === 'canc') {
+          <button type="button" class="tasto tasto--leggero" aria-label="Cancella ultima cifra" (click)="premi(t)">Cancella</button>
+        } @else if (t === 'apri') {
+          <button type="button" class="tasto tasto--apri" [disabled]="cifre().length < 2 || attesa() || fermo() || bloccato()" (click)="premi(t)">{{ attesa() ? '…' : 'Apri' }}</button>
+        } @else if (primo) {
+          <button #primoTasto type="button" class="tasto" [disabled]="fermo() || bloccato()" (click)="premi(t)">{{ t }}</button>
+        } @else {
+          <button type="button" class="tasto" [disabled]="fermo() || bloccato()" (click)="premi(t)">{{ t }}</button>
+        }
+      }
+    </div>
+    }
+    <button class="cambia" type="button" (click)="conLettere.set(!conLettere()); cifre.set('')">{{ conLettere() ? 'Torna al tastierino' : 'Il codice contiene lettere?' }}</button>
+  }
+
+  @if (modo() === 'documento') {
+    @if (provaMostrata(); as p) {
+      <div class="rivelata">
+        <h2 id="titolo-foglio">{{ p.titolo }}</h2>
+        <article class="documento">
+          <div class="intestazione"><span>FASCICOLO N. {{ p.numero }}</span><span>{{ s?.serata?.titolo }}</span></div>
+          <strong>{{ tipo(p.tipo) }}</strong>
+          @if (p.testo) { <p class="testo-prova">{{ p.testo }}</p> }
+          @if (p.allegato; as a) {
+            @if (a.tipo.startsWith('image/')) { <img [src]="a.url" [alt]="p.titolo" loading="lazy"> }
+            @else if (a.tipo.startsWith('audio/')) { <audio [src]="a.url" controls preload="none"></audio> }
+            @else if (a.tipo.startsWith('video/')) { <video [src]="a.url" controls preload="none" playsinline></video> }
+            @else { <a [href]="a.url" target="_blank" rel="noopener">Apri il documento allegato</a> }
+          }
+          <span class="timbro">AGLI ATTI</span>
+        </article>
+        @if (altreAperte().length) {
+          <p class="spiega">Lo stesso codice ha aperto anche {{ altreAperte().length === 1 ? 'un\'altra prova' : altreAperte().length + ' altre prove' }}: le trovate nell'elenco.</p>
+        }
+        <button class="bottone bottone--pieno largo" type="button" (click)="chiudi()">Metti tra le prove</button>
+      </div>
+    }
+  }
+</section>

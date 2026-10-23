@@ -1,0 +1,114 @@
+@font-face { font-family: "Barlow"; font-style: normal; font-weight: 400; font-display: swap; src: url("fonti/barlow-latin-400-normal.woff2") format("woff2"); }
+@font-face { font-family: "Barlow"; font-style: normal; font-weight: 500; font-display: swap; src: url("fonti/barlow-latin-500-normal.woff2") format("woff2"); }
+@font-face { font-family: "Barlow"; font-style: normal; font-weight: 600; font-display: swap; src: url("fonti/barlow-latin-600-normal.woff2") format("woff2"); }
+@font-face { font-family: "Barlow"; font-style: normal; font-weight: 700; font-display: swap; src: url("fonti/barlow-latin-700-normal.woff2") format("woff2"); }
+@font-face { font-family: "Grenze Gotisch"; font-style: normal; font-weight: 500; font-display: swap; src: url("fonti/grenze-gotisch-latin-500-normal.woff2") format("woff2"); }
+@font-face { font-family: "Grenze Gotisch"; font-style: normal; font-weight: 700; font-display: swap; src: url("fonti/grenze-gotisch-latin-700-normal.woff2") format("woff2"); }
+
+:root {
+  --notte: #0e0b14;
+  --notte-2: #17121f;
+  --notte-3: #231b2e;
+  --filetto: #3a2f48;
+  --osso: #eee6d6;
+  --osso-2: #b8aec4;
+  --zucca: #ff7a1a;
+  --zucca-chiara: #ff9a4d;
+  --zucca-scura: #e0620a;
+  --cratere: #e86a10;
+  --cera: #8e1b24;
+  --cera-luce: #b8323c;
+  --sangue: #ff5a5f;
+
+  --gotico: "Grenze Gotisch", serif;
+  --testo: "Barlow", system-ui, sans-serif;
+
+  --curva-uscita: cubic-bezier(0.23, 1, 0.32, 1);
+  --curva-cassetto: cubic-bezier(0.32, 0.72, 0, 1);
+  --tocco: 120ms;
+
+  color-scheme: dark;
+}
+
+*,
+*::before,
+*::after { box-sizing: border-box; }
+
+html { -webkit-text-size-adjust: 100%; }
+
+body {
+  margin: 0;
+  background: var(--notte);
+  color: var(--osso);
+  font-family: var(--testo);
+  font-size: 17px;
+  line-height: 1.5;
+  font-variant-numeric: tabular-nums;
+  caret-color: var(--zucca);
+  -webkit-font-smoothing: antialiased;
+}
+
+::selection { background: var(--zucca); color: var(--notte); }
+
+* { scrollbar-color: var(--filetto) transparent; scrollbar-width: thin; }
+::-webkit-scrollbar { width: 8px; height: 8px; }
+::-webkit-scrollbar-thumb { background: var(--filetto); border-radius: 4px; }
+
+:focus-visible { outline: 2px solid var(--zucca); outline-offset: 3px; border-radius: 4px; }
+
+a { color: var(--zucca); text-underline-offset: 3px; }
+a:hover { color: var(--zucca-chiara); }
+
+h1, h2, h3 { margin: 0; text-wrap: balance; }
+p { margin: 0; text-wrap: pretty; }
+
+button, input, select, textarea { font: inherit; color: inherit; }
+
+button {
+  cursor: pointer;
+  -webkit-tap-highlight-color: transparent;
+  transition: transform var(--tocco) var(--curva-uscita), background-color 160ms ease, color 160ms ease, border-color 160ms ease;
+}
+button:active:not(:disabled) { transform: scale(0.97); }
+button:disabled { cursor: not-allowed; }
+
+.gotico { font-family: var(--gotico); font-weight: 700; letter-spacing: 0; }
+
+.icona { width: 22px; height: 22px; flex: none; stroke: currentColor; stroke-width: 1.75; fill: none; stroke-linecap: round; stroke-linejoin: round; }
+
+.sr { position: absolute; width: 1px; height: 1px; overflow: hidden; clip: rect(0 0 0 0); white-space: nowrap; }
+
+.bottone {
+  min-height: 48px;
+  padding: 0 22px;
+  border-radius: 999px;
+  border: 1px solid var(--filetto);
+  background: transparent;
+  color: var(--osso);
+  font-weight: 600;
+  font-size: 16px;
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  gap: 10px;
+}
+.bottone--pieno { background: var(--zucca); border-color: var(--zucca); color: var(--notte); }
+@media (hover: hover) {
+  .bottone:hover { border-color: var(--osso-2); }
+  .bottone--pieno:hover { background: var(--zucca-chiara); border-color: var(--zucca-chiara); }
+}
+.bottone:disabled { color: var(--osso-2); border-color: var(--notte-3); background: var(--notte-3); }
+
+.campo {
+  width: 100%;
+  min-height: 48px;
+  border-radius: 10px;
+  border: 1px solid var(--filetto);
+  background: var(--notte);
+  padding: 10px 14px;
+}
+.campo::placeholder { color: var(--osso-2); }
+
+@media (prefers-reduced-motion: reduce) {
+  *, *::before, *::after { animation-duration: 1ms !important; animation-iteration-count: 1 !important; transition-duration: 1ms !important; }
+}

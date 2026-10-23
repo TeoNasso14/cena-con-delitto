@@ -1,0 +1,127 @@
+@let st = s();
+<div class="schermo" [attr.data-scena]="tipo()">
+  <div class="luna" aria-hidden="true">
+    <i></i><i></i><i></i><i></i>
+    <svg class="ramo" viewBox="0 0 1000 1000">
+      <g fill="none" stroke="#0e0b14" stroke-linecap="round" stroke-linejoin="round">
+        <path stroke-width="58" d="M1060 820C930 790 840 735 760 700S600 650 470 668"/>
+        <path stroke-width="34" d="M470 668C400 676 330 660 250 690S120 740 40 735"/>
+        <path stroke-width="26" d="M760 700C735 640 742 585 790 520S840 430 830 360"/>
+        <path stroke-width="16" d="M830 360C820 300 850 250 900 205"/>
+        <path stroke-width="12" d="M800 505C760 470 700 462 650 430"/>
+        <path stroke-width="18" d="M600 664C580 610 540 585 520 535S505 455 470 410"/>
+        <path stroke-width="9" d="M520 535C480 530 450 508 420 470"/>
+        <path stroke-width="14" d="M330 664C320 615 285 590 270 545"/>
+        <path stroke-width="8" d="M270 545C255 512 260 480 285 450"/>
+        <path stroke-width="8" d="M250 690C210 665 165 668 130 640"/>
+        <path stroke-width="6" d="M900 205C915 180 940 168 965 165M650 430C630 400 600 392 575 395M285 450C300 425 300 400 290 380"/>
+      </g>
+      <g fill="#0e0b14">
+        <path d="M600 662c-6-30 6-58 32-72 18-10 36-8 50-2 8-16 24-24 40-20l26 2-24 9c6 16 2 34-12 48-14 14-34 22-54 26l-38 16-26 26c-4-10 0-20 6-33Z"/>
+        <path d="M262 690c-4-22 6-42 26-52 14-7 27-5 38 0 6-12 18-18 30-15l20 2-18 7c4 12 1 25-9 36-11 10-26 16-41 19l-28 12-20 20c-3-8 0-16 2-29Z"/>
+      </g>
+    </svg>
+  </div>
+
+  <header class="testa">
+    <span class="gotico">{{ st?.titolo ?? 'Cena con delitto' }}</span>
+    <span>{{ etichettaFase() }}</span>
+  </header>
+
+  <main class="scene" aria-live="polite">
+    @if (st) {
+      @let sc = st.scena;
+      @switch (tipo()) {
+        @case ('nero') { <section class="scena" aria-label="Schermo spento"></section> }
+        @case ('narrazione') {
+          <section class="scena narrazione">
+            @if (sc.titolo) { <h1 class="titolo">{{ sc.titolo }}</h1> }
+            @if (sc.testo) { <p>{{ sc.testo }}</p> }
+          </section>
+        }
+        @case ('immagine') {
+          <section class="scena media">
+            @if (sc.allegato) { <img [src]="sc.allegato.url" [alt]="sc.titolo"> }
+            @if (sc.titolo) { <p class="didascalia">{{ sc.titolo }}</p> }
+          </section>
+        }
+        @case ('video') {
+          <section class="scena media">
+            @if (sc.allegato) { <video #media [src]="sc.allegato.url" playsinline [muted]="!attivo()" autoplay></video> }
+            @if (sc.titolo) { <p class="didascalia">{{ sc.titolo }}</p> }
+          </section>
+        }
+        @case ('audio') {
+          <section class="scena narrazione">
+            @if (sc.titolo) { <h1 class="titolo">{{ sc.titolo }}</h1> }
+            @if (sc.testo) { <p>{{ sc.testo }}</p> }
+            @if (sc.allegato) { <audio #media [src]="sc.allegato.url"></audio> }
+          </section>
+        }
+        @case ('conto') {
+          <section class="scena conto">
+            <div class="orologio">{{ resto() ?? '--:--' }}</div>
+            <h1 class="sotto">{{ sc.titolo || 'alla fine della fase' }}</h1>
+            @if (sc.testo) { <p class="sotto-testo">{{ sc.testo }}</p> }
+          </section>
+        }
+        @case ('avanzamento') {
+          <section class="scena avanzamento">
+            <h1 class="titolo">{{ sc.titolo || 'Chi è più vicino alla verità' }}</h1>
+            <div class="classifica">
+              @for (q of sc.squadre ?? []; track q.nome) {
+                <div class="riga">
+                  <span>{{ q.nome }}</span>
+                  <div class="barra"><span [style.transform]="'scaleX(' + quota(q.aperte) + ')'" [style.background]="q.colore"></span></div>
+                  <span class="quante">{{ q.aperte }} su {{ sc.totaleProve }}</span>
+                </div>
+              }
+            </div>
+          </section>
+        }
+        @case ('annuncio') {
+          <section class="scena narrazione">
+            <h1 class="titolo">{{ sc.titolo || 'Attenzione' }}</h1>
+            <p>{{ sc.annuncio || sc.testo }}</p>
+          </section>
+        }
+        @case ('rivelazione') {
+          <section class="scena rivelazione">
+            @if (sc.rivelata && sc.soluzione) {
+              <h1 class="titolo">{{ sc.soluzione.colpevole }}</h1>
+              <div class="dettagli"><span>{{ sc.soluzione.movente }}</span><span>{{ sc.soluzione.arma }}</span></div>
+              @if (sc.vincitori?.length) {
+                <p class="vince">L'hanno scoperto: {{ nomiVincitori() }}</p>
+              } @else {
+                <p class="vince">Nessuna squadra ha indovinato.</p>
+              }
+            } @else {
+              <h1 class="titolo">{{ sc.titolo || 'La verità' }}</h1>
+              <p class="vince">Tra un istante, il nome.</p>
+            }
+          </section>
+        }
+        @default {
+          <section class="scena attesa">
+            <h1 class="titolo">{{ st.titolo }}</h1>
+            <p>{{ st.stato === 'bozza' ? 'Si comincia tra poco. Prendete posto.' : sc.testo }}</p>
+          </section>
+        }
+      }
+    } @else {
+      <section class="scena attesa"><p>Collego lo schermo…</p></section>
+    }
+  </main>
+
+  @if (st && st.fase.elenco.length) {
+    <ol class="fasi" aria-label="Fasi della serata">
+      @for (f of st.fase.elenco; track f.numero) {
+        <li [class]="stato(f.numero)" [attr.aria-current]="stato(f.numero) === 'corrente' ? 'step' : null">{{ f.nome }}</li>
+      }
+    </ol>
+  }
+
+  @if (!attivo()) {
+    <button class="attiva" type="button" (click)="attiva(); $event.stopPropagation()">Tocca per lo schermo intero e l'audio</button>
+  }
+</div>
