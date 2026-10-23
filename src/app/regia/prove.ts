@@ -18,14 +18,14 @@ interface Bozza {
   changeDetection: ChangeDetectionStrategy.OnPush,
   styles: `
     .voce-prova { grid-template-columns: auto minmax(0, 1fr) auto; }
-    .num { font-family: var(--gotico); font-size: 26px; width: 40px; color: var(--osso-2); }
+    .num { font-weight: 600; font-size: 20px; width: 40px; color: var(--osso-2); font-variant-numeric: tabular-nums; }
     .modo { border: 1px solid var(--filetto); border-radius: 12px; padding: 14px; display: grid; gap: 12px; }
     .modo-testa { display: flex; justify-content: space-between; align-items: center; gap: 10px; flex-wrap: wrap; }
     .modo-testa strong { font-size: 15px; }
     .cond { display: grid; grid-template-columns: 150px minmax(0, 1fr) auto; gap: 8px; align-items: end; }
     @media (max-width: 560px) { .cond { grid-template-columns: minmax(0, 1fr) auto; } .cond .valore { grid-column: 1 / -1; grid-row: 2; } }
     .togli { width: 44px; height: 48px; border-radius: 10px; border: 1px solid var(--filetto); background: transparent; color: var(--osso-2); display: grid; place-items: center; }
-    .e { font-size: 13px; font-weight: 700; color: var(--osso-2); letter-spacing: 0.04em; }
+    .sep { border: 0; border-top: 1px solid var(--filetto); margin: 2px 0; width: 100%; }
     .pin-riga { display: grid; grid-template-columns: minmax(0, 1fr) auto; gap: 8px; }
     .pin-riga .campo { text-transform: uppercase; letter-spacing: 0.08em; font-weight: 600; }
   `,
@@ -64,7 +64,7 @@ interface Bozza {
           @for (m of b.modi; track $index; let mi = $index) {
             <div class="modo">
               <div class="modo-testa">
-                <strong>{{ mi === 0 ? 'Modo' : 'Oppure' }} {{ b.modi.length > 1 ? mi + 1 : '' }}</strong>
+                <strong>{{ nomeModo(mi) }}@if (m.condizioni.length > 1) {<span class="secondario" style="font-weight:400">, tutte le condizioni insieme</span>}</strong>
                 <label class="sr" [for]="'sq-' + mi">Per chi</label>
                 <select class="campo" style="width:auto; min-height:40px" [id]="'sq-' + mi" [name]="'sq-' + mi" [(ngModel)]="m.squadra_id">
                   <option [ngValue]="null">Vale per tutte le squadre</option>
@@ -72,7 +72,7 @@ interface Bozza {
                 </select>
               </div>
               @for (c of m.condizioni; track $index; let ci = $index) {
-                @if (ci > 0) { <span class="e">E INOLTRE</span> }
+                @if (ci > 0) { <hr class="sep" aria-hidden="true"> }
                 <div class="cond">
                   <label class="etichetta" [for]="'t-' + mi + '-' + ci">Condizione
                     <select class="campo" [id]="'t-' + mi + '-' + ci" [name]="'t-' + mi + '-' + ci" [(ngModel)]="c.tipo">
@@ -142,6 +142,11 @@ export class ProveRegia {
   readonly tipi = Object.entries(TIPI_PROVA);
   b: Bozza | null = null;
   conferma = false;
+
+  nomeModo(i: number) {
+    const n = this.b!.modi.length > 1 ? ` ${i + 1}` : '';
+    return (i === 0 ? 'Modo' : 'Oppure') + n;
+  }
 
   condizione(tipo: Condizione['tipo']): Condizione {
     return { tipo, pin: '', prova_richiesta_id: null, fase_numero: null };

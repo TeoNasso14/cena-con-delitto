@@ -73,7 +73,7 @@ import { RegiaStato, SquadraR, TIPI_SCENA } from './stato';
               <span class="luna" aria-hidden="true"></span>
               @if (!s.schermo_nero) {
                 <strong>{{ scenaInOnda()?.titolo || nomeTipo(scenaInOnda()?.tipo ?? 'attesa') }}</strong>
-                <small>{{ nomeTipo(scenaInOnda()?.tipo ?? 'attesa') }}</small>
+                @if (scenaInOnda()?.titolo) { <small>{{ nomeTipo(scenaInOnda()!.tipo) }}</small> }
               }
             </div>
             <div class="prossima">

@@ -45,7 +45,9 @@
 .classifica { display: grid; gap: 4vh; }
 .riga { display: grid; grid-template-columns: minmax(0, 16ch) minmax(0, 1fr) auto; align-items: center; gap: 3vw; font-size: clamp(24px, 4vh, 48px); font-weight: 600; }
 .barra { height: 2.4vh; border-radius: 999px; background: var(--notte-3); overflow: hidden; }
-.barra span { display: block; height: 100%; border-radius: 999px; transform-origin: left; transition: transform 1100ms var(--curva-uscita); }
+.nome-sq { display: flex; align-items: center; gap: 0.5em; min-width: 0; }
+.pallino { width: 0.5em; height: 0.5em; border-radius: 50%; flex: none; }
+.barra span { display: block; height: 100%; border-radius: 999px; background: var(--zucca); transform-origin: left; transition: transform 1100ms var(--curva-uscita); }
 .quante { color: var(--osso-2); font-weight: 500; }
 
 .rivelazione { align-items: center; text-align: center; gap: 3vh; }

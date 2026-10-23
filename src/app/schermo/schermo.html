@@ -71,8 +71,8 @@
             <div class="classifica">
               @for (q of sc.squadre ?? []; track q.nome) {
                 <div class="riga">
-                  <span>{{ q.nome }}</span>
-                  <div class="barra"><span [style.transform]="'scaleX(' + quota(q.aperte) + ')'" [style.background]="q.colore"></span></div>
+                  <span class="nome-sq"><i class="pallino" [style.background]="q.colore"></i>{{ q.nome }}</span>
+                  <div class="barra"><span [style.transform]="'scaleX(' + quota(q.aperte) + ')'"></span></div>
                   <span class="quante">{{ q.aperte }} su {{ sc.totaleProve }}</span>
                 </div>
               }
