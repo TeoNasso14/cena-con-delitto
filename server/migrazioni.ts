@@ -170,4 +170,16 @@ CREATE TABLE evento (
 CREATE INDEX evento_serata_ora ON evento (serata_id, ora DESC);
 `,
   },
+  {
+    nome: "20261026160000_cartelle_prove",
+    sql: String.raw`
+CREATE TABLE IF NOT EXISTS cartella (
+  id        SERIAL PRIMARY KEY,
+  serata_id INTEGER NOT NULL REFERENCES serata(id) ON DELETE CASCADE,
+  nome      TEXT NOT NULL,
+  ordine    INTEGER NOT NULL DEFAULT 0
+);
+ALTER TABLE prova ADD COLUMN IF NOT EXISTS cartella_id INTEGER REFERENCES cartella(id) ON DELETE SET NULL;
+`,
+  },
 ];

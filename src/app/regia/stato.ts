@@ -2,7 +2,8 @@ import { inject, Injectable, signal } from '@angular/core';
 import { Api, ErroreApi, ripeti } from '../api';
 
 export interface Regola { id?: number; tipo: 'pin' | 'prova' | 'fase'; pin?: string | null; prova_richiesta_id?: number | null; fase_numero?: number | null; squadra_id?: number | null; gruppo: number }
-export interface ProvaR { id: number; numero: number; titolo: string; tipo: string; testo: string; allegato_key: string | null; allegato_tipo: string | null; nota_sigillo: string; regole: Regola[] }
+export interface ProvaR { id: number; numero: number; titolo: string; tipo: string; testo: string; allegato_key: string | null; allegato_tipo: string | null; nota_sigillo: string; cartella_id: number | null; regole: Regola[] }
+export interface CartellaR { id: number; nome: string; ordine: number }
 export interface ScenaR { id: number; ordine: number; tipo: string; titolo: string; testo: string; allegato_key: string | null; allegato_tipo: string | null; fase_numero: number | null; avvio_automatico: boolean; in_onda_dal: string | null }
 export interface PersonaggioR { id: number; nome: string; ruolo: string; scheda: string; note_regia: string; foto_key: string | null; ordine: number }
 export interface SquadraR { id: number; nome: string; colore: string; account_id: number | null; username: string | null; ultimo_accesso: string | null; aperte: number; ultima_prova: string | null; codici_sbagliati: number; prove_aperte: number[] }
@@ -19,6 +20,7 @@ export interface Tutto {
   schermi: Array<{ id: number; username: string; ultimo_accesso: string | null }>;
   personaggi: PersonaggioR[];
   prove: ProvaR[];
+  cartelle: CartellaR[];
   scene: ScenaR[];
   annunci: Array<{ id: number; testo: string; ora: string; squadra: string | null }>;
   accuse: AccusaR[];

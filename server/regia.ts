@@ -48,6 +48,7 @@ export async function tutto(req: Request, db: Db) {
     [sid],
   );
   const scene = await db.q("SELECT * FROM scena WHERE serata_id = $1 ORDER BY ordine, id", [sid]);
+  const cartelle = await db.q("SELECT id, nome, ordine FROM cartella WHERE serata_id = $1 ORDER BY ordine, id", [sid]);
   const annunci = await db.q(
     `SELECT a.id, a.testo, a.ora, sq.nome AS squadra FROM annuncio a LEFT JOIN squadra sq ON sq.id = a.squadra_id
      WHERE a.serata_id = $1 ORDER BY a.ora DESC LIMIT 20`,
@@ -64,7 +65,7 @@ export async function tutto(req: Request, db: Db) {
   );
   return json({
     io: { username: u.username },
-    serata, fasi, totaleProve: totale?.n ?? 0, squadre, schermi, personaggi, prove, scene, annunci, accuse, eventi,
+    serata, fasi, totaleProve: totale?.n ?? 0, squadre, schermi, personaggi, prove, cartelle, scene, annunci, accuse, eventi,
   });
 }
 
@@ -297,6 +298,7 @@ function datiProva(b: Record<string, unknown>) {
     allegato_key: typeof b.allegato_key === "string" && b.allegato_key ? b.allegato_key : null,
     allegato_tipo: typeof b.allegato_tipo === "string" && b.allegato_tipo ? b.allegato_tipo.slice(0, 100) : null,
     nota_sigillo: testo(b.nota_sigillo ?? "", "nota sul sigillo", { max: 120, vuoto: true }),
+    cartella_id: b.cartella_id == null || b.cartella_id === "" ? null : intero(b.cartella_id, "cartella"),
   };
 }
 
@@ -314,14 +316,15 @@ export async function creaProva(req: Request, db: Db) {
   const u = await regia(req, db);
   const b = await corpo(req);
   const p = datiProva(b);
+  if (p.cartella_id !== null) await proprio(db, "cartella", p.cartella_id, u.serata_id);
   const regole = await controllaRegole(db, u.serata_id, null, b.regole ?? []);
   await codiceGiaUsato(db, u.serata_id, null, regole);
   const id = await db.transazione(async (t) => {
     const doppia = await t.uno("SELECT id FROM prova WHERE serata_id = $1 AND numero = $2", [u.serata_id, p.numero]);
     if (doppia) throw new Errore(409, `Esiste già una prova n. ${p.numero}.`);
     const r = await t.uno<{ id: number }>(
-      "INSERT INTO prova (serata_id, numero, titolo, tipo, testo, allegato_key, allegato_tipo, nota_sigillo) VALUES ($1,$2,$3,$4,$5,$6,$7,$8) RETURNING id",
-      [u.serata_id, p.numero, p.titolo, p.tipo, p.testo, p.allegato_key, p.allegato_tipo, p.nota_sigillo],
+      "INSERT INTO prova (serata_id, numero, titolo, tipo, testo, allegato_key, allegato_tipo, nota_sigillo, cartella_id) VALUES ($1,$2,$3,$4,$5,$6,$7,$8,$9) RETURNING id",
+      [u.serata_id, p.numero, p.titolo, p.tipo, p.testo, p.allegato_key, p.allegato_tipo, p.nota_sigillo, p.cartella_id],
     );
     await scriviRegole(t, r!.id, regole);
     return r!.id;
@@ -336,14 +339,15 @@ export async function modificaProva(req: Request, db: Db, id: number) {
   await proprio(db, "prova", id, u.serata_id);
   const b = await corpo(req);
   const p = datiProva(b);
+  if (p.cartella_id !== null) await proprio(db, "cartella", p.cartella_id, u.serata_id);
   const regole = await controllaRegole(db, u.serata_id, id, b.regole ?? []);
   await codiceGiaUsato(db, u.serata_id, id, regole);
   await db.transazione(async (t) => {
     const doppia = await t.uno("SELECT id FROM prova WHERE serata_id = $1 AND numero = $2 AND id <> $3", [u.serata_id, p.numero, id]);
     if (doppia) throw new Errore(409, `Esiste già una prova n. ${p.numero}.`);
     await t.q(
-      "UPDATE prova SET numero=$1, titolo=$2, tipo=$3, testo=$4, allegato_key=$5, allegato_tipo=$6, nota_sigillo=$7 WHERE id=$8",
-      [p.numero, p.titolo, p.tipo, p.testo, p.allegato_key, p.allegato_tipo, p.nota_sigillo, id],
+      "UPDATE prova SET numero=$1, titolo=$2, tipo=$3, testo=$4, allegato_key=$5, allegato_tipo=$6, nota_sigillo=$7, cartella_id=$8 WHERE id=$9",
+      [p.numero, p.titolo, p.tipo, p.testo, p.allegato_key, p.allegato_tipo, p.nota_sigillo, p.cartella_id, id],
     );
     await scriviRegole(t, id, regole);
   });
@@ -357,6 +361,56 @@ export async function eliminaProva(req: Request, db: Db, id: number) {
   await proprio(db, "prova", id, u.serata_id);
   await db.q("DELETE FROM prova WHERE id = $1", [id]);
   await tocca(db, u.serata_id);
+  return json({ ok: true });
+}
+
+/* ---------- Cartelle delle prove (solo per organizzare la regia) ---------- */
+
+export async function creaCartella(req: Request, db: Db) {
+  const u = await regia(req, db);
+  const b = await corpo<{ nome?: string }>(req);
+  const nome = testo(b.nome, "nome della cartella", { max: 60 });
+  const doppia = await db.uno("SELECT id FROM cartella WHERE serata_id = $1 AND lower(nome) = lower($2)", [u.serata_id, nome]);
+  if (doppia) throw new Errore(409, "Esiste già una cartella con questo nome.");
+  const r = await db.uno<{ id: number }>(
+    "INSERT INTO cartella (serata_id, nome, ordine) VALUES ($1, $2, COALESCE((SELECT MAX(ordine) + 1 FROM cartella WHERE serata_id = $1), 0)) RETURNING id",
+    [u.serata_id, nome],
+  );
+  return json({ id: r!.id }, 201);
+}
+
+export async function modificaCartella(req: Request, db: Db, id: number) {
+  const u = await regia(req, db);
+  await proprio(db, "cartella", id, u.serata_id);
+  const b = await corpo<{ nome?: string }>(req);
+  const nome = testo(b.nome, "nome della cartella", { max: 60 });
+  const doppia = await db.uno("SELECT id FROM cartella WHERE serata_id = $1 AND lower(nome) = lower($2) AND id <> $3", [u.serata_id, nome, id]);
+  if (doppia) throw new Errore(409, "Esiste già una cartella con questo nome.");
+  await db.q("UPDATE cartella SET nome = $1 WHERE id = $2", [nome, id]);
+  return json({ ok: true });
+}
+
+/** Elimina solo la cartella: le sue prove restano e passano in "Senza cartella". */
+export async function eliminaCartella(req: Request, db: Db, id: number) {
+  const u = await regia(req, db);
+  await proprio(db, "cartella", id, u.serata_id);
+  const r = await db.transazione(async (t) => {
+    const spostate = await t.q("UPDATE prova SET cartella_id = NULL WHERE cartella_id = $1 RETURNING id", [id]);
+    await t.q("DELETE FROM cartella WHERE id = $1", [id]);
+    return spostate.length;
+  });
+  return json({ ok: true, prove_spostate: r });
+}
+
+/** Sposta una o più prove in una cartella (o fuori, con cartella_id null). */
+export async function spostaProve(req: Request, db: Db) {
+  const u = await regia(req, db);
+  const b = await corpo<{ prove?: unknown[]; cartella_id?: number | null }>(req);
+  if (!Array.isArray(b.prove) || !b.prove.length || b.prove.length > 500) throw new Errore(400, "Scegli almeno una prova.");
+  const ids = b.prove.map((x) => intero(x, "prova"));
+  const cart = b.cartella_id == null ? null : intero(b.cartella_id, "cartella");
+  if (cart !== null) await proprio(db, "cartella", cart, u.serata_id);
+  await db.q("UPDATE prova SET cartella_id = $1 WHERE serata_id = $2 AND id = ANY($3::int[])", [cart, u.serata_id, ids]);
   return json({ ok: true });
 }
 
@@ -587,7 +641,8 @@ export async function esporta(req: Request, db: Db) {
   const fasi = await db.q("SELECT numero, nome, durata_minuti FROM fase WHERE serata_id = $1 ORDER BY numero", [sid]);
   const personaggi = await db.q("SELECT nome, ruolo, scheda, note_regia, ordine FROM personaggio WHERE serata_id = $1 ORDER BY ordine, id", [sid]);
   const prove = await db.q<{ id: number; numero: number }>(
-    "SELECT id, numero, titolo, tipo, testo, nota_sigillo FROM prova WHERE serata_id = $1 ORDER BY numero",
+    `SELECT p.id, p.numero, p.titolo, p.tipo, p.testo, p.nota_sigillo, c.nome AS cartella
+     FROM prova p LEFT JOIN cartella c ON c.id = p.cartella_id WHERE p.serata_id = $1 ORDER BY p.numero`,
     [sid],
   );
   const num = new Map(prove.map((p) => [p.id, p.numero]));
@@ -600,9 +655,10 @@ export async function esporta(req: Request, db: Db) {
     [sid],
   );
   const scene = await db.q("SELECT ordine, tipo, titolo, testo, fase_numero, avvio_automatico FROM scena WHERE serata_id = $1 ORDER BY ordine, id", [sid]);
+  const cartelle = (await db.q<{ nome: string }>("SELECT nome FROM cartella WHERE serata_id = $1 ORDER BY ordine, id", [sid])).map((c) => c.nome);
   return json({
     formato: "cena-con-delitto/1",
-    serata, fasi, personaggi, scene,
+    serata, fasi, personaggi, scene, cartelle,
     prove: prove.map(({ id, ...p }) => ({
       ...p,
       regole: regole.filter((r) => r.prova_id === id).map((r) => ({
@@ -618,7 +674,7 @@ export async function importa(req: Request, db: Db) {
   const b = await corpo<{
     conferma?: string;
     caso?: {
-      formato?: string; serata?: Record<string, unknown>; fasi?: Array<Record<string, unknown>>; personaggi?: Array<Record<string, unknown>>;
+      formato?: string; serata?: Record<string, unknown>; fasi?: Array<Record<string, unknown>>; personaggi?: Array<Record<string, unknown>>; cartelle?: unknown[];
       scene?: Array<Record<string, unknown>>;
       prove?: Array<Record<string, unknown> & { regole?: Array<{ tipo: string; pin?: string; prova_richiesta?: number; fase_numero?: number; gruppo?: number }> }>;
     };
@@ -629,7 +685,16 @@ export async function importa(req: Request, db: Db) {
   const sid = u.serata_id;
   await db.transazione(async (t) => {
     await t.q("UPDATE serata SET scena_in_onda = NULL WHERE id = $1", [sid]);
-    for (const tab of ["prova", "personaggio", "scena", "fase"]) await t.q(`DELETE FROM ${tab} WHERE serata_id = $1`, [sid]);
+    for (const tab of ["prova", "personaggio", "scena", "fase", "cartella"]) await t.q(`DELETE FROM ${tab} WHERE serata_id = $1`, [sid]);
+    const cartellaDi = new Map<string, number>();
+    const nomiCartelle = [...(c.cartelle ?? []), ...(c.prove ?? []).map((p) => p.cartella)]
+      .filter((n): n is string => typeof n === "string" && !!n.trim())
+      .map((n) => n.trim().slice(0, 60));
+    for (const nome of nomiCartelle) {
+      if (cartellaDi.has(nome.toLowerCase())) continue;
+      const r = await t.uno<{ id: number }>("INSERT INTO cartella (serata_id, nome, ordine) VALUES ($1, $2, $3) RETURNING id", [sid, nome, cartellaDi.size]);
+      cartellaDi.set(nome.toLowerCase(), r!.id);
+    }
     const s = c.serata ?? {};
     await t.q("UPDATE serata SET titolo=$1, premessa=$2, colpevole=$3, movente=$4, arma=$5 WHERE id=$6", [
       testo(s.titolo ?? "Cena con delitto", "titolo", { max: 120 }), String(s.premessa ?? ""), String(s.colpevole ?? ""),
@@ -653,10 +718,11 @@ export async function importa(req: Request, db: Db) {
     }
     const idDi = new Map<number, number>();
     for (const p of c.prove ?? []) {
-      const d = datiProva(p);
+      const d = datiProva({ ...p, cartella_id: null });
       const r = await t.uno<{ id: number }>(
-        "INSERT INTO prova (serata_id, numero, titolo, tipo, testo, nota_sigillo) VALUES ($1,$2,$3,$4,$5,$6) RETURNING id",
-        [sid, d.numero, d.titolo, d.tipo, d.testo, d.nota_sigillo],
+        "INSERT INTO prova (serata_id, numero, titolo, tipo, testo, nota_sigillo, cartella_id) VALUES ($1,$2,$3,$4,$5,$6,$7) RETURNING id",
+        [sid, d.numero, d.titolo, d.tipo, d.testo, d.nota_sigillo,
+          typeof p.cartella === "string" ? cartellaDi.get(p.cartella.trim().slice(0, 60).toLowerCase()) ?? null : null],
       );
       idDi.set(d.numero, r!.id);
     }

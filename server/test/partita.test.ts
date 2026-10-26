@@ -238,6 +238,59 @@ describe("la serata", () => {
   });
 });
 
+describe("cartelle delle prove", () => {
+  test("creare, spostare, eliminare senza perdere prove", async () => {
+    const prima = (await chiama("GET", "/api/regia", undefined, regia)).dati.prove.length;
+    const a = await chiama("POST", "/api/regia/cartelle", { nome: "Cantina" }, regia);
+    expect(a.stato).toBe(201);
+    expect((await chiama("POST", "/api/regia/cartelle", { nome: "cantina" }, regia)).stato).toBe(409);
+    const b = await chiama("POST", "/api/regia/cartelle", { nome: "Biblioteca" }, regia);
+    let t = (await chiama("GET", "/api/regia", undefined, regia)).dati;
+    const [p1, p2, p3] = t.prove;
+    expect((await chiama("POST", "/api/regia/prove/sposta", { prove: [p1.id, p2.id], cartella_id: a.dati.id }, regia)).stato).toBe(200);
+    // modificare una prova mantiene la sua cartella
+    const r = await chiama("PUT", `/api/regia/prove/${p3.id}`, { ...p3, cartella_id: b.dati.id, regole: p3.regole }, regia);
+    expect(r.stato, JSON.stringify(r.dati)).toBe(200);
+    t = (await chiama("GET", "/api/regia", undefined, regia)).dati;
+    expect(t.cartelle.map((c: any) => c.nome)).toEqual(["Cantina", "Biblioteca"]);
+    expect(t.prove.filter((p: any) => p.cartella_id === a.dati.id)).toHaveLength(2);
+    // rinomina ed esporta/importa le cartelle
+    await chiama("PUT", `/api/regia/cartelle/${b.dati.id}`, { nome: "La biblioteca" }, regia);
+    const e = (await chiama("GET", "/api/regia/esporta", undefined, regia)).dati;
+    expect(e.cartelle).toEqual(["Cantina", "La biblioteca"]);
+    expect(e.prove.find((p: any) => p.numero === p3.numero).cartella).toBe("La biblioteca");
+    // eliminare una cartella non elimina le sue prove
+    const del = await chiama("DELETE", `/api/regia/cartelle/${a.dati.id}`, undefined, regia);
+    expect(del.dati.prove_spostate).toBe(2);
+    t = (await chiama("GET", "/api/regia", undefined, regia)).dati;
+    expect(t.prove).toHaveLength(prima);
+    expect(t.prove.find((p: any) => p.id === p1.id).cartella_id).toBeNull();
+    expect((await chiama("POST", "/api/regia/importa", { conferma: "SOSTITUISCI", caso: e }, regia)).stato).toBe(200);
+    t = (await chiama("GET", "/api/regia", undefined, regia)).dati;
+    expect(t.cartelle.map((c: any) => c.nome)).toEqual(["Cantina", "La biblioteca"]);
+    expect(t.prove.filter((p: any) => p.cartella_id !== null)).toHaveLength(3);
+    // le squadre non vedono le cartelle
+    expect((await chiama("POST", "/api/regia/cartelle", { nome: "x" }, corvi)).stato).toBe(403);
+  });
+
+  test("l'aggiornamento dello schema conserva i dati di un database già in uso", async () => {
+    const { MIGRAZIONI } = await import("../migrazioni.ts");
+    const altro = new NetlifyDB();
+    const cs = await altro.start();
+    const d2 = apriDb(cs);
+    await d2.q(MIGRAZIONI[0].sql);
+    await d2.q("CREATE TABLE migrazione (nome TEXT PRIMARY KEY, applicata TIMESTAMPTZ NOT NULL DEFAULT NOW())");
+    await d2.q("INSERT INTO migrazione (nome) VALUES ($1)", [MIGRAZIONI[0].nome]);
+    const s = await d2.uno<{ id: number }>("INSERT INTO serata (titolo) VALUES ('Vecchia') RETURNING id");
+    await d2.q("INSERT INTO prova (serata_id, numero, titolo) VALUES ($1, 1, 'Prova vecchia'), ($1, 2, 'Altra')", [s!.id]);
+    await migra(d2);
+    const righe = await d2.q<{ titolo: string; cartella_id: number | null }>("SELECT titolo, cartella_id FROM prova ORDER BY numero");
+    expect(righe).toEqual([{ titolo: "Prova vecchia", cartella_id: null }, { titolo: "Altra", cartella_id: null }]);
+    await d2.fine?.();
+    await altro.stop();
+  }, 60_000);
+});
+
 test("confronto delle risposte", () => {
   expect(combacia("la Governante!", "Governante")).toBe(true);
   expect(combacia("Il maggiordomo", "La governante")).toBe(false);

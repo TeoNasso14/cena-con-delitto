@@ -1,23 +1,44 @@
-import { ChangeDetectionStrategy, Component, inject } from '@angular/core';
+import { ChangeDetectionStrategy, Component, computed, inject, signal } from '@angular/core';
 import { FormsModule } from '@angular/forms';
 import { Api } from '../api';
 import { Icona } from '../icona';
 import { Allegato } from './allegato';
-import { ProvaR, Regola, RegiaStato, TIPI_PROVA } from './stato';
+import { CartellaR, ProvaR, Regola, RegiaStato, TIPI_PROVA } from './stato';
 
 interface Condizione { tipo: 'pin' | 'prova' | 'fase'; pin: string; prova_richiesta_id: number | null; fase_numero: number | null }
 interface Modo { squadra_id: number | null; condizioni: Condizione[] }
 interface Bozza {
   id?: number; numero: number; titolo: string; tipo: string; testo: string; nota_sigillo: string;
-  allegato_key: string | null; allegato_tipo: string | null; modi: Modo[];
+  allegato_key: string | null; allegato_tipo: string | null; cartella_id: number | null; modi: Modo[];
 }
+type Filtro = 'tutte' | 'senza' | number;
+interface Gruppo { cartella: CartellaR | null; prove: ProvaR[] }
 
 @Component({
   selector: 'app-prove-regia',
   imports: [FormsModule, Icona, Allegato],
   changeDetection: ChangeDetectionStrategy.OnPush,
   styles: `
-    .voce-prova { grid-template-columns: auto minmax(0, 1fr) auto; }
+    .voce-prova { grid-template-columns: auto auto minmax(0, 1fr) auto; }
+    .scegli-prova { width: 20px; height: 20px; accent-color: var(--zucca); }
+    .filtri { display: flex; flex-wrap: wrap; gap: 8px; align-items: center; }
+    .filtri button { min-height: 40px; padding: 0 14px; border-radius: 999px; border: 1px solid var(--filetto); background: transparent; color: var(--osso-2); font-size: 14px; font-weight: 500; }
+    .filtri button.attivo { border-color: var(--zucca); color: var(--zucca); font-weight: 700; }
+    @media (hover: hover) { .filtri button:hover { color: var(--osso); border-color: var(--osso-2); } }
+    .filtri .n { color: var(--osso-2); font-weight: 400; margin-left: 4px; }
+    .nuova-cartella { display: flex; flex-wrap: wrap; gap: 8px; align-items: center; }
+    .nuova-cartella .campo { width: auto; flex: 1 1 200px; min-height: 40px; }
+    .gruppo { display: grid; gap: 10px; }
+    .gruppo-testa { display: flex; flex-wrap: wrap; justify-content: space-between; align-items: center; gap: 8px; padding-top: 6px; }
+    .gruppo-testa h3 { font-size: 17px; font-weight: 600; display: flex; align-items: center; gap: 8px; }
+    .gruppo-testa h3 app-icona { color: var(--zucca); }
+    .gruppo-testa .n { color: var(--osso-2); font-weight: 400; font-size: 14px; }
+    .gruppo-azioni { display: flex; flex-wrap: wrap; gap: 4px; align-items: center; }
+    .vuoto-cartella { color: var(--osso-2); font-size: 14px; padding: 12px 16px; border: 1px dashed var(--filetto); border-radius: 14px; }
+    .barra-sposta { position: sticky; bottom: 12px; z-index: 2; display: flex; flex-wrap: wrap; gap: 10px; align-items: center; padding: 12px 14px; border-radius: 14px; background: var(--osso); color: var(--notte); }
+    .barra-sposta .campo { width: auto; min-height: 40px; color: var(--osso); }
+    .barra-sposta .bottone { min-height: 40px; }
+    .barra-sposta .r-link { color: var(--notte); min-height: 40px; }
     .num { font-weight: 600; font-size: 20px; width: 40px; color: var(--osso-2); font-variant-numeric: tabular-nums; }
     .modo { border: 1px solid var(--filetto); border-radius: 12px; padding: 14px; display: grid; gap: 12px; }
     .modo-testa { display: flex; justify-content: space-between; align-items: center; gap: 10px; flex-wrap: wrap; }
@@ -35,15 +56,86 @@ interface Bozza {
       <button class="bottone bottone--pieno" type="button" (click)="nuova()"><app-icona nome="piu" />Nuova prova</button>
     </header>
     <div class="r-colonne">
-      <ul class="r-elenco r-colonna" style="gap:10px">
-        @for (p of st.t()!.prove; track p.id) {
-          <li class="r-voce voce-prova" [class.r-voce--scelta]="p.id === b?.id">
-            <span class="num">{{ p.numero }}</span>
-            <div><h3>{{ p.titolo }}</h3><p>{{ riassunto(p) }}</p></div>
-            <button class="bottone bottone--piccolo" type="button" (click)="modifica(p)">Modifica</button>
-          </li>
-        } @empty { <li class="r-vuoto">Nessuna prova ancora. Creane una e decidi come si apre.</li> }
-      </ul>
+      <div class="r-colonna" style="gap:14px">
+        <div class="filtri" role="group" aria-label="Mostra le prove">
+          <button type="button" [class.attivo]="filtro() === 'tutte'" (click)="filtro.set('tutte')">Tutte<span class="n">{{ st.t()!.prove.length }}</span></button>
+          @for (c of st.t()!.cartelle; track c.id) {
+            <button type="button" [class.attivo]="filtro() === c.id" (click)="filtro.set(c.id)">{{ c.nome }}<span class="n">{{ conta(c.id) }}</span></button>
+          }
+          @if (st.t()!.cartelle.length) {
+            <button type="button" [class.attivo]="filtro() === 'senza'" (click)="filtro.set('senza')">Senza cartella<span class="n">{{ conta(null) }}</span></button>
+          }
+          @if (!creaAperta()) {
+            <button type="button" (click)="creaAperta.set(true)"><app-icona nome="piu" [misura]="18" />Nuova cartella</button>
+          }
+        </div>
+        @if (creaAperta()) {
+          <form class="nuova-cartella" (ngSubmit)="creaCartella()">
+            <label class="sr" for="nome-cartella">Nome della nuova cartella</label>
+            <input id="nome-cartella" name="nome-cartella" class="campo" [(ngModel)]="nomeCartella" maxlength="60" placeholder="Ad esempio: Cantina, Fase 2, Indizi falsi" required>
+            <button class="bottone bottone--piccolo bottone--pieno" type="submit" [disabled]="!nomeCartella.trim()">Crea</button>
+            <button class="bottone bottone--piccolo" type="button" (click)="creaAperta.set(false); nomeCartella = ''">Annulla</button>
+          </form>
+        }
+
+        @for (g of gruppi(); track g.cartella?.id ?? 0) {
+          <section class="gruppo" [attr.aria-label]="g.cartella?.nome ?? 'Senza cartella'">
+            @if (mostraTesta(g)) {
+              <div class="gruppo-testa">
+                @if (rinomina === g.cartella?.id && g.cartella) {
+                  <form class="nuova-cartella" style="flex:1" (ngSubmit)="salvaNome(g.cartella.id)">
+                    <label class="sr" [for]="'rn-' + g.cartella.id">Nuovo nome</label>
+                    <input class="campo" [id]="'rn-' + g.cartella.id" [name]="'rn-' + g.cartella.id" [(ngModel)]="nomeNuovo" maxlength="60" required>
+                    <button class="bottone bottone--piccolo bottone--pieno" type="submit">Salva</button>
+                    <button class="bottone bottone--piccolo" type="button" (click)="rinomina = null">Annulla</button>
+                  </form>
+                } @else {
+                  <h3><app-icona [nome]="g.cartella ? 'caso' : 'prove'" [misura]="20" />{{ g.cartella?.nome ?? 'Senza cartella' }}<span class="n">{{ g.prove.length }}</span></h3>
+                  @if (g.cartella; as c) {
+                    <div class="gruppo-azioni">
+                      @if (eliminaCart === c.id) {
+                        <span class="secondario" style="font-size:14px">{{ g.prove.length ? 'Le prove restano, finiscono in Senza cartella.' : '' }}</span>
+                        <button class="bottone bottone--piccolo bottone--pericolo" type="button" (click)="eliminaCartella(c.id)">Sì, elimina la cartella</button>
+                        <button class="r-link" type="button" (click)="eliminaCart = null">No</button>
+                      } @else {
+                        <button class="r-link" type="button" (click)="rinomina = c.id; nomeNuovo = c.nome">Rinomina</button>
+                        <button class="r-link" type="button" (click)="eliminaCart = c.id">Elimina cartella</button>
+                      }
+                    </div>
+                  }
+                }
+              </div>
+            }
+            <ul class="r-elenco" style="gap:10px">
+              @for (p of g.prove; track p.id) {
+                <li class="r-voce voce-prova" [class.r-voce--scelta]="p.id === b?.id">
+                  <input class="scegli-prova" type="checkbox" [id]="'sel-' + p.id" [checked]="scelte().has(p.id)" (change)="scegli(p.id)" [attr.aria-label]="'Seleziona la prova ' + p.numero">
+                  <span class="num">{{ p.numero }}</span>
+                  <div><h3>{{ p.titolo }}</h3><p>{{ riassunto(p) }}</p></div>
+                  <button class="bottone bottone--piccolo" type="button" (click)="modifica(p)">Modifica</button>
+                </li>
+              } @empty {
+                <li class="vuoto-cartella">{{ g.cartella ? 'Cartella vuota. Seleziona delle prove e spostale qui, oppure creane una nuova.' : 'Nessuna prova fuori dalle cartelle.' }}</li>
+              }
+            </ul>
+          </section>
+        } @empty {
+          <p class="r-vuoto">Nessuna prova ancora. Creane una e decidi come si apre.</p>
+        }
+
+        @if (scelte().size) {
+          <div class="barra-sposta" role="region" aria-label="Sposta le prove selezionate">
+            <strong>{{ scelte().size === 1 ? '1 prova selezionata' : scelte().size + ' prove selezionate' }}</strong>
+            <label class="sr" for="dest-cartella">Sposta in</label>
+            <select id="dest-cartella" class="campo" [(ngModel)]="destinazione">
+              <option [ngValue]="null">Senza cartella</option>
+              @for (c of st.t()!.cartelle; track c.id) { <option [ngValue]="c.id">{{ c.nome }}</option> }
+            </select>
+            <button class="bottone bottone--pieno" type="button" (click)="sposta()">Sposta</button>
+            <button class="r-link" type="button" (click)="svuota()">Annulla la selezione</button>
+          </div>
+        }
+      </div>
 
       @if (b) {
         <form class="r-colonna r-scheda r-modulo" (ngSubmit)="salva()">
@@ -56,6 +148,12 @@ interface Bozza {
               </select>
             </label>
           </div>
+          <label class="etichetta" for="pr-cartella">Cartella <small>Serve solo a te per tenere in ordine le prove: le squadre non la vedono.</small>
+            <select id="pr-cartella" name="pr-cartella" class="campo" [(ngModel)]="b.cartella_id">
+              <option [ngValue]="null">Senza cartella</option>
+              @for (c of st.t()!.cartelle; track c.id) { <option [ngValue]="c.id">{{ c.nome }}</option> }
+            </select>
+          </label>
           <label class="etichetta" for="pr-titolo">Titolo <small>Le squadre lo vedono solo dopo averla aperta.</small><input id="pr-titolo" name="pr-titolo" class="campo" [(ngModel)]="b.titolo" required maxlength="120"></label>
           <label class="etichetta" for="pr-testo">Contenuto<textarea id="pr-testo" name="pr-testo" class="campo" rows="6" [(ngModel)]="b.testo"></textarea></label>
           <app-allegato etichetta="Allegato della prova" campo="pr-allegato" [(chiave)]="b.allegato_key" [(tipo)]="b.allegato_tipo" />
@@ -142,6 +240,65 @@ export class ProveRegia {
   readonly tipi = Object.entries(TIPI_PROVA);
   b: Bozza | null = null;
   conferma = false;
+  readonly filtro = signal<Filtro>('tutte');
+  readonly creaAperta = signal(false);
+  readonly scelte = signal<Set<number>>(new Set());
+  nomeCartella = '';
+  nomeNuovo = '';
+  rinomina: number | null = null;
+  eliminaCart: number | null = null;
+  destinazione: number | null = null;
+
+  readonly gruppi = computed<Gruppo[]>(() => {
+    const t = this.st.t()!;
+    const f = this.filtro();
+    const di = (id: number | null) => t.prove.filter((p) => (p.cartella_id ?? null) === id);
+    if (f === 'senza') return [{ cartella: null, prove: di(null) }];
+    if (typeof f === 'number') {
+      const c = t.cartelle.find((x) => x.id === f);
+      return c ? [{ cartella: c, prove: di(c.id) }] : [];
+    }
+    if (!t.cartelle.length) return t.prove.length ? [{ cartella: null, prove: t.prove }] : [];
+    const out: Gruppo[] = t.cartelle.map((c) => ({ cartella: c, prove: di(c.id) }));
+    const senza = di(null);
+    if (senza.length) out.push({ cartella: null, prove: senza });
+    return out;
+  });
+
+  conta(id: number | null) {
+    return this.st.t()!.prove.filter((p) => (p.cartella_id ?? null) === id).length;
+  }
+  mostraTesta(g: Gruppo) {
+    return !!g.cartella || this.st.t()!.cartelle.length > 0;
+  }
+  svuota() { this.scelte.set(new Set()); }
+  scegli(id: number) {
+    const s = new Set(this.scelte());
+    if (s.has(id)) s.delete(id); else s.add(id);
+    this.scelte.set(s);
+  }
+  async creaCartella() {
+    const r = await this.st.fai(() => this.api.post<{ id: number }>('/api/regia/cartelle', { nome: this.nomeCartella }), 'Cartella creata');
+    if (r) { this.nomeCartella = ''; this.creaAperta.set(false); this.filtro.set(r.id); }
+  }
+  async salvaNome(id: number) {
+    const ok = await this.st.fai(() => this.api.put(`/api/regia/cartelle/${id}`, { nome: this.nomeNuovo }), 'Cartella rinominata');
+    if (ok) this.rinomina = null;
+  }
+  async eliminaCartella(id: number) {
+    const r = await this.st.fai(() => this.api.del<{ prove_spostate: number }>(`/api/regia/cartelle/${id}`));
+    if (!r) return;
+    this.eliminaCart = null;
+    if (this.filtro() === id) this.filtro.set('tutte');
+    this.st.dimmi(r.prove_spostate ? `Cartella eliminata: ${r.prove_spostate === 1 ? '1 prova è passata' : r.prove_spostate + ' prove sono passate'} in Senza cartella` : 'Cartella eliminata');
+  }
+  async sposta() {
+    const ids = [...this.scelte()];
+    const dove = this.destinazione;
+    const nome = dove === null ? 'Senza cartella' : this.st.t()!.cartelle.find((c) => c.id === dove)?.nome;
+    const ok = await this.st.fai(() => this.api.post('/api/regia/prove/sposta', { prove: ids, cartella_id: dove }), `${ids.length === 1 ? 'Prova spostata' : ids.length + ' prove spostate'} in ${nome}`);
+    if (ok) this.scelte.set(new Set());
+  }
 
   nomeModo(i: number) {
     const n = this.b!.modi.length > 1 ? ` ${i + 1}` : '';
@@ -166,8 +323,8 @@ export class ProveRegia {
     const prove = this.st.t()!.prove;
     this.conferma = false;
     this.b = {
-      numero: (prove.at(-1)?.numero ?? 0) + 1, titolo: '', tipo: 'documento', testo: '', nota_sigillo: '',
-      allegato_key: null, allegato_tipo: null, modi: [{ squadra_id: null, condizioni: [{ ...this.condizione('pin'), pin: this.codiceNuovo() }] }],
+      numero: Math.max(0, ...prove.map((p) => p.numero)) + 1, titolo: '', tipo: 'documento', testo: '', nota_sigillo: '',
+      allegato_key: null, allegato_tipo: null, cartella_id: typeof this.filtro() === 'number' ? (this.filtro() as number) : null, modi: [{ squadra_id: null, condizioni: [{ ...this.condizione('pin'), pin: this.codiceNuovo() }] }],
     };
   }
 
@@ -177,7 +334,7 @@ export class ProveRegia {
     p.regole.forEach((r) => gruppi.set(r.gruppo, [...(gruppi.get(r.gruppo) ?? []), r]));
     this.b = {
       id: p.id, numero: p.numero, titolo: p.titolo, tipo: p.tipo, testo: p.testo, nota_sigillo: p.nota_sigillo,
-      allegato_key: p.allegato_key, allegato_tipo: p.allegato_tipo,
+      allegato_key: p.allegato_key, allegato_tipo: p.allegato_tipo, cartella_id: p.cartella_id ?? null,
       modi: [...gruppi.values()].map((g) => ({
         squadra_id: g[0].squadra_id ?? null,
         condizioni: g.map((r) => ({ tipo: r.tipo, pin: r.pin ?? '', prova_richiesta_id: r.prova_richiesta_id ?? null, fase_numero: r.fase_numero ?? null })),
