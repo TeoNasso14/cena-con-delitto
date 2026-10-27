@@ -10,6 +10,8 @@ import { RegiaStato, SquadraR, TIPI_SCENA } from './stato';
   imports: [FormsModule, RouterLink, Icona],
   changeDetection: ChangeDetectionStrategy.OnPush,
   styles: `
+    .rivela { display: flex; flex-wrap: wrap; gap: 10px; align-items: center; padding-top: 4px; }
+    .rivela .secondario { font-size: 14px; }
     .anteprima { position: relative; aspect-ratio: 16 / 9; max-width: 100%; border-radius: 10px; background: var(--notte); overflow: hidden; padding: 28px 6%;
       display: flex; flex-direction: column; justify-content: center; gap: 6px; }
     .anteprima .luna { position: absolute; width: 82%; aspect-ratio: 1; border-radius: 50%; background: var(--zucca); right: -40%; top: 50%; transform: translateY(-50%); }
@@ -93,6 +95,21 @@ import { RegiaStato, SquadraR, TIPI_SCENA } from './stato';
               <button class="bottone bottone--pieno" type="button" (click)="successiva()" [disabled]="!prossimaScena()"><app-icona nome="avanti" />Scena successiva</button>
               <button class="bottone" type="button" (click)="nero(!s.schermo_nero)">{{ s.schermo_nero ? 'Riaccendi' : 'Schermo nero' }}</button>
             </div>
+            @if (scenaInOnda()?.tipo === 'rivelazione') {
+              <div class="rivela">
+                @if (s.rivelata) {
+                  <span class="r-pillola r-pillola--zucca">Soluzione rivelata sul proiettore</span>
+                } @else if (!s.colpevole) {
+                  <p class="secondario">Per rivelare serve la soluzione: scrivila in <a routerLink="/regia/caso">Il caso e le fasi</a>.</p>
+                } @else if (confermaRivela()) {
+                  <button class="bottone bottone--pieno" type="button" (click)="rivela()">Sì, rivela sul proiettore</button>
+                  <button class="bottone" type="button" (click)="confermaRivela.set(false)">Non ancora</button>
+                } @else {
+                  <button class="bottone bottone--pieno" type="button" (click)="confermaRivela.set(true)">Rivela la soluzione</button>
+                  <span class="secondario">Il proiettore mostra colpevole, movente, arma e chi ha indovinato.</span>
+                }
+              </div>
+            }
             <div class="vedi"><a class="r-link" href="/schermo" target="_blank" rel="noopener">Apri il proiettore in un'altra scheda</a></div>
             @if (t.scene.length) {
               <div class="scelta-scene" role="group" aria-label="Manda in onda una scena">
@@ -246,6 +263,8 @@ export class DirettaVista {
 
   statoSerata(stato: string) { this.st.fai(() => this.api.post('/api/regia/stato', { stato }), stato === 'in_pausa' ? 'Serata in pausa' : 'Si riparte'); }
   avviaFase(numero: number) { this.st.fai(() => this.api.post('/api/regia/fase', { numero }), `Fase ${numero} iniziata`); }
+  readonly confermaRivela = signal(false);
+  rivela() { this.confermaRivela.set(false); this.st.fai(() => this.api.post('/api/regia/rivela'), 'Soluzione rivelata'); }
   successiva() { this.st.fai(() => this.api.post('/api/regia/onda/successiva'), 'Scena successiva in onda'); }
   manda(id: number) { this.st.fai(() => this.api.post('/api/regia/onda', { scena_id: id }), 'In onda'); }
   nero(nero: boolean) { this.st.fai(() => this.api.post('/api/regia/schermo-nero', { nero }), nero ? 'Schermo nero' : 'Schermo riacceso'); }
