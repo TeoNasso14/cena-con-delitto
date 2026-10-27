@@ -86,7 +86,7 @@ describe("la regia prepara la serata", () => {
 
   test("prove con regole diverse", async () => {
     const crea = async (numero: number, titolo: string, regole: unknown[]) => {
-      const r = await chiama("POST", "/api/regia/prove", { numero, titolo, testo: `Testo di ${titolo}`, regole }, regia);
+      const r = await chiama("POST", "/api/regia/prove", { numero, titolo, testo: `Testo di ${titolo}`, in_elenco: true, regole }, regia);
       expect(r.stato, JSON.stringify(r.dati)).toBe(201);
       ids[`p${numero}`] = r.dati.id;
     };
@@ -314,8 +314,9 @@ describe("cartelle delle prove", () => {
 
   test("le prove fuori elenco compaiono solo quando la squadra le apre", async () => {
     await chiama("POST", "/api/regia/fase", { numero: 1 }, regia);
+    // senza indicazioni una prova nuova parte nascosta
     const nuova = await chiama("POST", "/api/regia/prove", {
-      numero: 77, titolo: "Il biglietto nascosto", tipo: "documento", testo: "segreto", in_elenco: false,
+      numero: 77, titolo: "Il biglietto nascosto", tipo: "documento", testo: "segreto",
       regole: [{ tipo: "pin", pin: "4747", gruppo: 1 }],
     }, regia);
     expect(nuova.stato, JSON.stringify(nuova.dati)).toBe(201);
@@ -352,10 +353,14 @@ describe("cartelle delle prove", () => {
     const s = await d2.uno<{ id: number }>("INSERT INTO serata (titolo) VALUES ('Vecchia') RETURNING id");
     await d2.q("INSERT INTO prova (serata_id, numero, titolo) VALUES ($1, 1, 'Prova vecchia'), ($1, 2, 'Altra')", [s!.id]);
     await migra(d2);
+    // le prove nuove partono nascoste alle squadre
+    await d2.q("INSERT INTO prova (serata_id, numero, titolo) VALUES ($1, 3, 'Nuova')", [s!.id]);
+    expect((await d2.uno<{ in_elenco: boolean }>("SELECT in_elenco FROM prova WHERE numero = 3"))!.in_elenco).toBe(false);
+    await d2.q("DELETE FROM prova WHERE numero = 3");
     const righe = await d2.q("SELECT titolo, cartella_id, in_elenco, titolo_visibile FROM prova ORDER BY numero");
     expect(righe).toEqual([
-      { titolo: "Prova vecchia", cartella_id: null, in_elenco: true, titolo_visibile: false },
-      { titolo: "Altra", cartella_id: null, in_elenco: true, titolo_visibile: false },
+      { titolo: "Prova vecchia", cartella_id: null, in_elenco: false, titolo_visibile: false },
+      { titolo: "Altra", cartella_id: null, in_elenco: false, titolo_visibile: false },
     ]);
     await d2.fine?.();
     await altro.stop();

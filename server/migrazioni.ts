@@ -196,4 +196,13 @@ ALTER TABLE prova ADD COLUMN IF NOT EXISTS titolo_visibile BOOLEAN NOT NULL DEFA
 ALTER TABLE prova ADD COLUMN IF NOT EXISTS in_elenco BOOLEAN NOT NULL DEFAULT TRUE;
 `,
   },
+  {
+    // Scelta della regia: da qui in poi le prove sigillate sono nascoste alle squadre, salvo scelta diversa.
+    // Le prove già aperte da una squadra restano comunque visibili a quella squadra.
+    nome: "20261027170000_prove_nascoste_di_default",
+    sql: String.raw`
+ALTER TABLE prova ALTER COLUMN in_elenco SET DEFAULT FALSE;
+UPDATE prova SET in_elenco = FALSE, titolo_visibile = FALSE;
+`,
+  },
 ];

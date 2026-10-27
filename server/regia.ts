@@ -300,7 +300,7 @@ function datiProva(b: Record<string, unknown>) {
     nota_sigillo: testo(b.nota_sigillo ?? "", "nota sul sigillo", { max: 120, vuoto: true }),
     cartella_id: b.cartella_id == null || b.cartella_id === "" ? null : intero(b.cartella_id, "cartella"),
     titolo_visibile: b.titolo_visibile === true,
-    in_elenco: b.in_elenco !== false,
+    in_elenco: b.in_elenco === true,
   };
 }
 

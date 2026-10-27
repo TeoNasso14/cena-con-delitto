@@ -360,7 +360,7 @@ export class ProveRegia {
     const prove = this.st.t()!.prove;
     this.conferma = false;
     this.b = {
-      numero: Math.max(0, ...prove.map((p) => p.numero)) + 1, titolo: '', tipo: 'documento', testo: '', nota_sigillo: '', prima: 'sigillo',
+      numero: Math.max(0, ...prove.map((p) => p.numero)) + 1, titolo: '', tipo: 'documento', testo: '', nota_sigillo: '', prima: 'nascosta',
       allegato_key: null, allegato_tipo: null, cartella_id: typeof this.filtro() === 'number' ? (this.filtro() as number) : null, modi: [{ squadra_id: null, condizioni: [{ ...this.condizione('pin'), pin: this.codiceNuovo() }] }],
     };
   }
