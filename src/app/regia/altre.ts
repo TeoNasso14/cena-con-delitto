@@ -289,7 +289,10 @@ export class SquadreRegia {
     <header class="r-testa">
       <div><h1>Accuse e verdetto</h1><p>Ogni squadra consegna una sola accusa. Quando riveli, il sito assegna i punti confrontando le risposte con la soluzione: 2 per il colpevole, 1 per il movente, 1 per l'arma. Puoi correggerli a mano prima o dopo.</p></div>
       <div class="r-azioni">
-        @if (t.serata.rivelata) { <span class="r-pillola r-pillola--zucca">Soluzione rivelata</span> }
+        @if (t.serata.rivelata) {
+          <span class="r-pillola r-pillola--zucca">Soluzione rivelata</span>
+          <button class="r-link" type="button" (click)="nascondi()">Nascondi di nuovo</button>
+        }
         @else if (conferma()) {
           <button class="bottone bottone--pieno" type="button" (click)="rivela()">Sì, rivela sul proiettore</button>
           <button class="bottone" type="button" (click)="conferma.set(false)">Non ancora</button>
@@ -328,6 +331,7 @@ export class AccuseRegia {
   private api = inject(Api);
   readonly ora = ora;
   readonly conferma = signal(false);
+  nascondi() { this.st.fai(() => this.api.post('/api/regia/nascondi-soluzione'), 'Soluzione nascosta: il proiettore torna all\'attesa'); }
   rivela() { this.conferma.set(false); this.st.fai(() => this.api.post('/api/regia/rivela'), 'Soluzione rivelata'); }
   punti(id: number, v: string) {
     const punteggio = v === '' ? null : Number(v);

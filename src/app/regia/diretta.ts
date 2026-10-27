@@ -99,6 +99,7 @@ import { RegiaStato, SquadraR, TIPI_SCENA } from './stato';
               <div class="rivela">
                 @if (s.rivelata) {
                   <span class="r-pillola r-pillola--zucca">Soluzione rivelata sul proiettore</span>
+                  <button class="r-link" type="button" (click)="nascondi()">Nascondi di nuovo la soluzione</button>
                 } @else if (!s.colpevole) {
                   <p class="secondario">Per rivelare serve la soluzione: scrivila in <a routerLink="/regia/caso">Il caso e le fasi</a>.</p>
                 } @else if (confermaRivela()) {
@@ -264,6 +265,7 @@ export class DirettaVista {
   statoSerata(stato: string) { this.st.fai(() => this.api.post('/api/regia/stato', { stato }), stato === 'in_pausa' ? 'Serata in pausa' : 'Si riparte'); }
   avviaFase(numero: number) { this.st.fai(() => this.api.post('/api/regia/fase', { numero }), `Fase ${numero} iniziata`); }
   readonly confermaRivela = signal(false);
+  nascondi() { this.st.fai(() => this.api.post('/api/regia/nascondi-soluzione'), 'Soluzione nascosta: il proiettore torna all\'attesa'); }
   rivela() { this.confermaRivela.set(false); this.st.fai(() => this.api.post('/api/regia/rivela'), 'Soluzione rivelata'); }
   successiva() { this.st.fai(() => this.api.post('/api/regia/onda/successiva'), 'Scena successiva in onda'); }
   manda(id: number) { this.st.fai(() => this.api.post('/api/regia/onda', { scena_id: id }), 'In onda'); }

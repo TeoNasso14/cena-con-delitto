@@ -634,6 +634,15 @@ export async function rivela(req: Request, db: Db) {
   return json({ ok: true });
 }
 
+/** Torna a prima della rivelazione: il proiettore rimostra l'attesa. I punti già dati restano. */
+export async function nascondiSoluzione(req: Request, db: Db) {
+  const u = await regia(req, db);
+  await db.q("UPDATE serata SET rivelata = FALSE WHERE id = $1", [u.serata_id]);
+  await evento(db, u.serata_id, "Soluzione nascosta di nuovo", "rivelazione");
+  await tocca(db, u.serata_id);
+  return json({ ok: true });
+}
+
 /* ---------- Strumenti ---------- */
 
 export async function azzera(req: Request, db: Db) {

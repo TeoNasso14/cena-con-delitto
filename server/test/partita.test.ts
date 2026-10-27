@@ -367,6 +367,17 @@ describe("cartelle delle prove", () => {
   }, 60_000);
 });
 
+test("la soluzione si può nascondere di nuovo", async () => {
+  expect((await chiama("POST", "/api/regia/nascondi-soluzione", undefined, corvi)).stato).toBe(403);
+  const prima = (await chiama("GET", "/api/regia", undefined, regia)).dati.serata;
+  if (!prima.rivelata) await chiama("POST", "/api/regia/rivela", undefined, regia);
+  expect((await chiama("POST", "/api/regia/nascondi-soluzione", undefined, regia)).stato).toBe(200);
+  const s = (await chiama("GET", "/api/regia", undefined, regia)).dati.serata;
+  expect(s.rivelata).toBe(false);
+  const sc = (await chiama("GET", "/api/schermo/stato", undefined, schermo)).dati.scena;
+  expect(sc.soluzione).toBeUndefined();
+});
+
 test("confronto delle risposte", () => {
   expect(combacia("la Governante!", "Governante")).toBe(true);
   expect(combacia("Il maggiordomo", "La governante")).toBe(false);
