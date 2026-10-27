@@ -9,9 +9,12 @@ interface Condizione { tipo: 'pin' | 'prova' | 'fase'; pin: string; prova_richie
 interface Modo { squadra_id: number | null; condizioni: Condizione[] }
 interface Bozza {
   id?: number; numero: number; titolo: string; tipo: string; testo: string; nota_sigillo: string;
-  allegato_key: string | null; allegato_tipo: string | null; cartella_id: number | null; titolo_visibile: boolean; modi: Modo[];
+  allegato_key: string | null; allegato_tipo: string | null; cartella_id: number | null; prima: Prima; modi: Modo[];
 }
 type Filtro = 'tutte' | 'senza' | number;
+/** Cosa vedono le squadre di una prova prima di aprirla. */
+type Prima = 'nascosta' | 'sigillo' | 'titolo';
+const PRIMA: Array<[Prima, string]> = [['nascosta', 'Non la vedono'], ['sigillo', 'Vedono solo il sigillo'], ['titolo', 'Leggono il titolo']];
 interface Gruppo { cartella: CartellaR | null; prove: ProvaR[] }
 
 @Component({
@@ -36,6 +39,7 @@ interface Gruppo { cartella: CartellaR | null; prove: ProvaR[] }
     .visibile { font-size: 13px; font-weight: 600; color: var(--zucca); border: 1px solid var(--zucca); border-radius: 999px; padding: 1px 9px; }
     .barra-sposta .bottone:not(.bottone--pieno) { color: var(--notte); border-color: rgb(14 11 20 / 0.35); }
     @media (hover: hover) { .barra-sposta .bottone:not(.bottone--pieno):hover { color: var(--notte); border-color: var(--notte); } }
+    .barra-et { font-size: 14px; font-weight: 500; margin-right: -4px; }
     .barra-sposta .sep-v { width: 1px; align-self: stretch; background: var(--carta-filetto); }
     .gruppo-azioni { display: flex; flex-wrap: wrap; gap: 4px; align-items: center; }
     .vuoto-cartella { color: var(--osso-2); font-size: 14px; padding: 12px 16px; border: 1px dashed var(--filetto); border-radius: 14px; }
@@ -117,7 +121,7 @@ interface Gruppo { cartella: CartellaR | null; prove: ProvaR[] }
                 <li class="r-voce voce-prova" [class.r-voce--scelta]="p.id === b?.id">
                   <input class="scegli-prova" type="checkbox" [id]="'sel-' + p.id" [checked]="scelte().has(p.id)" (change)="scegli(p.id)" [attr.aria-label]="'Seleziona la prova ' + p.numero">
                   <span class="num">{{ p.numero }}</span>
-                  <div><h3>{{ p.titolo }}</h3><p>{{ riassunto(p) }}@if (p.titolo_visibile) {, titolo visibile da sigillata}</p></div>
+                  <div><h3>{{ p.titolo }}</h3><p>{{ riassunto(p) }}@switch (prima(p)) { @case ('nascosta') {, nascosta alle squadre finché non la aprono} @case ('titolo') {, titolo visibile da sigillata} }</p></div>
                   <button class="bottone bottone--piccolo" type="button" (click)="modifica(p)">Modifica</button>
                 </li>
               } @empty {
@@ -132,15 +136,18 @@ interface Gruppo { cartella: CartellaR | null; prove: ProvaR[] }
         @if (scelte().size) {
           <div class="barra-sposta" role="region" aria-label="Sposta le prove selezionate">
             <strong>{{ scelte().size === 1 ? '1 prova selezionata' : scelte().size + ' prove selezionate' }}</strong>
-            <label class="sr" for="dest-cartella">Sposta in</label>
+            <label class="barra-et" for="dest-cartella">Sposta in</label>
             <select id="dest-cartella" class="campo" [(ngModel)]="destinazione">
               <option [ngValue]="null">Senza cartella</option>
               @for (c of st.t()!.cartelle; track c.id) { <option [ngValue]="c.id">{{ c.nome }}</option> }
             </select>
             <button class="bottone bottone--pieno" type="button" (click)="sposta()">Sposta</button>
             <span class="sep-v" aria-hidden="true"></span>
-            <button class="bottone" type="button" (click)="titoli(true)">Mostra i titoli</button>
-            <button class="bottone" type="button" (click)="titoli(false)">Nascondi i titoli</button>
+            <label class="barra-et" for="dest-prima">Prima di aprirle, le squadre</label>
+            <select id="dest-prima" class="campo" [(ngModel)]="primaScelta">
+              @for (o of opzioniPrima; track o[0]) { <option [ngValue]="o[0]">{{ o[1] }}</option> }
+            </select>
+            <button class="bottone" type="button" (click)="applicaPrima()">Applica</button>
             <button class="r-link" type="button" (click)="svuota()">Annulla la selezione</button>
           </div>
         }
@@ -164,7 +171,11 @@ interface Gruppo { cartella: CartellaR | null; prove: ProvaR[] }
             </select>
           </label>
           <label class="etichetta" for="pr-titolo">Titolo<input id="pr-titolo" name="pr-titolo" class="campo" [(ngModel)]="b.titolo" required maxlength="120"></label>
-          <label class="r-check" for="pr-titolo-vis" style="margin-top:-6px"><input id="pr-titolo-vis" name="pr-titolo-vis" type="checkbox" [(ngModel)]="b.titolo_visibile">Le squadre leggono il titolo anche prima di aprirla</label>
+          <label class="etichetta" for="pr-prima">Prima di aprirla, le squadre <small>Una volta aperta, la vedono sempre.</small>
+            <select id="pr-prima" name="pr-prima" class="campo" [(ngModel)]="b.prima">
+              @for (o of opzioniPrima; track o[0]) { <option [ngValue]="o[0]">{{ o[1] }}</option> }
+            </select>
+          </label>
           <label class="etichetta" for="pr-testo">Contenuto<textarea id="pr-testo" name="pr-testo" class="campo" rows="6" [(ngModel)]="b.testo"></textarea></label>
           <app-allegato etichetta="Allegato della prova" campo="pr-allegato" [(chiave)]="b.allegato_key" [(tipo)]="b.allegato_tipo" />
 
@@ -259,6 +270,9 @@ export class ProveRegia {
   eliminaCart: number | null = null;
   destinazione: number | null = null;
   cartellaVisibile = false;
+  primaScelta: Prima = 'nascosta';
+  readonly opzioniPrima = PRIMA;
+  prima(p: ProvaR): Prima { return p.in_elenco === false ? 'nascosta' : p.titolo_visibile ? 'titolo' : 'sigillo'; }
 
   readonly gruppi = computed<Gruppo[]>(() => {
     const t = this.st.t()!;
@@ -296,10 +310,12 @@ export class ProveRegia {
     const v = !c.visibile;
     return this.st.fai(() => this.api.put(`/api/regia/cartelle/${c.id}`, { visibile: v }), v ? `Le squadre ora vedono la cartella ${c.nome}` : `Cartella ${c.nome} nascosta alle squadre`);
   }
-  async titoli(visibile: boolean) {
+  async applicaPrima() {
     const ids = [...this.scelte()];
+    const prima = this.primaScelta;
     const n = ids.length === 1 ? '1 prova' : `${ids.length} prove`;
-    const ok = await this.st.fai(() => this.api.post('/api/regia/prove/titoli', { prove: ids, visibile }), visibile ? `Titolo visibile per ${n}` : `Titolo nascosto per ${n}`);
+    const esito = { nascosta: `${n}: le squadre non le vedono finché non le aprono`, sigillo: `${n}: le squadre vedono solo il sigillo`, titolo: `${n}: le squadre leggono il titolo` }[prima];
+    const ok = await this.st.fai(() => this.api.post('/api/regia/prove/visibilita', { prove: ids, prima }), esito);
     if (ok) this.scelte.set(new Set());
   }
   async salvaNome(id: number) {
@@ -344,7 +360,7 @@ export class ProveRegia {
     const prove = this.st.t()!.prove;
     this.conferma = false;
     this.b = {
-      numero: Math.max(0, ...prove.map((p) => p.numero)) + 1, titolo: '', tipo: 'documento', testo: '', nota_sigillo: '', titolo_visibile: false,
+      numero: Math.max(0, ...prove.map((p) => p.numero)) + 1, titolo: '', tipo: 'documento', testo: '', nota_sigillo: '', prima: 'sigillo',
       allegato_key: null, allegato_tipo: null, cartella_id: typeof this.filtro() === 'number' ? (this.filtro() as number) : null, modi: [{ squadra_id: null, condizioni: [{ ...this.condizione('pin'), pin: this.codiceNuovo() }] }],
     };
   }
@@ -355,7 +371,7 @@ export class ProveRegia {
     p.regole.forEach((r) => gruppi.set(r.gruppo, [...(gruppi.get(r.gruppo) ?? []), r]));
     this.b = {
       id: p.id, numero: p.numero, titolo: p.titolo, tipo: p.tipo, testo: p.testo, nota_sigillo: p.nota_sigillo,
-      allegato_key: p.allegato_key, allegato_tipo: p.allegato_tipo, cartella_id: p.cartella_id ?? null, titolo_visibile: !!p.titolo_visibile,
+      allegato_key: p.allegato_key, allegato_tipo: p.allegato_tipo, cartella_id: p.cartella_id ?? null, prima: this.prima(p),
       modi: [...gruppi.values()].map((g) => ({
         squadra_id: g[0].squadra_id ?? null,
         condizioni: g.map((r) => ({ tipo: r.tipo, pin: r.pin ?? '', prova_richiesta_id: r.prova_richiesta_id ?? null, fase_numero: r.fase_numero ?? null })),
@@ -384,7 +400,8 @@ export class ProveRegia {
       tipo: c.tipo, gruppo: i + 1, squadra_id: m.squadra_id,
       ...(c.tipo === 'pin' ? { pin: c.pin } : c.tipo === 'prova' ? { prova_richiesta_id: c.prova_richiesta_id } : { fase_numero: c.fase_numero }),
     })));
-    const corpo = { ...b, regole };
+    const { prima, ...resto } = b;
+    const corpo = { ...resto, in_elenco: prima !== 'nascosta', titolo_visibile: prima === 'titolo', regole };
     const ok = await this.st.fai(() => (b.id ? this.api.put(`/api/regia/prove/${b.id}`, corpo) : this.api.post('/api/regia/prove', corpo)), 'Prova salvata');
     if (ok) this.b = null;
   }

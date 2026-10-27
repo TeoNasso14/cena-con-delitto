@@ -300,6 +300,7 @@ function datiProva(b: Record<string, unknown>) {
     nota_sigillo: testo(b.nota_sigillo ?? "", "nota sul sigillo", { max: 120, vuoto: true }),
     cartella_id: b.cartella_id == null || b.cartella_id === "" ? null : intero(b.cartella_id, "cartella"),
     titolo_visibile: b.titolo_visibile === true,
+    in_elenco: b.in_elenco !== false,
   };
 }
 
@@ -324,8 +325,8 @@ export async function creaProva(req: Request, db: Db) {
     const doppia = await t.uno("SELECT id FROM prova WHERE serata_id = $1 AND numero = $2", [u.serata_id, p.numero]);
     if (doppia) throw new Errore(409, `Esiste già una prova n. ${p.numero}.`);
     const r = await t.uno<{ id: number }>(
-      "INSERT INTO prova (serata_id, numero, titolo, tipo, testo, allegato_key, allegato_tipo, nota_sigillo, cartella_id, titolo_visibile) VALUES ($1,$2,$3,$4,$5,$6,$7,$8,$9,$10) RETURNING id",
-      [u.serata_id, p.numero, p.titolo, p.tipo, p.testo, p.allegato_key, p.allegato_tipo, p.nota_sigillo, p.cartella_id, p.titolo_visibile],
+      "INSERT INTO prova (serata_id, numero, titolo, tipo, testo, allegato_key, allegato_tipo, nota_sigillo, cartella_id, titolo_visibile, in_elenco) VALUES ($1,$2,$3,$4,$5,$6,$7,$8,$9,$10,$11) RETURNING id",
+      [u.serata_id, p.numero, p.titolo, p.tipo, p.testo, p.allegato_key, p.allegato_tipo, p.nota_sigillo, p.cartella_id, p.titolo_visibile, p.in_elenco],
     );
     await scriviRegole(t, r!.id, regole);
     return r!.id;
@@ -347,8 +348,8 @@ export async function modificaProva(req: Request, db: Db, id: number) {
     const doppia = await t.uno("SELECT id FROM prova WHERE serata_id = $1 AND numero = $2 AND id <> $3", [u.serata_id, p.numero, id]);
     if (doppia) throw new Errore(409, `Esiste già una prova n. ${p.numero}.`);
     await t.q(
-      "UPDATE prova SET numero=$1, titolo=$2, tipo=$3, testo=$4, allegato_key=$5, allegato_tipo=$6, nota_sigillo=$7, cartella_id=$8, titolo_visibile=$9 WHERE id=$10",
-      [p.numero, p.titolo, p.tipo, p.testo, p.allegato_key, p.allegato_tipo, p.nota_sigillo, p.cartella_id, p.titolo_visibile, id],
+      "UPDATE prova SET numero=$1, titolo=$2, tipo=$3, testo=$4, allegato_key=$5, allegato_tipo=$6, nota_sigillo=$7, cartella_id=$8, titolo_visibile=$9, in_elenco=$10 WHERE id=$11",
+      [p.numero, p.titolo, p.tipo, p.testo, p.allegato_key, p.allegato_tipo, p.nota_sigillo, p.cartella_id, p.titolo_visibile, p.in_elenco, id],
     );
     await scriviRegole(t, id, regole);
   });
@@ -422,13 +423,19 @@ export async function spostaProve(req: Request, db: Db) {
   return json({ ok: true });
 }
 
-/** Mostra o nasconde alle squadre il titolo di più prove ancora sigillate. */
-export async function titoliProve(req: Request, db: Db) {
+/**
+ * Cosa vedono le squadre di più prove ancora sigillate:
+ * "nascosta" (non compare finché non la aprono), "sigillo" (compare senza titolo), "titolo" (compare con il titolo).
+ */
+export async function visibilitaProve(req: Request, db: Db) {
   const u = await regia(req, db);
-  const b = await corpo<{ prove?: unknown[]; visibile?: boolean }>(req);
+  const b = await corpo<{ prove?: unknown[]; prima?: string }>(req);
   if (!Array.isArray(b.prove) || !b.prove.length || b.prove.length > 500) throw new Errore(400, "Scegli almeno una prova.");
+  if (b.prima !== "nascosta" && b.prima !== "sigillo" && b.prima !== "titolo") throw new Errore(400, "Scelta non valida.");
   const ids = b.prove.map((x) => intero(x, "prova"));
-  await db.q("UPDATE prova SET titolo_visibile = $1 WHERE serata_id = $2 AND id = ANY($3::int[])", [b.visibile === true, u.serata_id, ids]);
+  await db.q("UPDATE prova SET in_elenco = $1, titolo_visibile = $2 WHERE serata_id = $3 AND id = ANY($4::int[])", [
+    b.prima !== "nascosta", b.prima === "titolo", u.serata_id, ids,
+  ]);
   await tocca(db, u.serata_id);
   return json({ ok: true });
 }
@@ -660,7 +667,7 @@ export async function esporta(req: Request, db: Db) {
   const fasi = await db.q("SELECT numero, nome, durata_minuti FROM fase WHERE serata_id = $1 ORDER BY numero", [sid]);
   const personaggi = await db.q("SELECT nome, ruolo, scheda, note_regia, ordine FROM personaggio WHERE serata_id = $1 ORDER BY ordine, id", [sid]);
   const prove = await db.q<{ id: number; numero: number }>(
-    `SELECT p.id, p.numero, p.titolo, p.tipo, p.testo, p.nota_sigillo, p.titolo_visibile, c.nome AS cartella
+    `SELECT p.id, p.numero, p.titolo, p.tipo, p.testo, p.nota_sigillo, p.titolo_visibile, p.in_elenco, c.nome AS cartella
      FROM prova p LEFT JOIN cartella c ON c.id = p.cartella_id WHERE p.serata_id = $1 ORDER BY p.numero`,
     [sid],
   );
@@ -742,8 +749,8 @@ export async function importa(req: Request, db: Db) {
     for (const p of c.prove ?? []) {
       const d = datiProva({ ...p, cartella_id: null });
       const r = await t.uno<{ id: number }>(
-        "INSERT INTO prova (serata_id, numero, titolo, tipo, testo, nota_sigillo, titolo_visibile, cartella_id) VALUES ($1,$2,$3,$4,$5,$6,$7,$8) RETURNING id",
-        [sid, d.numero, d.titolo, d.tipo, d.testo, d.nota_sigillo, d.titolo_visibile,
+        "INSERT INTO prova (serata_id, numero, titolo, tipo, testo, nota_sigillo, titolo_visibile, in_elenco, cartella_id) VALUES ($1,$2,$3,$4,$5,$6,$7,$8,$9) RETURNING id",
+        [sid, d.numero, d.titolo, d.tipo, d.testo, d.nota_sigillo, d.titolo_visibile, d.in_elenco,
           typeof p.cartella === "string" ? cartellaDi.get(p.cartella.trim().slice(0, 60).toLowerCase()) ?? null : null],
       );
       idDi.set(d.numero, r!.id);

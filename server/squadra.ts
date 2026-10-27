@@ -5,7 +5,7 @@ import { bloccoPin, motivoSigillo, PIN_ERRORI_MAX, provaPin, Regola, regolePerSq
 interface Prova {
   id: number; numero: number; titolo: string; tipo: string; testo: string;
   allegato_key: string | null; allegato_tipo: string | null; nota_sigillo: string;
-  titolo_visibile: boolean; cartella_id: number | null;
+  titolo_visibile: boolean; in_elenco: boolean; cartella_id: number | null;
 }
 
 export async function faseInfo(db: Db, serataId: number, numero: number) {
@@ -29,7 +29,7 @@ export async function stato(req: Request, db: Db) {
     [sqId],
   );
   const prove = await db.q<Prova>(
-    "SELECT id, numero, titolo, tipo, testo, allegato_key, allegato_tipo, nota_sigillo, titolo_visibile, cartella_id FROM prova WHERE serata_id = $1 ORDER BY numero",
+    "SELECT id, numero, titolo, tipo, testo, allegato_key, allegato_tipo, nota_sigillo, titolo_visibile, in_elenco, cartella_id FROM prova WHERE serata_id = $1 ORDER BY numero",
     [sid],
   );
   // Solo le cartelle che la regia ha reso visibili: le altre restano un suo ordine privato.
@@ -51,7 +51,8 @@ export async function stato(req: Request, db: Db) {
     perProva.get(r.prova_id)!.push(r);
   }
 
-  const elenco = prove.map((p) => {
+  // Una prova fuori elenco compare solo quando la squadra la apre.
+  const elenco = prove.filter((p) => p.in_elenco || apertaDa.has(p.id)).map((p) => {
     const a = apertaDa.get(p.id);
     const cartella = p.cartella_id !== null && visibili.has(p.cartella_id) ? p.cartella_id : null;
     if (a) {

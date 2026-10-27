@@ -285,7 +285,7 @@ describe("cartelle delle prove", () => {
 
     expect((await chiama("PUT", `/api/regia/cartelle/${cA.id}`, { visibile: true }, regia)).stato).toBe(200);
     const sigillata = t.prove.find((p: any) => p.cartella_id === cA.id);
-    expect((await chiama("POST", "/api/regia/prove/titoli", { prove: [sigillata.id], visibile: true }, regia)).stato).toBe(200);
+    expect((await chiama("POST", "/api/regia/prove/visibilita", { prove: [sigillata.id], prima: "titolo" }, regia)).stato).toBe(200);
     s = await sq();
     expect(s.cartelle).toEqual([{ id: cA.id, nome: cA.nome }]);
     expect(JSON.stringify(s)).not.toContain(cB.nome);
@@ -309,7 +309,36 @@ describe("cartelle delle prove", () => {
     t = (await chiama("GET", "/api/regia", undefined, regia)).dati;
     expect(t.cartelle.find((c: any) => c.nome === "Cantina buia").visibile).toBe(true);
     expect(t.prove.find((p: any) => p.numero === sigillata.numero).titolo_visibile).toBe(true);
-    expect((await chiama("POST", "/api/regia/prove/titoli", { prove: [1], visibile: true }, corvi)).stato).toBe(403);
+    expect((await chiama("POST", "/api/regia/prove/visibilita", { prove: [1], prima: "titolo" }, corvi)).stato).toBe(403);
+  });
+
+  test("le prove fuori elenco compaiono solo quando la squadra le apre", async () => {
+    await chiama("POST", "/api/regia/fase", { numero: 1 }, regia);
+    const nuova = await chiama("POST", "/api/regia/prove", {
+      numero: 77, titolo: "Il biglietto nascosto", tipo: "documento", testo: "segreto", in_elenco: false,
+      regole: [{ tipo: "pin", pin: "4747", gruppo: 1 }],
+    }, regia);
+    expect(nuova.stato, JSON.stringify(nuova.dati)).toBe(201);
+    const sq = async () => (await chiama("GET", "/api/squadra/stato", undefined, corvi)).dati;
+    let s = await sq();
+    expect(s.prove.find((p: any) => p.id === nuova.dati.id)).toBeUndefined();
+    expect(JSON.stringify(s)).not.toContain("biglietto");
+    // in blocco: si nasconde e si rimostra
+    let t = (await chiama("GET", "/api/regia", undefined, regia)).dati;
+    expect(t.prove.find((p: any) => p.id === nuova.dati.id).in_elenco).toBe(false);
+    const altra = t.prove.find((p: any) => p.numero === 6);
+    await chiama("POST", "/api/regia/prove/visibilita", { prove: [altra.id], prima: "nascosta" }, regia);
+    expect((await sq()).prove.find((p: any) => p.id === altra.id)).toBeUndefined();
+    await chiama("POST", "/api/regia/prove/visibilita", { prove: [altra.id], prima: "sigillo" }, regia);
+    expect((await sq()).prove.find((p: any) => p.id === altra.id)).toMatchObject({ aperta: false });
+    expect((await chiama("POST", "/api/regia/prove/visibilita", { prove: [altra.id], prima: "boh" }, regia)).stato).toBe(400);
+    // aperta col codice, compare
+    expect((await chiama("POST", "/api/squadra/codice", { codice: "4747" }, corvi)).dati.esito).toBe("aperta");
+    s = await sq();
+    expect(s.prove.find((p: any) => p.id === nuova.dati.id)).toMatchObject({ aperta: true, titolo: "Il biglietto nascosto" });
+    // si conserva nell'esportazione
+    const e = (await chiama("GET", "/api/regia/esporta", undefined, regia)).dati;
+    expect(e.prove.find((p: any) => p.numero === 77).in_elenco).toBe(false);
   });
 
   test("l'aggiornamento dello schema conserva i dati di un database già in uso", async () => {
@@ -323,8 +352,11 @@ describe("cartelle delle prove", () => {
     const s = await d2.uno<{ id: number }>("INSERT INTO serata (titolo) VALUES ('Vecchia') RETURNING id");
     await d2.q("INSERT INTO prova (serata_id, numero, titolo) VALUES ($1, 1, 'Prova vecchia'), ($1, 2, 'Altra')", [s!.id]);
     await migra(d2);
-    const righe = await d2.q<{ titolo: string; cartella_id: number | null }>("SELECT titolo, cartella_id FROM prova ORDER BY numero");
-    expect(righe).toEqual([{ titolo: "Prova vecchia", cartella_id: null }, { titolo: "Altra", cartella_id: null }]);
+    const righe = await d2.q("SELECT titolo, cartella_id, in_elenco, titolo_visibile FROM prova ORDER BY numero");
+    expect(righe).toEqual([
+      { titolo: "Prova vecchia", cartella_id: null, in_elenco: true, titolo_visibile: false },
+      { titolo: "Altra", cartella_id: null, in_elenco: true, titolo_visibile: false },
+    ]);
     await d2.fine?.();
     await altro.stop();
   }, 60_000);

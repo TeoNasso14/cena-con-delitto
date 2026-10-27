@@ -189,4 +189,11 @@ ALTER TABLE cartella ADD COLUMN IF NOT EXISTS visibile BOOLEAN NOT NULL DEFAULT 
 ALTER TABLE prova ADD COLUMN IF NOT EXISTS titolo_visibile BOOLEAN NOT NULL DEFAULT FALSE;
 `,
   },
+  {
+    // Le prove esistenti restano nell'elenco delle squadre, come prima.
+    nome: "20261027160000_prove_in_elenco",
+    sql: String.raw`
+ALTER TABLE prova ADD COLUMN IF NOT EXISTS in_elenco BOOLEAN NOT NULL DEFAULT TRUE;
+`,
+  },
 ];
