@@ -2,10 +2,10 @@ import { inject, Injectable, signal } from '@angular/core';
 import { Api, ripeti } from '../api';
 
 export interface ProvaAperta {
-  id: number; numero: number; aperta: true; titolo: string; tipo: string; testo: string;
+  id: number; numero: number; cartella: number | null; aperta: true; titolo: string; tipo: string; testo: string;
   allegato: { url: string; tipo: string } | null; ora: string; via: string;
 }
-export interface ProvaChiusa { id: number; numero: number; aperta: false; motivo: string; conCodice: boolean }
+export interface ProvaChiusa { id: number; numero: number; cartella: number | null; aperta: false; motivo: string; conCodice: boolean; titolo?: string }
 export type Prova = ProvaAperta | ProvaChiusa;
 
 export interface StatoSquadra {
@@ -14,6 +14,8 @@ export interface StatoSquadra {
   fase: { numero: number; nome: string | null; totale: number };
   squadra: { nome: string; colore: string; taccuino: string };
   prove: Prova[];
+  /** Solo le cartelle che la regia ha reso visibili alle squadre. */
+  cartelle?: Array<{ id: number; nome: string }>;
   personaggi: Array<{ id: number; nome: string; ruolo: string; scheda: string; foto: string | null }>;
   annunci: Array<{ id: number; testo: string; ora: string }>;
   accusa: { colpevole: string; movente: string; arma: string; spiegazione: string; consegnata_alle: string } | null;

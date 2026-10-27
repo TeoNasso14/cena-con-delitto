@@ -19,6 +19,32 @@ export class ProveVista {
   readonly ora = ora;
   readonly tipo = (t: string) => TIPO[t] ?? 'Prova';
 
+  /** Filtro per cartella: 'tutte', 'altre' (fuori dalle cartelle) o l'id di una cartella. */
+  readonly filtro = signal<'tutte' | 'altre' | number>('tutte');
+  readonly cartelle = computed(() => this.st.stato()?.cartelle ?? []);
+  readonly gruppi = computed(() => {
+    const s = this.st.stato();
+    if (!s) return [];
+    const cart = this.cartelle();
+    if (!cart.length) return [{ id: 0, nome: null as string | null, prove: s.prove }];
+    const ids = new Set(cart.map((c) => c.id));
+    const fuori = s.prove.filter((p) => p.cartella === null || !ids.has(p.cartella));
+    const tutti = [
+      ...cart.map((c) => ({ id: c.id, nome: c.nome as string | null, prove: s.prove.filter((p) => p.cartella === c.id) })),
+      ...(fuori.length ? [{ id: -1, nome: 'Altre prove' as string | null, prove: fuori }] : []),
+    ].filter((g) => g.prove.length);
+    const f = this.filtro();
+    if (f === 'tutte') return tutti;
+    return tutti.filter((g) => (f === 'altre' ? g.id === -1 : g.id === f));
+  });
+  readonly haAltre = computed(() => {
+    const s = this.st.stato();
+    const ids = new Set(this.cartelle().map((c) => c.id));
+    return !!s?.prove.some((p) => p.cartella === null || !ids.has(p.cartella));
+  });
+  aperteIn(prove: Prova[]) { return prove.filter((p) => p.aperta).length; }
+  contaIn(id: number) { return this.st.stato()?.prove.filter((p) => p.cartella === id).length ?? 0; }
+
   readonly trovate = computed(() => this.st.stato()?.prove.filter((p) => p.aperta).length ?? 0);
   readonly ultimoAnnuncio = computed(() => this.st.stato()?.annunci[0] ?? null);
 

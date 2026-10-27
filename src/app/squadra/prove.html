@@ -23,32 +23,55 @@
     @if (s.prove.length === 0) {
       <p class="vuoto">La regia non ha ancora preparato le prove. Tenete d'occhio questa pagina.</p>
     }
-    <div class="griglia">
-      @for (p of s.prove; track p.id) {
-        @if (p.aperta) {
-          <button type="button" class="reperto reperto--aperto" (click)="apriDocumento(p.id)">
-            <span class="testa-reperto">
-              <app-icona [nome]="p.tipo" [misura]="26" />
-              @if (nuova(p)) { <span class="nuova">Nuova</span> } @else { <span class="numero">N. {{ p.numero }}</span> }
-            </span>
-            <span class="corpo-reperto">
-              <span class="reperto-titolo">{{ p.titolo }}</span>
-              <span class="reperto-nota">{{ tipo(p.tipo) }}, {{ ora(p.ora) }}</span>
-            </span>
-          </button>
-        } @else if (p.conCodice) {
-          <button type="button" class="reperto reperto--sigillato reperto--apribile" (click)="apriCodice()">
-            <span class="testa-reperto"><app-sigillo class="sigillo-mini" /><span class="numero">N. {{ p.numero }}</span></span>
-            <span class="corpo-reperto"><span class="reperto-titolo">Sigillata</span><span class="reperto-nota">{{ p.motivo }}</span></span>
-          </button>
-        } @else {
-          <div class="reperto reperto--sigillato">
-            <span class="testa-reperto"><app-sigillo class="sigillo-mini" /><span class="numero">N. {{ p.numero }}</span></span>
-            <span class="corpo-reperto"><span class="reperto-titolo">Sigillata</span><span class="reperto-nota">{{ p.motivo }}</span></span>
+    @if (cartelle().length) {
+      <div class="filtri" role="group" aria-label="Mostra le prove">
+        <button type="button" [class.attivo]="filtro() === 'tutte'" [attr.aria-pressed]="filtro() === 'tutte'" (click)="filtro.set('tutte')">Tutte</button>
+        @for (c of cartelle(); track c.id) {
+          @if (contaIn(c.id)) {
+            <button type="button" [class.attivo]="filtro() === c.id" [attr.aria-pressed]="filtro() === c.id" (click)="filtro.set(c.id)">{{ c.nome }}</button>
+          }
+        }
+        @if (haAltre()) {
+          <button type="button" [class.attivo]="filtro() === 'altre'" [attr.aria-pressed]="filtro() === 'altre'" (click)="filtro.set('altre')">Altre</button>
+        }
+      </div>
+    }
+    @for (g of gruppi(); track g.id) {
+      <div class="gruppo">
+        @if (g.nome) {
+          <div class="gruppo-testa">
+            <h3><app-icona nome="caso" [misura]="20" />{{ g.nome }}</h3>
+            <span class="conta">{{ aperteIn(g.prove) }} aperte su {{ g.prove.length }}</span>
           </div>
         }
-      }
-    </div>
+        <div class="griglia">
+          @for (p of g.prove; track p.id) {
+            @if (p.aperta) {
+              <button type="button" class="reperto reperto--aperto" (click)="apriDocumento(p.id)">
+                <span class="testa-reperto">
+                  <app-icona [nome]="p.tipo" [misura]="26" />
+                  @if (nuova(p)) { <span class="nuova">Nuova</span> } @else { <span class="numero">N. {{ p.numero }}</span> }
+                </span>
+                <span class="corpo-reperto">
+                  <span class="reperto-titolo">{{ p.titolo }}</span>
+                  <span class="reperto-nota">{{ tipo(p.tipo) }}, {{ ora(p.ora) }}</span>
+                </span>
+              </button>
+            } @else if (p.conCodice) {
+              <button type="button" class="reperto reperto--sigillato reperto--apribile" (click)="apriCodice()">
+                <span class="testa-reperto"><app-sigillo class="sigillo-mini" /><span class="numero">N. {{ p.numero }}</span></span>
+                <span class="corpo-reperto"><span class="reperto-titolo">{{ p.titolo ?? 'Sigillata' }}</span><span class="reperto-nota">{{ p.motivo }}</span></span>
+              </button>
+            } @else {
+              <div class="reperto reperto--sigillato">
+                <span class="testa-reperto"><app-sigillo class="sigillo-mini" /><span class="numero">N. {{ p.numero }}</span></span>
+                <span class="corpo-reperto"><span class="reperto-titolo">{{ p.titolo ?? 'Sigillata' }}</span><span class="reperto-nota">{{ p.motivo }}</span></span>
+              </div>
+            }
+          }
+        </div>
+      </div>
+    }
   </section>
 } @else if (!st.errore()) {
   <p class="vuoto" role="status">Apro il fascicolo…</p>

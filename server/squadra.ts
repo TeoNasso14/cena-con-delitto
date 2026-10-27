@@ -5,6 +5,7 @@ import { bloccoPin, motivoSigillo, PIN_ERRORI_MAX, provaPin, Regola, regolePerSq
 interface Prova {
   id: number; numero: number; titolo: string; tipo: string; testo: string;
   allegato_key: string | null; allegato_tipo: string | null; nota_sigillo: string;
+  titolo_visibile: boolean; cartella_id: number | null;
 }
 
 export async function faseInfo(db: Db, serataId: number, numero: number) {
@@ -28,9 +29,15 @@ export async function stato(req: Request, db: Db) {
     [sqId],
   );
   const prove = await db.q<Prova>(
-    "SELECT id, numero, titolo, tipo, testo, allegato_key, allegato_tipo, nota_sigillo FROM prova WHERE serata_id = $1 ORDER BY numero",
+    "SELECT id, numero, titolo, tipo, testo, allegato_key, allegato_tipo, nota_sigillo, titolo_visibile, cartella_id FROM prova WHERE serata_id = $1 ORDER BY numero",
     [sid],
   );
+  // Solo le cartelle che la regia ha reso visibili: le altre restano un suo ordine privato.
+  const cartelle = await db.q<{ id: number; nome: string }>(
+    "SELECT id, nome FROM cartella WHERE serata_id = $1 AND visibile ORDER BY ordine, id",
+    [sid],
+  );
+  const visibili = new Set(cartelle.map((c) => c.id));
   const aperte = await db.q<{ prova_id: number; ora: Date; via: string }>(
     "SELECT prova_id, ora, via FROM sblocco WHERE squadra_id = $1",
     [sqId],
@@ -46,15 +53,19 @@ export async function stato(req: Request, db: Db) {
 
   const elenco = prove.map((p) => {
     const a = apertaDa.get(p.id);
+    const cartella = p.cartella_id !== null && visibili.has(p.cartella_id) ? p.cartella_id : null;
     if (a) {
       return {
-        id: p.id, numero: p.numero, aperta: true, titolo: p.titolo, tipo: p.tipo, testo: p.testo,
+        id: p.id, numero: p.numero, cartella, aperta: true, titolo: p.titolo, tipo: p.tipo, testo: p.testo,
         allegato: p.allegato_key ? { url: `/api/file/${encodeURIComponent(p.allegato_key)}`, tipo: p.allegato_tipo } : null,
         ora: a.ora, via: a.via,
       };
     }
     const m = motivoSigillo(perProva.get(p.id) ?? [], numeroDi);
-    return { id: p.id, numero: p.numero, aperta: false, motivo: p.nota_sigillo || m.testo, conCodice: m.conCodice };
+    return {
+      id: p.id, numero: p.numero, cartella, aperta: false, motivo: p.nota_sigillo || m.testo, conCodice: m.conCodice,
+      ...(p.titolo_visibile ? { titolo: p.titolo } : {}),
+    };
   });
 
   const personaggi = await db.q<{ id: number; nome: string; ruolo: string; scheda: string; foto_key: string | null }>(
@@ -76,6 +87,7 @@ export async function stato(req: Request, db: Db) {
     fase: { numero: serata!.fase_corrente, nome: fase.corrente?.nome ?? null, totale: fase.totale },
     squadra,
     prove: elenco,
+    cartelle,
     personaggi: personaggi.map((p) => ({
       id: p.id, nome: p.nome, ruolo: p.ruolo, scheda: p.scheda,
       foto: p.foto_key ? `/api/file/${encodeURIComponent(p.foto_key)}` : null,

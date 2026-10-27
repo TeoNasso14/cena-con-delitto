@@ -273,6 +273,45 @@ describe("cartelle delle prove", () => {
     expect((await chiama("POST", "/api/regia/cartelle", { nome: "x" }, corvi)).stato).toBe(403);
   });
 
+  test("le squadre vedono solo le cartelle visibili e i titoli scelti dalla regia", async () => {
+    let t = (await chiama("GET", "/api/regia", undefined, regia)).dati;
+    const [cA, cB] = t.cartelle;
+    const sq = async () => (await chiama("GET", "/api/squadra/stato", undefined, corvi)).dati;
+    let s = await sq();
+    expect(s.cartelle).toEqual([]);
+    expect(s.prove.every((p: any) => p.cartella === null)).toBe(true);
+    expect(s.prove.filter((p: any) => !p.aperta).every((p: any) => p.titolo === undefined)).toBe(true);
+    expect(JSON.stringify(s)).not.toContain(cA.nome);
+
+    expect((await chiama("PUT", `/api/regia/cartelle/${cA.id}`, { visibile: true }, regia)).stato).toBe(200);
+    const sigillata = t.prove.find((p: any) => p.cartella_id === cA.id);
+    expect((await chiama("POST", "/api/regia/prove/titoli", { prove: [sigillata.id], visibile: true }, regia)).stato).toBe(200);
+    s = await sq();
+    expect(s.cartelle).toEqual([{ id: cA.id, nome: cA.nome }]);
+    expect(JSON.stringify(s)).not.toContain(cB.nome);
+    const vista = s.prove.find((p: any) => p.id === sigillata.id);
+    expect(vista.cartella).toBe(cA.id);
+    expect(vista.aperta).toBe(false);
+    expect(vista.titolo).toBe(sigillata.titolo);
+    expect(vista.testo).toBeUndefined();
+    // le prove di cartelle nascoste arrivano senza cartella
+    const nascosta = t.prove.find((p: any) => p.cartella_id === cB.id);
+    expect(s.prove.find((p: any) => p.id === nascosta.id).cartella).toBeNull();
+
+    // rinominare non tocca la visibilità; l'esportazione la conserva
+    await chiama("PUT", `/api/regia/cartelle/${cA.id}`, { nome: "Cantina buia" }, regia);
+    t = (await chiama("GET", "/api/regia", undefined, regia)).dati;
+    expect(t.cartelle.find((c: any) => c.id === cA.id)).toMatchObject({ nome: "Cantina buia", visibile: true });
+    const e = (await chiama("GET", "/api/regia/esporta", undefined, regia)).dati;
+    expect(e.cartelle_visibili).toEqual(["Cantina buia"]);
+    expect(e.prove.find((p: any) => p.numero === sigillata.numero).titolo_visibile).toBe(true);
+    await chiama("POST", "/api/regia/importa", { conferma: "SOSTITUISCI", caso: e }, regia);
+    t = (await chiama("GET", "/api/regia", undefined, regia)).dati;
+    expect(t.cartelle.find((c: any) => c.nome === "Cantina buia").visibile).toBe(true);
+    expect(t.prove.find((p: any) => p.numero === sigillata.numero).titolo_visibile).toBe(true);
+    expect((await chiama("POST", "/api/regia/prove/titoli", { prove: [1], visibile: true }, corvi)).stato).toBe(403);
+  });
+
   test("l'aggiornamento dello schema conserva i dati di un database già in uso", async () => {
     const { MIGRAZIONI } = await import("../migrazioni.ts");
     const altro = new NetlifyDB();

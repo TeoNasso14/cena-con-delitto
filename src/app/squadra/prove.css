@@ -14,6 +14,14 @@
 .conta { color: var(--osso-2); font-size: 15px; }
 .codice-btn { width: 100%; }
 .vuoto { color: var(--osso-2); padding: 24px 20px; }
+.filtri { display: flex; flex-wrap: wrap; gap: 8px; }
+.filtri button { min-height: 44px; padding: 0 16px; border-radius: 999px; border: 1px solid var(--filetto); background: transparent; color: var(--osso-2); font: inherit; font-size: 15px; font-weight: 500; }
+.filtri button.attivo { border-color: var(--zucca); color: var(--zucca); font-weight: 700; }
+.gruppo { display: grid; gap: 12px; }
+.gruppo + .gruppo { margin-top: 12px; }
+.gruppo-testa { display: flex; align-items: baseline; justify-content: space-between; gap: 12px; }
+.gruppo-testa h3 { font-size: 18px; font-weight: 600; display: flex; align-items: center; gap: 8px; min-width: 0; }
+.gruppo-testa h3 app-icona { color: var(--zucca); align-self: center; flex: none; }
 .griglia { display: grid; grid-template-columns: repeat(2, minmax(0, 1fr)); gap: 12px; }
 
 .reperto { position: relative; width: 100%; min-height: 164px; padding: 0 0 14px; border-radius: 2px; display: flex; flex-direction: column; gap: 12px; text-align: left; color: var(--osso); border: 1px solid var(--filetto); background: var(--notte-2); font: inherit; }

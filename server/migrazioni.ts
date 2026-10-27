@@ -182,4 +182,11 @@ CREATE TABLE IF NOT EXISTS cartella (
 ALTER TABLE prova ADD COLUMN IF NOT EXISTS cartella_id INTEGER REFERENCES cartella(id) ON DELETE SET NULL;
 `,
   },
+  {
+    nome: "20261027150000_visibilita_squadre",
+    sql: String.raw`
+ALTER TABLE cartella ADD COLUMN IF NOT EXISTS visibile BOOLEAN NOT NULL DEFAULT FALSE;
+ALTER TABLE prova ADD COLUMN IF NOT EXISTS titolo_visibile BOOLEAN NOT NULL DEFAULT FALSE;
+`,
+  },
 ];

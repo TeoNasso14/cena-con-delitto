@@ -43,6 +43,7 @@ const rotte: Array<[string, RegExp, Gestore]> = [
   ["PUT", /^\/api\/regia\/cartelle\/(?<id>\d+)$/, (r, db, p) => R.modificaCartella(r, db, n(p.id))],
   ["DELETE", /^\/api\/regia\/cartelle\/(?<id>\d+)$/, (r, db, p) => R.eliminaCartella(r, db, n(p.id))],
   ["POST", /^\/api\/regia\/prove\/sposta$/, (r, db) => R.spostaProve(r, db)],
+  ["POST", /^\/api\/regia\/prove\/titoli$/, (r, db) => R.titoliProve(r, db)],
   ["POST", /^\/api\/regia\/scene$/, (r, db) => R.creaScena(r, db)],
   ["PUT", /^\/api\/regia\/scene\/(?<id>\d+)$/, (r, db, p) => R.modificaScena(r, db, n(p.id))],
   ["DELETE", /^\/api\/regia\/scene\/(?<id>\d+)$/, (r, db, p) => R.eliminaScena(r, db, n(p.id))],

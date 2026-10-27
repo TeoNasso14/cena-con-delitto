@@ -9,7 +9,7 @@ interface Condizione { tipo: 'pin' | 'prova' | 'fase'; pin: string; prova_richie
 interface Modo { squadra_id: number | null; condizioni: Condizione[] }
 interface Bozza {
   id?: number; numero: number; titolo: string; tipo: string; testo: string; nota_sigillo: string;
-  allegato_key: string | null; allegato_tipo: string | null; cartella_id: number | null; modi: Modo[];
+  allegato_key: string | null; allegato_tipo: string | null; cartella_id: number | null; titolo_visibile: boolean; modi: Modo[];
 }
 type Filtro = 'tutte' | 'senza' | number;
 interface Gruppo { cartella: CartellaR | null; prove: ProvaR[] }
@@ -33,6 +33,10 @@ interface Gruppo { cartella: CartellaR | null; prove: ProvaR[] }
     .gruppo-testa h3 { font-size: 17px; font-weight: 600; display: flex; align-items: center; gap: 8px; }
     .gruppo-testa h3 app-icona { color: var(--zucca); }
     .gruppo-testa .n { color: var(--osso-2); font-weight: 400; font-size: 14px; }
+    .visibile { font-size: 13px; font-weight: 600; color: var(--zucca); border: 1px solid var(--zucca); border-radius: 999px; padding: 1px 9px; }
+    .barra-sposta .bottone:not(.bottone--pieno) { color: var(--notte); border-color: rgb(14 11 20 / 0.35); }
+    @media (hover: hover) { .barra-sposta .bottone:not(.bottone--pieno):hover { color: var(--notte); border-color: var(--notte); } }
+    .barra-sposta .sep-v { width: 1px; align-self: stretch; background: var(--carta-filetto); }
     .gruppo-azioni { display: flex; flex-wrap: wrap; gap: 4px; align-items: center; }
     .vuoto-cartella { color: var(--osso-2); font-size: 14px; padding: 12px 16px; border: 1px dashed var(--filetto); border-radius: 14px; }
     .barra-sposta { position: sticky; bottom: 12px; z-index: 2; display: flex; flex-wrap: wrap; gap: 10px; align-items: center; padding: 12px 14px; border-radius: 14px; background: var(--osso); color: var(--notte); }
@@ -73,6 +77,7 @@ interface Gruppo { cartella: CartellaR | null; prove: ProvaR[] }
           <form class="nuova-cartella" (ngSubmit)="creaCartella()">
             <label class="sr" for="nome-cartella">Nome della nuova cartella</label>
             <input id="nome-cartella" name="nome-cartella" class="campo" [(ngModel)]="nomeCartella" maxlength="60" placeholder="Ad esempio: Cantina, Fase 2, Indizi falsi" required>
+            <label class="r-check" for="vis-cartella"><input id="vis-cartella" name="vis-cartella" type="checkbox" [(ngModel)]="cartellaVisibile">Visibile alle squadre</label>
             <button class="bottone bottone--piccolo bottone--pieno" type="submit" [disabled]="!nomeCartella.trim()">Crea</button>
             <button class="bottone bottone--piccolo" type="button" (click)="creaAperta.set(false); nomeCartella = ''">Annulla</button>
           </form>
@@ -90,7 +95,7 @@ interface Gruppo { cartella: CartellaR | null; prove: ProvaR[] }
                     <button class="bottone bottone--piccolo" type="button" (click)="rinomina = null">Annulla</button>
                   </form>
                 } @else {
-                  <h3><app-icona [nome]="g.cartella ? 'caso' : 'prove'" [misura]="20" />{{ g.cartella?.nome ?? 'Senza cartella' }}<span class="n">{{ g.prove.length }}</span></h3>
+                  <h3><app-icona [nome]="g.cartella ? 'caso' : 'prove'" [misura]="20" />{{ g.cartella?.nome ?? 'Senza cartella' }}<span class="n">{{ g.prove.length }}</span>@if (g.cartella?.visibile) {<span class="visibile">Visibile alle squadre</span>}</h3>
                   @if (g.cartella; as c) {
                     <div class="gruppo-azioni">
                       @if (eliminaCart === c.id) {
@@ -98,6 +103,7 @@ interface Gruppo { cartella: CartellaR | null; prove: ProvaR[] }
                         <button class="bottone bottone--piccolo bottone--pericolo" type="button" (click)="eliminaCartella(c.id)">Sì, elimina la cartella</button>
                         <button class="r-link" type="button" (click)="eliminaCart = null">No</button>
                       } @else {
+                        <button class="r-link" type="button" (click)="visibilita(c)">{{ c.visibile ? 'Nascondi alle squadre' : 'Mostra alle squadre' }}</button>
                         <button class="r-link" type="button" (click)="rinomina = c.id; nomeNuovo = c.nome">Rinomina</button>
                         <button class="r-link" type="button" (click)="eliminaCart = c.id">Elimina cartella</button>
                       }
@@ -111,7 +117,7 @@ interface Gruppo { cartella: CartellaR | null; prove: ProvaR[] }
                 <li class="r-voce voce-prova" [class.r-voce--scelta]="p.id === b?.id">
                   <input class="scegli-prova" type="checkbox" [id]="'sel-' + p.id" [checked]="scelte().has(p.id)" (change)="scegli(p.id)" [attr.aria-label]="'Seleziona la prova ' + p.numero">
                   <span class="num">{{ p.numero }}</span>
-                  <div><h3>{{ p.titolo }}</h3><p>{{ riassunto(p) }}</p></div>
+                  <div><h3>{{ p.titolo }}</h3><p>{{ riassunto(p) }}@if (p.titolo_visibile) {, titolo visibile da sigillata}</p></div>
                   <button class="bottone bottone--piccolo" type="button" (click)="modifica(p)">Modifica</button>
                 </li>
               } @empty {
@@ -132,6 +138,9 @@ interface Gruppo { cartella: CartellaR | null; prove: ProvaR[] }
               @for (c of st.t()!.cartelle; track c.id) { <option [ngValue]="c.id">{{ c.nome }}</option> }
             </select>
             <button class="bottone bottone--pieno" type="button" (click)="sposta()">Sposta</button>
+            <span class="sep-v" aria-hidden="true"></span>
+            <button class="bottone" type="button" (click)="titoli(true)">Mostra i titoli</button>
+            <button class="bottone" type="button" (click)="titoli(false)">Nascondi i titoli</button>
             <button class="r-link" type="button" (click)="svuota()">Annulla la selezione</button>
           </div>
         }
@@ -148,13 +157,14 @@ interface Gruppo { cartella: CartellaR | null; prove: ProvaR[] }
               </select>
             </label>
           </div>
-          <label class="etichetta" for="pr-cartella">Cartella <small>Serve solo a te per tenere in ordine le prove: le squadre non la vedono.</small>
+          <label class="etichetta" for="pr-cartella">Cartella <small>Le squadre la vedono solo se la cartella è visibile alle squadre.</small>
             <select id="pr-cartella" name="pr-cartella" class="campo" [(ngModel)]="b.cartella_id">
               <option [ngValue]="null">Senza cartella</option>
-              @for (c of st.t()!.cartelle; track c.id) { <option [ngValue]="c.id">{{ c.nome }}</option> }
+              @for (c of st.t()!.cartelle; track c.id) { <option [ngValue]="c.id">{{ c.nome }}{{ c.visibile ? ' (visibile alle squadre)' : '' }}</option> }
             </select>
           </label>
-          <label class="etichetta" for="pr-titolo">Titolo <small>Le squadre lo vedono solo dopo averla aperta.</small><input id="pr-titolo" name="pr-titolo" class="campo" [(ngModel)]="b.titolo" required maxlength="120"></label>
+          <label class="etichetta" for="pr-titolo">Titolo<input id="pr-titolo" name="pr-titolo" class="campo" [(ngModel)]="b.titolo" required maxlength="120"></label>
+          <label class="r-check" for="pr-titolo-vis" style="margin-top:-6px"><input id="pr-titolo-vis" name="pr-titolo-vis" type="checkbox" [(ngModel)]="b.titolo_visibile">Le squadre leggono il titolo anche prima di aprirla</label>
           <label class="etichetta" for="pr-testo">Contenuto<textarea id="pr-testo" name="pr-testo" class="campo" rows="6" [(ngModel)]="b.testo"></textarea></label>
           <app-allegato etichetta="Allegato della prova" campo="pr-allegato" [(chiave)]="b.allegato_key" [(tipo)]="b.allegato_tipo" />
 
@@ -248,6 +258,7 @@ export class ProveRegia {
   rinomina: number | null = null;
   eliminaCart: number | null = null;
   destinazione: number | null = null;
+  cartellaVisibile = false;
 
   readonly gruppi = computed<Gruppo[]>(() => {
     const t = this.st.t()!;
@@ -278,8 +289,18 @@ export class ProveRegia {
     this.scelte.set(s);
   }
   async creaCartella() {
-    const r = await this.st.fai(() => this.api.post<{ id: number }>('/api/regia/cartelle', { nome: this.nomeCartella }), 'Cartella creata');
-    if (r) { this.nomeCartella = ''; this.creaAperta.set(false); this.filtro.set(r.id); }
+    const r = await this.st.fai(() => this.api.post<{ id: number }>('/api/regia/cartelle', { nome: this.nomeCartella, visibile: this.cartellaVisibile }), 'Cartella creata');
+    if (r) { this.nomeCartella = ''; this.cartellaVisibile = false; this.creaAperta.set(false); this.filtro.set(r.id); }
+  }
+  visibilita(c: CartellaR) {
+    const v = !c.visibile;
+    return this.st.fai(() => this.api.put(`/api/regia/cartelle/${c.id}`, { visibile: v }), v ? `Le squadre ora vedono la cartella ${c.nome}` : `Cartella ${c.nome} nascosta alle squadre`);
+  }
+  async titoli(visibile: boolean) {
+    const ids = [...this.scelte()];
+    const n = ids.length === 1 ? '1 prova' : `${ids.length} prove`;
+    const ok = await this.st.fai(() => this.api.post('/api/regia/prove/titoli', { prove: ids, visibile }), visibile ? `Titolo visibile per ${n}` : `Titolo nascosto per ${n}`);
+    if (ok) this.scelte.set(new Set());
   }
   async salvaNome(id: number) {
     const ok = await this.st.fai(() => this.api.put(`/api/regia/cartelle/${id}`, { nome: this.nomeNuovo }), 'Cartella rinominata');
@@ -323,7 +344,7 @@ export class ProveRegia {
     const prove = this.st.t()!.prove;
     this.conferma = false;
     this.b = {
-      numero: Math.max(0, ...prove.map((p) => p.numero)) + 1, titolo: '', tipo: 'documento', testo: '', nota_sigillo: '',
+      numero: Math.max(0, ...prove.map((p) => p.numero)) + 1, titolo: '', tipo: 'documento', testo: '', nota_sigillo: '', titolo_visibile: false,
       allegato_key: null, allegato_tipo: null, cartella_id: typeof this.filtro() === 'number' ? (this.filtro() as number) : null, modi: [{ squadra_id: null, condizioni: [{ ...this.condizione('pin'), pin: this.codiceNuovo() }] }],
     };
   }
@@ -334,7 +355,7 @@ export class ProveRegia {
     p.regole.forEach((r) => gruppi.set(r.gruppo, [...(gruppi.get(r.gruppo) ?? []), r]));
     this.b = {
       id: p.id, numero: p.numero, titolo: p.titolo, tipo: p.tipo, testo: p.testo, nota_sigillo: p.nota_sigillo,
-      allegato_key: p.allegato_key, allegato_tipo: p.allegato_tipo, cartella_id: p.cartella_id ?? null,
+      allegato_key: p.allegato_key, allegato_tipo: p.allegato_tipo, cartella_id: p.cartella_id ?? null, titolo_visibile: !!p.titolo_visibile,
       modi: [...gruppi.values()].map((g) => ({
         squadra_id: g[0].squadra_id ?? null,
         condizioni: g.map((r) => ({ tipo: r.tipo, pin: r.pin ?? '', prova_richiesta_id: r.prova_richiesta_id ?? null, fase_numero: r.fase_numero ?? null })),
