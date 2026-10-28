@@ -117,10 +117,31 @@ export async function propagaTutte(db: Db, serataId: number) {
   for (const s of sq) await propaga(db, serataId, s.id);
 }
 
-export async function consegnaDallaRegia(db: Db, serataId: number, squadraId: number, provaId: number) {
+/**
+ * La regia consegna una prova a una squadra.
+ * Se la prova ha un codice valido per quella squadra non si apre: compare sul telefono, sigillata e con il titolo,
+ * e la squadra la apre digitando il codice. Le prove senza codice si aprono subito.
+ */
+export async function consegnaDallaRegia(db: Db, serataId: number, squadraId: number, provaId: number): Promise<"aperta" | "mostrata" | "gia"> {
+  const q = await quadro(db, serataId, squadraId);
+  if (q.aperte.has(provaId)) return "gia";
+  if (q.regole.some((r) => r.prova_id === provaId && r.tipo === "pin")) {
+    const r = await db.q(
+      "INSERT INTO prova_mostrata (squadra_id, prova_id) VALUES ($1, $2) ON CONFLICT DO NOTHING RETURNING prova_id",
+      [squadraId, provaId],
+    );
+    if (r.length) {
+      const p = await db.uno<{ numero: number }>("SELECT numero FROM prova WHERE id = $1", [provaId]);
+      const sq = await db.uno<{ nome: string }>("SELECT nome FROM squadra WHERE id = $1", [squadraId]);
+      await db.q("INSERT INTO evento (serata_id, squadra_id, tipo, testo) VALUES ($1, $2, 'mostrata', $3)", [
+        serataId, squadraId, `La regia ha mostrato a ${sq?.nome ?? "una squadra"} la prova n. ${p?.numero}: si apre con il suo codice`,
+      ]);
+    }
+    return r.length ? "mostrata" : "gia";
+  }
   const ok = await apri(db, serataId, squadraId, provaId, "regia");
   await propaga(db, serataId, squadraId);
-  return ok;
+  return ok ? "aperta" : "gia";
 }
 
 export const PIN_ERRORI_MAX = 5;

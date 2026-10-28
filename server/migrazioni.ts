@@ -205,4 +205,16 @@ ALTER TABLE prova ALTER COLUMN in_elenco SET DEFAULT FALSE;
 UPDATE prova SET in_elenco = FALSE, titolo_visibile = FALSE;
 `,
   },
+  {
+    // Prove con codice consegnate dalla regia: la squadra le vede, sigillate e con il titolo, finché non digita il codice.
+    nome: "20261028133000_prove_mostrate",
+    sql: String.raw`
+CREATE TABLE IF NOT EXISTS prova_mostrata (
+  squadra_id INTEGER NOT NULL REFERENCES squadra(id) ON DELETE CASCADE,
+  prova_id   INTEGER NOT NULL REFERENCES prova(id) ON DELETE CASCADE,
+  ora        TIMESTAMPTZ NOT NULL DEFAULT NOW(),
+  PRIMARY KEY (squadra_id, prova_id)
+);
+`,
+  },
 ];

@@ -54,8 +54,11 @@ export async function stato(req: Request, db: Db) {
   // Una prova fuori elenco compare quando la squadra la apre, oppure quando manca solo il suo codice
   // perché le prove che la precedono sono già aperte (anche se consegnate dalla regia).
   const giaAperte = new Set(apertaDa.keys());
+  const mostrate = new Set(
+    (await db.q<{ prova_id: number }>("SELECT prova_id FROM prova_mostrata WHERE squadra_id = $1", [sqId])).map((m) => m.prova_id),
+  );
   const elenco = prove
-    .filter((p) => p.in_elenco || apertaDa.has(p.id) || prontaPerCodice(perProva.get(p.id) ?? [], giaAperte, serata!.fase_corrente))
+    .filter((p) => p.in_elenco || apertaDa.has(p.id) || mostrate.has(p.id) || prontaPerCodice(perProva.get(p.id) ?? [], giaAperte, serata!.fase_corrente))
     .map((p) => {
     const a = apertaDa.get(p.id);
     const cartella = p.cartella_id !== null && visibili.has(p.cartella_id) ? p.cartella_id : null;
@@ -69,7 +72,7 @@ export async function stato(req: Request, db: Db) {
     const m = motivoSigillo(perProva.get(p.id) ?? [], numeroDi);
     return {
       id: p.id, numero: p.numero, cartella, aperta: false, motivo: p.nota_sigillo || m.testo, conCodice: m.conCodice,
-      ...(p.titolo_visibile ? { titolo: p.titolo } : {}),
+      ...(p.titolo_visibile || mostrate.has(p.id) ? { titolo: p.titolo } : {}),
     };
   });
 

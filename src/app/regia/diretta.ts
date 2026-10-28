@@ -5,6 +5,8 @@ import { Api, ora } from '../api';
 import { Icona } from '../icona';
 import { RegiaStato, SquadraR, TIPI_SCENA } from './stato';
 
+interface EsitoConsegna { aperta: number; mostrata: number; gia: number }
+
 @Component({
   selector: 'app-diretta',
   imports: [FormsModule, RouterLink, Icona],
@@ -125,7 +127,7 @@ import { RegiaStato, SquadraR, TIPI_SCENA } from './stato';
         <section class="r-blocco" aria-labelledby="t-intervieni">
           <h2 id="t-intervieni">Intervieni</h2>
           <form class="r-scheda r-modulo" (ngSubmit)="consegna()">
-            <label class="etichetta" for="c-prova">Consegna una prova
+            <label class="etichetta" for="c-prova">Consegna una prova <small>Se la prova ha un codice, la squadra la vede sigillata con il titolo e la apre digitando il codice.</small>
               <select id="c-prova" name="c-prova" class="campo" [(ngModel)]="consegnaProva" required>
                 <option [ngValue]="null" disabled>Scegli la prova</option>
                 @for (p of t.prove; track p.id) { <option [ngValue]="p.id">N. {{ p.numero }}, {{ p.titolo }}</option> }
@@ -257,7 +259,7 @@ export class DirettaVista {
     return parti.join(', ');
   }
   prossimaPerSquadra(q: SquadraR) {
-    return this.st.t()!.prove.find((p) => !q.prove_aperte.includes(p.id)) ?? null;
+    return this.st.t()!.prove.find((p) => !q.prove_aperte.includes(p.id) && !(q.prove_mostrate ?? []).includes(p.id)) ?? null;
   }
 
   statoSerata(stato: string) { this.st.fai(() => this.api.post('/api/regia/stato', { stato }), stato === 'in_pausa' ? 'Serata in pausa' : 'Si riparte'); }
@@ -275,11 +277,17 @@ export class DirettaVista {
   manda(id: number) { this.st.fai(() => this.api.post('/api/regia/onda', { scena_id: id }), 'In onda'); }
   nero(nero: boolean) { this.st.fai(() => this.api.post('/api/regia/schermo-nero', { nero }), nero ? 'Schermo nero' : 'Schermo riacceso'); }
   async consegna() {
-    const ok = await this.st.fai(() => this.api.post('/api/regia/consegna', { prova_id: this.consegnaProva, squadra_id: this.consegnaA }), 'Prova consegnata');
-    if (ok) this.consegnaProva = null;
+    const r = await this.st.fai(() => this.api.post<EsitoConsegna>('/api/regia/consegna', { prova_id: this.consegnaProva, squadra_id: this.consegnaA }));
+    if (r) { this.consegnaProva = null; this.st.dimmi(this.esitoConsegna(r, 'Prova consegnata')); }
   }
-  aiutino(q: SquadraR, provaId: number) {
-    this.st.fai(() => this.api.post('/api/regia/consegna', { prova_id: provaId, squadra_id: q.id }), `Aiutino consegnato a ${q.nome}`);
+  async aiutino(q: SquadraR, provaId: number) {
+    const r = await this.st.fai(() => this.api.post<EsitoConsegna>('/api/regia/consegna', { prova_id: provaId, squadra_id: q.id }));
+    if (r) this.st.dimmi(this.esitoConsegna(r, `Aiutino consegnato a ${q.nome}`));
+  }
+  private esitoConsegna(r: EsitoConsegna, aperta: string) {
+    if (r.mostrata && !r.aperta) return 'Prova mostrata con il titolo: si apre quando la squadra digita il suo codice';
+    if (!r.mostrata && !r.aperta) return 'Le squadre avevano già questa prova';
+    return aperta;
   }
   async annuncia() {
     const ok = await this.st.fai(() => this.api.post('/api/regia/annunci', { testo: this.annuncio, squadra_id: this.annuncioA }), 'Annuncio mandato');

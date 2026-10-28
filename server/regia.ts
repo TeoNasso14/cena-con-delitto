@@ -29,7 +29,8 @@ export async function tutto(req: Request, db: Db) {
        (SELECT COUNT(*)::int FROM sblocco sb WHERE sb.squadra_id = sq.id) AS aperte,
        (SELECT MAX(ora) FROM sblocco sb WHERE sb.squadra_id = sq.id) AS ultima_prova,
        (SELECT COUNT(*)::int FROM tentativo_pin tp WHERE tp.squadra_id = sq.id AND tp.esito = FALSE) AS codici_sbagliati,
-       (SELECT COALESCE(json_agg(sb.prova_id), '[]'::json) FROM sblocco sb WHERE sb.squadra_id = sq.id) AS prove_aperte
+       (SELECT COALESCE(json_agg(sb.prova_id), '[]'::json) FROM sblocco sb WHERE sb.squadra_id = sq.id) AS prove_aperte,
+       (SELECT COALESCE(json_agg(pm.prova_id), '[]'::json) FROM prova_mostrata pm WHERE pm.squadra_id = sq.id) AS prove_mostrate
      FROM squadra sq LEFT JOIN account a ON a.squadra_id = sq.id
      WHERE sq.serata_id = $1 ORDER BY sq.id`,
     [sid],
@@ -565,12 +566,13 @@ export async function consegna(req: Request, db: Db) {
   const squadre = b.squadra_id == null
     ? await db.q<{ id: number }>("SELECT id FROM squadra WHERE serata_id = $1", [u.serata_id])
     : [{ id: intero(b.squadra_id, "squadra") }];
+  const esiti = { aperta: 0, mostrata: 0, gia: 0 };
   for (const s of squadre) {
     await proprio(db, "squadra", s.id, u.serata_id);
-    await consegnaDallaRegia(db, u.serata_id, s.id, provaId);
+    esiti[await consegnaDallaRegia(db, u.serata_id, s.id, provaId)]++;
   }
   await tocca(db, u.serata_id);
-  return json({ ok: true });
+  return json({ ok: true, ...esiti });
 }
 
 export async function annuncio(req: Request, db: Db) {
@@ -652,6 +654,7 @@ export async function azzera(req: Request, db: Db) {
   const sid = u.serata_id;
   await db.transazione(async (t) => {
     await t.q("DELETE FROM sblocco WHERE squadra_id IN (SELECT id FROM squadra WHERE serata_id = $1)", [sid]);
+    await t.q("DELETE FROM prova_mostrata WHERE squadra_id IN (SELECT id FROM squadra WHERE serata_id = $1)", [sid]);
     await t.q("DELETE FROM tentativo_pin WHERE squadra_id IN (SELECT id FROM squadra WHERE serata_id = $1)", [sid]);
     await t.q("DELETE FROM accusa WHERE squadra_id IN (SELECT id FROM squadra WHERE serata_id = $1)", [sid]);
     await t.q("UPDATE squadra SET taccuino = '' WHERE serata_id = $1", [sid]);

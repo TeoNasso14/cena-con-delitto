@@ -6,7 +6,7 @@ export interface ProvaR { id: number; numero: number; titolo: string; tipo: stri
 export interface CartellaR { id: number; nome: string; ordine: number; visibile: boolean }
 export interface ScenaR { id: number; ordine: number; tipo: string; titolo: string; testo: string; allegato_key: string | null; allegato_tipo: string | null; fase_numero: number | null; avvio_automatico: boolean; in_onda_dal: string | null }
 export interface PersonaggioR { id: number; nome: string; ruolo: string; scheda: string; note_regia: string; foto_key: string | null; ordine: number }
-export interface SquadraR { id: number; nome: string; colore: string; account_id: number | null; username: string | null; ultimo_accesso: string | null; aperte: number; ultima_prova: string | null; codici_sbagliati: number; prove_aperte: number[] }
+export interface SquadraR { id: number; nome: string; colore: string; account_id: number | null; username: string | null; ultimo_accesso: string | null; aperte: number; ultima_prova: string | null; codici_sbagliati: number; prove_aperte: number[]; prove_mostrate?: number[] }
 export interface Fase { numero: number; nome: string; durata_minuti: number | null; avviata_alle: string | null }
 export interface Serata { id: number; titolo: string; premessa: string; stato: 'bozza' | 'in_corso' | 'in_pausa' | 'chiusa'; fase_corrente: number; scena_in_onda: number | null; schermo_nero: boolean; colpevole: string; movente: string; arma: string; rivelata: boolean }
 export interface AccusaR { squadra_id: number; squadra: string; colpevole: string; movente: string; arma: string; spiegazione: string; consegnata_alle: string; punteggio: number | null }

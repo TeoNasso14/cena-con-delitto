@@ -400,6 +400,25 @@ test("una prova nascosta con 'dopo una prova' e codice compare quando l'altra è
   expect(g.find((p) => p.id === b)).toBeUndefined();
 });
 
+test("una prova con codice consegnata dalla regia compare con il titolo e si apre solo col codice", async () => {
+  await chiama("POST", "/api/regia/fase", { numero: 1 }, regia);
+  const r = await chiama("POST", "/api/regia/prove", { numero: 96, titolo: "La lettera del notaio", testo: "segreto", regole: [{ tipo: "pin", pin: "9696", gruppo: 1 }] }, regia);
+  const id = r.dati.id;
+  const vede = async () => ((await chiama("GET", "/api/squadra/stato", undefined, corvi)).dati.prove as any[]).find((p) => p.id === id);
+  expect(await vede()).toBeUndefined();
+  const c = await chiama("POST", "/api/regia/consegna", { prova_id: id, squadra_id: ids.corvi }, regia);
+  expect(c.dati).toMatchObject({ aperta: 0, mostrata: 1 });
+  const v = await vede();
+  expect(v).toMatchObject({ aperta: false, titolo: "La lettera del notaio", conCodice: true });
+  expect(v.testo).toBeUndefined();
+  // una seconda consegna non cambia nulla
+  expect((await chiama("POST", "/api/regia/consegna", { prova_id: id, squadra_id: ids.corvi }, regia)).dati).toMatchObject({ gia: 1 });
+  // l'altra squadra non la vede
+  expect(((await chiama("GET", "/api/squadra/stato", undefined, gufi)).dati.prove as any[]).find((p) => p.id === id)).toBeUndefined();
+  expect((await chiama("POST", "/api/squadra/codice", { codice: "9696" }, corvi)).dati).toEqual({ esito: "aperta", prove: [id] });
+  expect(await vede()).toMatchObject({ aperta: true, testo: "segreto", via: "pin" });
+});
+
 test("la soluzione si può nascondere di nuovo", async () => {
   expect((await chiama("POST", "/api/regia/nascondi-soluzione", undefined, corvi)).stato).toBe(403);
   const prima = (await chiama("GET", "/api/regia", undefined, regia)).dati.serata;
