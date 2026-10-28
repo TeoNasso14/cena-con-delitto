@@ -95,8 +95,7 @@ import { RegiaStato, SquadraR, TIPI_SCENA } from './stato';
               <button class="bottone bottone--pieno" type="button" (click)="successiva()" [disabled]="!prossimaScena()"><app-icona nome="avanti" />Scena successiva</button>
               <button class="bottone" type="button" (click)="nero(!s.schermo_nero)">{{ s.schermo_nero ? 'Riaccendi' : 'Schermo nero' }}</button>
             </div>
-            @if (true) {
-              <div class="rivela">
+            <div class="rivela">
                 @if (s.rivelata) {
                   <span class="r-pillola r-pillola--zucca">Soluzione rivelata sul proiettore</span>
                   <button class="r-link" type="button" (click)="nascondi()">Nascondi di nuovo la soluzione</button>
@@ -107,10 +106,9 @@ import { RegiaStato, SquadraR, TIPI_SCENA } from './stato';
                   <button class="bottone" type="button" (click)="confermaRivela.set(false)">Non ancora</button>
                 } @else {
                   <button class="bottone bottone--pieno" type="button" (click)="confermaRivela.set(true)">Rivela la soluzione</button>
-                  <span class="secondario">{{ scenaInOnda()?.tipo === 'rivelazione' ? 'Il proiettore mostra colpevole, movente, arma e chi ha indovinato.' : haRivelazione() ? 'Il proiettore passa alla scena di rivelazione e mostra colpevole, movente, arma e chi ha indovinato.' : 'Non c\'è una scena di rivelazione: creala in Scene del proiettore, altrimenti il proiettore non mostra la soluzione.' }}</span>
+                  <span class="secondario">{{ notaRivela() }}</span>
                 }
-              </div>
-            }
+            </div>
             <div class="vedi"><a class="r-link" href="/schermo" target="_blank" rel="noopener">Apri il proiettore in un'altra scheda</a></div>
             @if (t.scene.length) {
               <div class="scelta-scene" role="group" aria-label="Manda in onda una scena">
@@ -266,6 +264,11 @@ export class DirettaVista {
   avviaFase(numero: number) { this.st.fai(() => this.api.post('/api/regia/fase', { numero }), `Fase ${numero} iniziata`); }
   readonly confermaRivela = signal(false);
   readonly haRivelazione = computed(() => !!this.st.t()?.scene.some((x) => x.tipo === 'rivelazione'));
+  readonly notaRivela = computed(() => {
+    if (this.scenaInOnda()?.tipo === 'rivelazione') return 'Il proiettore mostra colpevole, movente, arma e chi ha indovinato.';
+    if (this.haRivelazione()) return 'Il proiettore passa alla scena di rivelazione e mostra colpevole, movente, arma e chi ha indovinato.';
+    return "Non c'è una scena di rivelazione: creala in Scene del proiettore, altrimenti il proiettore non mostra la soluzione.";
+  });
   nascondi() { this.st.fai(() => this.api.post('/api/regia/nascondi-soluzione'), 'Soluzione nascosta: il proiettore torna all\'attesa'); }
   rivela() { this.confermaRivela.set(false); this.st.fai(() => this.api.post('/api/regia/rivela'), 'Soluzione rivelata'); }
   successiva() { this.st.fai(() => this.api.post('/api/regia/onda/successiva'), 'Scena successiva in onda'); }
