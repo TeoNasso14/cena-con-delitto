@@ -55,7 +55,34 @@ export async function servi(req: Request, db: Db, key: string) {
   const r = await archivio().getWithMetadata(key, { type: "arrayBuffer" });
   if (!r) throw new Errore(404, "File non trovato.");
   const tipo = String((r.metadata as { tipo?: string }).tipo ?? "application/octet-stream");
-  return new Response(r.data, {
-    headers: { "content-type": tipo, "cache-control": "private, max-age=3600", "x-content-type-options": "nosniff" },
+  return rispostaFile(r.data as ArrayBuffer, tipo, req.headers.get("range"));
+}
+
+/**
+ * Risponde con il file intero o con il pezzo richiesto (Range).
+ * Safari su iPhone ascolta audio e video solo se il server sa mandare i pezzi:
+ * senza, la riproduzione si ferma a metà.
+ */
+export function rispostaFile(data: ArrayBuffer, tipo: string, range: string | null) {
+  const totale = data.byteLength;
+  const base = { "content-type": tipo, "cache-control": "private, max-age=3600", "x-content-type-options": "nosniff", "accept-ranges": "bytes" };
+  const m = range ? /^bytes=(\d*)-(\d*)$/.exec(range.trim()) : null;
+  if (!m || (!m[1] && !m[2])) {
+    return new Response(data, { headers: { ...base, "content-length": String(totale) } });
+  }
+  let inizio: number, fine: number;
+  if (!m[1]) {
+    inizio = Math.max(0, totale - Number(m[2]));
+    fine = totale - 1;
+  } else {
+    inizio = Number(m[1]);
+    fine = m[2] ? Math.min(Number(m[2]), totale - 1) : totale - 1;
+  }
+  if (inizio >= totale || inizio > fine) {
+    return new Response(null, { status: 416, headers: { ...base, "content-range": `bytes */${totale}` } });
+  }
+  return new Response(data.slice(inizio, fine + 1), {
+    status: 206,
+    headers: { ...base, "content-range": `bytes ${inizio}-${fine}/${totale}`, "content-length": String(fine - inizio + 1) },
   });
 }

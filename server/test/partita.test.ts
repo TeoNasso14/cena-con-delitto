@@ -1,6 +1,7 @@
 import { NetlifyDB } from "@netlify/database-dev";
 import { afterAll, beforeAll, describe, expect, test } from "vitest";
 import { apriDb, Db, migra } from "../base.ts";
+import { rispostaFile } from "../file.ts";
 import { combacia } from "../regia.ts";
 import { gestisci } from "../router.ts";
 
@@ -376,6 +377,23 @@ test("la soluzione si può nascondere di nuovo", async () => {
   expect(s.rivelata).toBe(false);
   const sc = (await chiama("GET", "/api/schermo/stato", undefined, schermo)).dati.scena;
   expect(sc.soluzione).toBeUndefined();
+});
+
+test("i file si servono anche a pezzi, come serve a Safari per audio e video", async () => {
+  const dati = new Uint8Array(1000).map((_, i) => i % 256).buffer;
+  const tutto = rispostaFile(dati, "audio/mpeg", null);
+  expect(tutto.status).toBe(200);
+  expect(tutto.headers.get("accept-ranges")).toBe("bytes");
+  const primi = rispostaFile(dati, "audio/mpeg", "bytes=0-1");
+  expect(primi.status).toBe(206);
+  expect(primi.headers.get("content-range")).toBe("bytes 0-1/1000");
+  expect(new Uint8Array(await primi.arrayBuffer())).toEqual(new Uint8Array([0, 1]));
+  const resto = rispostaFile(dati, "audio/mpeg", "bytes=990-");
+  expect(resto.headers.get("content-range")).toBe("bytes 990-999/1000");
+  expect((await resto.arrayBuffer()).byteLength).toBe(10);
+  const coda = rispostaFile(dati, "audio/mpeg", "bytes=-5");
+  expect(coda.headers.get("content-range")).toBe("bytes 995-999/1000");
+  expect(rispostaFile(dati, "audio/mpeg", "bytes=2000-").status).toBe(416);
 });
 
 test("confronto delle risposte", () => {
