@@ -95,7 +95,7 @@ import { RegiaStato, SquadraR, TIPI_SCENA } from './stato';
               <button class="bottone bottone--pieno" type="button" (click)="successiva()" [disabled]="!prossimaScena()"><app-icona nome="avanti" />Scena successiva</button>
               <button class="bottone" type="button" (click)="nero(!s.schermo_nero)">{{ s.schermo_nero ? 'Riaccendi' : 'Schermo nero' }}</button>
             </div>
-            @if (t.serata.stato !== 'bozza' || scenaInOnda()?.tipo === 'rivelazione') {
+            @if (true) {
               <div class="rivela">
                 @if (s.rivelata) {
                   <span class="r-pillola r-pillola--zucca">Soluzione rivelata sul proiettore</span>
