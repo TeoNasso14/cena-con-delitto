@@ -368,30 +368,6 @@ describe("cartelle delle prove", () => {
   }, 60_000);
 });
 
-test("consegnare a mano una prova consegna a catena quelle che vengono dopo, anche con codice", async () => {
-  await chiama("POST", "/api/regia/fase", { numero: 1 }, regia);
-  const crea = async (numero: number, regole: unknown[]) => {
-    const r = await chiama("POST", "/api/regia/prove", { numero, titolo: `Prova ${numero}`, in_elenco: true, regole }, regia);
-    expect(r.stato, JSON.stringify(r.dati)).toBe(201);
-    return r.dati.id as number;
-  };
-  const a = await crea(90, []);
-  const b = await crea(91, [{ tipo: "prova", prova_richiesta_id: a, gruppo: 1 }, { tipo: "pin", pin: "9191", gruppo: 1 }]);
-  const c = await crea(92, [{ tipo: "prova", prova_richiesta_id: b, gruppo: 1 }, { tipo: "pin", pin: "9292", gruppo: 1 }]);
-  const soloGufi = await crea(93, [{ tipo: "prova", prova_richiesta_id: a, squadra_id: ids.gufi, gruppo: 1 }, { tipo: "pin", pin: "9393", squadra_id: ids.gufi, gruppo: 1 }]);
-  const faseLontana = await crea(94, [{ tipo: "prova", prova_richiesta_id: a, gruppo: 1 }, { tipo: "fase", fase_numero: 2, gruppo: 1 }]);
-  const soloCodice = await crea(95, [{ tipo: "pin", pin: "9595", gruppo: 1 }]);
-  const r = await chiama("POST", "/api/regia/consegna", { prova_id: a, squadra_id: ids.corvi }, regia);
-  expect(r.stato).toBe(200);
-  expect(r.dati.anche).toEqual([91, 92]);
-  const aperte = (await chiama("GET", "/api/squadra/stato", undefined, corvi)).dati.prove.filter((p: any) => p.aperta).map((p: any) => p.id);
-  expect(aperte).toEqual(expect.arrayContaining([a, b, c]));
-  for (const no of [soloGufi, faseLontana, soloCodice]) expect(aperte).not.toContain(no);
-  // l'altra squadra non riceve nulla
-  const gufi = (await chiama("GET", "/api/regia", undefined, regia)).dati.squadre.find((q: any) => q.id === ids.gufi);
-  expect(gufi.prove_aperte).not.toContain(b);
-});
-
 test("la soluzione si può nascondere di nuovo", async () => {
   expect((await chiama("POST", "/api/regia/nascondi-soluzione", undefined, corvi)).stato).toBe(403);
   const prima = (await chiama("GET", "/api/regia", undefined, regia)).dati.serata;

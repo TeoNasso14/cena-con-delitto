@@ -117,37 +117,10 @@ export async function propagaTutte(db: Db, serataId: number) {
   for (const s of sq) await propaga(db, serataId, s.id);
 }
 
-/**
- * La regia consegna una prova a mano. Arrivano con lei, a catena, le prove che si aprono "dopo" quella
- * anche se chiedono pure un codice: chi consegna a mano salta il codice. Restano valide le altre condizioni
- * (fase, altre prove richieste, squadra). Restituisce le prove consegnate a catena.
- */
 export async function consegnaDallaRegia(db: Db, serataId: number, squadraId: number, provaId: number) {
   const ok = await apri(db, serataId, squadraId, provaId, "regia");
-  const consegnate = new Set([provaId]);
-  const aCatena: number[] = [];
-  for (let giro = 0; giro < 50; giro++) {
-    const q = await quadro(db, serataId, squadraId);
-    let cambiato = false;
-    for (const [id, gs] of gruppi(q.regole)) {
-      if (q.aperte.has(id)) continue;
-      for (const g of gs.values()) {
-        const dopoConsegnata = g.some((r) => r.tipo === "prova" && consegnate.has(r.prova_richiesta_id ?? -1));
-        if (!dopoConsegnata) continue;
-        if (!g.filter((r) => r.tipo !== "pin").every((r) => rispettata(r, q))) continue;
-        if (await apri(db, serataId, squadraId, id, "regia")) {
-          consegnate.add(id);
-          aCatena.push(id);
-          q.aperte.add(id);
-          cambiato = true;
-        }
-        break;
-      }
-    }
-    if (!cambiato) break;
-  }
   await propaga(db, serataId, squadraId);
-  return { ok, aCatena };
+  return ok;
 }
 
 export const PIN_ERRORI_MAX = 5;

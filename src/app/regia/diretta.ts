@@ -275,16 +275,11 @@ export class DirettaVista {
   manda(id: number) { this.st.fai(() => this.api.post('/api/regia/onda', { scena_id: id }), 'In onda'); }
   nero(nero: boolean) { this.st.fai(() => this.api.post('/api/regia/schermo-nero', { nero }), nero ? 'Schermo nero' : 'Schermo riacceso'); }
   async consegna() {
-    const r = await this.st.fai(() => this.api.post<{ anche: number[] }>('/api/regia/consegna', { prova_id: this.consegnaProva, squadra_id: this.consegnaA }));
-    if (r) { this.consegnaProva = null; this.st.dimmi('Prova consegnata' + this.catena(r.anche)); }
+    const ok = await this.st.fai(() => this.api.post('/api/regia/consegna', { prova_id: this.consegnaProva, squadra_id: this.consegnaA }), 'Prova consegnata');
+    if (ok) this.consegnaProva = null;
   }
-  async aiutino(q: SquadraR, provaId: number) {
-    const r = await this.st.fai(() => this.api.post<{ anche: number[] }>('/api/regia/consegna', { prova_id: provaId, squadra_id: q.id }));
-    if (r) this.st.dimmi(`Aiutino consegnato a ${q.nome}` + this.catena(r.anche));
-  }
-  private catena(anche: number[] | undefined) {
-    if (!anche?.length) return '';
-    return anche.length === 1 ? `, e a catena la n. ${anche[0]}` : `, e a catena le n. ${anche.join(', ')}`;
+  aiutino(q: SquadraR, provaId: number) {
+    this.st.fai(() => this.api.post('/api/regia/consegna', { prova_id: provaId, squadra_id: q.id }), `Aiutino consegnato a ${q.nome}`);
   }
   async annuncia() {
     const ok = await this.st.fai(() => this.api.post('/api/regia/annunci', { testo: this.annuncio, squadra_id: this.annuncioA }), 'Annuncio mandato');
