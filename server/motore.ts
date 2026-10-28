@@ -198,6 +198,21 @@ export async function provaPin(db: Db, serataId: number, squadraId: number, grez
 }
 
 /** Descrive in parole perché una prova è ancora sigillata per una squadra, senza svelarne il contenuto. */
+/**
+ * Una prova che si apre "dopo un'altra prova" più un codice è pronta quando le prove richieste sono aperte
+ * (e l'eventuale fase è iniziata): manca solo il codice. Anche se è nascosta, a quel punto la squadra la vede.
+ */
+export function prontaPerCodice(regole: Regola[], aperte: Set<number>, fase: number): boolean {
+  const q: Quadro = { fase, regole, aperte };
+  for (const gs of gruppi(regole).values()) {
+    for (const g of gs.values()) {
+      if (!g.some((r) => r.tipo === "pin") || !g.some((r) => r.tipo === "prova")) continue;
+      if (g.filter((r) => r.tipo !== "pin").every((r) => rispettata(r, q))) return true;
+    }
+  }
+  return false;
+}
+
 export function motivoSigillo(regole: Regola[], numeroDi: Map<number, number>): { testo: string; conCodice: boolean } {
   if (!regole.length) return { testo: "La consegna la regia", conCodice: false };
   const gs = gruppi(regole).values().next().value as Map<number, Regola[]>;

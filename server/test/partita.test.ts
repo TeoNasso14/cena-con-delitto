@@ -368,6 +368,38 @@ describe("cartelle delle prove", () => {
   }, 60_000);
 });
 
+test("una prova nascosta con 'dopo una prova' e codice compare quando l'altra è consegnata, e si apre solo col codice", async () => {
+  await chiama("POST", "/api/regia/fase", { numero: 1 }, regia);
+  const crea = async (numero: number, regole: unknown[]) => {
+    const r = await chiama("POST", "/api/regia/prove", { numero, titolo: `Prova ${numero}`, regole }, regia);
+    expect(r.stato, JSON.stringify(r.dati)).toBe(201);
+    return r.dati.id as number;
+  };
+  const a = await crea(90, []);
+  const b = await crea(91, [{ tipo: "prova", prova_richiesta_id: a, gruppo: 1 }, { tipo: "pin", pin: "9191", gruppo: 1 }]);
+  const c = await crea(92, [{ tipo: "prova", prova_richiesta_id: b, gruppo: 1 }, { tipo: "pin", pin: "9292", gruppo: 1 }]);
+  const soloCodice = await crea(93, [{ tipo: "pin", pin: "9393", gruppo: 1 }]);
+  const vede = async () => (await chiama("GET", "/api/squadra/stato", undefined, corvi)).dati.prove as any[];
+  let v = await vede();
+  for (const id of [a, b, c, soloCodice]) expect(v.find((p) => p.id === id)).toBeUndefined();
+  // il codice della 91 non basta finché la 90 non c'è
+  expect((await chiama("POST", "/api/squadra/codice", { codice: "9191" }, corvi)).dati.esito).toBe("non_ancora");
+  expect((await chiama("POST", "/api/regia/consegna", { prova_id: a, squadra_id: ids.corvi }, regia)).stato).toBe(200);
+  v = await vede();
+  expect(v.find((p) => p.id === a)).toMatchObject({ aperta: true });
+  expect(v.find((p) => p.id === b)).toMatchObject({ aperta: false, conCodice: true });
+  expect(v.find((p) => p.id === c)).toBeUndefined();
+  expect(v.find((p) => p.id === soloCodice)).toBeUndefined();
+  // il codice resta necessario
+  expect((await chiama("POST", "/api/squadra/codice", { codice: "9191" }, corvi)).dati).toEqual({ esito: "aperta", prove: [b] });
+  v = await vede();
+  expect(v.find((p) => p.id === b)).toMatchObject({ aperta: true });
+  expect(v.find((p) => p.id === c)).toMatchObject({ aperta: false });
+  // l'altra squadra non vede nulla
+  const g = (await chiama("GET", "/api/squadra/stato", undefined, gufi)).dati.prove as any[];
+  expect(g.find((p) => p.id === b)).toBeUndefined();
+});
+
 test("la soluzione si può nascondere di nuovo", async () => {
   expect((await chiama("POST", "/api/regia/nascondi-soluzione", undefined, corvi)).stato).toBe(403);
   const prima = (await chiama("GET", "/api/regia", undefined, regia)).dati.serata;

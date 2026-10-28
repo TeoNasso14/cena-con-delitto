@@ -1,6 +1,6 @@
 import { utente } from "./accesso.ts";
 import { corpo, Db, Errore, json, testo, tocca } from "./base.ts";
-import { bloccoPin, motivoSigillo, PIN_ERRORI_MAX, provaPin, Regola, regolePerSquadra } from "./motore.ts";
+import { bloccoPin, motivoSigillo, PIN_ERRORI_MAX, prontaPerCodice, provaPin, Regola, regolePerSquadra } from "./motore.ts";
 
 interface Prova {
   id: number; numero: number; titolo: string; tipo: string; testo: string;
@@ -51,8 +51,12 @@ export async function stato(req: Request, db: Db) {
     perProva.get(r.prova_id)!.push(r);
   }
 
-  // Una prova fuori elenco compare solo quando la squadra la apre.
-  const elenco = prove.filter((p) => p.in_elenco || apertaDa.has(p.id)).map((p) => {
+  // Una prova fuori elenco compare quando la squadra la apre, oppure quando manca solo il suo codice
+  // perché le prove che la precedono sono già aperte (anche se consegnate dalla regia).
+  const giaAperte = new Set(apertaDa.keys());
+  const elenco = prove
+    .filter((p) => p.in_elenco || apertaDa.has(p.id) || prontaPerCodice(perProva.get(p.id) ?? [], giaAperte, serata!.fase_corrente))
+    .map((p) => {
     const a = apertaDa.get(p.id);
     const cartella = p.cartella_id !== null && visibili.has(p.cartella_id) ? p.cartella_id : null;
     if (a) {

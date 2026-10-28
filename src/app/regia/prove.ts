@@ -171,7 +171,7 @@ interface Gruppo { cartella: CartellaR | null; prove: ProvaR[] }
             </select>
           </label>
           <label class="etichetta" for="pr-titolo">Titolo<input id="pr-titolo" name="pr-titolo" class="campo" [(ngModel)]="b.titolo" required maxlength="120"></label>
-          <label class="etichetta" for="pr-prima">Prima di aprirla, le squadre <small>Una volta aperta, la vedono sempre.</small>
+          <label class="etichetta" for="pr-prima">Prima di aprirla, le squadre <small>Una volta aperta, la vedono sempre. Se è nascosta e si apre dopo un'altra prova con un codice, compare sigillata appena quell'altra prova è aperta.</small>
             <select id="pr-prima" name="pr-prima" class="campo" [(ngModel)]="b.prima">
               @for (o of opzioniPrima; track o[0]) { <option [ngValue]="o[0]">{{ o[1] }}</option> }
             </select>
