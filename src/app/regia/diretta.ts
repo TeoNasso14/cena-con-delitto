@@ -95,7 +95,7 @@ import { RegiaStato, SquadraR, TIPI_SCENA } from './stato';
               <button class="bottone bottone--pieno" type="button" (click)="successiva()" [disabled]="!prossimaScena()"><app-icona nome="avanti" />Scena successiva</button>
               <button class="bottone" type="button" (click)="nero(!s.schermo_nero)">{{ s.schermo_nero ? 'Riaccendi' : 'Schermo nero' }}</button>
             </div>
-            @if (scenaInOnda()?.tipo === 'rivelazione') {
+            @if (t.serata.stato !== 'bozza' || scenaInOnda()?.tipo === 'rivelazione') {
               <div class="rivela">
                 @if (s.rivelata) {
                   <span class="r-pillola r-pillola--zucca">Soluzione rivelata sul proiettore</span>
@@ -107,7 +107,7 @@ import { RegiaStato, SquadraR, TIPI_SCENA } from './stato';
                   <button class="bottone" type="button" (click)="confermaRivela.set(false)">Non ancora</button>
                 } @else {
                   <button class="bottone bottone--pieno" type="button" (click)="confermaRivela.set(true)">Rivela la soluzione</button>
-                  <span class="secondario">Il proiettore mostra colpevole, movente, arma e chi ha indovinato.</span>
+                  <span class="secondario">{{ scenaInOnda()?.tipo === 'rivelazione' ? 'Il proiettore mostra colpevole, movente, arma e chi ha indovinato.' : haRivelazione() ? 'Il proiettore passa alla scena di rivelazione e mostra colpevole, movente, arma e chi ha indovinato.' : 'Non c\'è una scena di rivelazione: creala in Scene del proiettore, altrimenti il proiettore non mostra la soluzione.' }}</span>
                 }
               </div>
             }
@@ -265,6 +265,7 @@ export class DirettaVista {
   statoSerata(stato: string) { this.st.fai(() => this.api.post('/api/regia/stato', { stato }), stato === 'in_pausa' ? 'Serata in pausa' : 'Si riparte'); }
   avviaFase(numero: number) { this.st.fai(() => this.api.post('/api/regia/fase', { numero }), `Fase ${numero} iniziata`); }
   readonly confermaRivela = signal(false);
+  readonly haRivelazione = computed(() => !!this.st.t()?.scene.some((x) => x.tipo === 'rivelazione'));
   nascondi() { this.st.fai(() => this.api.post('/api/regia/nascondi-soluzione'), 'Soluzione nascosta: il proiettore torna all\'attesa'); }
   rivela() { this.confermaRivela.set(false); this.st.fai(() => this.api.post('/api/regia/rivela'), 'Soluzione rivelata'); }
   successiva() { this.st.fai(() => this.api.post('/api/regia/onda/successiva'), 'Scena successiva in onda'); }
