@@ -122,26 +122,58 @@ export async function propagaTutte(db: Db, serataId: number) {
  * Se la prova ha un codice valido per quella squadra non si apre: compare sul telefono, sigillata e con il titolo,
  * e la squadra la apre digitando il codice. Le prove senza codice si aprono subito.
  */
-export async function consegnaDallaRegia(db: Db, serataId: number, squadraId: number, provaId: number): Promise<"aperta" | "mostrata" | "gia"> {
-  const q = await quadro(db, serataId, squadraId);
-  if (q.aperte.has(provaId)) return "gia";
-  if (q.regole.some((r) => r.prova_id === provaId && r.tipo === "pin")) {
-    const r = await db.q(
-      "INSERT INTO prova_mostrata (squadra_id, prova_id) VALUES ($1, $2) ON CONFLICT DO NOTHING RETURNING prova_id",
-      [squadraId, provaId],
-    );
-    if (r.length) {
-      const p = await db.uno<{ numero: number }>("SELECT numero FROM prova WHERE id = $1", [provaId]);
-      const sq = await db.uno<{ nome: string }>("SELECT nome FROM squadra WHERE id = $1", [squadraId]);
-      await db.q("INSERT INTO evento (serata_id, squadra_id, tipo, testo) VALUES ($1, $2, 'mostrata', $3)", [
-        serataId, squadraId, `La regia ha mostrato a ${sq?.nome ?? "una squadra"} la prova n. ${p?.numero}: si apre con il suo codice`,
-      ]);
+async function mostra(db: Db, serataId: number, squadraId: number, provaId: number, aCatena: boolean) {
+  const r = await db.q(
+    "INSERT INTO prova_mostrata (squadra_id, prova_id) VALUES ($1, $2) ON CONFLICT DO NOTHING RETURNING prova_id",
+    [squadraId, provaId],
+  );
+  if (!r.length) return false;
+  const p = await db.uno<{ numero: number }>("SELECT numero FROM prova WHERE id = $1", [provaId]);
+  const sq = await db.uno<{ nome: string }>("SELECT nome FROM squadra WHERE id = $1", [squadraId]);
+  await db.q("INSERT INTO evento (serata_id, squadra_id, tipo, testo) VALUES ($1, $2, 'mostrata', $3)", [
+    serataId, squadraId,
+    `La regia ha mostrato a ${sq?.nome ?? "una squadra"} la prova n. ${p?.numero}${aCatena ? " (a catena)" : ""}: resta sigillata finché non si apre`,
+  ]);
+  return true;
+}
+
+/**
+ * La regia consegna una prova a una squadra.
+ * - Una prova senza codice si apre subito. Una prova con codice compare sigillata con il titolo e si apre col suo codice.
+ * - A catena compaiono, sigillate e con il titolo, le prove che si aprono "dopo" quella consegnata (e dopo quelle
+ *   comparse così), purché valgano per la squadra e la loro fase sia iniziata. Ognuna mantiene le sue condizioni:
+ *   codice e prove richieste. Quelle senza codice si aprono da sole appena le prove richieste sono aperte.
+ */
+export async function consegnaDallaRegia(db: Db, serataId: number, squadraId: number, provaId: number) {
+  const esito = { stato: "gia" as "aperta" | "mostrata" | "gia", aCatena: [] as number[] };
+  let q = await quadro(db, serataId, squadraId);
+  if (!q.aperte.has(provaId)) {
+    if (q.regole.some((r) => r.prova_id === provaId && r.tipo === "pin")) {
+      if (await mostra(db, serataId, squadraId, provaId, false)) esito.stato = "mostrata";
+    } else if (await apri(db, serataId, squadraId, provaId, "regia")) {
+      esito.stato = "aperta";
     }
-    return r.length ? "mostrata" : "gia";
   }
-  const ok = await apri(db, serataId, squadraId, provaId, "regia");
   await propaga(db, serataId, squadraId);
-  return ok ? "aperta" : "gia";
+
+  const catena = new Set([provaId]);
+  for (let giro = 0; giro < 50; giro++) {
+    q = await quadro(db, serataId, squadraId);
+    let cambiato = false;
+    for (const [id, gs] of gruppi(q.regole)) {
+      if (q.aperte.has(id) || catena.has(id)) continue;
+      for (const g of gs.values()) {
+        if (!g.some((r) => r.tipo === "prova" && catena.has(r.prova_richiesta_id ?? -1))) continue;
+        if (!g.filter((r) => r.tipo === "fase").every((r) => rispettata(r, q))) continue;
+        catena.add(id);
+        cambiato = true;
+        if (await mostra(db, serataId, squadraId, id, true)) esito.aCatena.push(id);
+        break;
+      }
+    }
+    if (!cambiato) break;
+  }
+  return esito;
 }
 
 export const PIN_ERRORI_MAX = 5;

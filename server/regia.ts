@@ -567,12 +567,18 @@ export async function consegna(req: Request, db: Db) {
     ? await db.q<{ id: number }>("SELECT id FROM squadra WHERE serata_id = $1", [u.serata_id])
     : [{ id: intero(b.squadra_id, "squadra") }];
   const esiti = { aperta: 0, mostrata: 0, gia: 0 };
+  const anche = new Set<number>();
   for (const s of squadre) {
     await proprio(db, "squadra", s.id, u.serata_id);
-    esiti[await consegnaDallaRegia(db, u.serata_id, s.id, provaId)]++;
+    const r = await consegnaDallaRegia(db, u.serata_id, s.id, provaId);
+    esiti[r.stato]++;
+    r.aCatena.forEach((id) => anche.add(id));
   }
+  const catena = anche.size
+    ? (await db.q<{ numero: number }>("SELECT numero FROM prova WHERE id = ANY($1::int[]) ORDER BY numero", [[...anche]])).map((p) => p.numero)
+    : [];
   await tocca(db, u.serata_id);
-  return json({ ok: true, ...esiti });
+  return json({ ok: true, ...esiti, catena });
 }
 
 export async function annuncio(req: Request, db: Db) {

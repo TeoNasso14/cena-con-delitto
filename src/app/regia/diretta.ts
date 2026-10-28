@@ -5,7 +5,7 @@ import { Api, ora } from '../api';
 import { Icona } from '../icona';
 import { RegiaStato, SquadraR, TIPI_SCENA } from './stato';
 
-interface EsitoConsegna { aperta: number; mostrata: number; gia: number }
+interface EsitoConsegna { aperta: number; mostrata: number; gia: number; catena?: number[] }
 
 @Component({
   selector: 'app-diretta',
@@ -127,7 +127,7 @@ interface EsitoConsegna { aperta: number; mostrata: number; gia: number }
         <section class="r-blocco" aria-labelledby="t-intervieni">
           <h2 id="t-intervieni">Intervieni</h2>
           <form class="r-scheda r-modulo" (ngSubmit)="consegna()">
-            <label class="etichetta" for="c-prova">Consegna una prova <small>Se la prova ha un codice, la squadra la vede sigillata con il titolo e la apre digitando il codice.</small>
+            <label class="etichetta" for="c-prova">Consegna una prova <small>Se la prova ha un codice, la squadra la vede sigillata con il titolo e la apre digitando il codice. Compaiono con il titolo anche le prove che vengono dopo, ognuna con le sue condizioni.</small>
               <select id="c-prova" name="c-prova" class="campo" [(ngModel)]="consegnaProva" required>
                 <option [ngValue]="null" disabled>Scegli la prova</option>
                 @for (p of t.prove; track p.id) { <option [ngValue]="p.id">N. {{ p.numero }}, {{ p.titolo }}</option> }
@@ -285,9 +285,11 @@ export class DirettaVista {
     if (r) this.st.dimmi(this.esitoConsegna(r, `Aiutino consegnato a ${q.nome}`));
   }
   private esitoConsegna(r: EsitoConsegna, aperta: string) {
-    if (r.mostrata && !r.aperta) return 'Prova mostrata con il titolo: si apre quando la squadra digita il suo codice';
-    if (!r.mostrata && !r.aperta) return 'Le squadre avevano già questa prova';
-    return aperta;
+    const n = r.catena ?? [];
+    const catena = !n.length ? '' : n.length === 1 ? `. A catena compare anche la n. ${n[0]}` : `. A catena compaiono anche le n. ${n.join(', ')}`;
+    if (r.mostrata && !r.aperta) return 'Prova mostrata con il titolo: si apre quando la squadra digita il suo codice' + catena;
+    if (!r.mostrata && !r.aperta) return (n.length ? 'La prova c\'era già' : 'Le squadre avevano già questa prova') + catena;
+    return aperta + catena;
   }
   async annuncia() {
     const ok = await this.st.fai(() => this.api.post('/api/regia/annunci', { testo: this.annuncio, squadra_id: this.annuncioA }), 'Annuncio mandato');

@@ -384,17 +384,21 @@ test("una prova nascosta con 'dopo una prova' e codice compare quando l'altra è
   for (const id of [a, b, c, soloCodice]) expect(v.find((p) => p.id === id)).toBeUndefined();
   // il codice della 91 non basta finché la 90 non c'è
   expect((await chiama("POST", "/api/squadra/codice", { codice: "9191" }, corvi)).dati.esito).toBe("non_ancora");
-  expect((await chiama("POST", "/api/regia/consegna", { prova_id: a, squadra_id: ids.corvi }, regia)).stato).toBe(200);
+  const cons = await chiama("POST", "/api/regia/consegna", { prova_id: a, squadra_id: ids.corvi }, regia);
+  expect(cons.dati).toMatchObject({ aperta: 1, catena: [91, 92] });
   v = await vede();
   expect(v.find((p) => p.id === a)).toMatchObject({ aperta: true });
-  expect(v.find((p) => p.id === b)).toMatchObject({ aperta: false, conCodice: true });
-  expect(v.find((p) => p.id === c)).toBeUndefined();
+  // a catena compaiono sigillate e con il titolo
+  expect(v.find((p) => p.id === b)).toMatchObject({ aperta: false, conCodice: true, titolo: "Prova 91" });
+  expect(v.find((p) => p.id === c)).toMatchObject({ aperta: false, conCodice: true, titolo: "Prova 92" });
   expect(v.find((p) => p.id === soloCodice)).toBeUndefined();
-  // il codice resta necessario
+  // ognuna mantiene le sue condizioni: la 92 aspetta la 91
+  expect((await chiama("POST", "/api/squadra/codice", { codice: "9292" }, corvi)).dati.esito).toBe("non_ancora");
   expect((await chiama("POST", "/api/squadra/codice", { codice: "9191" }, corvi)).dati).toEqual({ esito: "aperta", prove: [b] });
   v = await vede();
   expect(v.find((p) => p.id === b)).toMatchObject({ aperta: true });
   expect(v.find((p) => p.id === c)).toMatchObject({ aperta: false });
+  expect((await chiama("POST", "/api/squadra/codice", { codice: "9292" }, corvi)).dati).toEqual({ esito: "aperta", prove: [c] });
   // l'altra squadra non vede nulla
   const g = (await chiama("GET", "/api/squadra/stato", undefined, gufi)).dati.prove as any[];
   expect(g.find((p) => p.id === b)).toBeUndefined();
@@ -411,12 +415,25 @@ test("una prova con codice consegnata dalla regia compare con il titolo e si apr
   const v = await vede();
   expect(v).toMatchObject({ aperta: false, titolo: "La lettera del notaio", conCodice: true });
   expect(v.testo).toBeUndefined();
+  // a catena anche partendo da una prova con codice
+  const dopo = await chiama("POST", "/api/regia/prove", { numero: 97, titolo: "La busta sigillata", testo: "dentro", regole: [{ tipo: "prova", prova_richiesta_id: id, gruppo: 1 }, { tipo: "pin", pin: "9797", gruppo: 1 }] }, regia);
+  const senzaCodice = await chiama("POST", "/api/regia/prove", { numero: 98, titolo: "Il timbro", regole: [{ tipo: "prova", prova_richiesta_id: dopo.dati.id, gruppo: 1 }] }, regia);
+  const c2 = await chiama("POST", "/api/regia/consegna", { prova_id: id, squadra_id: ids.corvi }, regia);
+  expect(c2.dati.catena).toEqual([97, 98]);
+  const tutte = (await chiama("GET", "/api/squadra/stato", undefined, corvi)).dati.prove as any[];
+  expect(tutte.find((p) => p.id === dopo.dati.id)).toMatchObject({ aperta: false, titolo: "La busta sigillata" });
+  expect(tutte.find((p) => p.id === dopo.dati.id).testo).toBeUndefined();
+  expect(tutte.find((p) => p.id === senzaCodice.dati.id)).toMatchObject({ aperta: false, titolo: "Il timbro" });
   // una seconda consegna non cambia nulla
   expect((await chiama("POST", "/api/regia/consegna", { prova_id: id, squadra_id: ids.corvi }, regia)).dati).toMatchObject({ gia: 1 });
   // l'altra squadra non la vede
   expect(((await chiama("GET", "/api/squadra/stato", undefined, gufi)).dati.prove as any[]).find((p) => p.id === id)).toBeUndefined();
   expect((await chiama("POST", "/api/squadra/codice", { codice: "9696" }, corvi)).dati).toEqual({ esito: "aperta", prove: [id] });
   expect(await vede()).toMatchObject({ aperta: true, testo: "segreto", via: "pin" });
+  // la 97 ora chiede solo il suo codice; la 98 senza codice si apre da sola dopo la 97
+  expect((await chiama("POST", "/api/squadra/codice", { codice: "9797" }, corvi)).dati.esito).toBe("aperta");
+  const fine = (await chiama("GET", "/api/squadra/stato", undefined, corvi)).dati.prove as any[];
+  expect(fine.find((p) => p.id === senzaCodice.dati.id)).toMatchObject({ aperta: true, via: "catena" });
 });
 
 test("la soluzione si può nascondere di nuovo", async () => {
