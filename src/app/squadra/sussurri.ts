@@ -35,21 +35,21 @@ const FRASI = [
   'Gio, ti ho visto ieri notte. Eri tu?',
   'Sara, il tuo riflesso è rimasto indietro.',
 
-  // E quattordici per Pietro, che se le merita.
-  'Pietro, anche i fantasmi ti evitano.',
-  'Pietro, il vampiro ha assaggiato e ha rinunciato.',
-  'Pietro, sei il primo sospettato. Di tutto.',
-  'Pietro, la zucca ha più idee di te.',
-  'Pietro, nemmeno gli zombie ti vogliono in squadra.',
-  'Pietro, la strega ha detto: lui no, è troppo.',
-  'Pietro, il corvo ride di te.',
-  'Pietro, stasera muori tu. Di vergogna.',
-  'Pietro, il gatto nero cambia strada quando ti vede.',
-  'Pietro, la casa è infestata da quando sei entrato.',
-  'Pietro, il cimitero ha rifiutato la tua prenotazione.',
-  'Pietro, sei l\'unico che il buio non vuole.',
-  'Pietro, l\'assassino ha un alibi. Tu no.',
-  'Pietro, hai paura? Fai bene.',
+  // E quattordici per Pietro, che se le merita tutte.
+  'Pietro, anche i fantasmi fingono di non conoscerti.',
+  'Pietro, il vampiro ti ha assaggiato e ha chiesto il conto.',
+  'Pietro, sei il primo sospettato. Di tutto. Da sempre.',
+  'Pietro, la zucca ha più idee di te. Ed è vuota.',
+  'Pietro, gli zombie cercano cervelli: con te sono a posto.',
+  'Pietro, la strega ti ha guardato e ha chiuso il calderone.',
+  'Pietro, il corvo ride di te. Ha ragione.',
+  'Pietro, stasera muori tu. Di vergogna, come al solito.',
+  'Pietro, il gatto nero porta sfortuna. Tu fai di peggio.',
+  'Pietro, la casa era tranquilla prima che entrassi.',
+  'Pietro, il cimitero ha rifiutato la tua prenotazione: troppo noioso.',
+  'Pietro, sei stato invitato per sbaglio. Nessuno ha avuto il coraggio di dirtelo.',
+  'Pietro, l\'assassino ha un alibi. Tu neanche una scusa.',
+  'Pietro, la tua squadra perde punti solo a vederti.',
 ];
 
 /** Piccole figure animate (disegnate qui, nessun file esterno) che "parlano" dalla nuvoletta. */
