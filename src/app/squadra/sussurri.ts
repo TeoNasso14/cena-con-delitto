@@ -119,12 +119,12 @@ const FRASI = [
   'Il cadavere era più vivace di questa squadra.',
   'Qualcuno ha già sbagliato l\'accusa. Si vede dalla faccia.',
 
-  // Alessia, arrivata dopo.
-  'Alessia, il fantasma ti ha vista e si è nascosto lui.',
-  'Alessia, la strega ti ha offerto una mela. Per toglierti di mezzo.',
-  'Alessia, anche il vampiro preferisce digiunare.',
-  'Alessia, il cimitero ha più vita della tua squadra.',
-  'Alessia, sei arrivata tardi pure al tuo funerale.',
+  // Altre per Sara.
+  'Sara, il fantasma ti ha vista e si è nascosto lui.',
+  'Sara, la strega ti ha offerto una mela. Per toglierti di mezzo.',
+  'Sara, anche il vampiro preferisce digiunare.',
+  'Sara, il cimitero ha più vita della tua squadra.',
+  'Sara, sei arrivata tardi pure al tuo funerale.',
 ];
 
 /** Piccole figure animate (disegnate qui, nessun file esterno) che "parlano" dalla nuvoletta. */
