@@ -134,7 +134,7 @@ type Figura = (typeof FIGURE)[number];
 const PRIMA = 10_000;
 const ATTESA_MIN = 20_000;
 const ATTESA_MAX = 45_000;
-const DURATA = 5_500;
+const DURATA = 10_000;
 
 /** Nuvolette inquietanti che compaiono ogni tanto in basso, sui telefoni delle squadre. */
 @Component({
