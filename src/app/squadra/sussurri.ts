@@ -39,17 +39,17 @@ const FRASI = [
   'Pietro, anche i fantasmi fingono di non conoscerti.',
   'Pietro, il vampiro ti ha assaggiato e ha chiesto il conto.',
   'Pietro, sei il primo sospettato. Di tutto. Da sempre.',
-  'Pietro, la zucca ha più idee di te. Ed è vuota.',
+  'Pietro, la zucca ha più capelli di te. E idee.',
   'Pietro, gli zombie cercano cervelli: con te sono a posto.',
   'Pietro, la strega ti ha guardato e ha chiuso il calderone.',
   'Pietro, il corvo ride di te. Ha ragione.',
   'Pietro, stasera muori tu. Di vergogna, come al solito.',
-  'Pietro, il gatto nero porta sfortuna. Tu fai di peggio.',
+  'Pietro, spegnete le candele: basta la sua testa a fare luce.',
   'Pietro, la casa era tranquilla prima che entrassi.',
   'Pietro, il cimitero ha rifiutato la tua prenotazione: troppo noioso.',
-  'Pietro, sei stato invitato per sbaglio. Nessuno ha avuto il coraggio di dirtelo.',
+  'Pietro, i fantasmi si specchiano sulla tua testa per sistemarsi il lenzuolo.',
   'Pietro, l\'assassino ha un alibi. Tu neanche una scusa.',
-  'Pietro, la tua squadra perde punti solo a vederti.',
+  'Pietro, il teschio sullo scaffale ti ha scambiato per un cugino.',
 ];
 
 /** Piccole figure animate (disegnate qui, nessun file esterno) che "parlano" dalla nuvoletta. */
