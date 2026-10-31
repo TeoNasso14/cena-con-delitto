@@ -124,9 +124,9 @@ const FRASI = [
 const FIGURE = ['fantasma', 'pipistrello', 'ragno', 'zucca', 'occhi', 'candela'] as const;
 type Figura = (typeof FIGURE)[number];
 
-const PRIMA = 40_000;
-const ATTESA_MIN = 70_000;
-const ATTESA_MAX = 160_000;
+const PRIMA = 10_000;
+const ATTESA_MIN = 20_000;
+const ATTESA_MAX = 45_000;
 const DURATA = 5_500;
 
 /** Nuvolette inquietanti che compaiono ogni tanto in basso, sui telefoni delle squadre. */
@@ -267,7 +267,7 @@ export class Sussurri {
   constructor() {
     // ?sussurri=subito fa comparire la prima nuvoletta dopo un attimo: serve per provarle.
     const subito = new URLSearchParams(location.search).get('sussurri') === 'subito';
-    this.programma(subito ? 1_500 : PRIMA + Math.random() * 30_000);
+    this.programma(subito ? 1_500 : PRIMA + Math.random() * 10_000);
     inject(DestroyRef).onDestroy(() => clearTimeout(this.timer));
   }
 
