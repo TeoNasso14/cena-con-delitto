@@ -18,6 +18,38 @@ const FRASI = [
   'Il vento conosce il tuo nome.',
   'Non era il gatto.',
   'Fa più freddo di prima, vero?',
+
+  // Una per ciascun commensale.
+  'Ali, il fantasma ti ha chiesto l\'amicizia.',
+  'Mela, qualcuno ha morso la tua ombra.',
+  'Laura, non guardare sotto la tovaglia.',
+  'Sasso, la cripta ti ha tenuto un posto.',
+  'Losco: già il nome è sospetto.',
+  'Tenca, il lago ti sta chiamando.',
+  'Teo, chi ha fatto questo sito non dorme da giorni.',
+  'Giulia, il ritratto ti segue con gli occhi.',
+  'Andre, una mano fredda ti cerca la spalla.',
+  'Bianca, stasera sei più pallida del solito.',
+  'Chiara, la candela si spegne solo quando passi tu.',
+  'Gabri, il corvo ha imparato il tuo nome.',
+  'Gio, ti ho visto ieri notte. Eri tu?',
+  'Sara, il tuo riflesso è rimasto indietro.',
+
+  // E quattordici per Pietro, che se le merita.
+  'Pietro, anche i fantasmi ti evitano.',
+  'Pietro, il vampiro ha assaggiato e ha rinunciato.',
+  'Pietro, sei il primo sospettato. Di tutto.',
+  'Pietro, la zucca ha più idee di te.',
+  'Pietro, nemmeno gli zombie ti vogliono in squadra.',
+  'Pietro, la strega ha detto: lui no, è troppo.',
+  'Pietro, il corvo ride di te.',
+  'Pietro, stasera muori tu. Di vergogna.',
+  'Pietro, il gatto nero cambia strada quando ti vede.',
+  'Pietro, la casa è infestata da quando sei entrato.',
+  'Pietro, il cimitero ha rifiutato la tua prenotazione.',
+  'Pietro, sei l\'unico che il buio non vuole.',
+  'Pietro, l\'assassino ha un alibi. Tu no.',
+  'Pietro, hai paura? Fai bene.',
 ];
 
 /** Piccole figure animate (disegnate qui, nessun file esterno) che "parlano" dalla nuvoletta. */
