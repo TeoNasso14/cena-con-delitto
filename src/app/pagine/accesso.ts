@@ -3,6 +3,7 @@ import { FormsModule } from '@angular/forms';
 import { Router, RouterLink } from '@angular/router';
 import { Api, ErroreApi, Ruolo } from '../api';
 import { Sessione } from '../sessione';
+import { Firma } from '../firma';
 
 const STILE = `
   :host { display: block; min-height: 100dvh; position: relative; overflow: hidden; }
@@ -19,7 +20,7 @@ const STILE = `
 
 @Component({
   selector: 'app-accesso',
-  imports: [FormsModule, RouterLink],
+  imports: [FormsModule, RouterLink, Firma],
   changeDetection: ChangeDetectionStrategy.OnPush,
   styles: STILE,
   template: `
@@ -40,6 +41,7 @@ const STILE = `
       @if (daConfigurare()) {
         <p class="nota">Il sito non ha ancora una regia. <a routerLink="/avvio">Crea l'account regia</a> con il codice di primo avvio.</p>
       }
+      <app-firma />
     </main>
   `,
 })
@@ -80,7 +82,7 @@ export class Accesso implements OnInit {
 
 @Component({
   selector: 'app-avvio',
-  imports: [FormsModule, RouterLink],
+  imports: [FormsModule, RouterLink, Firma],
   changeDetection: ChangeDetectionStrategy.OnPush,
   styles: STILE,
   template: `
@@ -105,6 +107,7 @@ export class Accesso implements OnInit {
         <button class="bottone bottone--pieno" type="submit" [disabled]="attesa()">Crea la regia</button>
       </form>
       <p class="nota"><a routerLink="/accesso">Torna all'accesso</a></p>
+      <app-firma />
     </main>
   `,
 })

@@ -4,10 +4,11 @@ import { Api } from '../api';
 import { Icona } from '../icona';
 import { Sessione } from '../sessione';
 import { RegiaStato } from './stato';
+import { Firma } from '../firma';
 
 @Component({
   selector: 'app-regia',
-  imports: [RouterOutlet, RouterLink, RouterLinkActive, Icona],
+  imports: [RouterOutlet, RouterLink, RouterLinkActive, Icona, Firma],
   changeDetection: ChangeDetectionStrategy.OnPush,
   styles: `
     :host { display: flex; flex-wrap: wrap; min-height: 100dvh; }
@@ -46,6 +47,7 @@ import { RegiaStato } from './stato';
     </nav>
     <main class="centro">
       @if (st.t()) { <router-outlet /> } @else { <p class="secondario" role="status">Apro la regia…</p> }
+      <app-firma />
     </main>
     @if (st.avviso(); as a) {
       <p class="avviso-regia" [class.errore]="a.errore" role="status">{{ a.testo }}</p>

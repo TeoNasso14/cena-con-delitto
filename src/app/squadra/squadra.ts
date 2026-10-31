@@ -4,10 +4,12 @@ import { Api } from '../api';
 import { Icona } from '../icona';
 import { Sessione } from '../sessione';
 import { StatoSquadraService } from './stato';
+import { Firma } from '../firma';
+import { Sussurri } from './sussurri';
 
 @Component({
   selector: 'app-squadra',
-  imports: [RouterOutlet, RouterLink, RouterLinkActive, Icona],
+  imports: [RouterOutlet, RouterLink, RouterLinkActive, Icona, Firma, Sussurri],
   changeDetection: ChangeDetectionStrategy.OnPush,
   styles: `
     :host { display: block; }
@@ -47,7 +49,9 @@ import { StatoSquadraService } from './stato';
       @if (s && s.serata.stato === 'in_pausa') { <p class="avviso ferma" role="status">La regia ha messo in pausa la serata. I sigilli si riaprono quando riparte.</p> }
       @if (st.errore() && !s) { <p class="avviso avviso--errore ferma" role="alert">{{ st.errore() }}</p> }
       <router-outlet />
+      <app-firma />
     </div>
+    <app-sussurri />
     <nav class="schede" aria-label="Sezioni">
       <ul>
         <li><a routerLink="/squadra" routerLinkActive="attiva" [routerLinkActiveOptions]="{ exact: true }" ariaCurrentWhenActive="page"><app-icona nome="prove" />Prove</a></li>

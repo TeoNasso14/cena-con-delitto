@@ -1,6 +1,7 @@
 import { ChangeDetectionStrategy, Component, computed, effect, ElementRef, inject, OnDestroy, OnInit, signal, viewChild } from '@angular/core';
 import { Router } from '@angular/router';
 import { Api, ora, ripeti } from '../api';
+import { Sussurri } from '../squadra/sussurri';
 
 interface Scena {
   id?: number; tipo: string; titolo: string; testo: string;
@@ -18,6 +19,7 @@ interface StatoSchermo {
 
 @Component({
   selector: 'app-schermo',
+  imports: [Sussurri],
   changeDetection: ChangeDetectionStrategy.OnPush,
   styleUrl: './schermo.css',
   templateUrl: './schermo.html',
