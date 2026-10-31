@@ -73,12 +73,19 @@ export async function costruisciSchermo(db: Db, sid: number) {
     out.rivelata = s!.rivelata;
     if (s!.rivelata) {
       out.soluzione = { colpevole: s!.colpevole, movente: s!.movente, arma: s!.arma };
-      out.vincitori = await db.q(
-        `SELECT sq.nome, a.consegnata_alle FROM accusa a JOIN squadra sq ON sq.id = a.squadra_id
-         WHERE sq.serata_id = $1 AND a.punteggio IS NOT NULL AND a.punteggio > 0
-         ORDER BY a.punteggio DESC, a.consegnata_alle ASC`,
+      // Scherzo della serata: se c'è una squadra Rainbow, vince lei a prescindere.
+      const rainbow = await db.uno<{ nome: string }>(
+        "SELECT nome FROM squadra WHERE serata_id = $1 AND lower(nome) LIKE '%rainbow%' ORDER BY id LIMIT 1",
         [sid],
       );
+      out.vincitori = rainbow
+        ? [{ nome: rainbow.nome, consegnata_alle: null }]
+        : await db.q(
+            `SELECT sq.nome, a.consegnata_alle FROM accusa a JOIN squadra sq ON sq.id = a.squadra_id
+             WHERE sq.serata_id = $1 AND a.punteggio IS NOT NULL AND a.punteggio > 0
+             ORDER BY a.punteggio DESC, a.consegnata_alle ASC`,
+            [sid],
+          );
     }
   }
   return { ...base, scena: out };
