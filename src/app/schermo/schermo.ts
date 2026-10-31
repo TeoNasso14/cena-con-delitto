@@ -15,6 +15,7 @@ interface StatoSchermo {
   versione: string; titolo: string; stato: string; schermoNero: boolean; adesso: string;
   fase: { numero: number; nome: string | null; avviata: string | null; durataMinuti: number | null; elenco: Array<{ numero: number; nome: string }> };
   scena: Scena;
+  sfondo: { url: string; opacita: number } | null;
 }
 
 @Component({

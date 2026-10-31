@@ -46,7 +46,8 @@ export async function servi(req: Request, db: Db, key: string) {
   if (u.ruolo === "schermo") {
     const ok = await db.uno(
       `SELECT 1 FROM scena s JOIN serata se ON se.scena_in_onda = s.id WHERE se.id = $1 AND s.allegato_key = $2
-       UNION SELECT 1 FROM personaggio WHERE serata_id = $1 AND foto_key = $2`,
+       UNION SELECT 1 FROM personaggio WHERE serata_id = $1 AND foto_key = $2
+       UNION SELECT 1 FROM serata WHERE id = $1 AND sfondo_key = $2`,
       [u.serata_id, key],
     );
     if (!ok) throw new Errore(404, "File non trovato.");

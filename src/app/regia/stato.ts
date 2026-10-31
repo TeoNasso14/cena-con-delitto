@@ -8,7 +8,7 @@ export interface ScenaR { id: number; ordine: number; tipo: string; titolo: stri
 export interface PersonaggioR { id: number; nome: string; ruolo: string; scheda: string; note_regia: string; foto_key: string | null; ordine: number }
 export interface SquadraR { id: number; nome: string; colore: string; account_id: number | null; username: string | null; ultimo_accesso: string | null; aperte: number; ultima_prova: string | null; codici_sbagliati: number; prove_aperte: number[]; prove_mostrate?: number[] }
 export interface Fase { numero: number; nome: string; durata_minuti: number | null; avviata_alle: string | null }
-export interface Serata { id: number; titolo: string; premessa: string; stato: 'bozza' | 'in_corso' | 'in_pausa' | 'chiusa'; fase_corrente: number; scena_in_onda: number | null; schermo_nero: boolean; colpevole: string; movente: string; arma: string; rivelata: boolean }
+export interface Serata { id: number; titolo: string; premessa: string; stato: 'bozza' | 'in_corso' | 'in_pausa' | 'chiusa'; fase_corrente: number; scena_in_onda: number | null; schermo_nero: boolean; colpevole: string; movente: string; arma: string; rivelata: boolean; sfondo_key: string | null; sfondo_opacita: number }
 export interface AccusaR { squadra_id: number; squadra: string; colpevole: string; movente: string; arma: string; spiegazione: string; consegnata_alle: string; punteggio: number | null }
 
 export interface Tutto {

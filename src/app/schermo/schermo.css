@@ -1,6 +1,8 @@
 :host { display: block; height: 100dvh; overflow: hidden; cursor: default; }
 .schermo { position: relative; height: 100%; width: 100%; overflow: hidden; display: grid; grid-template-rows: auto 1fr auto; padding: 4.2vh 5vw 4vh; }
 
+.sfondo-foto { position: absolute; inset: 0; z-index: 0; width: 100%; height: 100%; object-fit: cover; pointer-events: none; transition: opacity 900ms ease; }
+[data-scena="nero"] .sfondo-foto { opacity: 0 !important; }
 .luna { position: absolute; z-index: 0; overflow: hidden; border: 0 solid var(--zucca); border-radius: 50%; background: var(--zucca);
   width: 86vh; height: 86vh; left: 71vw; top: 52%; transform: translate(-20%, -50%);
   transition: left 900ms var(--curva-cassetto), top 900ms var(--curva-cassetto), width 900ms var(--curva-cassetto), height 900ms var(--curva-cassetto),

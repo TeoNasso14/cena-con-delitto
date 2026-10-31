@@ -18,12 +18,39 @@ import { RegiaStato, ScenaR, TIPI_SCENA } from './stato';
     .ordine button:disabled { opacity: 0.35; }
     .bottoni { display: flex; gap: 8px; flex-wrap: wrap; justify-content: flex-end; }
     .aiuto { font-size: 14px; color: var(--osso-2); }
+    .sfondo { display: grid; grid-template-columns: minmax(0, 260px) minmax(0, 1fr); gap: 20px; align-items: start; margin-bottom: 24px; }
+    @media (max-width: 640px) { .sfondo { grid-template-columns: minmax(0, 1fr); } }
+    .sfondo h2 { font-family: var(--gotico); font-size: 24px; line-height: 1.1; }
+    .anteprima-sfondo { position: relative; aspect-ratio: 16 / 9; border-radius: 10px; overflow: hidden; background: var(--notte); border: 1px solid var(--filetto); }
+    .anteprima-sfondo img { position: absolute; inset: 0; width: 100%; height: 100%; object-fit: cover; }
+    .anteprima-sfondo .luna-mini { position: absolute; width: 62%; aspect-ratio: 1; border-radius: 50%; background: var(--zucca); right: -14%; top: 50%; transform: translateY(-50%); }
+    .anteprima-sfondo span { position: absolute; left: 8%; top: 40%; font-family: var(--gotico); font-size: 22px; color: var(--osso); }
+    .sfondo-campi { display: grid; gap: 12px; }
+    .sfondo-campi input[type=range] { width: 100%; accent-color: var(--zucca); }
   `,
   template: `
     <header class="r-testa">
       <div><h1>Scene del proiettore</h1><p>La scaletta che porta la storia in sala. In diretta mandi in onda la successiva con un tocco, o una qualsiasi dall'elenco.</p></div>
       <button class="bottone bottone--pieno" type="button" (click)="nuova()"><app-icona nome="piu" />Nuova scena</button>
     </header>
+    <section class="r-scheda sfondo" aria-labelledby="t-sfondo">
+      @let se = st.t()!.serata;
+      <div class="anteprima-sfondo" aria-hidden="true">
+        @if (se.sfondo_key) { <img [src]="'/api/file/' + se.sfondo_key" [style.opacity]="opacita()" alt=""> }
+        <i class="luna-mini"></i>
+        <span>{{ se.titolo }}</span>
+      </div>
+      <div class="sfondo-campi">
+        <h2 id="t-sfondo">Sfondo del proiettore</h2>
+        <p class="aiuto">Una foto, per esempio quella di gruppo, che resta trasparente dietro a tutte le scene. Con lo schermo nero non si vede.</p>
+        <app-allegato etichetta="Foto di sfondo" campo="sfondo-foto" accetta="image/*" [chiave]="se.sfondo_key" (chiaveChange)="salvaSfondo($event)" />
+        @if (se.sfondo_key) {
+          <label class="etichetta" for="sfondo-op">Quanto si vede: {{ percentuale() }}%
+            <input id="sfondo-op" type="range" min="5" max="80" step="1" [value]="percentuale()" (input)="opacitaLocale.set(+$any($event.target).value / 100)" (change)="salvaOpacita()">
+          </label>
+        }
+      </div>
+    </section>
     <div class="r-colonne">
       <ul class="r-elenco r-colonna" style="gap:10px">
         @for (s of st.t()!.scene; track s.id; let i = $index, ultimo = $last, primo = $first) {
@@ -101,6 +128,18 @@ export class SceneRegia {
   };
   b: (Omit<ScenaR, 'id' | 'in_onda_dal'> & { id?: number }) | null = null;
   conferma = false;
+  /** Valore del cursore mentre lo si trascina, prima di salvarlo. */
+  readonly opacitaLocale = signal<number | null>(null);
+  opacita() { return this.opacitaLocale() ?? this.st.t()!.serata.sfondo_opacita ?? 0.25; }
+  percentuale() { return Math.round(this.opacita() * 100); }
+  salvaSfondo(key: string | null) {
+    this.st.fai(() => this.api.put('/api/regia/sfondo', { key }), key ? 'Sfondo del proiettore aggiornato' : 'Sfondo tolto dal proiettore');
+  }
+  async salvaOpacita() {
+    const o = this.opacita();
+    await this.st.fai(() => this.api.put('/api/regia/sfondo', { opacita: o }));
+    this.opacitaLocale.set(null);
+  }
 
   nuova() {
     this.conferma = false;

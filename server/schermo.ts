@@ -12,8 +12,9 @@ export async function costruisciSchermo(db: Db, sid: number) {
   const s = await db.uno<{
     titolo: string; stato: string; fase_corrente: number; scena_in_onda: number | null; schermo_nero: boolean;
     versione: string; rivelata: boolean; colpevole: string; movente: string; arma: string;
+    sfondo_key: string | null; sfondo_opacita: number;
   }>(
-    "SELECT titolo, stato, fase_corrente, scena_in_onda, schermo_nero, versione, rivelata, colpevole, movente, arma FROM serata WHERE id = $1",
+    "SELECT titolo, stato, fase_corrente, scena_in_onda, schermo_nero, versione, rivelata, colpevole, movente, arma, sfondo_key, sfondo_opacita FROM serata WHERE id = $1",
     [sid],
   );
   const fase = await faseInfo(db, sid, s!.fase_corrente);
@@ -37,6 +38,7 @@ export async function costruisciSchermo(db: Db, sid: number) {
       elenco: fase.fasi,
     },
     adesso: new Date().toISOString(),
+    sfondo: s!.sfondo_key ? { url: `/api/file/${encodeURIComponent(s!.sfondo_key)}`, opacita: Number(s!.sfondo_opacita) } : null,
   };
 
   if (!scena) return { ...base, scena: { tipo: "attesa", titolo: s!.titolo, testo: "" } };

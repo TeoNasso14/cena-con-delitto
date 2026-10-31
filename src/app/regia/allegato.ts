@@ -40,10 +40,13 @@ export class Allegato {
     const f = el.files?.[0];
     if (!f) return;
     this.errore.set('');
-    if (f.size > 4 * 1024 * 1024) { this.errore.set('Il file supera 4 MB. Riducilo e riprova.'); el.value = ''; return; }
     this.attesa.set(true);
     try {
-      const r = await this.api.carica(f);
+      // Le foto troppo grandi (tipiche dei telefoni) si rimpiccioliscono qui, prima di caricarle.
+      let file: Blob = f;
+      if (f.size > 4 * 1024 * 1024 && /^image\/(jpeg|png|webp)$/.test(f.type)) file = await rimpicciolisci(f);
+      if (file.size > 4 * 1024 * 1024) { this.errore.set('Il file supera 4 MB. Riducilo e riprova.'); return; }
+      const r = await this.api.carica(file as File);
       this.chiave.set(r.key);
       this.tipo.set(r.tipo);
     } catch (err) {
@@ -53,4 +56,21 @@ export class Allegato {
       el.value = '';
     }
   }
+}
+
+/** Ridimensiona una foto a 2400 px sul lato lungo, in JPEG: resta nitida sul proiettore e pesa poco. */
+async function rimpicciolisci(f: File): Promise<Blob> {
+  const img = await createImageBitmap(f);
+  const lato = 2400;
+  const k = Math.min(1, lato / Math.max(img.width, img.height));
+  const c = document.createElement('canvas');
+  c.width = Math.round(img.width * k);
+  c.height = Math.round(img.height * k);
+  c.getContext('2d')!.drawImage(img, 0, 0, c.width, c.height);
+  img.close();
+  for (const q of [0.85, 0.75, 0.6]) {
+    const b = await new Promise<Blob | null>((ok) => c.toBlob(ok, 'image/jpeg', q));
+    if (b && b.size <= 4 * 1024 * 1024) return b;
+  }
+  return f;
 }

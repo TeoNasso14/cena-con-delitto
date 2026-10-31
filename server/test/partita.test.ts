@@ -464,6 +464,20 @@ test("i file si servono anche a pezzi, come serve a Safari per audio e video", a
   expect(rispostaFile(dati, "audio/mpeg", "bytes=2000-").status).toBe(416);
 });
 
+test("la regia mette la foto di sfondo del proiettore", async () => {
+  expect((await chiama("PUT", "/api/regia/sfondo", { key: "s1-x" }, corvi)).stato).toBe(403);
+  expect((await chiama("PUT", "/api/regia/sfondo", { key: "s999-altra-serata" }, regia)).stato).toBe(400);
+  const sid = (await chiama("GET", "/api/regia", undefined, regia)).dati.serata.id;
+  expect((await chiama("PUT", "/api/regia/sfondo", { key: `s${sid}-foto`, opacita: 0.4 }, regia)).stato).toBe(200);
+  let sc = (await chiama("GET", "/api/schermo/stato", undefined, schermo)).dati;
+  expect(sc.sfondo).toEqual({ url: `/api/file/s${sid}-foto`, opacita: expect.closeTo(0.4, 5) });
+  await chiama("PUT", "/api/regia/sfondo", { opacita: 5 }, regia);
+  sc = (await chiama("GET", "/api/schermo/stato", undefined, schermo)).dati;
+  expect(sc.sfondo.opacita).toBeCloseTo(0.8, 5);
+  await chiama("PUT", "/api/regia/sfondo", { key: null }, regia);
+  expect((await chiama("GET", "/api/schermo/stato", undefined, schermo)).dati.sfondo).toBeNull();
+});
+
 test("confronto delle risposte", () => {
   expect(combacia("la Governante!", "Governante")).toBe(true);
   expect(combacia("Il maggiordomo", "La governante")).toBe(false);

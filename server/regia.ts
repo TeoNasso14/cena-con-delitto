@@ -651,6 +651,29 @@ export async function nascondiSoluzione(req: Request, db: Db) {
   return json({ ok: true });
 }
 
+/** Foto di sfondo del proiettore e la sua trasparenza (da 0.05 a 0.8). */
+export async function sfondo(req: Request, db: Db) {
+  const u = await regia(req, db);
+  const b = await corpo<{ key?: string | null; opacita?: number }>(req);
+  const sets: string[] = [];
+  const valori: unknown[] = [];
+  if (b.key !== undefined) {
+    if (b.key !== null && (typeof b.key !== "string" || !b.key.startsWith(`s${u.serata_id}-`))) throw new Errore(400, "Foto non valida.");
+    valori.push(b.key); sets.push(`sfondo_key = $${valori.length}`);
+  }
+  if (b.opacita !== undefined) {
+    const o = Number(b.opacita);
+    if (!Number.isFinite(o)) throw new Errore(400, "Trasparenza non valida.");
+    valori.push(Math.min(0.8, Math.max(0.05, o))); sets.push(`sfondo_opacita = $${valori.length}`);
+  }
+  if (sets.length) {
+    valori.push(u.serata_id);
+    await db.q(`UPDATE serata SET ${sets.join(", ")} WHERE id = $${valori.length}`, valori);
+    await tocca(db, u.serata_id);
+  }
+  return json({ ok: true });
+}
+
 /* ---------- Strumenti ---------- */
 
 export async function azzera(req: Request, db: Db) {

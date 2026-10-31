@@ -217,4 +217,12 @@ CREATE TABLE IF NOT EXISTS prova_mostrata (
 );
 `,
   },
+  {
+    // Foto di sfondo del proiettore (ad esempio la foto di gruppo), mostrata trasparente dietro le scene.
+    nome: "20261031121000_sfondo_proiettore",
+    sql: String.raw`
+ALTER TABLE serata ADD COLUMN IF NOT EXISTS sfondo_key TEXT;
+ALTER TABLE serata ADD COLUMN IF NOT EXISTS sfondo_opacita REAL NOT NULL DEFAULT 0.25;
+`,
+  },
 ];

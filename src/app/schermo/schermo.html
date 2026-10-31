@@ -1,5 +1,6 @@
 @let st = s();
 <div class="schermo" [attr.data-scena]="tipo()">
+  @if (st?.sfondo; as f) { <img class="sfondo-foto" [src]="f.url" [style.opacity]="f.opacita" alt="" aria-hidden="true"> }
   <div class="luna" aria-hidden="true">
     <i></i><i></i><i></i><i></i>
     <svg class="ramo" viewBox="0 0 1000 1000">
