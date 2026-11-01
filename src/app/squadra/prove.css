@@ -85,7 +85,7 @@
 @keyframes sale { from { opacity: 0; transform: translateY(24px); } to { opacity: 1; transform: none; } }
 .documento { position: relative; margin-top: 6px; width: 100%; text-align: left; background: var(--carta); color: var(--inchiostro); border-radius: 2px; padding: 0 18px 56px; display: grid; gap: 10px; }
 .intestazione { display: flex; justify-content: space-between; gap: 10px; padding: 12px 0 10px; border-bottom: 1.5px solid var(--inchiostro); font-size: 13px; font-weight: 700; letter-spacing: 0.04em; text-transform: uppercase; }
-.intestazione span:last-child { text-align: right; }
+.intestazione span:last-child { text-align: right; text-wrap: balance; }
 .documento strong { font-family: var(--titoli); font-size: 28px; line-height: 1.05; margin-top: 6px; }
 .testo-prova { font-size: 16px; line-height: 1.55; white-space: pre-line; padding-bottom: 8px; border-bottom: 1px solid var(--carta-filetto); }
 .documento img, .documento video { width: 100%; border-radius: 2px; }

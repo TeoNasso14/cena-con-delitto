@@ -24,7 +24,7 @@ import { RegiaStato, ScenaR, TIPI_SCENA } from './stato';
     .sfondo h2 { font-family: var(--titoli); font-size: 24px; line-height: 1.1; }
     .anteprima-sfondo { position: relative; aspect-ratio: 16 / 9; border-radius: 10px; overflow: hidden; background: var(--fondo); border: 1px solid var(--filetto); }
     .anteprima-sfondo img { position: absolute; inset: 0; width: 100%; height: 100%; object-fit: cover; }
-    .anteprima-sfondo .luna-mini { position: absolute; width: 62%; aspect-ratio: 1; border-radius: 50%; background: var(--accento); right: -14%; top: 50%; transform: translateY(-50%); }
+    .anteprima-sfondo .luna-mini { position: absolute; width: 62%; aspect-ratio: 1; border-radius: 50%; background: var(--disco); right: -14%; top: 50%; transform: translateY(-50%); }
     .anteprima-sfondo span { position: absolute; left: 8%; top: 40%; font-family: var(--titoli); font-size: 22px; color: var(--testo-1); }
     .sfondo-campi { display: grid; gap: 12px; }
     .sfondo-campi input[type=range] { width: 100%; accent-color: var(--accento); }
@@ -269,7 +269,8 @@ export class SquadreRegia {
   readonly credenziali = signal<{ titolo: string; username: string; password: string } | null>(null);
   readonly copiato = signal(false);
   nome = '';
-  colore = '#ff7a1a';
+  /** Il colore proposto per una squadra nuova è quello del disco del tema (non l'accento, che segna le cose vive); la regia lo può cambiare. */
+  colore = temaDa(this.st.t()?.serata.tema).colori.disco;
   modifica: number | null = null;
   modNome = '';
   modColore = '';
@@ -410,7 +411,7 @@ export class AccuseRegia {
           <li>
             <button type="button" class="tema" [class.tema--scelto]="tm.id === t.serata.tema" [attr.aria-pressed]="tm.id === t.serata.tema" (click)="scegliTema(tm.id)">
               <span class="tema-anteprima" aria-hidden="true" [style.background]="tm.colori.fondo" [style.border-color]="tm.colori.filetto">
-                <i [style.background]="tm.colori.accento"></i>
+                <i [style.background]="tm.colori.disco"></i>
                 <b [style.font-family]="tm.titoli" [style.color]="tm.colori['testo-1']">{{ t.serata.titolo }}</b>
               </span>
               <span class="tema-nome">{{ tm.nome }}@if (tm.id === t.serata.tema) { <span class="r-pillola r-pillola--accento">In uso</span> }</span>

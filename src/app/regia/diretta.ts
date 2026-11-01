@@ -16,7 +16,7 @@ interface EsitoConsegna { aperta: number; mostrata: number; gia: number; catena?
     .rivela .secondario { font-size: 14px; }
     .anteprima { position: relative; aspect-ratio: 16 / 9; max-width: 100%; border-radius: 10px; background: var(--fondo); overflow: hidden; padding: 28px 6%;
       display: flex; flex-direction: column; justify-content: center; gap: 6px; }
-    .anteprima .luna { position: absolute; width: 82%; aspect-ratio: 1; border-radius: 50%; background: var(--accento); right: -40%; top: 50%; transform: translateY(-50%); }
+    .anteprima .luna { position: absolute; width: 82%; aspect-ratio: 1; border-radius: 50%; background: var(--disco); right: -40%; top: 50%; transform: translateY(-50%); }
     .anteprima.nero .luna { display: none; }
     .anteprima strong { position: relative; font-family: var(--titoli); font-size: clamp(18px, 2.4vw, 28px); line-height: 1; max-width: 46%; }
     .anteprima small { position: relative; color: var(--testo-2); max-width: 46%; }

@@ -6,6 +6,10 @@
 @font-face { font-family: "Barlow"; font-style: normal; font-weight: 700; font-display: swap; src: url("/fonti/barlow-latin-700-normal.woff2") format("woff2"); }
 @font-face { font-family: "Grenze Gotisch"; font-style: normal; font-weight: 500; font-display: swap; src: url("/fonti/grenze-gotisch-latin-500-normal.woff2") format("woff2"); }
 @font-face { font-family: "Grenze Gotisch"; font-style: normal; font-weight: 700; font-display: swap; src: url("/fonti/grenze-gotisch-latin-700-normal.woff2") format("woff2"); }
+/* Noir. League Gothic ha un solo peso e Courier Prime due: gli intervalli evitano grassetti finti. */
+@font-face { font-family: "League Gothic"; font-style: normal; font-weight: 100 900; font-display: swap; src: url("/fonti/league-gothic-latin-400-normal.woff2") format("woff2"); }
+@font-face { font-family: "Courier Prime"; font-style: normal; font-weight: 100 599; font-display: swap; src: url("/fonti/courier-prime-latin-400-normal.woff2") format("woff2"); }
+@font-face { font-family: "Courier Prime"; font-style: normal; font-weight: 600 900; font-display: swap; src: url("/fonti/courier-prime-latin-700-normal.woff2") format("woff2"); }
 
 :root {
   --fondo: #0e0b14;
@@ -17,6 +21,8 @@
   --accento: #ff7a1a;
   --accento-chiaro: #ff9a4d;
   --su-accento: #0e0b14;
+  --disco: #ff7a1a;
+  --su-disco: #0e0b14;
   --sigillo: #8e1b24;
   --sigillo-luce: #b8323c;
   --sigillo-segno: #e7a39a;

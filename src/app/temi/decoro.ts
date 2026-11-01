@@ -20,9 +20,21 @@ import { ChangeDetectionStrategy, Component, input } from '@angular/core';
     .ramo { position: absolute; inset: 0; width: 100%; height: 100%; transition: opacity 700ms ease; }
     :host-context([data-scena="rivelazione"]) .cratere,
     :host-context([data-scena="conto"]) .ramo, :host-context([data-scena="avanzamento"]) .ramo, :host-context([data-scena="rivelazione"]) .ramo { opacity: 0; }
+
+    /* Noir: la luna vista attraverso una veneziana, lamelle scure appena inclinate e il cordino. */
+    .veneziana { position: absolute; inset: 0; width: 100%; height: 100%; transition: opacity 700ms ease; }
+    :host-context([data-scena="conto"]) .veneziana, :host-context([data-scena="avanzamento"]) .veneziana, :host-context([data-scena="rivelazione"]) .veneziana { opacity: 0; }
   `,
   template: `
     @switch (tema()) {
+      @case ('noir') {
+        <svg class="veneziana" viewBox="0 0 1000 1000" preserveAspectRatio="none">
+          <g fill="var(--fondo)" transform="rotate(-6 500 500)">
+            @for (y of lamelle; track y) { <rect x="-200" [attr.y]="y" width="1400" height="32"/> }
+          </g>
+          <path d="M640 -20V1020" stroke="var(--fondo)" stroke-width="7"/>
+        </svg>
+      }
       @default {
         <i class="cratere"></i><i class="cratere"></i><i class="cratere"></i><i class="cratere"></i>
         <svg class="ramo" viewBox="0 0 1000 1000">
@@ -50,4 +62,6 @@ import { ChangeDetectionStrategy, Component, input } from '@angular/core';
 })
 export class Decoro {
   readonly tema = input<string | undefined>();
+  /** Le lamelle della veneziana: fitte in alto, un po' più larghe verso il basso. */
+  readonly lamelle = [-40, 50, 142, 236, 332, 430, 530, 632, 736, 842, 950];
 }

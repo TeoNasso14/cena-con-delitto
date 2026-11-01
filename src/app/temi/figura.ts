@@ -40,8 +40,33 @@ import { Figura as NomeFigura } from './catalogo';
     .fiamma { transform-box: fill-box; transform-origin: 50% 100%; animation: fiamma 0.6s ease-in-out infinite alternate; }
     @keyframes fiamma { from { transform: scale(1, 1) rotate(-3deg); } to { transform: scale(0.85, 1.12) rotate(3deg); } }
 
+    /* cappello */
+    .cappello { transform-box: fill-box; transform-origin: 50% 100%; animation: saluta 3s ease-in-out infinite; }
+    @keyframes saluta { 0%, 70%, 100% { transform: rotate(0); } 80% { transform: translateY(-3px) rotate(-8deg); } 90% { transform: rotate(0); } }
+    /* sigaretta */
+    .fumo { animation: fumo 2.8s ease-out infinite; }
+    .fumo.due { animation-delay: 1.4s; }
+    @keyframes fumo { from { opacity: 0.8; transform: translateY(0); } to { opacity: 0; transform: translate(4px, -10px); } }
+    .brace { animation: brace 1.6s ease-in-out infinite; }
+    @keyframes brace { 0%, 100% { opacity: 1; } 50% { opacity: 0.55; } }
+    /* macchina da scrivere */
+    .foglio-macchina { animation: batte 1.2s steps(4) infinite; }
+    @keyframes batte { from { transform: translateX(3px); } to { transform: translateX(-3px); } }
+    .martelletto { transform-box: fill-box; transform-origin: 50% 100%; animation: colpo 0.3s ease-in-out infinite alternate; }
+    @keyframes colpo { from { transform: rotate(0); } to { transform: rotate(-30deg); } }
+    /* bicchiere */
+    .liquido { transform-box: fill-box; transform-origin: 50% 100%; animation: ondeggia 2.2s ease-in-out infinite; }
+    @keyframes ondeggia { 0%, 100% { transform: skewY(-4deg); } 50% { transform: skewY(4deg); } }
+    /* lampione */
+    .luce { opacity: 0.28; animation: tremola 2.4s steps(1) infinite; }
+    @keyframes tremola { 0%, 100% { opacity: 0.28; } 40% { opacity: 0.12; } 46% { opacity: 0.28; } 72% { opacity: 0.2; } }
+    /* impronta */
+    .impronta { stroke-dasharray: 60; animation: rileva 3.2s ease-in-out infinite; }
+    @keyframes rileva { 0% { stroke-dashoffset: 60; } 50%, 100% { stroke-dashoffset: 0; } }
+
     @media (prefers-reduced-motion: reduce) {
       svg * { animation: none !important; }
+      .impronta { stroke-dasharray: none; }
     }
   `,
   template: `
@@ -101,6 +126,59 @@ import { Figura as NomeFigura } from './catalogo';
           <rect x="22" y="27" width="12" height="22" rx="2" fill="var(--testo-1)"/>
           <path d="M22 30q3 4 2 9" stroke="var(--testo-2)" stroke-width="2" fill="none"/>
           <rect x="17" y="48" width="22" height="4" rx="2" fill="var(--testo-2)"/>
+        </svg>
+      }
+      @case ('cappello') {
+        <svg viewBox="0 0 56 56"><g class="cappello">
+          <path d="M17 34c0-8 2-15 5-18 2-2 4-1 6 1 2-2 4-3 6-1 3 3 5 10 5 18z" fill="var(--testo-2)"/>
+          <path d="M17 31h22v4H17z" fill="var(--fondo)"/>
+          <ellipse cx="28" cy="36" rx="20" ry="4.5" fill="var(--testo-2)"/>
+        </g></svg>
+      }
+      @case ('sigaretta') {
+        <svg viewBox="0 0 56 56">
+          <path class="fumo" d="M42 30c-3-4 3-7 0-11" stroke="var(--testo-2)" stroke-width="1.6" fill="none" stroke-linecap="round"/>
+          <path class="fumo due" d="M45 28c-3-4 3-7 0-11" stroke="var(--testo-2)" stroke-width="1.6" fill="none" stroke-linecap="round"/>
+          <rect x="8" y="33" width="28" height="6" rx="1" fill="var(--testo-1)"/>
+          <rect x="8" y="33" width="9" height="6" rx="1" fill="var(--testo-2)"/>
+          <rect class="brace" x="36" y="33" width="5" height="6" rx="1" fill="var(--accento)"/>
+        </svg>
+      }
+      @case ('macchina') {
+        <svg viewBox="0 0 56 56">
+          <g class="foglio-macchina"><rect x="17" y="6" width="22" height="20" fill="var(--testo-1)"/>
+            <path d="M20 12h14M20 16h16M20 20h10" stroke="var(--fondo-3)" stroke-width="1.4"/></g>
+          <rect x="8" y="24" width="40" height="7" rx="2" fill="var(--testo-2)"/>
+          <path d="M6 33h44l-4 15H10z" fill="var(--testo-2)"/>
+          <g fill="var(--fondo)"><circle cx="16" cy="38" r="1.8"/><circle cx="22" cy="38" r="1.8"/><circle cx="28" cy="38" r="1.8"/><circle cx="34" cy="38" r="1.8"/><circle cx="40" cy="38" r="1.8"/>
+            <rect x="17" y="42" width="22" height="3" rx="1.5"/></g>
+          <path class="martelletto" d="M28 31v-6" stroke="var(--fondo)" stroke-width="2" stroke-linecap="round"/>
+        </svg>
+      }
+      @case ('bicchiere') {
+        <svg viewBox="0 0 56 56">
+          <path class="liquido" d="M17.6 32h20.8l-1.8 14H19.4z" fill="var(--testo-2)" opacity="0.55"/>
+          <rect x="23" y="27" width="9" height="9" rx="1.5" fill="var(--testo-1)" opacity="0.7" transform="rotate(12 27.5 31.5)"/>
+          <path d="M16 18h24l-3 30H19z" fill="none" stroke="var(--testo-1)" stroke-width="2" stroke-linejoin="round"/>
+        </svg>
+      }
+      @case ('lampione') {
+        <svg viewBox="0 0 56 56">
+          <path class="luce" d="M24 17h8l10 33H14z" fill="var(--testo-1)"/>
+          <path d="M28 6v4" stroke="var(--testo-2)" stroke-width="2"/>
+          <path d="M21 10h14l-3 7h-8z" fill="var(--testo-2)"/>
+          <path d="M28 17v33M22 50h12" stroke="var(--testo-2)" stroke-width="2.4" stroke-linecap="round"/>
+        </svg>
+      }
+      @case ('impronta') {
+        <svg viewBox="0 0 56 56">
+          <g class="impronta" fill="none" stroke="var(--testo-1)" stroke-width="1.8" stroke-linecap="round">
+            <path d="M18 40c-3-6-3-14 2-19s13-6 18 0 5 14 2 20"/>
+            <path d="M22 42c-2-5-2-11 1-15s9-5 12 0 3 10 1 15"/>
+            <path d="M26 44c-1-4-1-8 1-11s5-3 6 0 1 7 0 11"/>
+            <path d="M29.5 34c.5 3 .5 7-.5 11"/>
+            <path d="M15 32c0-9 5-16 13-16s13 7 13 16"/>
+          </g>
         </svg>
       }
     }

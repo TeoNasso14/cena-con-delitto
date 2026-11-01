@@ -54,6 +54,7 @@ describe.each(CATALOGO.map((t) => [t.nome, t] as const))("%s", (_nome, t) => {
     }
     expect(contrasto(c["su-accento"], c.accento)).toBeGreaterThanOrEqual(4.5);
     expect(contrasto(c["su-accento"], c["accento-chiaro"])).toBeGreaterThanOrEqual(4.5);
+    expect(contrasto(c["su-disco"], c.disco)).toBeGreaterThanOrEqual(4.5);
     expect(contrasto(c.inchiostro, c.carta)).toBeGreaterThanOrEqual(7);
     expect(contrasto(c.allarme, c.fondo)).toBeGreaterThanOrEqual(4.5);
   });
