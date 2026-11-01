@@ -708,8 +708,17 @@ describe("2.0: più regie e più serate", () => {
     expect((await chiama("GET", "/api/squadra/stato", undefined, suo.cookie)).dati.serata.titolo).toBe("Delitto sul treno");
     expect((await chiama("POST", "/api/accesso", { username: c.dati.username, password: c.dati.password })).stato).toBe(401);
 
+    // la pagina pubblica della serata: titolo e tema, niente del caso
+    expect((await chiama("GET", "/api/s/delitto-sul-treno")).dati).toEqual({ titolo: "Delitto sul treno", tema: "halloween", aperta: true });
+    expect((await chiama("GET", "/api/s/non-esiste")).stato).toBe(404);
+    expect((await chiama("GET", "/api/io", undefined, suo.cookie)).dati).toMatchObject({ ruolo: "squadra", slug: "delitto-sul-treno" });
+    // l'accesso della regia non fa entrare le squadre, nemmeno della serata storica
+    expect((await chiama("POST", "/api/accesso", { ...credCorvi, regia: true })).stato).toBe(401);
+    expect((await chiama("POST", "/api/accesso", { username: "marta", password: "password-di-marta", regia: true })).dati).toEqual({ ruolo: "regia", admin: false });
+
     // serata archiviata: le squadre non entrano e la sessione aperta si ferma
     await db.q("UPDATE serata SET archiviata = TRUE WHERE id = $1", [sM!.id]);
+    expect((await chiama("GET", "/api/s/delitto-sul-treno")).dati.aperta).toBe(false);
     expect((await chiama("POST", "/api/accesso", { username: c.dati.username, password: c.dati.password, slug: "delitto-sul-treno" })).stato).toBe(403);
     expect((await chiama("GET", "/api/squadra/stato", undefined, suo.cookie)).stato).toBe(403);
     await db.q("UPDATE serata SET archiviata = FALSE WHERE id = $1", [sM!.id]);

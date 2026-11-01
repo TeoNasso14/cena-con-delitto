@@ -71,7 +71,7 @@ export class RegiaShell implements OnInit, OnDestroy {
   private rotta = inject(ActivatedRoute);
   constructor() {
     effect(() => {
-      if (this.api.sessioneScaduta()) this.router.navigateByUrl('/accesso');
+      if (this.api.sessioneScaduta()) this.router.navigateByUrl('/regia/accedi');
       else if (this.st.persa()) this.router.navigateByUrl('/regia');
     });
   }

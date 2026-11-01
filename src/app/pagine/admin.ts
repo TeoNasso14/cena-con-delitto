@@ -194,7 +194,7 @@ export class AdminVista implements OnInit {
     try {
       this.vista.set(await this.api.get('/api/admin'));
     } catch (e) {
-      if (e instanceof ErroreApi && e.stato === 401) await this.router.navigateByUrl('/accesso');
+      if (e instanceof ErroreApi && e.stato === 401) await this.router.navigateByUrl('/regia/accedi');
       else this.errore.set((e as Error).message);
     }
   }

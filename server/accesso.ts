@@ -83,6 +83,13 @@ async function serataStorica(db: Db) {
   return db.uno<{ id: number; tema: string; archiviata: boolean }>("SELECT id, tema, archiviata FROM serata ORDER BY id LIMIT 1");
 }
 
+/** Pubblico: la pagina /s/<slug> si veste col tema della serata e mostra il titolo. Nient'altro del caso. */
+export async function serataPubblica(db: Db, slug: string) {
+  const s = await db.uno<{ titolo: string; tema: string; archiviata: boolean }>("SELECT titolo, tema, archiviata FROM serata WHERE slug = $1", [slug]);
+  if (!s) throw new Errore(404, "Questa serata non esiste. Controlla l'indirizzo che ti hanno dato.", "serata_non_trovata");
+  return json({ titolo: s.titolo, tema: s.tema, aperta: !s.archiviata });
+}
+
 export async function statoAvvio(db: Db) {
   // Configurato quando esiste l'amministrazione: prima, SETUP_CODE serve a crearla.
   const r = await db.uno<{ n: number }>("SELECT COUNT(*)::int AS n FROM utente WHERE admin");
@@ -136,7 +143,8 @@ export async function primoAvvio(req: Request, db: Db) {
  * con lo slug cerca squadre e proiettore di quella serata. Il blocco per troppi tentativi vale per nome e serata.
  */
 export async function accedi(req: Request, db: Db) {
-  const b = await corpo<{ username?: string; password?: string; slug?: string }>(req);
+  // regia: true arriva da /regia/accedi, che accetta solo regia e amministrazione.
+  const b = await corpo<{ username?: string; password?: string; slug?: string; regia?: boolean }>(req);
   const username = testo(b.username, "nome utente", { max: 40 }).toLowerCase();
   const password = testo(b.password, "password", { max: 200 });
   const serata = typeof b.slug === "string" && b.slug
@@ -167,6 +175,11 @@ export async function accedi(req: Request, db: Db) {
       const token = firmaSessione({ k: "u", a: p.id, r: "regia", v: p.versione_token });
       return json({ ruolo: "regia", admin: p.admin }, 200, { "set-cookie": cookieSessione(token) });
     }
+  }
+
+  if (b.regia) {
+    await registra(false, null);
+    throw new Errore(401, "Nome utente o password non giusti.", "credenziali");
   }
 
   const u = sid
@@ -202,7 +215,9 @@ export async function io(req: Request, db: Db) {
   const sq = u.squadra_id
     ? await db.uno<{ nome: string; colore: string }>("SELECT nome, colore FROM squadra WHERE id = $1", [u.squadra_id])
     : undefined;
-  return json({ ruolo: u.ruolo, username: u.username, squadra: sq ?? null });
+  // Lo slug serve a "Esci", che riporta squadre e proiettore alla pagina d'accesso della loro serata.
+  const se = await db.uno<{ slug: string }>("SELECT slug FROM serata WHERE id = $1", [u.serata_id]);
+  return json({ ruolo: u.ruolo, username: u.username, squadra: sq ?? null, slug: se?.slug ?? null });
 }
 
 /** La regia cambia la propria password (e se vuole il nome utente). Chiude le altre sessioni di quell'utente. */

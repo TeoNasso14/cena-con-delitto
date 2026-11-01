@@ -28,12 +28,19 @@ export class Sessione {
     return ruolo === 'regia' ? '/regia' : ruolo === 'schermo' ? '/schermo' : '/squadra';
   }
 
+  /** Dove si rientra: squadre e proiettore dalla pagina della loro serata, regia e amministrazione da /regia/accedi. */
+  paginaAccesso(io: Io | null = this.io()) {
+    if (io && io.ruolo !== 'regia') return io.slug ? `/s/${io.slug}` : '/accesso';
+    return '/regia/accedi';
+  }
+
   async esci() {
+    const dove = this.paginaAccesso();
     await this.api.post('/api/uscita').catch(() => undefined);
     this.api.scegliSerata(null);
     this.io.set(null);
     this.caricato = true;
-    await this.router.navigateByUrl('/accesso');
+    await this.router.navigateByUrl(dove);
   }
 }
 
@@ -42,7 +49,7 @@ export const soloPer = (...ruoli: Ruolo[]): CanMatchFn => async () => {
   const s = inject(Sessione);
   const router = inject(Router);
   const io = await s.carica();
-  if (!io) return router.parseUrl('/accesso');
+  if (!io) return router.parseUrl(ruoli.includes('regia') && !ruoli.includes('squadra') && !ruoli.includes('schermo') ? '/regia/accedi' : '/accesso');
   // L'amministrazione non apre serate, quindi non entra nelle pagine di regia, squadre e proiettore.
   if (io.admin || !ruoli.includes(io.ruolo)) return router.parseUrl(s.pagina(io.ruolo, io.admin));
   return true;
@@ -53,6 +60,6 @@ export const soloAdmin: CanMatchFn = async () => {
   const s = inject(Sessione);
   const router = inject(Router);
   const io = await s.carica();
-  if (!io) return router.parseUrl('/accesso');
+  if (!io) return router.parseUrl('/regia/accedi');
   return io.admin ? true : router.parseUrl(s.pagina(io.ruolo));
 };

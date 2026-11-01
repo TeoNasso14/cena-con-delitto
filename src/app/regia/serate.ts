@@ -232,7 +232,7 @@ export class SerateVista implements OnInit {
       this.serate.set((await this.api.get<{ serate: SerataElenco[] }>('/api/regia/serate')).serate);
       this.caricate.set(true);
     } catch (e) {
-      if (e instanceof ErroreApi && e.stato === 401) await this.router.navigateByUrl('/accesso');
+      if (e instanceof ErroreApi && e.stato === 401) await this.router.navigateByUrl('/regia/accedi');
       else this.errore.set((e as Error).message);
     }
   }

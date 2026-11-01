@@ -72,7 +72,7 @@ export class SquadraShell implements OnInit, OnDestroy {
 
   constructor() {
     effect(() => {
-      if (this.api.sessioneScaduta()) this.router.navigateByUrl('/accesso');
+      if (this.api.sessioneScaduta()) this.router.navigateByUrl(this.sessione.paginaAccesso());
     });
   }
   ngOnInit() { this.st.avvia(); }

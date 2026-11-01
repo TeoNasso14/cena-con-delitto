@@ -12,6 +12,7 @@ const n = (v: string) => Number.parseInt(v, 10);
 
 const rotte: Array<[string, RegExp, Gestore]> = [
   ["GET", /^\/api\/avvio$/, (_r, db) => A.statoAvvio(db)],
+  ["GET", /^\/api\/s\/(?<slug>[a-z0-9-]{1,80})$/, (_r, db, p) => A.serataPubblica(db, p.slug)],
   ["POST", /^\/api\/avvio$/, (r, db) => A.primoAvvio(r, db)],
   ["POST", /^\/api\/accesso$/, (r, db) => A.accedi(r, db)],
   ["POST", /^\/api\/uscita$/, () => A.esci()],

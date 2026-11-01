@@ -176,6 +176,8 @@ export class SceneRegia {
   imports: [FormsModule, Icona],
   changeDetection: ChangeDetectionStrategy.OnPush,
   styles: `
+    .indirizzo-serata { margin-bottom: 24px; gap: 10px; }
+    .indirizzo-serata .url { font-weight: 700; font-size: 18px; overflow-wrap: anywhere; }
     .pallino { width: 14px; height: 14px; border-radius: 50%; display: inline-block; margin-right: 8px; vertical-align: -1px; }
     .voce-sq { grid-template-columns: minmax(0, 1fr); }
     .righe { display: flex; flex-wrap: wrap; gap: 8px; }
@@ -186,6 +188,14 @@ export class SceneRegia {
     <header class="r-testa">
       <div><h1>Squadre e accessi</h1><p>Ogni squadra ha un suo accesso: nome utente e password da dare al tavolo. Anche il proiettore ha il suo. Le password si vedono una volta sola: se le perdi, ne generi una nuova e quella vecchia smette di funzionare.</p></div>
     </header>
+    <section class="r-scheda indirizzo-serata" aria-label="Indirizzo della serata">
+      <p>Squadre e proiettore entrano da qui, con le loro credenziali:</p>
+      <p class="url">{{ indirizzo() }}</p>
+      <div class="r-azioni">
+        <button class="bottone bottone--piccolo" type="button" (click)="copiaIndirizzo()">{{ indirizzoCopiato() ? 'Copiato' : "Copia l'indirizzo" }}</button>
+        <span class="secondario">Lo cambi dall'elenco delle serate, in "Indirizzo ed eliminazione".</span>
+      </div>
+    </section>
 
     @if (credenziali(); as c) {
       <div class="r-credenziali" role="status" style="margin-bottom:28px">
@@ -265,6 +275,16 @@ export class SceneRegia {
 export class SquadreRegia {
   readonly st = inject(RegiaStato);
   private api = inject(Api);
+  readonly indirizzo = () => `${location.origin}/s/${this.st.t()!.serata.slug}`;
+  readonly indirizzoCopiato = signal(false);
+  async copiaIndirizzo() {
+    try {
+      await navigator.clipboard.writeText(this.indirizzo());
+      this.indirizzoCopiato.set(true);
+    } catch {
+      this.st.dimmi("Copia non riuscita: seleziona l'indirizzo e copialo a mano.", true);
+    }
+  }
   readonly ora = ora;
   readonly credenziali = signal<{ titolo: string; username: string; password: string } | null>(null);
   readonly copiato = signal(false);

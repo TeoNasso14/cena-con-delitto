@@ -12,6 +12,8 @@ export interface Io {
   username: string;
   admin?: boolean;
   squadra: { nome: string; colore: string } | null;
+  /** Per squadre e proiettore: la serata, per tornare alla sua pagina d'accesso. */
+  slug?: string | null;
 }
 
 /** Chiave della serata aperta dalla regia: per scheda, così due schede possono stare su due serate. */

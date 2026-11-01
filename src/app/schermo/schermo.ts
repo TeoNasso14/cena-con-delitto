@@ -1,6 +1,7 @@
 import { ChangeDetectionStrategy, Component, computed, effect, ElementRef, inject, OnDestroy, OnInit, signal, viewChild } from '@angular/core';
 import { Router } from '@angular/router';
 import { Api, ora, ripeti } from '../api';
+import { Sessione } from '../sessione';
 import { Sussurri } from '../squadra/sussurri';
 import { Atmosfera } from '../temi/atmosfera';
 import { Decoro } from '../temi/decoro';
@@ -34,6 +35,7 @@ interface StatoSchermo {
 export class Schermo implements OnInit, OnDestroy {
   private api = inject(Api);
   private router = inject(Router);
+  private sessione = inject(Sessione);
   readonly s = signal<StatoSchermo | null>(null);
   readonly attivo = signal(false);
   readonly adesso = signal(Date.now());
@@ -68,7 +70,7 @@ export class Schermo implements OnInit, OnDestroy {
 
   constructor() {
     effect(() => {
-      if (this.api.sessioneScaduta()) this.router.navigateByUrl('/accesso');
+      if (this.api.sessioneScaduta()) this.router.navigateByUrl(this.sessione.paginaAccesso());
     });
     let ultimaScena: number | undefined;
     effect(() => {
