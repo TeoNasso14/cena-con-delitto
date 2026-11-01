@@ -43,7 +43,7 @@ Le regole di DESIGN.md valgono per tutti: niente gradienti, niente ombre su elem
 ## Passi
 1. **Colori per ruolo**, senza differenze visibili. Fatto: variabili rinominate, colori scritti a mano sostituiti (velo e allarmi con `color-mix`), superfici di carta su `--carta` e `--inchiostro`.
 2. **Infrastruttura**. Fatto: migrazione `…_tema_serata`, `tema` nelle risposte di squadra e proiettore, `PUT /api/regia/tema`, tema in `GET /api/avvio`, catalogo con il solo Halloween, `data-tema` e anti-lampo, scelta del tema in regia con anteprime. Revisione dei `var(--fondo)` usati come testo sull'accento, che diventano `--su-accento`.
-3. **Nuvolette dalla regia**: migrazione `…_sussurri` con copia delle frasi attuali, API, sezione in regia, componente che legge le frasi dalla serata.
+3. **Nuvolette dalla regia**. Fatto: migrazione `…_sussurri` con copia delle frasi attuali, API, sezione in regia, componente che legge le frasi dalla serata.
 4. **Spazi per tema**: decorazione del proiettore, figure, frasi pronte, lessico, caratteri. Halloween passa dentro questi spazi senza cambiare aspetto.
 5. **I cinque temi nuovi**, un commit ciascuno, con la loro sezione in DESIGN.md.
 6. **Documenti**: DESIGN.md diviso in regole comuni e sezioni per tema, PRODUCT.md, README, CHANGELOG 1.1.0, STORIA.

@@ -1,5 +1,5 @@
 import { describe, expect, test } from "vitest";
-import { COLORI, TEMI as CATALOGO, temaDa, variabili } from "../../src/app/temi/catalogo.ts";
+import { COLORI, TEMI as CATALOGO, frasiDaMostrare, temaDa, variabili } from "../../src/app/temi/catalogo.ts";
 import { TEMI } from "../regia.ts";
 
 /** Contrasto WCAG tra due colori #rrggbb. */
@@ -21,11 +21,24 @@ test("il catalogo dei temi e il server conoscono gli stessi temi", () => {
   expect(temaDa("sconosciuto").id).toBe("halloween");
 });
 
+test("le nuvolette usano le frasi della serata, altrimenti quelle del tema", () => {
+  expect(frasiDaMostrare("halloween", { attivi: true, frasi: ["Mia"] })).toEqual(["Mia"]);
+  expect(frasiDaMostrare("halloween", { attivi: true, frasi: [] })).toBe(temaDa("halloween").frasi);
+  expect(frasiDaMostrare("halloween", { attivi: false, frasi: ["Mia"] })).toEqual([]);
+  expect(frasiDaMostrare("halloween", undefined)).toEqual([]);
+});
+
 describe.each(CATALOGO.map((t) => [t.nome, t] as const))("%s", (_nome, t) => {
   test("ha tutti i colori e due caratteri", () => {
     for (const c of COLORI) expect(t.colori[c], c).toMatch(/^#[0-9a-f]{6}$/);
     expect(Object.keys(variabili(t))).toHaveLength(COLORI.length + 2);
     expect(t.titoli).not.toBe(t.corpo);
+  });
+
+  test("ha frasi pronte per le nuvolette, brevi", () => {
+    expect(t.frasi.length).toBeGreaterThanOrEqual(12);
+    for (const f of t.frasi) expect(f.length, f).toBeLessThanOrEqual(120);
+    expect(new Set(t.frasi).size).toBe(t.frasi.length);
   });
 
   test("si legge: testo su ogni fondo, sull'accento e sulla carta", () => {

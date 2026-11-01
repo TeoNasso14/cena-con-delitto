@@ -22,6 +22,7 @@ export interface StatoSquadra {
   annunci: Array<{ id: number; testo: string; ora: string }>;
   accusa: { colpevole: string; movente: string; arma: string; spiegazione: string; consegnata_alle: string } | null;
   codici: { bloccatoPer: number; tentativiRimasti: number };
+  sussurri: { attivi: boolean; frasi: string[] };
 }
 
 export type EsitoCodice =

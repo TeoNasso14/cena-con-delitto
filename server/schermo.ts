@@ -1,6 +1,6 @@
 import { utente } from "./accesso.ts";
 import { Db, json } from "./base.ts";
-import { faseInfo } from "./squadra.ts";
+import { faseInfo, sussurriDi } from "./squadra.ts";
 
 /** Stato del proiettore: solo ciò che la regia ha mandato in onda. */
 export async function statoSchermo(req: Request, db: Db) {
@@ -12,9 +12,9 @@ export async function costruisciSchermo(db: Db, sid: number) {
   const s = await db.uno<{
     titolo: string; stato: string; fase_corrente: number; scena_in_onda: number | null; schermo_nero: boolean;
     versione: string; rivelata: boolean; colpevole: string; movente: string; arma: string;
-    sfondo_key: string | null; sfondo_opacita: number; tema: string;
+    sfondo_key: string | null; sfondo_opacita: number; tema: string; sussurri_attivi: boolean;
   }>(
-    "SELECT titolo, stato, fase_corrente, scena_in_onda, schermo_nero, versione, rivelata, colpevole, movente, arma, sfondo_key, sfondo_opacita, tema FROM serata WHERE id = $1",
+    "SELECT titolo, stato, fase_corrente, scena_in_onda, schermo_nero, versione, rivelata, colpevole, movente, arma, sfondo_key, sfondo_opacita, tema, sussurri_attivi FROM serata WHERE id = $1",
     [sid],
   );
   const fase = await faseInfo(db, sid, s!.fase_corrente);
@@ -28,6 +28,7 @@ export async function costruisciSchermo(db: Db, sid: number) {
   const base = {
     versione: s!.versione,
     tema: s!.tema,
+    sussurri: await sussurriDi(db, sid, s!.sussurri_attivi),
     titolo: s!.titolo,
     stato: s!.stato,
     schermoNero: s!.schermo_nero,

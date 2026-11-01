@@ -66,9 +66,10 @@ export async function tutto(req: Request, db: Db) {
     `SELECT e.id, e.tipo, e.testo, e.ora FROM evento e WHERE e.serata_id = $1 ORDER BY e.ora DESC, e.id DESC LIMIT 60`,
     [sid],
   );
+  const sussurri = (await db.q<{ testo: string }>("SELECT testo FROM sussurro WHERE serata_id = $1 ORDER BY ordine, id", [sid])).map((r) => r.testo);
   return json({
     io: { username: u.username },
-    serata, fasi, totaleProve: totale?.n ?? 0, squadre, schermi, personaggi, prove, cartelle, scene, annunci, accuse, eventi,
+    serata, sussurri, fasi, totaleProve: totale?.n ?? 0, squadre, schermi, personaggi, prove, cartelle, scene, annunci, accuse, eventi,
   });
 }
 
@@ -682,6 +683,29 @@ export async function tema(req: Request, db: Db) {
   const b = await corpo<{ tema?: string }>(req);
   if (typeof b.tema !== "string" || !TEMI.includes(b.tema)) throw new Errore(400, "Tema sconosciuto.");
   await db.q("UPDATE serata SET tema = $1 WHERE id = $2", [b.tema, u.serata_id]);
+  await tocca(db, u.serata_id);
+  return json({ ok: true });
+}
+
+/** Nuvolette: accese o spente, e le frasi della serata (sostituite tutte insieme). */
+export async function sussurri(req: Request, db: Db) {
+  const u = await regia(req, db);
+  const b = await corpo<{ attivi?: boolean; frasi?: unknown }>(req);
+  if (b.attivi !== undefined && typeof b.attivi !== "boolean") throw new Errore(400, "Valore non valido.");
+  let frasi: string[] | undefined;
+  if (b.frasi !== undefined) {
+    if (!Array.isArray(b.frasi)) throw new Errore(400, "Le frasi devono essere un elenco.");
+    frasi = b.frasi.map((f) => String(f ?? "").trim()).filter(Boolean);
+    if (frasi.length > 500) throw new Errore(400, "Al massimo 500 frasi.");
+    if (frasi.some((f) => f.length > 200)) throw new Errore(400, "Ogni frase al massimo 200 caratteri: nella nuvoletta deve starci.");
+  }
+  await db.transazione(async (t) => {
+    if (b.attivi !== undefined) await t.q("UPDATE serata SET sussurri_attivi = $1 WHERE id = $2", [b.attivi, u.serata_id]);
+    if (frasi) {
+      await t.q("DELETE FROM sussurro WHERE serata_id = $1", [u.serata_id]);
+      for (const [i, f] of frasi.entries()) await t.q("INSERT INTO sussurro (serata_id, testo, ordine) VALUES ($1, $2, $3)", [u.serata_id, f, i]);
+    }
+  });
   await tocca(db, u.serata_id);
   return json({ ok: true });
 }

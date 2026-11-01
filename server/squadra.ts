@@ -17,13 +17,20 @@ export async function faseInfo(db: Db, serataId: number, numero: number) {
   return { fasi: fasi.map((f) => ({ numero: f.numero, nome: f.nome })), corrente, totale: fasi.length };
 }
 
+/** Frasi delle nuvolette. Spente: elenco vuoto. Accese senza frasi: il client usa quelle del tema. */
+export async function sussurriDi(db: Db, serataId: number, attivi: boolean) {
+  if (!attivi) return { attivi, frasi: [] as string[] };
+  const righe = await db.q<{ testo: string }>("SELECT testo FROM sussurro WHERE serata_id = $1 ORDER BY ordine, id", [serataId]);
+  return { attivi, frasi: righe.map((r) => r.testo) };
+}
+
 export async function stato(req: Request, db: Db) {
   const u = await utente(req, db, ["squadra"]);
   const sid = u.serata_id;
   const sqId = u.squadra_id!;
   const serata = await db.uno<{
-    titolo: string; premessa: string; stato: string; fase_corrente: number; versione: string; rivelata: boolean; tema: string;
-  }>("SELECT titolo, premessa, stato, fase_corrente, versione, rivelata, tema FROM serata WHERE id = $1", [sid]);
+    titolo: string; premessa: string; stato: string; fase_corrente: number; versione: string; rivelata: boolean; tema: string; sussurri_attivi: boolean;
+  }>("SELECT titolo, premessa, stato, fase_corrente, versione, rivelata, tema, sussurri_attivi FROM serata WHERE id = $1", [sid]);
   const squadra = await db.uno<{ nome: string; colore: string; taccuino: string }>(
     "SELECT nome, colore, taccuino FROM squadra WHERE id = $1",
     [sqId],
@@ -106,6 +113,7 @@ export async function stato(req: Request, db: Db) {
     annunci,
     accusa: accusa ?? null,
     codici: { bloccatoPer: blocco.secondi, tentativiRimasti: Math.max(0, PIN_ERRORI_MAX - blocco.errori) },
+    sussurri: await sussurriDi(db, sid, serata!.sussurri_attivi),
   });
 }
 

@@ -3,6 +3,7 @@ import { Router } from '@angular/router';
 import { Api, ora, ripeti } from '../api';
 import { Sussurri } from '../squadra/sussurri';
 import { applicaTema } from '../temi/applica';
+import { frasiDaMostrare } from '../temi/catalogo';
 
 interface Scena {
   id?: number; tipo: string; titolo: string; testo: string;
@@ -17,6 +18,7 @@ interface StatoSchermo {
   fase: { numero: number; nome: string | null; avviata: string | null; durataMinuti: number | null; elenco: Array<{ numero: number; nome: string }> };
   scena: Scena;
   sfondo: { url: string; opacita: number } | null;
+  sussurri: { attivi: boolean; frasi: string[] };
 }
 
 @Component({
@@ -38,6 +40,8 @@ export class Schermo implements OnInit, OnDestroy {
   private ferma?: () => void;
   private orologio?: ReturnType<typeof setInterval>;
   private media = viewChild<ElementRef<HTMLMediaElement>>('media');
+
+  readonly frasi = computed(() => frasiDaMostrare(this.s()?.tema, this.s()?.sussurri));
 
   readonly tipo = computed(() => {
     const s = this.s();

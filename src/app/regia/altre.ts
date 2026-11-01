@@ -3,7 +3,7 @@ import { FormsModule } from '@angular/forms';
 import { Api, ora } from '../api';
 import { Icona } from '../icona';
 import { Allegato } from './allegato';
-import { TEMI } from '../temi/catalogo';
+import { temaDa, TEMI } from '../temi/catalogo';
 import { RegiaStato, ScenaR, TIPI_SCENA } from './stato';
 
 /* ---------- Scene del proiettore ---------- */
@@ -400,7 +400,7 @@ export class AccuseRegia {
   `,
   template: `
     @let t = st.t()!;
-    <header class="r-testa"><div><h1>Strumenti</h1><p>Tema della serata, accesso della regia, stato della serata, salvataggio del caso e ripartenza da zero.</p></div></header>
+    <header class="r-testa"><div><h1>Strumenti</h1><p>Tema e nuvolette, accesso della regia, stato della serata, salvataggio del caso e ripartenza da zero.</p></div></header>
     <section class="r-blocco">
       <h2>Tema della serata</h2>
       <p class="secondario">Colori, caratteri e decorazioni di telefoni, proiettore e regia. Cambia per tutti entro pochi secondi, anche a serata in corso.</p>
@@ -418,6 +418,20 @@ export class AccuseRegia {
           </li>
         }
       </ul>
+    </section>
+    <section class="r-blocco">
+      <h2>Nuvolette</h2>
+      <div class="r-scheda r-modulo">
+        <p class="secondario">Frasi brevi che compaiono ogni tanto sui telefoni e sul proiettore, con una piccola figura del tema. Solo atmosfera: niente che sembri un indizio.</p>
+        <label class="r-check" for="su-accese"><input id="su-accese" type="checkbox" [checked]="t.serata.sussurri_attivi" (change)="accendiSussurri($any($event.target).checked)">Nuvolette accese</label>
+        <label class="etichetta" for="su-frasi">Frasi della serata <small>Una per riga. Se lasci vuoto, compaiono le {{ temaInUso().frasi.length }} frasi pronte del tema.</small>
+          <textarea id="su-frasi" name="su-frasi" class="campo" rows="10" [(ngModel)]="frasi"></textarea>
+        </label>
+        <div class="r-azioni">
+          <button class="bottone bottone--pieno" type="button" [disabled]="!frasiCambiate()" (click)="salvaFrasi()">Salva le frasi</button>
+          <button class="bottone" type="button" (click)="frasiDelTema()">Metti le frasi pronte del tema</button>
+        </div>
+      </div>
     </section>
     <div class="r-colonne">
       <div class="r-colonna">
@@ -477,6 +491,8 @@ export class Strumenti {
   readonly azioniStato: Record<string, string> = { bozza: 'Torna in preparazione', in_corso: 'Metti in corso', in_pausa: 'Metti in pausa', chiusa: 'Chiudi la serata' };
   readonly ordineStati = ['bozza', 'in_corso', 'in_pausa', 'chiusa'];
   readonly temi = TEMI;
+  readonly temaInUso = () => temaDa(this.st.t()?.serata.tema);
+  frasi = (this.st.t()?.sussurri ?? []).join('\n');
   username = this.st.t()?.io.username ?? '';
   attuale = '';
   nuova = '';
@@ -489,6 +505,17 @@ export class Strumenti {
     if (ok) { this.attuale = ''; this.nuova = ''; }
   }
   stato(s: string) { this.st.fai(() => this.api.post('/api/regia/stato', { stato: s }), 'Stato aggiornato'); }
+  private righe() { return this.frasi.split('\n').map((f) => f.trim()).filter(Boolean); }
+  frasiCambiate() { return this.righe().join('\n') !== (this.st.t()?.sussurri ?? []).join('\n'); }
+  frasiDelTema() { this.frasi = this.temaInUso().frasi.join('\n'); }
+  async salvaFrasi() {
+    const frasi = this.righe();
+    const ok = await this.st.fai(() => this.api.put('/api/regia/sussurri', { frasi }), frasi.length ? `Frasi salvate: ${frasi.length}` : 'Ora compaiono le frasi pronte del tema');
+    if (ok) this.frasi = frasi.join('\n');
+  }
+  accendiSussurri(attivi: boolean) {
+    this.st.fai(() => this.api.put('/api/regia/sussurri', { attivi }), attivi ? 'Nuvolette accese' : 'Nuvolette spente');
+  }
   scegliTema(id: string) {
     if (id === this.st.t()?.serata.tema) return;
     this.st.fai(() => this.api.put('/api/regia/tema', { tema: id }), 'Tema della serata cambiato');

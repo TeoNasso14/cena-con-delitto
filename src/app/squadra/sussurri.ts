@@ -1,132 +1,5 @@
 import { ChangeDetectionStrategy, Component, DestroyRef, inject, input, signal } from '@angular/core';
 
-/** Frasi brevi, solo atmosfera: non devono sembrare indizi del caso. */
-const FRASI = [
-  'Qualcuno vi sta guardando.',
-  'Non voltatevi.',
-  'Hai sentito anche tu?',
-  'La candela ha tremato.',
-  'Contate i commensali. Siete ancora tutti?',
-  'Le ombre si allungano.',
-  'Chi ha spento la luce?',
-  'Qualcosa gratta sotto il tavolo.',
-  'Il gufo ha smesso di cantare.',
-  'Mezzanotte si avvicina.',
-  'Il ritratto ha cambiato espressione.',
-  'Un passo, poi silenzio.',
-  'Dietro la porta, un respiro.',
-  'Il vento conosce il tuo nome.',
-  'Non era il gatto.',
-  'Fa più freddo di prima, vero?',
-
-  // Tre per ciascun commensale, cattive quanto quelle di Pietro.
-  'Ali, il fantasma ti ha chiesto l\'amicizia. Poi ti ha bloccato.',
-  'Ali, anche il vampiro ha detto: no, grazie.',
-  'Ali, se sparisci stasera, nessuno se ne accorge.',
-  'Mela, anche le streghe avvelenate ti scartano.',
-  'Mela, Biancaneve ti ha morso e ha sputato.',
-  'Mela, marcia dentro, come da tradizione.',
-  'Ludo, il maggiordomo ha detto che sei la più sospetta. E la più antipatica.',
-  'Ludo, sotto la tovaglia c\'è qualcosa. Più simpatico di te.',
-  'Ludo, la casa stregata ha chiesto di cambiare ospite.',
-  'Sasso, hai la sensibilità del tuo nome.',
-  'Sasso, la cripta ti ha tenuto un posto. Ti ci vedono bene.',
-  'Sasso, anche le lapidi hanno più conversazione.',
-  'Losco: il nome dice già tutto. Anche la faccia.',
-  'Losco, l\'assassino ti ha copiato lo sguardo.',
-  'Losco, la polizia ti ha già in rubrica.',
-  'Tenca, il lago ti rivuole indietro. Noi no.',
-  'Tenca, anche i pesci ti trovano noioso.',
-  'Tenca, abbocchi a qualsiasi indizio, come da nome.',
-  'Teo, hai fatto il sito perché a giocare saresti stato inutile.',
-  'Teo, il sito l\'ha fatto Claude. Tu hai detto bravo.',
-  'Teo, chi ha fatto questo sito non dorme da giorni. Si vede.',
-  'Giulia, il ritratto ti fissa. Si sta chiedendo chi ti ha invitata.',
-  'Giulia, i fantasmi ti passano attraverso per non salutarti.',
-  'Giulia, la strega ti ha offerto un passaggio. Di sola andata.',
-  'Andre, la mano fredda sulla spalla era solo per spingerti fuori.',
-  'Andre, sei l\'unico che lo zombie non insegue. Troppo lento anche per lui.',
-  'Andre, il testamento ti nomina solo per lasciarti le bollette.',
-  'Bianca, sei così pallida che i fantasmi ti chiedono il segreto.',
-  'Bianca, il vampiro ti ha guardata e ha scelto il pomodoro.',
-  'Bianca, ti hanno scambiata per la tovaglia.',
-  'Chiara, la candela si spegne quando passi tu. Anche la conversazione.',
-  'Chiara, di chiaro c\'è solo che non hai capito niente.',
-  'Chiara, la tua ombra ha chiesto il trasferimento.',
-  'Gabri, il corvo ha imparato il tuo nome. Lo usa come insulto.',
-  'Gabri, anche il gatto nero si gira dall\'altra parte.',
-  'Gabri, la zucca intagliata ha un\'espressione più sveglia.',
-  'Gio, ti ho visto ieri notte. Peccato.',
-  'Gio, il fantasma ha chiesto di cambiare tavolo.',
-  'Gio, il buio ti dona. Restaci.',
-  'Sara, il tuo riflesso è rimasto indietro: si vergognava.',
-  'Sara, lo specchio si è incrinato. Colpa tua.',
-  'Sara, la strega ti ha guardata e ha posato la scopa: inutile.',
-
-  // E quattordici per Pietro, che se le merita tutte.
-  'Pietro, anche i fantasmi fingono di non conoscerti.',
-  'Pietro, il vampiro ti ha assaggiato e ha chiesto il conto.',
-  'Pietro, sei il primo sospettato. Di tutto. Da sempre.',
-  'Pietro, la zucca ha più capelli di te. E idee.',
-  'Pietro, gli zombie cercano cervelli: con te sono a posto.',
-  'Pietro, la strega ti ha guardato e ha chiuso il calderone.',
-  'Pietro, il corvo ride di te. Ha ragione.',
-  'Pietro, stasera muori tu. Di vergogna, come al solito.',
-  'Pietro, spegnete le candele: basta la sua testa a fare luce.',
-  'Pietro, la casa era tranquilla prima che entrassi.',
-  'Pietro, il cimitero ha rifiutato la tua prenotazione: troppo noioso.',
-  'Pietro, i fantasmi si specchiano sulla tua testa per sistemarsi il lenzuolo.',
-  'Pietro, l\'assassino ha un alibi. Tu neanche una scusa.',
-  'Pietro, il teschio sullo scaffale ti ha scambiato per un cugino.',
-
-  // Altre, a sorpresa.
-  'Ali, la tua squadra ha votato: sei tu la vittima sacrificale.',
-  'Ali, il lupo mannaro ti ha annusato e ha preferito la luna.',
-  'Mela, il verme dentro di te ha chiesto un affitto più basso.',
-  'Mela, la strega ti ha messa nel cesto degli scarti.',
-  'Ludo, il fantasma del castello ti ha chiesto di abbassare la voce.',
-  'Ludo, l\'unico mistero stasera è perché sei qui.',
-  'Sasso, rotoli verso la soluzione. Molto lentamente.',
-  'Sasso, la gargoyle ti ha scambiato per un parente.',
-  'Losco, se muore qualcuno, la regia guarda te.',
-  'Losco, perfino l\'ombra ti tiene d\'occhio.',
-  'Tenca, l\'acqua stagnante ha più movimento di te.',
-  'Tenca, hai la memoria di un pesce e si vede dall\'accusa.',
-  'Teo, architetto di cosa? Hai spostato due pulsanti.',
-  'Teo, il fantasma dice che il tuo codice infesta Netlify.',
-  'Giulia, la bambola maledetta ti ha chiesto di smettere di fissarla.',
-  'Giulia, anche il buio si annoia con te.',
-  'Andre, il becchino ti ha preso le misure. Per scrupolo.',
-  'Andre, sei l\'indizio falso della serata.',
-  'Bianca, la mummia ha più colorito.',
-  'Bianca, il lenzuolo del fantasma ti sta largo.',
-  'Chiara, la sfera di cristallo si è appannata appena ti ha vista.',
-  'Chiara, i pipistrelli ci vedono meglio di te al buio. E alla luce.',
-  'Gabri, il cappello della strega ti starebbe bene. Copre.',
-  'Gabri, i ragni hanno tessuto la tela sulla tua ultima idea.',
-  'Gio, sei il tipo di invitato che il cadavere avrebbe evitato.',
-  'Gio, il pozzo nel giardino ha più profondità di te.',
-  'Sara, il gatto nero ti ha dato sfortuna. Anzi no, eri già così.',
-  'Sara, la scopa della strega ha chiesto di non volare con te.',
-  'Pietro, la luna piena si è vista riflessa. Sulla tua testa.',
-  'Pietro, i pipistrelli usano la tua testa come pista d\'atterraggio.',
-  'Pietro, il lupo mannaro ti invidia: almeno lui i peli li ha.',
-  'Pietro, l\'esorcista ha provato. Il demone era più simpatico.',
-  'Pietro, la bara è pronta. Hanno scelto la più economica.',
-  'Pietro, sei la prova che i morti viventi esistono.',
-  'La regia vi osserva. E ride.',
-  'Uno di voi non tornerà a casa. Speriamo Pietro.',
-  'Il cadavere era più vivace di questa squadra.',
-  'Qualcuno ha già sbagliato l\'accusa. Si vede dalla faccia.',
-
-  // Altre per Sara.
-  'Sara, il fantasma ti ha vista e si è nascosto lui.',
-  'Sara, la strega ti ha offerto una mela. Per toglierti di mezzo.',
-  'Sara, anche il vampiro preferisce digiunare.',
-  'Sara, il cimitero ha più vita della tua squadra.',
-  'Sara, sei arrivata tardi pure al tuo funerale.',
-];
-
 /** Piccole figure animate (disegnate qui, nessun file esterno) che "parlano" dalla nuvoletta. */
 const FIGURE = ['fantasma', 'pipistrello', 'ragno', 'zucca', 'occhi', 'candela'] as const;
 type Figura = (typeof FIGURE)[number];
@@ -264,6 +137,8 @@ const DURATA = 10_000;
 export class Sussurri {
   /** Sul proiettore le nuvolette sono più grandi e non ci sono fogli da rispettare. */
   readonly proiettore = input(false);
+  /** Le frasi le decide la regia (vedi frasiDaMostrare): elenco vuoto, nessuna nuvoletta. */
+  readonly frasi = input<readonly string[]>([]);
   readonly frase = signal<string | null>(null);
   readonly figura = signal<Figura>('fantasma');
   readonly uscita = signal(false);
@@ -293,11 +168,13 @@ export class Sussurri {
     // Non disturba mentre la squadra ha aperto un foglio (codice o documento) o la pagina non è in vista.
     // Sul proiettore tace a schermo nero.
     if (document.hidden || document.querySelector('.foglio.aperto, .schermo[data-scena="nero"]')) { this.programma(15_000); return; }
-    this.ultimaFrase = this.pesca(FRASI.length, this.ultimaFrase);
+    const frasi = this.frasi();
+    if (!frasi.length) { this.programma(15_000); return; }
+    this.ultimaFrase = this.pesca(frasi.length, this.ultimaFrase);
     this.ultimaFigura = this.pesca(FIGURE.length, this.ultimaFigura);
     this.uscita.set(false);
     this.figura.set(FIGURE[this.ultimaFigura]);
-    this.frase.set(FRASI[this.ultimaFrase]);
+    this.frase.set(frasi[this.ultimaFrase]);
     this.timer = setTimeout(() => this.chiudi(), DURATA);
   }
 

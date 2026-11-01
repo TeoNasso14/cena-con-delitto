@@ -58,6 +58,7 @@ const rotte: Array<[string, RegExp, Gestore]> = [
   ["POST", /^\/api\/regia\/rivela$/, (r, db) => R.rivela(r, db)],
   ["PUT", /^\/api\/regia\/sfondo$/, (r, db) => R.sfondo(r, db)],
   ["PUT", /^\/api\/regia\/tema$/, (r, db) => R.tema(r, db)],
+  ["PUT", /^\/api\/regia\/sussurri$/, (r, db) => R.sussurri(r, db)],
   ["POST", /^\/api\/regia\/nascondi-soluzione$/, (r, db) => R.nascondiSoluzione(r, db)],
   ["POST", /^\/api\/regia\/azzera$/, (r, db) => R.azzera(r, db)],
   ["GET", /^\/api\/regia\/esporta$/, (r, db) => R.esporta(r, db)],

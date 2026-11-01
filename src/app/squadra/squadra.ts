@@ -1,4 +1,4 @@
-import { ChangeDetectionStrategy, Component, effect, inject, OnDestroy, OnInit } from '@angular/core';
+import { ChangeDetectionStrategy, Component, computed, effect, inject, OnDestroy, OnInit } from '@angular/core';
 import { Router, RouterLink, RouterLinkActive, RouterOutlet } from '@angular/router';
 import { Api } from '../api';
 import { Icona } from '../icona';
@@ -6,6 +6,7 @@ import { Sessione } from '../sessione';
 import { StatoSquadraService } from './stato';
 import { Firma } from '../firma';
 import { Sussurri } from './sussurri';
+import { frasiDaMostrare } from '../temi/catalogo';
 
 @Component({
   selector: 'app-squadra',
@@ -51,7 +52,7 @@ import { Sussurri } from './sussurri';
       <router-outlet />
       <app-firma />
     </div>
-    <app-sussurri />
+    <app-sussurri [frasi]="frasi()" />
     <nav class="schede" aria-label="Sezioni">
       <ul>
         <li><a routerLink="/squadra" routerLinkActive="attiva" [routerLinkActiveOptions]="{ exact: true }" ariaCurrentWhenActive="page"><app-icona nome="prove" />Prove</a></li>
@@ -67,6 +68,7 @@ export class SquadraShell implements OnInit, OnDestroy {
   readonly sessione = inject(Sessione);
   private api = inject(Api);
   private router = inject(Router);
+  readonly frasi = computed(() => frasiDaMostrare(this.st.stato()?.tema, this.st.stato()?.sussurri));
 
   constructor() {
     effect(() => {

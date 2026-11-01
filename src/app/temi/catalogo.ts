@@ -20,6 +20,8 @@ export interface Tema {
   colori: Record<Colore, string>;
   titoli: string;
   corpo: string;
+  /** Frasi pronte delle nuvolette, per le serate che non ne hanno di proprie. Solo atmosfera, mai indizi. */
+  frasi: readonly string[];
 }
 
 export const TEMI: readonly Tema[] = [
@@ -37,6 +39,24 @@ export const TEMI: readonly Tema[] = [
     },
     titoli: '"Grenze Gotisch", Georgia, serif',
     corpo: '"Barlow", system-ui, sans-serif',
+    frasi: [
+      'Qualcuno vi sta guardando.',
+      'Non voltatevi.',
+      'Hai sentito anche tu?',
+      'La candela ha tremato.',
+      'Contate i commensali. Siete ancora tutti?',
+      'Le ombre si allungano.',
+      'Chi ha spento la luce?',
+      'Qualcosa gratta sotto il tavolo.',
+      'Il gufo ha smesso di cantare.',
+      'Mezzanotte si avvicina.',
+      'Il ritratto ha cambiato espressione.',
+      'Un passo, poi silenzio.',
+      'Dietro la porta, un respiro.',
+      'Il vento conosce il tuo nome.',
+      'Non era il gatto.',
+      'Fa più freddo di prima, vero?',
+    ],
   },
 ];
 
@@ -44,6 +64,12 @@ export const PREDEFINITO = TEMI[0];
 
 export function temaDa(id: string | null | undefined): Tema {
   return TEMI.find((t) => t.id === id) ?? PREDEFINITO;
+}
+
+/** Le frasi che le nuvolette pescano: quelle della serata, altrimenti quelle pronte del tema. Spente, nessuna. */
+export function frasiDaMostrare(tema: string | null | undefined, s: { attivi: boolean; frasi: readonly string[] } | undefined): readonly string[] {
+  if (!s?.attivi) return [];
+  return s.frasi.length ? s.frasi : temaDa(tema).frasi;
 }
 
 /** Le variabili CSS che il tema imposta su <html>. */

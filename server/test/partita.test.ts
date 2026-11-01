@@ -365,6 +365,12 @@ describe("cartelle delle prove", () => {
     ]);
     // la serata già in uso prende il tema predefinito
     expect(await d2.q("SELECT titolo, tema FROM serata")).toEqual([{ titolo: "Vecchia", tema: "halloween" }]);
+    // e si tiene le frasi delle nuvolette che prima erano scritte nel codice
+    const frasi = await d2.q<{ testo: string }>("SELECT testo FROM sussurro WHERE serata_id = $1 ORDER BY ordine", [s!.id]);
+    expect(frasi).toHaveLength(115);
+    expect(frasi[0].testo).toBe("Qualcuno vi sta guardando.");
+    expect(frasi.some((f) => f.testo.includes("l'accusa"))).toBe(true);
+    expect((await d2.uno<{ sussurri_attivi: boolean }>("SELECT sussurri_attivi FROM serata"))!.sussurri_attivi).toBe(true);
     await d2.fine?.();
     await altro.stop();
   }, 60_000);
@@ -496,6 +502,42 @@ test("la regia sceglie il tema della serata", async () => {
   expect(avvio.dati).toEqual({ configurato: true, tema: "halloween" });
   // il tema viaggia con il caso esportato
   expect((await chiama("GET", "/api/regia/esporta", undefined, regia)).dati.serata.tema).toBe("halloween");
+});
+
+test("la regia decide le frasi delle nuvolette e le può spegnere", async () => {
+  const leggi = async () => ({
+    squadra: (await chiama("GET", "/api/squadra/stato", undefined, corvi)).dati,
+    schermo: (await chiama("GET", "/api/schermo/stato", undefined, schermo)).dati.sussurri,
+    regia: (await chiama("GET", "/api/regia", undefined, regia)).dati.sussurri,
+  });
+  // una serata nuova non ha frasi proprie: il client userà quelle del tema
+  let ora = await leggi();
+  expect(ora.squadra.sussurri).toEqual({ attivi: true, frasi: [] });
+  expect(ora.regia).toEqual([]);
+
+  expect((await chiama("PUT", "/api/regia/sussurri", { frasi: ["Uno"] }, corvi)).stato).toBe(403);
+  expect((await chiama("PUT", "/api/regia/sussurri", { frasi: "Uno" }, regia)).stato).toBe(400);
+  expect((await chiama("PUT", "/api/regia/sussurri", { frasi: ["x".repeat(201)] }, regia)).stato).toBe(400);
+  expect((await chiama("PUT", "/api/regia/sussurri", { attivi: "no" }, regia)).stato).toBe(400);
+
+  const versione = Number(ora.squadra.versione);
+  expect((await chiama("PUT", "/api/regia/sussurri", { frasi: ["  Il gatto vi guarda. ", "", "Mezzanotte."] }, regia)).stato).toBe(200);
+  ora = await leggi();
+  expect(Number(ora.squadra.versione)).toBeGreaterThan(versione);
+  expect(ora.regia).toEqual(["Il gatto vi guarda.", "Mezzanotte."]);
+  expect(ora.squadra.sussurri).toEqual({ attivi: true, frasi: ["Il gatto vi guarda.", "Mezzanotte."] });
+  expect(ora.schermo).toEqual(ora.squadra.sussurri);
+
+  // spente: le squadre non ricevono frasi, la regia le ritrova
+  await chiama("PUT", "/api/regia/sussurri", { attivi: false }, regia);
+  ora = await leggi();
+  expect(ora.squadra.sussurri).toEqual({ attivi: false, frasi: [] });
+  expect(ora.schermo).toEqual({ attivi: false, frasi: [] });
+  expect(ora.regia).toEqual(["Il gatto vi guarda.", "Mezzanotte."]);
+
+  // riaccese e svuotate: si torna alle frasi del tema
+  await chiama("PUT", "/api/regia/sussurri", { attivi: true, frasi: [] }, regia);
+  expect((await leggi()).squadra.sussurri).toEqual({ attivi: true, frasi: [] });
 });
 
 test("confronto delle risposte", () => {
