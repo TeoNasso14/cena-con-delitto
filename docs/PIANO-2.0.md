@@ -55,7 +55,7 @@ Parte da `docs/ROADMAP.md` (architettura e decisioni del 1 novembre 2026) e dal 
 2. **Le mie serate**. Fatto: elenco, crea, duplica (con allegati), archivia, riattiva, elimina, slug.
 3. **Amministrazione e inviti**. Fatto: primo amministratore con `SETUP_CODE`, `/admin`, inviti, sospensione, password dimenticata.
 4. **Accesso per serata**. Fatto: `/s/<slug>` a tema, accessi di squadre e proiettore dentro la serata, serate archiviate chiuse, compatibilità di `/accesso`.
-5. **Documenti**: README (pubblicare e primo avvio), CHANGELOG 2.0.0, STORIA, CLAUDE.md, PRODUCT.md, ROADMAP.
+5. **Documenti**. Fatto: README (pubblicare e primo avvio), CHANGELOG 2.0.0, STORIA, CLAUDE.md, PRODUCT.md, ROADMAP.
 
 ## Test
 - Migrazione da un database 1.1 in uso: l'account regia diventa utente con la stessa password, è proprietario della serata, la serata ha uno slug, squadre e proiettore entrano come prima, nessun dato perso.

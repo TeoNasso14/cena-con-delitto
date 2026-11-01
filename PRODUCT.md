@@ -8,12 +8,13 @@ web
 
 ## Stack
 
-Angular 21 (standalone components, signals, zoneless) per il frontend. Backend su Netlify: Functions in TypeScript, Netlify Database (Postgres) con Drizzle, Netlify Blobs per gli allegati delle prove. Un solo progetto Netlify.
+Angular 21 (standalone components, signals, zoneless) per il frontend. Backend su Netlify: Functions in TypeScript, Postgres esterno (Neon) con SQL scritto a mano e migrazioni applicate a runtime, Netlify Blobs per gli allegati. Un solo progetto Netlify.
 
 ## Users
 
-- **Squadre di giocatori**: 2-4 squadre, 10-20 persone in tutto, a una cena con delitto a tema Halloween in un locale o ristorante. Indagano dal proprio telefono, seduti a tavola, tra una portata e l'altra: leggono il caso, sbloccano prove con PIN, consegnano un'accusa.
-- **Organizzatore**: ha scritto il caso (oggi in un PPT) e la sera fa sia la regia sul sito sia la conduzione in sala davanti al proiettore. Una persona sola, con le mani spesso occupate a parlare.
+- **Squadre di giocatori**: 2-4 squadre, 10-20 persone in tutto, a una cena con delitto in un locale o ristorante, con il tema scelto per la serata. Indagano dal proprio telefono, seduti a tavola, tra una portata e l'altra: leggono il caso, sbloccano prove con PIN, consegnano un'accusa.
+- **Organizzatore (regia)**: ha scritto il caso e la sera fa sia la regia sul sito sia la conduzione in sala davanti al proiettore. Una persona sola, con le mani spesso occupate a parlare. Dalla 2.0 ci possono essere più regie, ognuna con le sue serate, invitate dall'amministrazione; le serate si preparano a casa, da computer o tablet.
+- **Amministrazione** (Teo): crea gli account regia con un invito, li sospende, rimette le password. Vede account e numeri, mai il contenuto delle serate.
 - **Sala intera**: guarda il proiettore, che porta la narrazione principale e scandisce le fasi.
 
 ## Product Purpose
@@ -33,7 +34,7 @@ Non è un sito di contenuti ma uno strumento di scena: tre superfici sincronizza
 
 ## Capabilities and Constraints
 
-- Ruoli: squadra (codice squadra), proiettore (codice schermo), regia (password dell'organizzatore), sviluppatore.
+- Ruoli: amministrazione (account creato con il codice di primo avvio), regia (account da invito, più serate per account), squadra e proiettore (account creati dalla regia dentro una serata).
 - Vincolo anti-spoiler: lo sviluppatore (Teo) gioca e non deve vedere trama, soluzione o PIN. Il codice contiene solo un caso dimostrativo finto.
 - I PIN si verificano sul server, con limite di tentativi.
 - Il sistema deve reggere più meccaniche di sblocco combinabili ed estendibili.
@@ -41,8 +42,9 @@ Non è un sito di contenuti ma uno strumento di scena: tre superfici sincronizza
 
 ## Brand Commitments
 
-- Tema dichiarato: Halloween.
-- Direzione visiva scelta da Teo: Halloween classico della categoria (gotico, nero e arancio), eseguito alla lettera e senza ironia. Livello di finitura di riferimento: siti di escape room e giochi dal vivo, videogiochi horror investigativi (schede indizi alla Resident Evil, Phasmophobia, Return of the Obra Dinn), locandine dei film horror classici, pagine Halloween dei parchi a tema (Gardaland Magic Halloween, Halloween Horror Nights).
+- Marchio dell'applicazione: Il Movente, "Gialli da tavola" (collana di gialli su una parete di locandine, scuro). Veste le pagine fuori da una serata.
+- Tema della serata, scelto dalla regia: Halloween classico (predefinito, la prima serata) e Noir anni '40; altri in preparazione.
+- Direzione visiva del tema Halloween, scelta da Teo: Halloween classico della categoria (gotico, nero e arancio), eseguito alla lettera e senza ironia. Livello di finitura di riferimento: siti di escape room e giochi dal vivo, videogiochi horror investigativi (schede indizi alla Resident Evil, Phasmophobia, Return of the Obra Dinn), locandine dei film horror classici, pagine Halloween dei parchi a tema (Gardaland Magic Halloween, Halloween Horror Nights).
 - Lingua: italiano.
 - Regole di scrittura e stile fissate da Teo per i suoi siti: niente etichette sopra i titoli, niente gradienti, niente ombre su elementi fermi, niente emoji, titoli entro due righe, al massimo due caratteri tipografici, niente trattini lunghi nei testi.
 

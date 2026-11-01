@@ -49,3 +49,31 @@ Riassunto della conversazione con Claude che ha portato alla versione 1.0.0 (23 
 4. **Invitati e squadre**: lista invitati, sorteggio con vincoli ("questi divisi"), biglietti con QR per entrare.
 5. **Caso completo in un file**, allegati compresi.
 6. **Tempo reale** al posto del polling, per serate grandi.
+
+# Dalla 1.0 alla 2.0 (1 novembre 2026)
+
+Lavoro fatto sul ramo `develop`, senza pubblicare la 1.1 da sola (scelta di Teo). I piani con il dettaglio dei passi sono in docs/PIANO-1.1.md e docs/PIANO-2.0.md.
+
+## Temi della serata (la 1.1)
+- Il tema è una proprietà della serata, scelto dalla regia. Per renderlo possibile le variabili di colore hanno preso nomi per ruolo (fondo, accento, testo, sigillo, allarme, carta, disco) al posto dei nomi di Halloween; Halloween è rimasto identico, verificato con screenshot uguali byte per byte.
+- Ogni tema cambia anche i due caratteri, il disegno nel disco del proiettore, uno strato d'atmosfera, le sei figure e le frasi pronte delle nuvolette. Un lessico di testi per tema non è servito: le parole dell'interfaccia sono già da indagine.
+- I temi si disegnano con la skill Impeccable, installata a livello utente (`~/.claude/skills/impeccable`) con la copia manuale dal repository ufficiale: i suoi agenti di revisione e documentazione non si installano così, e al loro posto si usano agenti generici con le istruzioni di riserva della skill.
+- Noir anni '40, chiesto da Teo come "bianco, nero e pioggia, macchina da scrivere": League Gothic e Courier Prime, un solo rossetto, errori in giallo nastro, luna argento dietro una veneziana, pioggia solo sul proiettore. Revisione finale chiusa con ship dopo due giri.
+
+## Nuvolette dalla regia
+- Teo ha chiesto di togliere le frasi dal codice subito, anticipando la 2.1. Le 115 frasi di Halloween 2026 (con i nomi degli invitati) sono passate nella serata con una migrazione; le frasi generiche sono diventate le frasi pronte del tema.
+
+## Più regie, più serate (la 2.0)
+- Decisione chiave: l'account regia della 1.0 è dell'organizzatrice e diventa una regia normale; l'amministrazione è Teo, con un account separato creato con `SETUP_CODE`, che non apre serate (regola "Teo gioca").
+- La regia indica la serata su cui lavora a ogni richiesta (intestazione `x-serata`), così i gestori della 1.0 sono rimasti quasi intatti e due schede possono stare su due serate.
+- Duplicare una serata copia anche gli allegati con chiavi nuove; eliminarla chiede il titolo scritto per intero.
+- Squadre e proiettore entrano da `/s/<slug>` nel tema della serata; `/accesso` resta per la serata di Halloween.
+
+## Marchio dell'applicazione
+- Teo non voleva Halloween fuori dalle serate: serviva un marchio. Due mani di direzioni con Impeccable (tra cui gioco da tavolo, tabellone delle partenze, tableau dei tavoli, mappa della metropolitana, parete delle locandine), poi la scelta di Teo: un mix tra la collana gialla da edicola e la parete delle locandine, a tema scuro.
+- Nome scelto tra tre proposte: Il Movente, con il sottotitolo "Gialli da tavola". Carattere dei titoli cercato in tre giri (più particolare, poi gotico, poi da detective): Limelight, la scritta sulla porta a vetri dell'agenzia. Testi in Source Sans 3.
+- Limelight in piccolo fa leggere la G come una C: il marchio lo usa solo in grande. Per il futuro tema Gatsby servirà un altro carattere.
+
+## Stato alla 2.0.0
+- Tutto su `develop`, non ancora unito in `main` né pubblicato. Al passaggio l'organizzatrice rientra una volta con le sue credenziali, e Teo crea l'amministrazione da `/avvio`.
+- Restano: Vittoriano, Delitto in viaggio, Gatsby, Natale; invitati e sorteggio (2.1); caso completo con allegati (2.2); tempo reale; il manuale della regia su Claude Docs da aggiornare.

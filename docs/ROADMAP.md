@@ -1,6 +1,11 @@
 # Verso la 2.0: più regie, più serate, accessi separati
 
-Proposta di architettura concordata il 1 novembre 2026, da rifinire prima di scrivere codice.
+Proposta di architettura concordata il 1 novembre 2026. Realizzata nella 2.0 sul ramo `develop` (piani di dettaglio in docs/PIANO-1.1.md e docs/PIANO-2.0.md); le differenze rispetto a questa proposta sono segnate sotto.
+
+## Stato (1 novembre 2026)
+- **Fatto nella 2.0**: temi della serata (Halloween classico, Noir anni '40), nuvolette dalla regia, marchio Il Movente per le pagine fuori dalle serate, amministrazione con inviti, più serate per regia, accesso per serata a tema, accesso della regia.
+- **Differenze dalla proposta**: l'account regia della 1.0 è diventato una regia normale (non amministratore); l'accesso della regia non ha un aspetto neutro ma il marchio Il Movente.
+- **Prossimi**: gli altri quattro temi (1.1.x, uno alla volta con la skill Impeccable), poi 2.1 (invitati, sorteggio squadre, QR per tavolo, frequenza delle nuvolette), 2.2 (caso completo con allegati), tempo reale.
 
 ## Tre livelli di utenti
 1. **Amministrazione** (Teo): una dashboard `/admin` per creare, sospendere e riattivare gli account regia, e vedere quante serate ha ciascuno. Non vede il contenuto delle serate.
@@ -24,9 +29,9 @@ Proposta di architettura concordata il 1 novembre 2026, da rifinire prima di scr
 Il tema è una proprietà della serata e cambia: colori, caratteri, decorazione del proiettore, figure e frasi delle nuvolette, tono dei testi, pagina di accesso dei partecipanti. Halloween classico è il predefinito. Altri da preparare: Noir anni '40, Vittoriano alla Sherlock, Delitto in viaggio, Anni '20 Gatsby, Natale con delitto.
 
 ## Ordine proposto
-1. **1.1, Temi**: servono anche per la pagina di accesso a tema.
-2. **2.0, Più regie e più serate**: dashboard admin, accesso regia unico, elenco serate, indirizzo e accesso per serata.
-3. **2.1, Invitati e nuvolette dalla regia**: invitati, sorteggio squadre con vincoli, QR per tavolo, frasi delle nuvolette e frequenza decise dalla regia (via i nomi scritti nel codice).
+1. **1.1, Temi**: fatto, uscito dentro la 2.0 (due temi; gli altri seguono).
+2. **2.0, Più regie e più serate**: fatto.
+3. **2.1, Invitati e squadre**: invitati, sorteggio squadre con vincoli, QR per tavolo, frequenza e durata delle nuvolette (le frasi dalla regia sono già nella 2.0).
 4. **2.2, Caso completo in un file**, allegati compresi.
 5. **Poi**: aggiornamenti in tempo reale, controlli automatici su GitHub, manuale della regia aggiornato.
 

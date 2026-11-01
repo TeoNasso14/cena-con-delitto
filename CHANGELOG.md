@@ -1,5 +1,35 @@
 # Registro delle versioni
 
+## 2.0.0
+
+Più regie e più serate, temi della serata, nuvolette decise dalla regia, marchio dell'applicazione. Comprende quella che era stata pensata come 1.1 (temi e nuvolette), che non è uscita da sola.
+
+### Marchio
+- L'applicazione si chiama **Il Movente**, "Gialli da tavola": collana di gialli su una parete di locandine, a tema scuro, titoli in Limelight e testi in Source Sans 3. Veste le pagine fuori da una serata.
+
+### Account e serate
+- Amministrazione (`/admin`): crea inviti per gli account regia, li rigenera o revoca, sospende e riattiva account, manda link per una password nuova. Vede account e numeri, mai il contenuto delle serate, e non apre serate.
+- `SETUP_CODE` crea il primo amministratore; gli account regia nascono dagli inviti (`/invito/<token>`), con nome utente e password scelti da chi li riceve. Link monouso, scadenza 7 giorni, nel database solo l'impronta.
+- Accesso della regia da `/regia/accedi`; squadre e proiettore entrano da `/s/<indirizzo>` della loro serata, nella grafica del tema.
+- Le tue serate (`/regia`): ogni serata è un volume della collana con la copertina del suo tema. Crea, apri, duplica (caso, fasi, personaggi, prove e regole, scene, tema, nuvolette, sfondo e allegati; niente squadre), archivia e riattiva, cambia l'indirizzo, elimina scrivendo il titolo.
+- Serata archiviata: la regia la consulta in sola lettura, squadre e proiettore non entrano.
+- Nomi utente di squadre e proiettore unici dentro la serata.
+
+### Temi
+- Tema della serata scelto in Regia, Strumenti: Halloween classico (predefinito) e Noir anni '40 (bianco, nero e pioggia, macchina da scrivere, un solo rossetto).
+- Ogni tema cambia colori, caratteri, disegno nel disco del proiettore, atmosfera del proiettore, figure e frasi pronte delle nuvolette.
+
+### Nuvolette
+- Le frasi le decide la regia per ogni serata e si possono spegnere; una serata senza frasi usa quelle pronte del tema. Le frasi con i nomi degli invitati di Halloween 2026 sono passate dal codice alla serata.
+
+### Passaggio dalla 1.0
+- Automatico e senza perdite: l'account regia diventa un utente regia con la stessa password, proprietario della sua serata, che riceve un indirizzo. La regia rientra una volta; squadre e proiettore restano collegati; `/accesso` vale ancora per la serata di Halloween.
+
+### Tecnica
+- Variabili di colore per ruolo invece che per Halloween; catalogo dei temi in `src/app/temi/`.
+- La regia indica la serata su cui lavora con l'intestazione `x-serata`; il server controlla che sia sua.
+- Test sul passaggio da un database 1.x, sull'isolamento tra regie, sugli inviti e sul contrasto di ogni tema.
+
 ## 1.0.0, 1 novembre 2026
 
 Prima versione, usata per la cena con delitto di Halloween 2026.
