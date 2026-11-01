@@ -1,6 +1,6 @@
 # Cena con delitto
 
-Sito per cene con delitto: telefoni delle squadre, proiettore, regia. Leggi README.md (uso e pubblicazione), CHANGELOG.md (cosa c'è), PRODUCT.md e DESIGN.md (scopo e linguaggio visivo).
+Sito per cene con delitto: telefoni delle squadre, proiettore, regia. Leggi README.md (uso e pubblicazione), CHANGELOG.md (cosa c'è), docs/STORIA.md (decisioni e richieste fin qui), PRODUCT.md e DESIGN.md (scopo e linguaggio visivo).
 
 ## Regole che valgono sempre
 - **Teo gioca.** Non mostrargli mai trama, soluzione, codici, titoli o contenuti delle prove, testi delle scene o note di regia del caso caricato sul sito vero. Se devi controllare dati reali, leggi solo conteggi, tipi e sì/no.
