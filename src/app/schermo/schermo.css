@@ -38,9 +38,9 @@
 .didascalia { font-size: clamp(20px, 3vh, 36px); color: var(--testo-2); }
 
 .conto { align-items: center; text-align: center; gap: 1.6vh; }
-.orologio { font-weight: 700; font-size: 20vh; line-height: 1; color: var(--fondo); letter-spacing: -0.02em; }
-.conto .sotto { font-family: var(--titoli); font-size: 4.6vh; max-width: 56vh; color: var(--fondo); line-height: 1; }
-.conto .sotto-testo { font-size: 2.6vh; color: var(--fondo); max-width: 52vh; font-weight: 600; }
+.orologio { font-weight: 700; font-size: 20vh; line-height: 1; color: var(--su-accento); letter-spacing: -0.02em; }
+.conto .sotto { font-family: var(--titoli); font-size: 4.6vh; max-width: 56vh; color: var(--su-accento); line-height: 1; }
+.conto .sotto-testo { font-size: 2.6vh; color: var(--su-accento); max-width: 52vh; font-weight: 600; }
 
 .avanzamento { gap: 6vh; max-width: 68vw; }
 .avanzamento .titolo { font-size: clamp(48px, 10vh, 120px); }

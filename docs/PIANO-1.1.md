@@ -20,7 +20,7 @@ Ogni tema cambia: colori, i due caratteri (titoli e testo), decorazione del proi
 - **Applicazione**: attributo `data-tema` su `<html>` e variabili impostate dal catalogo. `index.html` riapplica subito l'ultimo tema visto (`localStorage`, in try/catch) per evitare il lampo di Halloween; anche `theme-color` segue il tema.
 - **Caratteri**: due per tema, entrambi diversi da tema a tema, self-hosted, licenza OFL. Le `@font-face` sono dichiarate tutte; il browser scarica solo quelle usate. Vincoli: cifre ben leggibili (tastierino, orologio, punteggi) e titoli che stanno in due righe sul proiettore.
 - **Proiettore**: il disco e i suoi movimenti per scena restano (il conto alla rovescia ci si appoggia); il disegno dentro diventa un componente per tema.
-- **Pagina di accesso**: `GET /api/aspetto`, pubblico, restituisce solo l'id del tema.
+- **Pagina di accesso**: `GET /api/avvio`, già pubblico, restituisce in più solo l'id del tema.
 - **Nuvolette dalla regia** (anticipato dalla 2.1): le frasi non stanno più nel codice.
   - Tabella `sussurro` (`serata_id`, `testo`, `ordine`) e `serata.sussurri_attivi BOOLEAN NOT NULL DEFAULT TRUE`.
   - La migrazione copia nella serata esistente le frasi di oggi, così Halloween 2026 non perde nulla; poi le frasi escono da `sussurri.ts`.
@@ -42,7 +42,7 @@ Le regole di DESIGN.md valgono per tutti: niente gradienti, niente ombre su elem
 
 ## Passi
 1. **Colori per ruolo**, senza differenze visibili. Fatto: variabili rinominate, colori scritti a mano sostituiti (velo e allarmi con `color-mix`), superfici di carta su `--carta` e `--inchiostro`.
-2. **Infrastruttura**: migrazione `…_tema_serata`, `tema` nelle risposte di squadra e proiettore, `PUT /api/regia/tema`, `GET /api/aspetto`, catalogo con il solo Halloween, `data-tema` e anti-lampo, scelta del tema in regia con anteprime. Revisione dei `var(--fondo)` usati come testo sull'accento, che diventano `--su-accento`.
+2. **Infrastruttura**. Fatto: migrazione `…_tema_serata`, `tema` nelle risposte di squadra e proiettore, `PUT /api/regia/tema`, tema in `GET /api/avvio`, catalogo con il solo Halloween, `data-tema` e anti-lampo, scelta del tema in regia con anteprime. Revisione dei `var(--fondo)` usati come testo sull'accento, che diventano `--su-accento`.
 3. **Nuvolette dalla regia**: migrazione `…_sussurri` con copia delle frasi attuali, API, sezione in regia, componente che legge le frasi dalla serata.
 4. **Spazi per tema**: decorazione del proiettore, figure, frasi pronte, lessico, caratteri. Halloween passa dentro questi spazi senza cambiare aspetto.
 5. **I cinque temi nuovi**, un commit ciascuno, con la loro sezione in DESIGN.md.
@@ -50,6 +50,6 @@ Le regole di DESIGN.md valgono per tutti: niente gradienti, niente ombre su elem
 
 ## Test
 - Migrazioni: un database con lo schema della 1.0 e una serata in uso finisce con `tema = 'halloween'`, le frasi copiate e nient'altro toccato.
-- API: tema sconosciuto rifiutato; cambio di tema e di frasi aumenta `versione`; `/api/aspetto` restituisce solo il tema; le squadre ricevono le frasi della loro serata.
+- API: tema sconosciuto rifiutato; cambio di tema e di frasi aumenta `versione`; `/api/avvio` restituisce solo il tema; le squadre ricevono le frasi della loro serata.
 - Contrasto, per ogni tema del catalogo: testo secondario su ogni livello di fondo almeno 4.5:1, testo sull'accento e sulla carta leggibile, allarme distinguibile dall'accento.
 - `npm test`, `npm run verifica`, `npm run build`, poi un giro in locale con `?sussurri=subito` su telefono, proiettore e regia per ogni tema.

@@ -225,4 +225,11 @@ ALTER TABLE serata ADD COLUMN IF NOT EXISTS sfondo_key TEXT;
 ALTER TABLE serata ADD COLUMN IF NOT EXISTS sfondo_opacita REAL NOT NULL DEFAULT 0.25;
 `,
   },
+  {
+    // Tema della serata: colori, caratteri e decorazioni di telefoni, proiettore e regia. Halloween classico resta il predefinito.
+    nome: "20261101130000_tema_serata",
+    sql: String.raw`
+ALTER TABLE serata ADD COLUMN IF NOT EXISTS tema TEXT NOT NULL DEFAULT 'halloween';
+`,
+  },
 ];

@@ -6,6 +6,8 @@ const regia = (req: Request, db: Db) => utente(req, db, ["regia"]);
 
 const TIPI_PROVA = ["documento", "oggetto", "testimonianza", "foto", "audio", "video"];
 const TIPI_SCENA = ["narrazione", "immagine", "video", "audio", "conto", "avanzamento", "annuncio", "rivelazione", "attesa"];
+/** Gli stessi id del catalogo in src/app/temi/catalogo.ts: un test controlla che coincidano. */
+export const TEMI = ["halloween"];
 
 async function evento(db: Db, sid: number, testoEvento: string, tipo = "regia", squadraId: number | null = null) {
   await db.q("INSERT INTO evento (serata_id, squadra_id, tipo, testo) VALUES ($1, $2, $3, $4)", [sid, squadraId, tipo, testoEvento]);
@@ -674,6 +676,16 @@ export async function sfondo(req: Request, db: Db) {
   return json({ ok: true });
 }
 
+/** Tema della serata: telefoni, proiettore e regia cambiano aspetto al prossimo aggiornamento. */
+export async function tema(req: Request, db: Db) {
+  const u = await regia(req, db);
+  const b = await corpo<{ tema?: string }>(req);
+  if (typeof b.tema !== "string" || !TEMI.includes(b.tema)) throw new Errore(400, "Tema sconosciuto.");
+  await db.q("UPDATE serata SET tema = $1 WHERE id = $2", [b.tema, u.serata_id]);
+  await tocca(db, u.serata_id);
+  return json({ ok: true });
+}
+
 /* ---------- Strumenti ---------- */
 
 export async function azzera(req: Request, db: Db) {
@@ -704,7 +716,7 @@ export async function azzera(req: Request, db: Db) {
 export async function esporta(req: Request, db: Db) {
   const u = await regia(req, db);
   const sid = u.serata_id;
-  const serata = await db.uno("SELECT titolo, premessa, colpevole, movente, arma FROM serata WHERE id = $1", [sid]);
+  const serata = await db.uno("SELECT titolo, premessa, colpevole, movente, arma, tema FROM serata WHERE id = $1", [sid]);
   const fasi = await db.q("SELECT numero, nome, durata_minuti FROM fase WHERE serata_id = $1 ORDER BY numero", [sid]);
   const personaggi = await db.q("SELECT nome, ruolo, scheda, note_regia, ordine FROM personaggio WHERE serata_id = $1 ORDER BY ordine, id", [sid]);
   const prove = await db.q<{ id: number; numero: number }>(
@@ -770,6 +782,8 @@ export async function importa(req: Request, db: Db) {
       testo(s.titolo ?? "Cena con delitto", "titolo", { max: 120 }), String(s.premessa ?? ""), String(s.colpevole ?? ""),
       String(s.movente ?? ""), String(s.arma ?? ""), sid,
     ]);
+    // I file esportati prima della 1.1 non hanno il tema: resta quello attuale.
+    if (typeof s.tema === "string" && TEMI.includes(s.tema)) await t.q("UPDATE serata SET tema = $1 WHERE id = $2", [s.tema, sid]);
     for (const [i, f] of (c.fasi ?? []).entries()) {
       await t.q("INSERT INTO fase (serata_id, numero, nome, durata_minuti) VALUES ($1,$2,$3,$4)", [
         sid, i + 1, testo(f.nome, "fase", { max: 80 }), f.durata_minuti ?? null,

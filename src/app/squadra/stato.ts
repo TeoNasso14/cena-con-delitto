@@ -1,5 +1,6 @@
 import { inject, Injectable, signal } from '@angular/core';
 import { Api, ripeti } from '../api';
+import { applicaTema } from '../temi/applica';
 
 export interface ProvaAperta {
   id: number; numero: number; cartella: number | null; aperta: true; titolo: string; tipo: string; testo: string;
@@ -10,6 +11,7 @@ export type Prova = ProvaAperta | ProvaChiusa;
 
 export interface StatoSquadra {
   versione: string;
+  tema: string;
   serata: { titolo: string; premessa: string; stato: string; rivelata: boolean };
   fase: { numero: number; nome: string | null; totale: number };
   squadra: { nome: string; colore: string; taccuino: string };
@@ -53,6 +55,7 @@ export class StatoSquadraService {
         this.viste.set(new Set(s.prove.filter((p) => p.aperta).map((p) => p.id)));
       }
       this.stato.set(s);
+      applicaTema(s.tema);
       this.errore.set('');
     } catch (e) {
       this.errore.set((e as Error).message);

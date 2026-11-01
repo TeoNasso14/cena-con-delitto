@@ -1,5 +1,6 @@
 import { inject, Injectable, signal } from '@angular/core';
 import { Api, ErroreApi, ripeti } from '../api';
+import { applicaTema } from '../temi/applica';
 
 export interface Regola { id?: number; tipo: 'pin' | 'prova' | 'fase'; pin?: string | null; prova_richiesta_id?: number | null; fase_numero?: number | null; squadra_id?: number | null; gruppo: number }
 export interface ProvaR { id: number; numero: number; titolo: string; tipo: string; testo: string; allegato_key: string | null; allegato_tipo: string | null; nota_sigillo: string; cartella_id: number | null; titolo_visibile: boolean; in_elenco: boolean; regole: Regola[] }
@@ -8,7 +9,7 @@ export interface ScenaR { id: number; ordine: number; tipo: string; titolo: stri
 export interface PersonaggioR { id: number; nome: string; ruolo: string; scheda: string; note_regia: string; foto_key: string | null; ordine: number }
 export interface SquadraR { id: number; nome: string; colore: string; account_id: number | null; username: string | null; ultimo_accesso: string | null; aperte: number; ultima_prova: string | null; codici_sbagliati: number; prove_aperte: number[]; prove_mostrate?: number[] }
 export interface Fase { numero: number; nome: string; durata_minuti: number | null; avviata_alle: string | null }
-export interface Serata { id: number; titolo: string; premessa: string; stato: 'bozza' | 'in_corso' | 'in_pausa' | 'chiusa'; fase_corrente: number; scena_in_onda: number | null; schermo_nero: boolean; colpevole: string; movente: string; arma: string; rivelata: boolean; sfondo_key: string | null; sfondo_opacita: number }
+export interface Serata { id: number; titolo: string; premessa: string; stato: 'bozza' | 'in_corso' | 'in_pausa' | 'chiusa'; fase_corrente: number; scena_in_onda: number | null; schermo_nero: boolean; colpevole: string; movente: string; arma: string; rivelata: boolean; sfondo_key: string | null; sfondo_opacita: number; tema: string }
 export interface AccusaR { squadra_id: number; squadra: string; colpevole: string; movente: string; arma: string; spiegazione: string; consegnata_alle: string; punteggio: number | null }
 
 export interface Tutto {
@@ -50,7 +51,9 @@ export class RegiaStato {
   arresta() { this.ferma?.(); }
 
   async aggiorna() {
-    this.t.set(await this.api.get<Tutto>('/api/regia'));
+    const t = await this.api.get<Tutto>('/api/regia');
+    this.t.set(t);
+    applicaTema(t.serata.tema);
   }
 
   dimmi(testo: string, errore = false) {

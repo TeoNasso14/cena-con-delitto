@@ -22,8 +22,8 @@ export async function stato(req: Request, db: Db) {
   const sid = u.serata_id;
   const sqId = u.squadra_id!;
   const serata = await db.uno<{
-    titolo: string; premessa: string; stato: string; fase_corrente: number; versione: string; rivelata: boolean;
-  }>("SELECT titolo, premessa, stato, fase_corrente, versione, rivelata FROM serata WHERE id = $1", [sid]);
+    titolo: string; premessa: string; stato: string; fase_corrente: number; versione: string; rivelata: boolean; tema: string;
+  }>("SELECT titolo, premessa, stato, fase_corrente, versione, rivelata, tema FROM serata WHERE id = $1", [sid]);
   const squadra = await db.uno<{ nome: string; colore: string; taccuino: string }>(
     "SELECT nome, colore, taccuino FROM squadra WHERE id = $1",
     [sqId],
@@ -93,6 +93,7 @@ export async function stato(req: Request, db: Db) {
 
   return json({
     versione: serata!.versione,
+    tema: serata!.tema,
     serata: { titolo: serata!.titolo, premessa: serata!.premessa, stato: serata!.stato, rivelata: serata!.rivelata },
     fase: { numero: serata!.fase_corrente, nome: fase.corrente?.nome ?? null, totale: fase.totale },
     squadra,

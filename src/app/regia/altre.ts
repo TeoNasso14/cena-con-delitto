@@ -3,6 +3,7 @@ import { FormsModule } from '@angular/forms';
 import { Api, ora } from '../api';
 import { Icona } from '../icona';
 import { Allegato } from './allegato';
+import { TEMI } from '../temi/catalogo';
 import { RegiaStato, ScenaR, TIPI_SCENA } from './stato';
 
 /* ---------- Scene del proiettore ---------- */
@@ -191,7 +192,7 @@ export class SceneRegia {
         <p><strong>{{ c.titolo }}</strong>. Scrivila adesso: dopo non si potrà più leggere.</p>
         <dl><dt>Nome utente</dt><dd>{{ c.username }}</dd><dt>Password</dt><dd>{{ c.password }}</dd></dl>
         <button class="bottone bottone--piccolo" type="button" (click)="copia(c)">{{ copiato() ? 'Copiate' : 'Copia le credenziali' }}</button>
-        <button class="r-link" type="button" style="color:var(--fondo); justify-self:start" (click)="credenziali.set(null)">Fatto, nascondi</button>
+        <button class="r-link" type="button" style="color:var(--inchiostro); justify-self:start" (click)="credenziali.set(null)">Fatto, nascondi</button>
       </div>
     }
 
@@ -384,9 +385,40 @@ export class AccuseRegia {
   selector: 'app-strumenti',
   imports: [FormsModule],
   changeDetection: ChangeDetectionStrategy.OnPush,
+  styles: `
+    .temi { list-style: none; margin: 0; padding: 0; display: grid; grid-template-columns: repeat(auto-fill, minmax(220px, 1fr)); gap: 12px; }
+    .tema { width: 100%; height: 100%; display: grid; align-content: start; gap: 6px; padding: 10px 10px 14px; text-align: left; border-radius: 14px;
+      border: 1px solid transparent; background: var(--fondo-2); color: var(--testo-1); font: inherit; cursor: pointer; }
+    .tema--scelto { border-color: var(--accento); }
+    @media (hover: hover) { .tema:hover { background: var(--fondo-3); } }
+    .tema-anteprima { position: relative; display: block; aspect-ratio: 16 / 9; margin-bottom: 4px; border-radius: 10px; border: 1px solid; overflow: hidden; }
+    .tema-anteprima i { position: absolute; width: 62%; aspect-ratio: 1; border-radius: 50%; right: -14%; top: 50%; transform: translateY(-50%); }
+    .tema-anteprima b { position: absolute; left: 8%; top: 50%; transform: translateY(-50%); max-width: 56%; font-size: 20px; line-height: 1; font-weight: 700;
+      text-wrap: balance; display: -webkit-box; -webkit-line-clamp: 2; -webkit-box-orient: vertical; overflow: hidden; }
+    .tema-nome { display: flex; flex-wrap: wrap; align-items: center; gap: 8px; font-weight: 600; }
+    .tema-descrizione { font-size: 14px; color: var(--testo-2); }
+  `,
   template: `
     @let t = st.t()!;
-    <header class="r-testa"><div><h1>Strumenti</h1><p>Accesso della regia, stato della serata, salvataggio del caso e ripartenza da zero.</p></div></header>
+    <header class="r-testa"><div><h1>Strumenti</h1><p>Tema della serata, accesso della regia, stato della serata, salvataggio del caso e ripartenza da zero.</p></div></header>
+    <section class="r-blocco">
+      <h2>Tema della serata</h2>
+      <p class="secondario">Colori, caratteri e decorazioni di telefoni, proiettore e regia. Cambia per tutti entro pochi secondi, anche a serata in corso.</p>
+      <ul class="temi">
+        @for (tm of temi; track tm.id) {
+          <li>
+            <button type="button" class="tema" [class.tema--scelto]="tm.id === t.serata.tema" [attr.aria-pressed]="tm.id === t.serata.tema" (click)="scegliTema(tm.id)">
+              <span class="tema-anteprima" aria-hidden="true" [style.background]="tm.colori.fondo" [style.border-color]="tm.colori.filetto">
+                <i [style.background]="tm.colori.accento"></i>
+                <b [style.font-family]="tm.titoli" [style.color]="tm.colori['testo-1']">{{ t.serata.titolo }}</b>
+              </span>
+              <span class="tema-nome">{{ tm.nome }}@if (tm.id === t.serata.tema) { <span class="r-pillola r-pillola--accento">In uso</span> }</span>
+              <span class="tema-descrizione">{{ tm.descrizione }}</span>
+            </button>
+          </li>
+        }
+      </ul>
+    </section>
     <div class="r-colonne">
       <div class="r-colonna">
         <section class="r-blocco">
@@ -444,6 +476,7 @@ export class Strumenti {
   readonly stati: Record<string, string> = { bozza: 'in preparazione', in_corso: 'in corso', in_pausa: 'in pausa', chiusa: 'chiusa' };
   readonly azioniStato: Record<string, string> = { bozza: 'Torna in preparazione', in_corso: 'Metti in corso', in_pausa: 'Metti in pausa', chiusa: 'Chiudi la serata' };
   readonly ordineStati = ['bozza', 'in_corso', 'in_pausa', 'chiusa'];
+  readonly temi = TEMI;
   username = this.st.t()?.io.username ?? '';
   attuale = '';
   nuova = '';
@@ -456,6 +489,10 @@ export class Strumenti {
     if (ok) { this.attuale = ''; this.nuova = ''; }
   }
   stato(s: string) { this.st.fai(() => this.api.post('/api/regia/stato', { stato: s }), 'Stato aggiornato'); }
+  scegliTema(id: string) {
+    if (id === this.st.t()?.serata.tema) return;
+    this.st.fai(() => this.api.put('/api/regia/tema', { tema: id }), 'Tema della serata cambiato');
+  }
   async esporta() {
     const dati = await this.st.fai(() => this.api.get('/api/regia/esporta'));
     if (!dati) return;

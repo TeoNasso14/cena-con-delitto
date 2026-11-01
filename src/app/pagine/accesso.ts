@@ -4,6 +4,7 @@ import { Router, RouterLink } from '@angular/router';
 import { Api, ErroreApi, Ruolo } from '../api';
 import { Sessione } from '../sessione';
 import { Firma } from '../firma';
+import { applicaTema } from '../temi/applica';
 
 const STILE = `
   :host { display: block; min-height: 100dvh; position: relative; overflow: hidden; }
@@ -61,8 +62,9 @@ export class Accesso implements OnInit {
       await this.router.navigateByUrl(this.sessione.pagina(io.ruolo));
       return;
     }
-    const a = await this.api.get<{ configurato: boolean }>('/api/avvio').catch(() => ({ configurato: true }));
+    const a = await this.api.get<{ configurato: boolean; tema?: string }>('/api/avvio').catch(() => ({ configurato: true, tema: undefined }));
     this.daConfigurare.set(!a.configurato);
+    if (a.tema) applicaTema(a.tema);
   }
 
   async entra() {

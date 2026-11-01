@@ -2,6 +2,7 @@ import { ChangeDetectionStrategy, Component, computed, effect, ElementRef, injec
 import { Router } from '@angular/router';
 import { Api, ora, ripeti } from '../api';
 import { Sussurri } from '../squadra/sussurri';
+import { applicaTema } from '../temi/applica';
 
 interface Scena {
   id?: number; tipo: string; titolo: string; testo: string;
@@ -12,7 +13,7 @@ interface Scena {
   vincitori?: Array<{ nome: string; consegnata_alle: string }>;
 }
 interface StatoSchermo {
-  versione: string; titolo: string; stato: string; schermoNero: boolean; adesso: string;
+  versione: string; tema: string; titolo: string; stato: string; schermoNero: boolean; adesso: string;
   fase: { numero: number; nome: string | null; avviata: string | null; durataMinuti: number | null; elenco: Array<{ numero: number; nome: string }> };
   scena: Scena;
   sfondo: { url: string; opacita: number } | null;
@@ -80,6 +81,7 @@ export class Schermo implements OnInit, OnDestroy {
       const s = await this.api.get<StatoSchermo>('/api/schermo/stato');
       this.scarto = new Date(s.adesso).getTime() - (t0 + Date.now()) / 2;
       this.s.set(s);
+      applicaTema(s.tema);
     }, 2000);
     this.orologio = setInterval(() => this.adesso.set(Date.now()), 1000);
     navigator.wakeLock?.request('screen').catch(() => undefined);

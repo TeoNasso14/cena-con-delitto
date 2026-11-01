@@ -30,7 +30,9 @@ export async function utente(req: Request, db: Db, ruoli: Ruolo[]): Promise<Uten
 
 export async function statoAvvio(db: Db) {
   const r = await db.uno<{ n: number }>("SELECT COUNT(*)::int AS n FROM account WHERE ruolo = 'regia'");
-  return json({ configurato: (r?.n ?? 0) > 0 });
+  // Pubblico: serve alla pagina di accesso per vestirsi col tema. Solo l'id del tema, niente del caso.
+  const s = await db.uno<{ tema: string }>("SELECT tema FROM serata ORDER BY id LIMIT 1");
+  return json({ configurato: (r?.n ?? 0) > 0, tema: s?.tema ?? "halloween" });
 }
 
 function controllaPassword(pw: string) {

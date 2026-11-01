@@ -36,7 +36,7 @@
 .reperto-nota { font-size: 14px; color: var(--testo-2); line-height: 1.35; }
 .reperto--sigillato .reperto-nota { color: var(--testo-1); }
 .numero { font-size: 13px; color: var(--testo-2); font-weight: 600; letter-spacing: 0.04em; }
-.nuova { font-size: 13px; font-weight: 700; color: var(--fondo); background: var(--accento); border-radius: 2px; padding: 1px 7px; }
+.nuova { font-size: 13px; font-weight: 700; color: var(--su-accento); background: var(--accento); border-radius: 2px; padding: 1px 7px; }
 .sigillo-mini { width: 40px; height: 40px; }
 
 /* Foglio */
@@ -78,7 +78,7 @@
 .tasto { min-height: 64px; border-radius: 16px; border: 0; background: var(--fondo-3); font-size: 28px; font-weight: 600; color: var(--testo-1); }
 @media (hover: hover) { .tasto:hover:not(:disabled) { background: var(--filetto); } .tasto--apri:hover:not(:disabled) { background: var(--accento-chiaro); } }
 .tasto--leggero { background: transparent; font-size: 16px; color: var(--testo-2); }
-.tasto--apri { background: var(--accento); color: var(--fondo); font-size: 17px; font-weight: 700; }
+.tasto--apri { background: var(--accento); color: var(--su-accento); font-size: 17px; font-weight: 700; }
 .tasto:disabled { background: var(--fondo-3); color: var(--testo-2); opacity: 0.6; }
 
 .rivelata { display: grid; gap: 14px; justify-items: center; text-align: center; animation: sale 520ms var(--curva-cassetto) both; }

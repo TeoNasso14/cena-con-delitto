@@ -363,6 +363,8 @@ describe("cartelle delle prove", () => {
       { titolo: "Prova vecchia", cartella_id: null, in_elenco: false, titolo_visibile: false },
       { titolo: "Altra", cartella_id: null, in_elenco: false, titolo_visibile: false },
     ]);
+    // la serata già in uso prende il tema predefinito
+    expect(await d2.q("SELECT titolo, tema FROM serata")).toEqual([{ titolo: "Vecchia", tema: "halloween" }]);
     await d2.fine?.();
     await altro.stop();
   }, 60_000);
@@ -476,6 +478,24 @@ test("la regia mette la foto di sfondo del proiettore", async () => {
   expect(sc.sfondo.opacita).toBeCloseTo(0.8, 5);
   await chiama("PUT", "/api/regia/sfondo", { key: null }, regia);
   expect((await chiama("GET", "/api/schermo/stato", undefined, schermo)).dati.sfondo).toBeNull();
+});
+
+test("la regia sceglie il tema della serata", async () => {
+  expect((await chiama("PUT", "/api/regia/tema", { tema: "halloween" }, corvi)).stato).toBe(403);
+  expect((await chiama("PUT", "/api/regia/tema", { tema: "fantascienza" }, regia)).stato).toBe(400);
+  expect((await chiama("PUT", "/api/regia/tema", {}, regia)).stato).toBe(400);
+  const prima = (await chiama("GET", "/api/squadra/stato", undefined, corvi)).dati;
+  expect(prima.tema).toBe("halloween");
+  expect((await chiama("PUT", "/api/regia/tema", { tema: "halloween" }, regia)).stato).toBe(200);
+  const dopo = (await chiama("GET", "/api/squadra/stato", undefined, corvi)).dati;
+  expect(Number(dopo.versione)).toBeGreaterThan(Number(prima.versione));
+  expect((await chiama("GET", "/api/schermo/stato", undefined, schermo)).dati.tema).toBe("halloween");
+  expect((await chiama("GET", "/api/regia", undefined, regia)).dati.serata.tema).toBe("halloween");
+  // la pagina di accesso è pubblica: riceve il tema e nient'altro della serata
+  const avvio = await chiama("GET", "/api/avvio");
+  expect(avvio.dati).toEqual({ configurato: true, tema: "halloween" });
+  // il tema viaggia con il caso esportato
+  expect((await chiama("GET", "/api/regia/esporta", undefined, regia)).dati.serata.tema).toBe("halloween");
 });
 
 test("confronto delle risposte", () => {
