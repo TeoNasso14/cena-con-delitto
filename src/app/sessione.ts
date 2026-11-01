@@ -22,7 +22,9 @@ export class Sessione {
     return this.io();
   }
 
-  pagina(ruolo: Ruolo) {
+  /** La pagina di casa: l'amministrazione ha solo la sua. */
+  pagina(ruolo: Ruolo, admin = false) {
+    if (admin) return '/admin';
     return ruolo === 'regia' ? '/regia' : ruolo === 'schermo' ? '/schermo' : '/squadra';
   }
 
@@ -41,6 +43,16 @@ export const soloPer = (...ruoli: Ruolo[]): CanMatchFn => async () => {
   const router = inject(Router);
   const io = await s.carica();
   if (!io) return router.parseUrl('/accesso');
-  if (!ruoli.includes(io.ruolo)) return router.parseUrl(s.pagina(io.ruolo));
+  // L'amministrazione non apre serate, quindi non entra nelle pagine di regia, squadre e proiettore.
+  if (io.admin || !ruoli.includes(io.ruolo)) return router.parseUrl(s.pagina(io.ruolo, io.admin));
   return true;
+};
+
+/** Solo per l'amministrazione. */
+export const soloAdmin: CanMatchFn = async () => {
+  const s = inject(Sessione);
+  const router = inject(Router);
+  const io = await s.carica();
+  if (!io) return router.parseUrl('/accesso');
+  return io.admin ? true : router.parseUrl(s.pagina(io.ruolo));
 };

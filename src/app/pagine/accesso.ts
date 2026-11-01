@@ -5,6 +5,7 @@ import { Api, ErroreApi, Ruolo } from '../api';
 import { Sessione } from '../sessione';
 import { Firma } from '../firma';
 import { applicaTema } from '../temi/applica';
+import { Testata } from './testata';
 
 const STILE = `
   :host { display: block; min-height: 100dvh; position: relative; overflow: hidden; }
@@ -40,7 +41,7 @@ const STILE = `
         <button class="bottone bottone--pieno" type="submit" [disabled]="attesa()">{{ attesa() ? 'Entro…' : 'Entra' }}</button>
       </form>
       @if (daConfigurare()) {
-        <p class="nota">Il sito non ha ancora una regia. <a routerLink="/avvio">Crea l'account regia</a> con il codice di primo avvio.</p>
+        <p class="nota">Il sito non ha ancora un'amministrazione. <a routerLink="/avvio">Creala</a> con il codice di primo avvio.</p>
       }
       <app-firma />
     </main>
@@ -59,7 +60,7 @@ export class Accesso implements OnInit {
   async ngOnInit() {
     const io = await this.sessione.carica(true);
     if (io) {
-      await this.router.navigateByUrl(this.sessione.pagina(io.ruolo));
+      await this.router.navigateByUrl(this.sessione.pagina(io.ruolo, io.admin));
       return;
     }
     const a = await this.api.get<{ configurato: boolean; tema?: string }>('/api/avvio').catch(() => ({ configurato: true, tema: undefined }));
@@ -71,9 +72,9 @@ export class Accesso implements OnInit {
     this.errore.set('');
     this.attesa.set(true);
     try {
-      const r = await this.api.post<{ ruolo: Ruolo }>('/api/accesso', { username: this.username, password: this.password });
+      const r = await this.api.post<{ ruolo: Ruolo; admin?: boolean }>('/api/accesso', { username: this.username, password: this.password });
       await this.sessione.carica(true);
-      await this.router.navigateByUrl(this.sessione.pagina(r.ruolo));
+      await this.router.navigateByUrl(this.sessione.pagina(r.ruolo, r.admin));
     } catch (e) {
       this.errore.set(e instanceof ErroreApi ? e.message : 'Accesso non riuscito.');
     } finally {
@@ -82,55 +83,68 @@ export class Accesso implements OnInit {
   }
 }
 
+/** Forma delle pagine brevi del marchio (primo avvio, invito): testata gialla, titolo e un modulo scuro. */
+export const STILE_MARCHIO = `
+  :host { display: block; min-height: 100dvh; }
+  .pagina { max-width: 560px; margin: 0 auto; padding: 48px max(16px, min(3vw, 48px)) 48px; display: grid; gap: 24px; }
+  h1 { font: 400 clamp(40px, 6vw, 56px)/1 var(--titoli); text-wrap: balance; }
+  .intro { color: var(--testo-2); font-size: 17px; }
+  form { display: grid; gap: 16px; padding: 24px; background: var(--fondo-2); border: 1px solid var(--filetto); border-radius: 2px; }
+  .nota { color: var(--testo-2); font-size: 15px; }
+  .bottone--pieno { width: 100%; }
+`;
+
 @Component({
   selector: 'app-avvio',
-  imports: [FormsModule, RouterLink, Firma],
+  imports: [FormsModule, RouterLink, Firma, Testata],
   changeDetection: ChangeDetectionStrategy.OnPush,
-  styles: STILE,
+  styles: STILE_MARCHIO,
   template: `
-    <div class="luna" aria-hidden="true"></div>
+    <app-testata casa="/accesso" />
     <main class="pagina">
       <h1>Primo avvio</h1>
-      <p class="intro">Crea l'account della regia. Si fa una volta sola: poi la regia crea le squadre e il proiettore. Se poi consegni la regia a qualcun altro, potrà cambiare nome utente e password da Strumenti.</p>
+      <p class="intro">Crea l'account dell'amministrazione. Si fa una volta sola: poi l'amministrazione invita le regie, che creano e conducono le serate. L'amministrazione vede account e numeri, mai il contenuto delle serate.</p>
       <form (ngSubmit)="crea()">
         <label class="etichetta" for="codice">Codice di primo avvio <small>Quello impostato su Netlify come SETUP_CODE.</small>
           <input id="codice" class="campo" name="codice" type="password" autocomplete="off" [(ngModel)]="codice" required>
         </label>
-        <label class="etichetta" for="titolo">Titolo della serata
-          <input id="titolo" class="campo" name="titolo" [(ngModel)]="titolo" required>
+        <label class="etichetta" for="nome">Il tuo nome <small>Facoltativo.</small>
+          <input id="nome" class="campo" name="nome" autocomplete="name" [(ngModel)]="nome">
         </label>
-        <label class="etichetta" for="utente">Nome utente della regia <small>Minuscolo, almeno 3 caratteri.</small>
+        <label class="etichetta" for="utente">Nome utente <small>Minuscolo, almeno 3 caratteri.</small>
           <input id="utente" class="campo" name="utente" autocomplete="username" autocapitalize="none" spellcheck="false" [(ngModel)]="username" required>
         </label>
-        <label class="etichetta" for="pw">Password della regia <small>Almeno 10 caratteri.</small>
+        <label class="etichetta" for="pw">Password <small>Almeno 10 caratteri.</small>
           <input id="pw" class="campo" name="pw" type="password" autocomplete="new-password" [(ngModel)]="password" required>
         </label>
         @if (errore()) { <p class="avviso avviso--errore" role="alert">{{ errore() }}</p> }
-        <button class="bottone bottone--pieno" type="submit" [disabled]="attesa()">Crea la regia</button>
+        <button class="bottone bottone--pieno" type="submit" [disabled]="attesa()">Crea l'amministrazione</button>
       </form>
       <p class="nota"><a routerLink="/accesso">Torna all'accesso</a></p>
       <app-firma />
     </main>
   `,
 })
-export class Avvio {
+export class Avvio implements OnInit {
   private api = inject(Api);
   private sessione = inject(Sessione);
   private router = inject(Router);
   codice = '';
-  titolo = 'Cena con delitto';
-  username = 'regia';
+  nome = '';
+  username = '';
   password = '';
   readonly errore = signal('');
   readonly attesa = signal(false);
+
+  ngOnInit() { applicaTema('marchio'); }
 
   async crea() {
     this.errore.set('');
     this.attesa.set(true);
     try {
-      await this.api.post('/api/avvio', { codice: this.codice, titolo: this.titolo, username: this.username, password: this.password });
+      await this.api.post('/api/avvio', { codice: this.codice, nome: this.nome, username: this.username, password: this.password });
       await this.sessione.carica(true);
-      await this.router.navigateByUrl('/regia');
+      await this.router.navigateByUrl('/admin');
     } catch (e) {
       this.errore.set(e instanceof ErroreApi ? e.message : 'Creazione non riuscita.');
     } finally {

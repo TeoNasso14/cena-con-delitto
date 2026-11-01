@@ -30,6 +30,7 @@ async function chiaviAllegati(db: Db, id: number) {
 
 export async function crea(req: Request, db: Db) {
   const u = await utenteSenzaSerata(req, db);
+  if (u.admin) throw new Errore(403, "L'amministrazione non crea serate: invita un account regia.", "vietato");
   const b = await corpo<{ titolo?: string }>(req);
   const titolo = testo(b.titolo, "titolo", { max: 120 });
   const s = await db.uno<{ id: number; slug: string }>(

@@ -1,6 +1,6 @@
 import {
   cookieSessione, cookieUscita, corpo, Db, env, Errore, firmaSessione, hashPassword, json, leggiSessione,
-  Ruolo, slugSerata, testo, tokenDaRichiesta, verificaPassword,
+  Ruolo, testo, tokenDaRichiesta, verificaPassword,
 } from "./base.ts";
 
 /**
@@ -61,6 +61,7 @@ export async function utente(req: Request, db: Db, ruoli: Ruolo[], serataDelFile
     return p.u;
   }
   if (!ruoli.includes("regia")) throw new Errore(403, "Questa pagina non è per il tuo account.", "vietato");
+  if (p.admin) throw new Errore(403, "L'amministrazione non apre le serate.", "vietato");
   const sid = serataDelFile ?? Number(req.headers.get("x-serata"));
   if (!Number.isInteger(sid) || sid <= 0) throw new Errore(400, "Scegli prima una serata.", "serata_mancante");
   const se = await db.uno<{ archiviata: boolean }>("SELECT archiviata FROM serata WHERE id = $1 AND proprietario_id = $2", [sid, p.id]);
@@ -83,7 +84,8 @@ async function serataStorica(db: Db) {
 }
 
 export async function statoAvvio(db: Db) {
-  const r = await db.uno<{ n: number }>("SELECT COUNT(*)::int AS n FROM utente");
+  // Configurato quando esiste l'amministrazione: prima, SETUP_CODE serve a crearla.
+  const r = await db.uno<{ n: number }>("SELECT COUNT(*)::int AS n FROM utente WHERE admin");
   // Pubblico: serve alla pagina di accesso per vestirsi col tema. Solo l'id del tema, niente del caso.
   const s = await serataStorica(db);
   return json({ configurato: (r?.n ?? 0) > 0, tema: s?.tema ?? "halloween" });
@@ -100,9 +102,12 @@ function controllaUsername(u: string) {
   }
 }
 
-/** Crea il primo utente regia e la sua serata. Funziona una sola volta e richiede il codice di primo avvio. */
+/**
+ * Crea il primo amministratore. Funziona finché non ce n'è uno e richiede il codice di primo avvio.
+ * L'amministrazione non gestisce serate: gli account regia nascono dagli inviti.
+ */
 export async function primoAvvio(req: Request, db: Db) {
-  const b = await corpo<{ codice?: string; username?: string; password?: string; titolo?: string }>(req);
+  const b = await corpo<{ codice?: string; username?: string; password?: string; nome?: string }>(req);
   const atteso = env("SETUP_CODE");
   if (!atteso) throw new Errore(500, "Il sito non è configurato: manca SETUP_CODE.", "configurazione");
   if (testo(b.codice, "codice di primo avvio") !== atteso) throw new Errore(403, "Il codice di primo avvio non è giusto.");
@@ -110,21 +115,20 @@ export async function primoAvvio(req: Request, db: Db) {
   controllaUsername(username);
   const password = testo(b.password, "password", { max: 200 });
   controllaPassword(password);
-  const titolo = testo(b.titolo ?? "Cena con delitto", "titolo", { max: 120 });
+  const nome = testo(b.nome ?? "", "nome", { max: 80, vuoto: true });
   const hash = await hashPassword(password);
 
   const u = await db.transazione(async (t) => {
-    const esiste = await t.uno<{ n: number }>("SELECT COUNT(*)::int AS n FROM utente");
-    if ((esiste?.n ?? 0) > 0) throw new Errore(409, "La regia esiste già. Accedi con il suo account.");
-    const nuovo = await t.uno<{ id: number; versione_token: number }>(
-      "INSERT INTO utente (username, password_hash) VALUES ($1, $2) RETURNING id, versione_token",
-      [username, hash],
+    const esiste = await t.uno<{ n: number }>("SELECT COUNT(*)::int AS n FROM utente WHERE admin");
+    if ((esiste?.n ?? 0) > 0) throw new Errore(409, "L'amministrazione esiste già. Accedi con il suo account.");
+    if (await t.uno("SELECT id FROM utente WHERE username = $1", [username])) throw new Errore(409, "Questo nome utente è già usato da un account regia.");
+    return t.uno<{ id: number; versione_token: number }>(
+      "INSERT INTO utente (username, password_hash, nome, admin) VALUES ($1, $2, $3, TRUE) RETURNING id, versione_token",
+      [username, hash, nome],
     );
-    await t.q("INSERT INTO serata (titolo, proprietario_id, slug) VALUES ($1, $2, $3)", [titolo, nuovo!.id, await slugSerata(t, titolo)]);
-    return nuovo;
   });
   const token = firmaSessione({ k: "u", a: u!.id, r: "regia", v: u!.versione_token });
-  return json({ ruolo: "regia" }, 201, { "set-cookie": cookieSessione(token) });
+  return json({ ruolo: "regia", admin: true }, 201, { "set-cookie": cookieSessione(token) });
 }
 
 /**

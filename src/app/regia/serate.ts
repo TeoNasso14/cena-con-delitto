@@ -4,6 +4,7 @@ import { FormsModule } from '@angular/forms';
 import { Router, RouterLink } from '@angular/router';
 import { Api, ErroreApi } from '../api';
 import { Firma } from '../firma';
+import { Testata } from '../pagine/testata';
 import { Sessione } from '../sessione';
 import { applicaTema } from '../temi/applica';
 import { temaDa } from '../temi/catalogo';
@@ -20,25 +21,10 @@ interface SerataElenco {
  */
 @Component({
   selector: 'app-serate',
-  imports: [FormsModule, NgTemplateOutlet, RouterLink, Copertina, Firma],
+  imports: [FormsModule, NgTemplateOutlet, RouterLink, Copertina, Firma, Testata],
   changeDetection: ChangeDetectionStrategy.OnPush,
   styles: `
     :host { display: block; min-height: 100dvh; }
-    .testata { background: var(--accento); color: var(--su-accento); border-bottom: 2px solid var(--su-accento); }
-    .barra { max-width: 1440px; margin: 0 auto; min-height: 64px; padding: 10px max(16px, min(3vw, 48px)); display: flex; flex-wrap: wrap; align-items: center; gap: 12px 32px; }
-    .marchio { display: flex; align-items: baseline; gap: 10px; color: var(--su-accento); text-decoration: none; }
-    .marchio b { background: var(--su-accento); color: var(--accento); font: 400 26px/1 var(--titoli); padding: 7px 12px 5px; border-radius: 2px; }
-    /* Limelight resta per il marchio e i titoli: in piccolo la G diventa una C, quindi il sottotitolo è nel carattere del testo. */
-    .marchio span { font: 700 16px/1 var(--corpo); }
-    .utente { margin-left: auto; display: flex; align-items: center; gap: 14px; font-weight: 600; }
-    .esci { min-height: 40px; padding: 0 16px; border-radius: 999px; border: 1.5px solid var(--su-accento); background: transparent; color: var(--su-accento); font: 600 15px/1 var(--corpo); }
-    @media (hover: hover) { .esci:hover { background: var(--su-accento); color: var(--accento); } }
-    @media (max-width: 480px) {
-      .barra { flex-wrap: nowrap; gap: 12px; }
-      .marchio span, .utente > span { display: none; }
-      .marchio b { font-size: 22px; }
-    }
-
     .pagina { max-width: 1440px; margin: 0 auto; padding: 0 max(16px, min(3vw, 48px)) 48px; }
     .apertura { padding: 28px 0 22px; display: flex; flex-wrap: wrap; align-items: flex-end; justify-content: space-between; gap: 16px; border-bottom: 1px solid var(--filetto); }
     .apertura h1 { font: 400 clamp(40px, 5vw, 56px)/1 var(--titoli); }
@@ -99,15 +85,7 @@ interface SerataElenco {
     .a-sinistra { justify-self: start; }
   `,
   template: `
-    <header class="testata">
-      <div class="barra">
-        <a class="marchio" routerLink="/regia"><b>Il Movente</b><span>Gialli da tavola</span></a>
-        <div class="utente">
-          @if (sessione.io(); as io) { <span>{{ io.username }}</span> }
-          <button class="esci" type="button" (click)="sessione.esci()">Esci</button>
-        </div>
-      </div>
-    </header>
+    <app-testata />
 
     <main class="pagina">
       <div class="apertura">

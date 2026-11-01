@@ -1,10 +1,12 @@
 import { Routes } from '@angular/router';
-import { soloPer } from './sessione';
+import { soloAdmin, soloPer } from './sessione';
 
 export const routes: Routes = [
   { path: '', pathMatch: 'full', redirectTo: 'accesso' },
   { path: 'accesso', loadComponent: () => import('./pagine/accesso').then((m) => m.Accesso), title: 'Cena con delitto' },
-  { path: 'avvio', loadComponent: () => import('./pagine/accesso').then((m) => m.Avvio), title: 'Primo avvio' },
+  { path: 'avvio', loadComponent: () => import('./pagine/accesso').then((m) => m.Avvio), title: 'Primo avvio, Il Movente' },
+  { path: 'invito/:token', loadComponent: () => import('./pagine/invito').then((m) => m.InvitoVista), title: 'Il tuo accesso, Il Movente' },
+  { path: 'admin', canMatch: [soloAdmin], loadComponent: () => import('./pagine/admin').then((m) => m.AdminVista), title: 'Amministrazione, Il Movente' },
   {
     path: 'squadra',
     canMatch: [soloPer('squadra')],

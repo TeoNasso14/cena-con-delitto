@@ -4,6 +4,7 @@ import * as F from "./file.ts";
 import * as R from "./regia.ts";
 import * as S from "./squadra.ts";
 import * as SE from "./serate.ts";
+import * as AD from "./admin.ts";
 import { statoSchermo } from "./schermo.ts";
 
 type Gestore = (req: Request, db: Db, p: Record<string, string>) => Promise<Response> | Response;
@@ -15,6 +16,14 @@ const rotte: Array<[string, RegExp, Gestore]> = [
   ["POST", /^\/api\/accesso$/, (r, db) => A.accedi(r, db)],
   ["POST", /^\/api\/uscita$/, () => A.esci()],
   ["GET", /^\/api\/io$/, (r, db) => A.io(r, db)],
+  ["GET", /^\/api\/admin$/, (r, db) => AD.tutto(r, db)],
+  ["POST", /^\/api\/admin\/inviti$/, (r, db) => AD.invita(r, db)],
+  ["POST", /^\/api\/admin\/inviti\/(?<id>\d+)\/revoca$/, (r, db, p) => AD.revoca(r, db, n(p.id))],
+  ["POST", /^\/api\/admin\/inviti\/(?<id>\d+)\/rigenera$/, (r, db, p) => AD.rigenera(r, db, n(p.id))],
+  ["POST", /^\/api\/admin\/utenti\/(?<id>\d+)\/sospendi$/, (r, db, p) => AD.sospendi(r, db, n(p.id))],
+  ["POST", /^\/api\/admin\/utenti\/(?<id>\d+)\/password$/, (r, db, p) => AD.linkPassword(r, db, n(p.id))],
+  ["GET", /^\/api\/invito\/(?<token>[A-Za-z0-9_-]{20,64})$/, (r, db, p) => AD.leggiInvito(r, db, p.token)],
+  ["POST", /^\/api\/invito\/(?<token>[A-Za-z0-9_-]{20,64})$/, (r, db, p) => AD.usaInvito(r, db, p.token)],
   ["GET", /^\/api\/regia\/serate$/, (r, db) => A.mieSerate(r, db)],
   ["POST", /^\/api\/regia\/serate$/, (r, db) => SE.crea(r, db)],
   ["PUT", /^\/api\/regia\/serate\/(?<id>\d+)$/, (r, db, p) => SE.modifica(r, db, n(p.id))],

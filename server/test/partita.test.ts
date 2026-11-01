@@ -40,6 +40,7 @@ async function chiama(metodo: string, path: string, body?: unknown, cookie?: str
 
 const ids: Record<string, number> = {};
 let regia = "";
+let admin = "";
 let corvi = "";
 let gufi = "";
 let schermo = "";
@@ -52,12 +53,28 @@ describe("primo avvio e accesso", () => {
     expect(no.stato).toBe(403);
     const corta = await chiama("POST", "/api/avvio", { codice: "codice-avvio", username: "regia", password: "corta" });
     expect(corta.stato).toBe(400);
-    const ok = await chiama("POST", "/api/avvio", { codice: "codice-avvio", username: "Regia", password: "una-password-lunga", titolo: "La notte di Villa Corvina" });
+    // il primo avvio crea l'amministrazione, che non gestisce serate
+    const ok = await chiama("POST", "/api/avvio", { codice: "codice-avvio", username: "Teo", password: "password-amministrazione", nome: "Teo" });
     expect(ok.stato).toBe(201);
-    regia = ok.cookie!;
+    admin = ok.cookie!;
     const di_nuovo = await chiama("POST", "/api/avvio", { codice: "codice-avvio", username: "altro", password: "una-password-lunga" });
     expect(di_nuovo.stato).toBe(409);
-    expect((await chiama("GET", "/api/io", undefined, regia)).dati).toMatchObject({ ruolo: "regia", username: "regia" });
+    expect((await chiama("GET", "/api/io", undefined, admin)).dati).toMatchObject({ ruolo: "regia", username: "teo", admin: true });
+    expect((await chiama("GET", "/api/avvio")).dati.configurato).toBe(true);
+    expect((await chiama("POST", "/api/regia/serate", { titolo: "Di Teo" }, admin)).stato).toBe(403);
+
+    // la regia nasce da un invito: sceglie lei nome utente e password
+    const inv = await chiama("POST", "/api/admin/inviti", { nome: "Organizzatrice", email: "org@esempio.it" }, admin);
+    expect(inv.stato).toBe(201);
+    expect((await chiama("GET", `/api/invito/${inv.dati.token}`)).dati).toEqual({ tipo: "regia", nome: "Organizzatrice", username: null });
+    const entra = await chiama("POST", `/api/invito/${inv.dati.token}`, { username: "Regia", password: "una-password-lunga" });
+    expect(entra.dati).toEqual({ ruolo: "regia", admin: false });
+    regia = entra.cookie!;
+    expect((await chiama("POST", `/api/invito/${inv.dati.token}`, { username: "altra", password: "una-password-lunga" })).stato).toBe(410);
+    expect((await chiama("GET", "/api/io", undefined, regia)).dati).toMatchObject({ ruolo: "regia", username: "regia", admin: false });
+    expect((await chiama("POST", "/api/accesso", { username: "regia", password: "una-password-lunga" })).dati).toEqual({ ruolo: "regia", admin: false });
+    expect((await chiama("GET", "/api/regia/serate", undefined, regia)).dati.serate).toEqual([]);
+    expect((await chiama("POST", "/api/regia/serate", { titolo: "La notte di Villa Corvina" }, regia)).stato).toBe(201);
     const serate = (await chiama("GET", "/api/regia/serate", undefined, regia)).dati.serate;
     expect(serate).toMatchObject([{ titolo: "La notte di Villa Corvina", slug: "la-notte-di-villa-corvina", archiviata: false }]);
     // senza serata scelta la regia non può lavorare
@@ -551,6 +568,58 @@ test("la regia decide le frasi delle nuvolette e le può spegnere", async () => 
   expect((await leggi()).squadra.sussurri).toEqual({ attivi: true, frasi: [] });
 });
 
+test("amministrazione: account, inviti, sospensione, password dimenticata", async () => {
+  expect((await chiama("GET", "/api/admin", undefined, regia)).stato).toBe(403);
+  expect((await chiama("GET", "/api/admin")).stato).toBe(401);
+  let vista = (await chiama("GET", "/api/admin", undefined, admin)).dati;
+  const r = vista.utenti.find((x: any) => x.username === "regia");
+  expect(r).toMatchObject({ nome: "Organizzatrice", email: "org@esempio.it", admin: false, stato: "attivo" });
+  expect(r.serate).toBeGreaterThan(0);
+  // solo account e numeri: nessun campo delle serate
+  expect(Object.keys(r).sort()).toEqual(["admin", "creato", "email", "id", "nome", "serate", "stato", "ultimo_accesso", "username"]);
+  // l'amministrazione non apre le serate di nessuno
+  expect((await chiama("GET", "/api/regia", undefined, admin, serataRegia)).stato).toBe(403);
+
+  // invito: rigenerato il link vecchio non vale, revocato non vale più nessuno, scaduto risponde 410
+  const inv = (await chiama("POST", "/api/admin/inviti", { nome: "Paolo Costa" }, admin)).dati;
+  expect((await chiama("POST", "/api/admin/inviti", { nome: "X", email: "non-una-email" }, admin)).stato).toBe(400);
+  const nuovo = (await chiama("POST", `/api/admin/inviti/${inv.id}/rigenera`, {}, admin)).dati;
+  expect((await chiama("GET", `/api/invito/${inv.token}`)).stato).toBe(404);
+  expect((await chiama("GET", `/api/invito/${nuovo.token}`)).stato).toBe(200);
+  vista = (await chiama("GET", "/api/admin", undefined, admin)).dati;
+  expect(vista.inviti.find((i: any) => i.id === inv.id)).toMatchObject({ tipo: "regia", nome: "Paolo Costa", stato: "attesa" });
+  expect(JSON.stringify(vista)).not.toContain(nuovo.token);
+  await db.q("UPDATE invito SET scade = NOW() - interval '1 day' WHERE id = $1", [inv.id]);
+  expect((await chiama("GET", `/api/invito/${nuovo.token}`)).stato).toBe(410);
+  expect((await chiama("GET", "/api/admin", undefined, admin)).dati.inviti.find((i: any) => i.id === inv.id).stato).toBe("scaduto");
+  await chiama("POST", `/api/admin/inviti/${inv.id}/revoca`, {}, admin);
+  expect((await chiama("GET", `/api/invito/${nuovo.token}`)).stato).toBe(404);
+  expect((await chiama("GET", "/api/admin", undefined, admin)).dati.inviti.some((i: any) => i.id === inv.id)).toBe(false);
+  // nel database c'è solo l'impronta del token
+  expect(await db.uno("SELECT id FROM invito WHERE token_hash = $1", [nuovo.token])).toBeUndefined();
+
+  // sospensione: la sessione si chiude e non si rientra; riattivato si rientra
+  const marta = await db.uno<{ id: number }>("INSERT INTO utente (username, password_hash) VALUES ('sandro', $1) RETURNING id", [await hashPassword("password-di-marta")]);
+  const sessione = (await chiama("POST", "/api/accesso", { username: "sandro", password: "password-di-marta" })).cookie!;
+  expect((await chiama("POST", `/api/admin/utenti/${marta!.id}/sospendi`, { sospeso: true }, admin)).stato).toBe(200);
+  expect((await chiama("GET", "/api/regia/serate", undefined, sessione)).stato).toBe(401);
+  expect((await chiama("POST", "/api/accesso", { username: "sandro", password: "password-di-marta" })).stato).toBe(403);
+  await chiama("POST", `/api/admin/utenti/${marta!.id}/sospendi`, { sospeso: false }, admin);
+  expect((await chiama("POST", "/api/accesso", { username: "sandro", password: "password-di-marta" })).stato).toBe(200);
+  const io = (await chiama("GET", "/api/admin", undefined, admin)).dati.io;
+  expect((await chiama("POST", `/api/admin/utenti/${io.id}/sospendi`, { sospeso: true }, admin)).stato).toBe(400);
+
+  // password dimenticata: un link per scegliere la nuova; le sessioni vecchie si chiudono
+  const vecchia = (await chiama("POST", "/api/accesso", { username: "sandro", password: "password-di-marta" })).cookie!;
+  const lp = (await chiama("POST", `/api/admin/utenti/${marta!.id}/password`, {}, admin)).dati;
+  expect((await chiama("GET", `/api/invito/${lp.token}`)).dati).toMatchObject({ tipo: "password", username: "sandro" });
+  expect((await chiama("POST", `/api/invito/${lp.token}`, { password: "corta" })).stato).toBe(400);
+  expect((await chiama("POST", `/api/invito/${lp.token}`, { password: "nuova-password-di-marta" })).dati).toEqual({ ruolo: "regia", admin: false });
+  expect((await chiama("GET", "/api/regia/serate", undefined, vecchia)).stato).toBe(401);
+  expect((await chiama("POST", "/api/accesso", { username: "sandro", password: "password-di-marta" })).stato).toBe(401);
+  expect((await chiama("POST", "/api/accesso", { username: "sandro", password: "nuova-password-di-marta" })).stato).toBe(200);
+});
+
 test("confronto delle risposte", () => {
   expect(combacia("la Governante!", "Governante")).toBe(true);
   expect(combacia("Il maggiordomo", "La governante")).toBe(false);
@@ -601,7 +670,15 @@ describe("2.0: più regie e più serate", () => {
     // la squadra entra da /accesso come prima
     expect((await chiama2("POST", "/api/accesso", { username: "gufi", password: "gufo-notte-12" })).dati).toEqual({ ruolo: "squadra" });
     // nessun amministratore ancora: il primo avvio resta chiuso perché esiste già un utente
-    expect((await chiama2("GET", "/api/avvio")).dati).toEqual({ configurato: true, tema: "noir" });
+    // nessuna amministrazione ancora: SETUP_CODE crea quella di Teo, con un nome diverso dall'organizzatrice
+    expect((await chiama2("GET", "/api/avvio")).dati).toEqual({ configurato: false, tema: "noir" });
+    expect((await chiama2("POST", "/api/avvio", { codice: "codice-avvio", username: "organizza", password: "password-amministrazione" })).stato).toBe(409);
+    const ad = await chiama2("POST", "/api/avvio", { codice: "codice-avvio", username: "teo", password: "password-amministrazione" });
+    expect(ad.dati).toEqual({ ruolo: "regia", admin: true });
+    // l'amministrazione vede l'account dell'organizzatrice e il numero di serate, non le serate
+    const vista = (await chiama2("GET", "/api/admin", undefined, ad.cookie)).dati;
+    expect(vista.utenti.find((x: any) => x.username === "organizza")).toMatchObject({ admin: false, stato: "attivo", serate: 1 });
+    expect((await chiama2("GET", "/api/regia", undefined, ad.cookie, s!.id)).stato).toBe(403);
     await d2.fine?.();
     await altro.stop();
   }, 60_000);
