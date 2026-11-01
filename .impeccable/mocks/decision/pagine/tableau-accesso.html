@@ -1,0 +1,71 @@
+<!doctype html>
+<html lang="it">
+<head>
+<meta charset="utf-8">
+<title>Accesso della regia</title>
+<link href="https://fonts.googleapis.com/css2?family=Bodoni+Moda:opsz,wght@6..96,500;6..96,700&family=Manrope:wght@400;500;600;700&display=swap" rel="stylesheet">
+<style>
+:root{--petrol:#0f3d3a;--petrol-2:#164c48;--ground:#f7f5f2;--card:#ffffff;--gold:#b8892f;--ink:#1c1c1c;--mute:#5d625f;--rule:#dcd8d1;--tone:#efece7;--coral:#c94f3d}
+*{box-sizing:border-box;margin:0;padding:0}
+html,body{width:1440px;height:900px;overflow:hidden}
+body{background:var(--petrol);color:var(--ink);font:15px/1.5 "Manrope",sans-serif;display:flex;flex-direction:column}
+a{color:inherit;text-underline-offset:3px}
+button,input{font:inherit}
+.top{height:88px;display:flex;align-items:center;justify-content:space-between;padding:0 56px;color:#f7f5f2}
+.brand{font-family:"Bodoni Moda",serif;font-weight:700;font-size:26px;letter-spacing:.01em;text-decoration:none}
+.brand i{font-style:normal;color:var(--gold)}
+.top p{font-size:14px;color:#cfdcd9;font-weight:600}
+.stage{flex:1;display:flex;flex-direction:column;align-items:center;justify-content:center;padding-bottom:88px}
+.table{display:grid;grid-template-columns:220px 560px;background:var(--card);border:1px solid var(--gold);outline:1px solid var(--gold);outline-offset:5px;border-radius:2px}
+.num{background:var(--tone);border-right:1px solid var(--rule);display:flex;flex-direction:column;align-items:center;justify-content:center;gap:14px;padding:32px 20px}
+.num b{font-family:"Bodoni Moda",serif;font-weight:500;font-size:132px;line-height:.9;color:var(--gold)}
+.num hr{width:72px;border:0;border-top:1px solid var(--gold)}
+.num span{font-size:13px;font-weight:600;color:var(--mute);text-align:center;line-height:1.4}
+form{padding:44px 52px 40px;display:flex;flex-direction:column}
+h1{font-family:"Bodoni Moda",serif;font-weight:700;font-size:44px;line-height:1.1;letter-spacing:-.01em}
+.lead{color:var(--mute);font-size:16px;margin-top:8px}
+.field{display:flex;flex-direction:column;gap:7px;margin-top:22px}
+.field:first-of-type{margin-top:32px}
+label{font-size:14px;font-weight:700}
+input{height:50px;padding:0 16px;border:1px solid #c9c4bb;border-radius:2px;background:var(--ground);color:var(--ink);font-size:16px}
+input:focus{outline:2px solid var(--petrol);outline-offset:1px;border-color:var(--petrol);background:#fff}
+.btn{margin-top:30px;height:52px;border-radius:999px;border:1px solid var(--petrol);background:var(--petrol);color:#fff;font-weight:700;font-size:16px;cursor:pointer}
+.btn:hover{background:var(--petrol-2)}
+.btn:active{background:#0a2c2a}
+.help{margin-top:22px;padding-top:18px;border-top:1px solid var(--rule);font-size:14px;color:var(--mute)}
+.help a{color:var(--petrol);font-weight:700}
+.quiet{margin-top:40px;font-size:14px;color:#cfdcd9}
+.quiet a{color:#f7f5f2;font-weight:600}
+.places{position:absolute;left:56px;bottom:40px;display:flex;gap:8px}
+.place{position:relative;min-width:92px;padding:12px 14px 5px;border:1px solid #4f7571;border-radius:2px;font-size:13px;font-weight:600;text-align:center;color:#cfdcd9}
+.place::before{content:"";position:absolute;left:0;right:0;top:7px;border-top:1px solid #4f7571}
+</style>
+</head>
+<body>
+<header class="top">
+  <a class="brand" href="#">Il <i>Movente</i></a>
+  <p>Cene con delitto, dalla prima prova all'ultima accusa</p>
+</header>
+<main class="stage">
+  <section class="table" aria-labelledby="titolo">
+    <div class="num" aria-hidden="true"><b>1</b><hr><span>Il tavolo<br>della regia</span></div>
+    <form action="#" method="post">
+      <h1 id="titolo">Entra nella regia</h1>
+      <p class="lead">Prepara e conduci le tue serate.</p>
+      <div class="field">
+        <label for="utente">Nome utente</label>
+        <input id="utente" name="utente" type="text" autocomplete="username" value="marta">
+      </div>
+      <div class="field">
+        <label for="password">Password</label>
+        <input id="password" name="password" type="password" autocomplete="current-password">
+      </div>
+      <button class="btn" type="submit">Entra</button>
+      <p class="help">Hai perso la password? <a href="#">Chiedi all'amministrazione</a> un link nuovo.</p>
+    </form>
+  </section>
+  <p class="quiet">Giochi in una squadra? <a href="#">Entra dall'indirizzo della tua serata.</a></p>
+</main>
+<div class="places" aria-hidden="true"><span class="place">Regia</span><span class="place">Proiettore</span><span class="place">Squadre</span></div>
+</body>
+</html>

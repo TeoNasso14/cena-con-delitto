@@ -1,0 +1,109 @@
+<!doctype html>
+<html lang="it">
+<head>
+<meta charset="utf-8">
+<title>Le tue serate</title>
+<link href="https://fonts.googleapis.com/css2?family=Alfa+Slab+One&family=Figtree:wght@400;500;600;700&display=swap" rel="stylesheet">
+<style>
+:root{--verde:#164b3a;--verde2:#1e5c48;--carta:#eef1ee;--tile:#f8faf8;--giallo:#f2d16b;--azzurro:#9cc3d5;--rosa:#e6a6a1;--ink:#15201b;--ink2:#4a5852;--riga:#c9d2cc;--c:8px}
+*{box-sizing:border-box;margin:0;padding:0}
+html,body{width:1440px;height:900px;overflow:hidden}
+body{background:var(--carta);color:var(--ink);font:400 15px/1.45 Figtree,sans-serif}
+a{color:inherit}
+.bar{height:64px;background:var(--verde);color:var(--carta);display:flex;align-items:center;padding:0 64px;gap:48px}
+.brand{display:flex;align-items:center;gap:12px;text-decoration:none;font:400 22px/1 'Alfa Slab One',serif;letter-spacing:.01em}
+.mark{width:32px;height:32px;border:2px solid currentColor;border-radius:2px;display:grid;grid-template:1fr 1fr/1fr 1fr;flex:none}
+.mark i:nth-child(1){background:var(--giallo)}.mark i:nth-child(4){background:var(--rosa)}
+.mark i:nth-child(2),.mark i:nth-child(3){position:relative}
+.mark i:nth-child(3)::after{content:"";position:absolute;inset:3px;border-radius:50%;background:var(--carta)}
+nav{display:flex;gap:8px;flex:1}
+nav a{text-decoration:none;font-weight:600;font-size:15px;padding:8px 16px;border-radius:999px;color:#cfe0d8}
+nav a[aria-current]{background:var(--carta);color:var(--verde)}
+nav a:hover{color:#fff}
+.user{display:flex;align-items:center;gap:16px;font-weight:600}
+.user .pawn{width:14px;height:14px}
+.btn{font:600 14px/1 Figtree,sans-serif;border-radius:999px;padding:11px 20px;border:1.5px solid var(--ink);background:transparent;color:var(--ink);cursor:pointer;text-decoration:none;display:inline-block;white-space:nowrap}
+.btn.pri{background:var(--verde);border-color:var(--verde);color:#fff}
+.btn.pri:hover{background:var(--verde2)}
+.btn.inv{border-color:#cfe0d8;color:var(--carta);padding:9px 18px}
+.btn.big{font-size:16px;padding:14px 26px}
+main{padding:40px 64px 0}
+.head{display:flex;align-items:flex-end;justify-content:space-between;padding-bottom:24px;border-bottom:3px solid var(--ink)}
+h1{font:400 48px/1.05 'Alfa Slab One',serif;letter-spacing:-.005em}
+.head p{margin-top:12px;font-size:17px;color:var(--ink2)}
+.cols,.row{display:grid;grid-template-columns:280px 224px 72px 1fr 300px;column-gap:24px;align-items:center}
+.cols{padding:16px 24px 8px;font-size:13px;font-weight:600;color:var(--ink2)}
+.row{background:var(--tile);border:1px solid var(--riga);border-left:8px solid var(--c);border-radius:2px;padding:20px 24px 20px 16px;margin-bottom:8px}
+.row.g{--c:var(--giallo)}.row.a{--c:var(--azzurro)}.row.r{--c:var(--rosa)}.row.x{--c:var(--riga);background:transparent}
+h2{font:400 21px/1.2 'Alfa Slab One',serif}
+.tema{font-size:14px;color:var(--ink2);margin-top:4px}
+.track{position:relative;display:flex;gap:0}
+.sq{width:72px;text-align:center;font-size:12px;color:var(--ink2)}
+.sq b{display:flex;align-items:center;justify-content:center;gap:3px;height:40px;margin:0 4px 6px;border:1.5px solid var(--ink);border-radius:2px;background:var(--tile)}
+.sq.fatto b{background:var(--ink)}
+.sq.qui b{outline:1.5px solid var(--ink);outline-offset:3px;background:var(--carta)}
+.sq.qui{color:var(--ink);font-weight:700}
+.track.chiusa::after{content:"";position:absolute;left:0;right:0;top:20px;height:2px;background:var(--ink)}
+.track.chiusa .sq b{border-style:dashed}
+.pawn{display:inline-block;width:12px;height:12px;border-radius:50%;border:1.5px solid var(--ink)}
+.p1{background:var(--giallo)}.p2{background:var(--azzurro)}.p3{background:var(--rosa)}.p4{background:#fff}
+.num{font:400 24px/1 'Alfa Slab One',serif}.num small{display:block;font:500 12px/1.4 Figtree,sans-serif;color:var(--ink2);margin-top:4px}
+.num.zero{font:600 14px/1.3 Figtree,sans-serif;color:var(--ink2)}
+.addr{font-weight:600;font-size:14px;text-decoration:underline;text-decoration-thickness:1px;text-underline-offset:3px;overflow-wrap:anywhere}
+.when{font-size:13px;color:var(--ink2);margin-top:4px}
+.act{display:flex;flex-wrap:wrap;gap:8px;justify-content:flex-end;align-items:center}
+.row.x .act{flex-wrap:nowrap}
+.act .small{flex-basis:100%;text-align:right;font-size:13px;color:var(--ink2);margin-top:4px}
+.sez{display:flex;align-items:baseline;gap:16px;margin:32px 0 16px;padding-bottom:12px;border-bottom:1.5px solid var(--ink)}
+h3{font:400 26px/1.1 'Alfa Slab One',serif}
+.sez span{font-size:14px;color:var(--ink2)}
+</style>
+</head>
+<body>
+<header class="bar">
+ <a class="brand" href="#"><span class="mark"><i></i><i></i><i></i><i></i></span>Cena con delitto</a>
+ <nav><a href="#" aria-current="page">Le tue serate</a><a href="#">Amministrazione</a></nav>
+ <div class="user"><span class="pawn p1"></span>Marta<a class="btn inv" href="#">Esci</a></div>
+</header>
+<main>
+ <div class="head">
+  <div><h1>Le tue serate</h1><p>Ogni serata ha il suo caso, le sue squadre e il suo indirizzo per entrare.</p></div>
+  <button class="btn pri big">Nuova serata</button>
+ </div>
+ <div class="cols"><span>Serata</span><span>Percorso</span><span>Squadre</span><span>Indirizzo pubblico</span><span style="text-align:right">Azioni</span></div>
+
+ <div class="row g">
+  <div><h2>Villa Corvina, Halloween</h2><div class="tema">Halloween classico</div></div>
+  <div class="track"><div class="sq fatto"><b></b>preparazione</div><div class="sq qui"><b><i class="pawn p1"></i><i class="pawn p2"></i><i class="pawn p3"></i><i class="pawn p4"></i></b>in corso</div><div class="sq"><b></b>chiusa</div></div>
+  <div class="num">4<small>squadre</small></div>
+  <div><a class="addr" href="#">cenacondelitto.it/s/villa-corvina-halloween</a><div class="when">Modificata oggi</div></div>
+  <div class="act"><a class="btn pri" href="#">Apri</a><button class="btn">Duplica</button><button class="btn">Archivia</button><a class="small" href="#">Indirizzo ed eliminazione</a></div>
+ </div>
+
+ <div class="row a">
+  <div><h2>Delitto sul treno delle 21.40</h2><div class="tema">Delitto in viaggio</div></div>
+  <div class="track"><div class="sq qui"><b><i class="pawn p1"></i><i class="pawn p2"></i><i class="pawn p3"></i></b>preparazione</div><div class="sq"><b></b>in corso</div><div class="sq"><b></b>chiusa</div></div>
+  <div class="num">3<small>squadre</small></div>
+  <div><a class="addr" href="#">cenacondelitto.it/s/delitto-sul-treno</a><div class="when">Modificata ieri</div></div>
+  <div class="act"><a class="btn pri" href="#">Apri</a><button class="btn">Duplica</button><button class="btn">Archivia</button><a class="small" href="#">Indirizzo ed eliminazione</a></div>
+ </div>
+
+ <div class="row r">
+  <div><h2>Natale al castello</h2><div class="tema">Natale con delitto</div></div>
+  <div class="track"><div class="sq qui"><b></b>preparazione</div><div class="sq"><b></b>in corso</div><div class="sq"><b></b>chiusa</div></div>
+  <div class="num zero">Nessuna squadra</div>
+  <div><a class="addr" href="#">cenacondelitto.it/s/natale-al-castello</a><div class="when">Modificata il 28 ottobre</div></div>
+  <div class="act"><a class="btn pri" href="#">Apri</a><button class="btn">Duplica</button><button class="btn">Archivia</button><a class="small" href="#">Indirizzo ed eliminazione</a></div>
+ </div>
+
+ <div class="sez"><h3>Archiviate</h3><span>1 serata</span></div>
+ <div class="row x">
+  <div><h2>Cena del commissario, prova generale</h2><div class="tema">Noir anni '40</div></div>
+  <div class="track chiusa"><div class="sq"><b></b>preparazione</div><div class="sq"><b></b>in corso</div><div class="sq"><b></b>archiviata</div></div>
+  <div class="num">5<small>squadre</small></div>
+  <div><a class="addr" href="#">cenacondelitto.it/s/prova-generale</a><div class="when">Archiviata il 12 ottobre</div></div>
+  <div class="act"><a class="btn pri" href="#">Consulta</a><button class="btn">Duplica</button><button class="btn">Riattiva</button></div>
+ </div>
+</main>
+</body>
+</html>

@@ -1,0 +1,75 @@
+<!doctype html>
+<html lang="it">
+<head>
+<meta charset="utf-8">
+<title>Accesso della regia</title>
+<link href="https://fonts.googleapis.com/css2?family=Big+Shoulders+Display:wght@700;800&family=Figtree:wght@400;500;600;700&display=swap" rel="stylesheet">
+<style>
+:root{--fondo:#141414;--testo:#f5f5f1;--sec:#808080;--accento:#e50914;--linea:#2a2a2a;--pannello:#1c1c1c}
+*{box-sizing:border-box;margin:0;padding:0}
+html,body{width:1440px;height:900px;overflow:hidden;background:var(--fondo);color:var(--testo);font:400 15px/1.45 Figtree,system-ui,sans-serif}
+a{color:inherit}
+button{font:inherit;cursor:pointer;border:0;border-radius:4px}
+.nav{height:68px;display:flex;align-items:center;padding:0 56px;border-bottom:1px solid var(--linea)}
+.marchio{font:800 26px/1 "Big Shoulders Display",sans-serif;letter-spacing:.01em;text-decoration:none}
+.marchio b{color:var(--accento)}
+.nav .destra{margin-left:auto;color:var(--sec);font-size:14px}
+.scena{display:grid;grid-template-columns:1fr 560px;height:832px}
+.parete{position:relative;overflow:hidden;padding:40px 0 0 56px}
+.griglia{display:grid;grid-template-columns:repeat(3,236px);gap:20px;opacity:.38}
+.loc{position:relative;aspect-ratio:2/3;border-radius:4px;overflow:hidden}
+.loc svg{position:absolute;inset:0;width:100%;height:100%;display:block}
+.loc span{position:absolute;left:16px;right:16px;bottom:16px;font:800 28px/.95 "Big Shoulders Display",sans-serif;text-transform:uppercase}
+.griglia .loc:nth-child(3n+2){margin-top:60px}
+.pannello{background:var(--fondo);border-left:1px solid var(--linea);padding:132px 72px 0}
+h1{font:800 56px/1 "Big Shoulders Display",sans-serif;margin-bottom:12px}
+.sotto{color:var(--sec);font-size:16px;margin-bottom:36px}
+form{display:flex;flex-direction:column;gap:20px}
+label{display:flex;flex-direction:column;gap:8px;font-weight:600;font-size:14px}
+input{font:400 16px/1.2 Figtree,sans-serif;color:var(--testo);background:#2a2a2a;border:1px solid #3a3a3a;border-radius:4px;padding:14px 16px;outline:0}
+input:focus{border-color:var(--accento);background:#333}
+.primario{background:var(--accento);color:#fff;font-weight:700;font-size:16px;padding:14px 18px;margin-top:8px}
+.primario:hover{background:#f6121d}
+.nota{margin-top:28px;font-size:14px;color:var(--testo)}
+.nota a{text-underline-offset:3px}
+.quieta{margin-top:40px;padding-top:20px;border-top:1px solid var(--linea);font-size:14px;color:var(--sec)}
+</style>
+</head>
+<body>
+<svg width="0" height="0" style="position:absolute" aria-hidden="true">
+  <symbol id="halloween" viewBox="0 0 200 300" preserveAspectRatio="xMidYMid slice"><rect width="200" height="300" fill="#0e0b14"/><circle cx="128" cy="92" r="52" fill="#ff7a1a"/><circle cx="146" cy="80" r="9" fill="#e5650c"/><path d="M0 230 L0 196 L30 196 L30 168 L52 140 L74 168 L74 186 L98 186 L98 150 L112 128 L126 150 L126 200 L200 200 L200 300 L0 300Z" fill="#05040a"/><rect x="58" y="172" width="8" height="10" fill="#ff7a1a"/><rect x="108" y="160" width="8" height="12" fill="#ff7a1a"/></symbol>
+  <symbol id="noir" viewBox="0 0 200 300" preserveAspectRatio="xMidYMid slice"><rect width="200" height="300" fill="#0b0b0b"/><g fill="#b8bcc2"><rect y="40" width="200" height="8"/><rect y="62" width="200" height="8"/><rect y="84" width="200" height="8"/><rect y="106" width="200" height="8"/></g><path d="M60 160 h80 l-8 -26 h-64Z M44 162 h112 v8 h-112Z" fill="#0b0b0b" stroke="#b8bcc2" stroke-width="2"/><circle cx="150" cy="200" r="7" fill="#c8102e"/></symbol>
+  <symbol id="viaggio" viewBox="0 0 200 300" preserveAspectRatio="xMidYMid slice"><rect width="200" height="300" fill="#13233f"/><circle cx="100" cy="88" r="46" fill="none" stroke="#c9a24a" stroke-width="5"/><path d="M100 88 L100 54 M100 88 L126 104" stroke="#c9a24a" stroke-width="5" stroke-linecap="round"/><path d="M78 300 L98 170 M122 300 L102 170" stroke="#c9a24a" stroke-width="4"/><path d="M84 262h32M89 230h22M93 204h14" stroke="#c9a24a" stroke-width="3"/><rect y="168" width="200" height="2" fill="#c9a24a"/></symbol>
+  <symbol id="natale" viewBox="0 0 200 300" preserveAspectRatio="xMidYMid slice"><rect width="200" height="300" fill="#1f4a35"/><path d="M20 210 V120 h20 v-14 h10 v14 h14 V90 l16 -24 l16 24 v30 h14 v-14 h10 v14 h20 v-14 h10 v14 h10 v90Z" fill="#c8263a"/><rect x="88" y="170" width="24" height="40" rx="12" fill="#1f4a35"/><g fill="#f5f5f1"><circle cx="30" cy="40" r="2.5"/><circle cx="70" cy="28" r="2"/><circle cx="150" cy="44" r="2.5"/><circle cx="176" cy="80" r="2"/></g><rect y="210" width="200" height="90" fill="#163827"/></symbol>
+  <symbol id="gatsby" viewBox="0 0 200 300" preserveAspectRatio="xMidYMid slice"><rect width="200" height="300" fill="#101010"/><g fill="none" stroke="#d4af37" stroke-width="3"><path d="M100 170 L20 70 M100 170 L60 50 M100 170 L100 40 M100 170 L140 50 M100 170 L180 70"/><path d="M40 170 a60 60 0 0 1 120 0"/><rect x="14" y="14" width="172" height="272"/></g><rect x="40" y="170" width="120" height="4" fill="#d4af37"/></symbol>
+  <symbol id="sherlock" viewBox="0 0 200 300" preserveAspectRatio="xMidYMid slice"><rect width="200" height="300" fill="#4a1420"/><rect y="150" width="200" height="150" fill="#3a0f19"/><path d="M62 132 h76 v-8 h-12 v-52 a26 10 0 0 0 -52 0 v52 h-12Z" fill="#1a0a0e"/><path d="M118 196 h30 a12 12 0 0 1 0 24 h-14 l-16 30" fill="none" stroke="#e8d9b0" stroke-width="5"/><circle cx="60" cy="210" r="22" fill="none" stroke="#e8d9b0" stroke-width="5"/><path d="M76 226 l20 20" stroke="#e8d9b0" stroke-width="6"/></symbol>
+</svg>
+<header class="nav">
+  <a class="marchio" href="#">Il <b>Movente</b></a>
+  <span class="destra">Regia</span>
+</header>
+<main class="scena">
+  <div class="parete" aria-hidden="true">
+    <div class="griglia">
+      <div class="loc"><svg><use href="#halloween"/></svg><span>Halloween classico</span></div>
+      <div class="loc"><svg><use href="#noir"/></svg><span>Noir anni '40</span></div>
+      <div class="loc"><svg><use href="#viaggio"/></svg><span>Delitto in viaggio</span></div>
+      <div class="loc"><svg><use href="#natale"/></svg><span>Natale con delitto</span></div>
+      <div class="loc"><svg><use href="#gatsby"/></svg><span>Anni '20 Gatsby</span></div>
+      <div class="loc"><svg><use href="#sherlock"/></svg><span>Vittoriano alla Sherlock</span></div>
+    </div>
+  </div>
+  <section class="pannello">
+    <h1>Entra nella regia</h1>
+    <p class="sotto">Prepara e conduci le tue serate.</p>
+    <form>
+      <label>Nome utente<input type="text" name="utente" autocomplete="username" value="marta"></label>
+      <label>Password<input type="password" name="password" autocomplete="current-password" autofocus></label>
+      <button class="primario" type="submit">Entra</button>
+    </form>
+    <p class="nota">Hai perso la password? <a href="#">Chiedi all'amministrazione un link nuovo.</a></p>
+    <p class="quieta">Giochi in una squadra? Entra dall'indirizzo della tua serata.</p>
+  </section>
+</main>
+</body>
+</html>

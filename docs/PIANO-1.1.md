@@ -35,7 +35,7 @@ Ogni tema cambia: colori, i due caratteri (titoli e testo), decorazione del proi
 | Noir | Bodoni Moda, Courier Prime | finestra con veneziane, pioggia a righe | cappello, sigaretta, macchina da scrivere, bicchiere, impronta, lampione |
 | Vittoriano | IM Fell English, EB Garamond | lente d'ingrandimento | pipa, lente, cilindro, orologio da taschino, calamaio, lampione a gas |
 | Viaggio | Bebas Neue, Work Sans | orologio di stazione o oblò | biglietto, valigia, locomotiva, ancora, chiave di cabina, bussola |
-| Gatsby | Limelight, Josefin Sans | raggiera art déco | coppa, piuma, perle, grammofono, ventaglio, bocchino |
+| Gatsby | da scegliere (Limelight è del marchio Il Movente) | raggiera art déco | coppa, piuma, perle, grammofono, ventaglio, bocchino |
 | Natale | Cinzel, Lato | luna d'inverno con neve | pallina, regalo, stella, candela, campanella, fiocco di neve |
 
 Le regole di DESIGN.md valgono per tutti: niente gradienti, niente ombre su elementi fermi, niente emoji, titoli entro due righe, due caratteri, niente caratteri che imitano la scrittura a mano.

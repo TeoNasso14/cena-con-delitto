@@ -1,0 +1,116 @@
+<!doctype html>
+<html lang="it">
+<head>
+<meta charset="utf-8">
+<title>Le tue serate</title>
+<link href="https://fonts.googleapis.com/css2?family=Big+Shoulders+Display:wght@700;800&family=Figtree:wght@400;500;600;700&display=swap" rel="stylesheet">
+<style>
+:root{--fondo:#141414;--testo:#f5f5f1;--sec:#808080;--accento:#e50914;--linea:#2a2a2a;--pannello:#1c1c1c}
+*{box-sizing:border-box;margin:0;padding:0}
+html,body{width:1440px;height:900px;overflow:hidden;background:var(--fondo);color:var(--testo);font:400 15px/1.45 Figtree,system-ui,sans-serif}
+a{color:inherit;text-decoration:none}
+button{font:inherit;cursor:pointer;border:0;border-radius:4px}
+.nav{height:68px;display:flex;align-items:center;gap:36px;padding:0 56px;border-bottom:1px solid var(--linea)}
+.marchio{font:800 26px/1 "Big Shoulders Display",sans-serif;letter-spacing:.01em}
+.marchio b{color:var(--accento)}
+.nav nav{display:flex;gap:26px;font-size:15px;color:var(--sec)}
+.nav nav a[aria-current]{color:var(--testo);font-weight:600}
+.nav .destra{margin-left:auto;display:flex;align-items:center;gap:22px;color:var(--sec)}
+.utente{display:flex;align-items:center;gap:10px;color:var(--testo)}
+.avatar{width:30px;height:30px;border-radius:4px;background:#3a3a3a;display:grid;place-items:center;font-weight:700;font-size:13px}
+.primario{background:var(--accento);color:#fff;font-weight:700;padding:10px 18px}
+.primario:hover{background:#f6121d}
+.secondario{background:#2f2f2f;color:var(--testo);font-weight:600;padding:10px 16px}
+.secondario:hover{background:#3d3d3d}
+main{padding:30px 56px 0}
+.testa{display:flex;align-items:baseline;gap:18px;margin-bottom:26px}
+h1{font:800 44px/1 "Big Shoulders Display",sans-serif}
+.testa p{color:var(--sec)}
+h2{font:700 19px/1.2 Figtree,sans-serif;margin-bottom:14px}
+h2 span{color:var(--sec);font-weight:500;margin-left:8px}
+.fila{display:flex;gap:20px;align-items:flex-start}
+.loc{position:relative;width:256px;aspect-ratio:2/3;border-radius:4px;overflow:hidden;flex:none}
+.loc svg{position:absolute;inset:0;width:100%;height:100%;display:block}
+.loc h3{position:absolute;left:18px;right:18px;bottom:18px;font:800 32px/.95 "Big Shoulders Display",sans-serif;text-transform:uppercase}
+.stato{position:absolute;top:14px;left:14px;font-size:12px;font-weight:600;padding:3px 8px;border-radius:3px;background:rgba(0,0,0,.55)}
+.fuoco{display:flex;border:2px solid var(--accento);border-radius:6px;overflow:hidden;background:var(--pannello);flex:none}
+.fuoco .loc{border-radius:0;width:252px}
+.info{width:356px;padding:24px 26px;display:flex;flex-direction:column}
+.info h3{font:800 30px/1 "Big Shoulders Display",sans-serif;margin-bottom:14px}
+.vivo{display:inline-flex;align-items:center;gap:8px;font-weight:600}
+.vivo i{width:8px;height:8px;border-radius:50%;background:#46d369}
+dl{display:grid;grid-template-columns:96px 1fr;row-gap:9px;margin:18px 0 22px;font-size:14px}
+dt{color:var(--sec)}
+dd code{font:500 13px/1.4 Figtree,monospace;color:var(--testo);background:#2a2a2a;padding:2px 6px;border-radius:3px}
+.azioni{display:flex;gap:10px;margin-top:auto}
+.azioni .primario{padding:10px 26px}
+.link{margin-top:14px;font-size:14px;color:var(--sec);text-decoration:underline;text-underline-offset:3px}
+.spenta{opacity:.42}
+.archivio{margin-top:34px}
+.archivio .loc{width:200px}
+.archivio .loc h3{font-size:26px}
+</style>
+</head>
+<body>
+<header class="nav">
+  <span class="marchio">Cena con <b>delitto</b></span>
+  <nav><a href="#" aria-current="page">Le tue serate</a><a href="#">Amministrazione</a></nav>
+  <div class="destra">
+    <span class="utente"><span class="avatar">M</span>Marta</span>
+    <a href="#">Esci</a>
+    <button class="primario">Nuova serata</button>
+  </div>
+</header>
+<main>
+  <div class="testa"><h1>Le tue serate</h1><p>3 in programma, 1 archiviata</p></div>
+
+  <section>
+    <h2>In programma</h2>
+    <div class="fila">
+      <article class="fuoco">
+        <div class="loc">
+          <svg viewBox="0 0 200 300" preserveAspectRatio="xMidYMid slice"><rect width="200" height="300" fill="#0e0b14"/><circle cx="128" cy="92" r="52" fill="#ff7a1a"/><circle cx="146" cy="80" r="9" fill="#e5650c"/><path d="M0 230 L0 196 L30 196 L30 168 L52 140 L74 168 L74 186 L98 186 L98 150 L112 128 L126 150 L126 200 L200 200 L200 300 L0 300Z" fill="#05040a"/><rect x="58" y="172" width="8" height="10" fill="#ff7a1a"/><rect x="108" y="160" width="8" height="12" fill="#ff7a1a"/><path d="M40 60 q6 -6 12 0 q6 -6 12 0" stroke="#f5f5f1" stroke-width="2" fill="none"/></svg>
+          <span class="stato">In corso</span>
+          <h3>Villa Corvina, Halloween</h3>
+        </div>
+        <div class="info">
+          <h3>Villa Corvina, Halloween</h3>
+          <span class="vivo"><i></i>In corso adesso</span>
+          <dl>
+            <dt>Tema</dt><dd>Halloween classico</dd>
+            <dt>Squadre</dt><dd>4 squadre, 18 invitati</dd>
+            <dt>Indirizzo</dt><dd><code>/s/villa-corvina-halloween</code></dd>
+            <dt>Ultima modifica</dt><dd>modificata oggi</dd>
+          </dl>
+          <div class="azioni"><button class="primario">Apri</button><button class="secondario">Duplica</button><button class="secondario">Archivia</button></div>
+          <a class="link" href="#">Indirizzo ed eliminazione</a>
+        </div>
+      </article>
+
+      <article class="loc">
+        <svg viewBox="0 0 200 300" preserveAspectRatio="xMidYMid slice"><rect width="200" height="300" fill="#13233f"/><circle cx="100" cy="88" r="46" fill="none" stroke="#c9a24a" stroke-width="5"/><path d="M100 88 L100 54 M100 88 L126 104" stroke="#c9a24a" stroke-width="5" stroke-linecap="round"/><path d="M78 300 L98 170 M122 300 L102 170" stroke="#c9a24a" stroke-width="4"/><path d="M84 262h32M89 230h22M93 204h14M96 186h8" stroke="#c9a24a" stroke-width="3"/><rect y="168" width="200" height="2" fill="#c9a24a"/></svg>
+        <span class="stato">In preparazione</span>
+        <h3>Delitto sul treno delle 21.40</h3>
+      </article>
+
+      <article class="loc">
+        <svg viewBox="0 0 200 300" preserveAspectRatio="xMidYMid slice"><rect width="200" height="300" fill="#1f4a35"/><path d="M20 210 V120 h20 v-14 h10 v14 h14 V90 l16 -24 l16 24 v30 h14 v-14 h10 v14 h20 v-14 h10 v14 h10 v90Z" fill="#c8263a"/><rect x="88" y="170" width="24" height="40" rx="12" fill="#1f4a35"/><g fill="#f5f5f1"><circle cx="30" cy="40" r="2.5"/><circle cx="70" cy="28" r="2"/><circle cx="150" cy="44" r="2.5"/><circle cx="176" cy="80" r="2"/><circle cx="40" cy="84" r="2"/><circle cx="120" cy="20" r="2"/></g><rect y="210" width="200" height="90" fill="#163827"/></svg>
+        <span class="stato">In preparazione</span>
+        <h3>Natale al castello</h3>
+      </article>
+    </div>
+  </section>
+
+  <section class="archivio spenta">
+    <h2>Archiviate <span>1</span></h2>
+    <div class="fila">
+      <article class="loc">
+        <svg viewBox="0 0 200 300" preserveAspectRatio="xMidYMid slice"><rect width="200" height="300" fill="#0b0b0b"/><g fill="#b8bcc2"><rect x="0" y="40" width="200" height="8"/><rect x="0" y="62" width="200" height="8"/><rect x="0" y="84" width="200" height="8"/><rect x="0" y="106" width="200" height="8"/></g><path d="M60 160 h80 l-8 -26 h-64Z M44 162 h112 v8 h-112Z" fill="#0b0b0b" stroke="#b8bcc2" stroke-width="2"/><circle cx="150" cy="200" r="7" fill="#c8102e"/></svg>
+        <span class="stato">Archiviata</span>
+        <h3>Cena del commissario, prova generale</h3>
+      </article>
+    </div>
+  </section>
+</main>
+</body>
+</html>

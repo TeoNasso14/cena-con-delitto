@@ -1,0 +1,138 @@
+<!doctype html>
+<html lang="it">
+<head>
+<meta charset="utf-8">
+<title>Le tue serate</title>
+<link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&display=swap" rel="stylesheet">
+<style>
+:root{--ink:#111827;--ink2:#4b5563;--ink3:#6b7280;--line:#e5e7eb;--surf:#f3f4f6;--acc:#4f46e5;--acc-t:#eef2ff;--acc-d:#4338ca}
+*{box-sizing:border-box;margin:0;padding:0}
+html,body{width:1440px;height:900px;overflow:hidden}
+body{font-family:Inter,system-ui,sans-serif;color:var(--ink);background:var(--surf);font-size:14px;line-height:20px;display:flex;-webkit-font-smoothing:antialiased}
+a{color:inherit;text-decoration:none}
+aside{width:256px;height:900px;background:#fff;border-right:1px solid var(--line);display:flex;flex-direction:column;padding:24px 16px}
+.brand{display:flex;align-items:center;gap:10px;padding:0 8px 28px;font-weight:600;font-size:15px}
+.mark{width:28px;height:28px;border-radius:7px;background:var(--acc);display:grid;place-items:center}
+.mark span{width:10px;height:10px;border:2px solid #fff;border-radius:50%}
+nav a{display:flex;align-items:center;gap:10px;padding:8px 10px;border-radius:6px;color:var(--ink2);font-weight:500;margin-bottom:2px}
+nav a.on{background:var(--acc-t);color:var(--acc-d)}
+nav a:hover{background:var(--surf)}
+.ico{width:16px;height:16px;border:1.5px solid currentColor;border-radius:4px}
+.ico.c{border-radius:50%}
+.user{margin-top:auto;border-top:1px solid var(--line);padding:16px 8px 0;display:flex;align-items:center;gap:10px}
+.av{width:32px;height:32px;border-radius:50%;background:var(--surf);border:1px solid var(--line);display:grid;place-items:center;font-weight:600;font-size:13px;color:var(--ink2)}
+.user b{font-weight:500;display:block}
+.user a{font-size:13px;color:var(--ink3)}
+.user a:hover{color:var(--ink)}
+main{flex:1;height:900px;padding:40px 48px 0;overflow:hidden}
+.wrap{max-width:1040px}
+header{display:flex;align-items:flex-end;justify-content:space-between;margin-bottom:28px}
+h1{font-size:28px;line-height:36px;font-weight:700;letter-spacing:-.02em}
+header p{color:var(--ink2);margin-top:6px;font-size:15px}
+.btn{font:inherit;font-weight:500;font-size:14px;height:36px;padding:0 14px;border-radius:6px;border:1px solid var(--line);background:#fff;color:var(--ink);cursor:pointer;display:inline-flex;align-items:center;gap:6px}
+.btn:hover{background:var(--surf)}
+.btn.p{background:var(--acc);border-color:var(--acc);color:#fff}
+.btn.p:hover{background:var(--acc-d)}
+.btn:focus-visible{outline:2px solid var(--acc);outline-offset:2px}
+.list{display:flex;flex-direction:column;gap:12px}
+.card{background:#fff;border:1px solid var(--line);border-radius:10px;padding:20px 24px;display:grid;grid-template-columns:1fr auto;gap:16px 24px;align-items:start}
+.card:hover{border-color:#d1d5db}
+.top{display:flex;align-items:center;gap:12px}
+h2{font-size:17px;line-height:24px;font-weight:600;letter-spacing:-.01em}
+.pill{font-size:12px;line-height:20px;font-weight:500;padding:0 8px;border-radius:999px;background:var(--surf);color:var(--ink2);border:1px solid var(--line);white-space:nowrap}
+.pill.live{background:var(--acc-t);color:var(--acc-d);border-color:#c7d2fe}
+.pill.live::before{content:"";display:inline-block;width:6px;height:6px;border-radius:50%;background:var(--acc);margin-right:6px;vertical-align:1px}
+.meta{display:grid;grid-template-columns:200px 120px 1fr;gap:24px;margin-top:12px}
+.meta dt{font-size:12px;color:var(--ink3)}
+.meta dd{color:var(--ink);font-weight:500;margin-top:2px;white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
+.meta dd.url{font-weight:400;color:var(--ink2);font-variant-numeric:tabular-nums}
+.side{display:flex;flex-direction:column;align-items:flex-end;gap:14px}
+.acts{display:flex;gap:8px}
+.foot{display:flex;gap:16px;font-size:13px;color:var(--ink3)}
+.foot a{color:var(--acc);font-weight:500}
+.foot a:hover{text-decoration:underline}
+.sec{display:flex;align-items:baseline;gap:10px;margin:36px 0 12px}
+.sec h3{font-size:16px;font-weight:600}
+.sec span{color:var(--ink3);font-size:13px}
+.card.arch{background:#fafafa}
+.card.arch h2{color:var(--ink2)}
+</style>
+</head>
+<body>
+<aside>
+  <div class="brand"><div class="mark"><span></span></div>Cena con delitto</div>
+  <nav>
+    <a class="on" href="#" aria-current="page"><i class="ico"></i>Le tue serate</a>
+    <a href="#"><i class="ico c"></i>Amministrazione</a>
+  </nav>
+  <div class="user"><div class="av">M</div><div><b>Marta</b><a href="#">Esci</a></div></div>
+</aside>
+<main><div class="wrap">
+  <header>
+    <div><h1>Le tue serate</h1><p>Ogni serata ha il suo caso, le sue squadre e il suo indirizzo per entrare.</p></div>
+    <button class="btn p" type="button"><span aria-hidden="true">+</span> Nuova serata</button>
+  </header>
+  <div class="list">
+    <article class="card">
+      <div>
+        <div class="top"><h2>Villa Corvina, Halloween</h2><span class="pill live">In corso</span></div>
+        <dl class="meta">
+          <div><dt>Tema</dt><dd>Halloween classico</dd></div>
+          <div><dt>Squadre</dt><dd>4 squadre</dd></div>
+          <div><dt>Indirizzo pubblico</dt><dd class="url">cenacondelitto.it/s/villa-corvina-halloween</dd></div>
+        </dl>
+      </div>
+      <div class="side">
+        <div class="acts"><button class="btn" type="button">Duplica</button><button class="btn" type="button">Archivia</button><button class="btn p" type="button">Apri</button></div>
+        <div class="foot"><span>Modificata oggi</span><a href="#">Indirizzo ed eliminazione</a></div>
+      </div>
+    </article>
+    <article class="card">
+      <div>
+        <div class="top"><h2>Delitto sul treno delle 21.40</h2><span class="pill">In preparazione</span></div>
+        <dl class="meta">
+          <div><dt>Tema</dt><dd>Delitto in viaggio</dd></div>
+          <div><dt>Squadre</dt><dd>3 squadre</dd></div>
+          <div><dt>Indirizzo pubblico</dt><dd class="url">cenacondelitto.it/s/delitto-sul-treno</dd></div>
+        </dl>
+      </div>
+      <div class="side">
+        <div class="acts"><button class="btn" type="button">Duplica</button><button class="btn" type="button">Archivia</button><button class="btn p" type="button">Apri</button></div>
+        <div class="foot"><span>Modificata ieri</span><a href="#">Indirizzo ed eliminazione</a></div>
+      </div>
+    </article>
+    <article class="card">
+      <div>
+        <div class="top"><h2>Natale al castello</h2><span class="pill">In preparazione</span></div>
+        <dl class="meta">
+          <div><dt>Tema</dt><dd>Natale con delitto</dd></div>
+          <div><dt>Squadre</dt><dd style="color:var(--ink3);font-weight:400">Nessuna squadra</dd></div>
+          <div><dt>Indirizzo pubblico</dt><dd class="url">cenacondelitto.it/s/natale-al-castello</dd></div>
+        </dl>
+      </div>
+      <div class="side">
+        <div class="acts"><button class="btn" type="button">Duplica</button><button class="btn" type="button">Archivia</button><button class="btn p" type="button">Apri</button></div>
+        <div class="foot"><span>Modificata il 28 ottobre</span><a href="#">Indirizzo ed eliminazione</a></div>
+      </div>
+    </article>
+  </div>
+  <div class="sec"><h3>Archiviate</h3><span>1 serata</span></div>
+  <div class="list">
+    <article class="card arch">
+      <div>
+        <div class="top"><h2>Cena del commissario, prova generale</h2><span class="pill">Archiviata</span></div>
+        <dl class="meta">
+          <div><dt>Tema</dt><dd>Noir anni '40</dd></div>
+          <div><dt>Squadre</dt><dd>5 squadre</dd></div>
+          <div><dt>Indirizzo pubblico</dt><dd class="url">cenacondelitto.it/s/cena-del-commissario</dd></div>
+        </dl>
+      </div>
+      <div class="side">
+        <div class="acts"><button class="btn" type="button">Duplica</button><button class="btn" type="button">Riattiva</button><button class="btn p" type="button">Consulta</button></div>
+        <div class="foot"><span>Archiviata il 12 ottobre</span></div>
+      </div>
+    </article>
+  </div>
+</div></main>
+</body>
+</html>

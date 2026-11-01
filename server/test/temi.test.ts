@@ -1,5 +1,5 @@
 import { describe, expect, test } from "vitest";
-import { COLORI, TEMI as CATALOGO, frasiDaMostrare, temaDa, variabili } from "../../src/app/temi/catalogo.ts";
+import { COLORI, MARCHIO, TEMI as CATALOGO, frasiDaMostrare, temaDa, variabili } from "../../src/app/temi/catalogo.ts";
 import { TEMI } from "../regia.ts";
 
 /** Contrasto WCAG tra due colori #rrggbb. */
@@ -28,19 +28,24 @@ test("le nuvolette usano le frasi della serata, altrimenti quelle del tema", () 
   expect(frasiDaMostrare("halloween", undefined)).toEqual([]);
 });
 
-describe.each(CATALOGO.map((t) => [t.nome, t] as const))("%s", (_nome, t) => {
+test("il marchio non è un tema da scegliere per una serata", () => {
+  expect(TEMI).not.toContain(MARCHIO.id);
+  expect(temaDa(MARCHIO.id).id).toBe("halloween");
+});
+
+describe.each([...CATALOGO, MARCHIO].map((t) => [t.nome, t] as const))("%s", (_nome, t) => {
   test("ha tutti i colori e due caratteri", () => {
     for (const c of COLORI) expect(t.colori[c], c).toMatch(/^#[0-9a-f]{6}$/);
     expect(Object.keys(variabili(t))).toHaveLength(COLORI.length + 2);
     expect(t.titoli).not.toBe(t.corpo);
   });
 
-  test("ha sei figure diverse per le nuvolette", () => {
+  test.skipIf(t === MARCHIO)("ha sei figure diverse per le nuvolette", () => {
     expect(t.figure).toHaveLength(6);
     expect(new Set(t.figure).size).toBe(6);
   });
 
-  test("ha frasi pronte per le nuvolette, brevi", () => {
+  test.skipIf(t === MARCHIO)("ha frasi pronte per le nuvolette, brevi", () => {
     expect(t.frasi.length).toBeGreaterThanOrEqual(12);
     for (const f of t.frasi) expect(f.length, f).toBeLessThanOrEqual(120);
     expect(new Set(t.frasi).size).toBe(t.frasi.length);

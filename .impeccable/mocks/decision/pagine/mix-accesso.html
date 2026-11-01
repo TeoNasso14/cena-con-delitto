@@ -1,0 +1,82 @@
+<!doctype html>
+<html lang="it">
+<head>
+<meta charset="utf-8">
+<title>Accesso della regia</title>
+<link href="https://fonts.googleapis.com/css2?family=Barlow+Condensed:wght@600;700;800&family=Source+Sans+3:wght@400;600;700&display=swap" rel="stylesheet">
+<style>
+:root{--y:#f6c800;--k:#111111;--bg:#141414;--s1:#1c1c1c;--s2:#242424;--ln:#2e2e2e;--t:#f5f5f1;--g:#8c8c8c;--r:#c8102e}
+*{box-sizing:border-box;margin:0;padding:0}
+html,body{width:1440px;height:900px;overflow:hidden}
+body{background:var(--bg);color:var(--t);font:400 15px/1.45 "Source Sans 3",sans-serif}
+a{color:var(--t)}
+header a,header{color:var(--k)}
+header{background:var(--y);border-bottom:2px solid var(--k);height:64px;padding:0 56px;display:flex;align-items:center;justify-content:space-between}
+.brand{display:flex;align-items:baseline;gap:10px;text-decoration:none}
+.brand b{background:var(--k);color:var(--y);font:800 27px/1 "Barlow Condensed",sans-serif;padding:6px 12px 5px;border-radius:2px;letter-spacing:.2px}
+.brand span,header>span{font:700 17px/1 "Barlow Condensed",sans-serif}
+.scene{display:grid;grid-template-columns:1fr 600px;height:836px}
+.fan{padding:58px 0 0 76px;display:grid;grid-template-columns:repeat(3,200px);grid-auto-rows:276px;gap:30px 34px;align-content:start;position:relative}
+.cov{color:var(--k);background:var(--y);border:1.5px solid var(--k);border-radius:2px;padding:0 9px;display:flex;flex-direction:column}
+.band{height:34px;display:flex;align-items:center;justify-content:space-between}
+.n{font:800 22px/1 "Barlow Condensed",sans-serif}
+.n small{font-size:14px;margin-right:2px}
+.ser{font:800 14px/1 "Barlow Condensed",sans-serif}
+.art{flex:1;border:1.5px solid var(--k);border-radius:1px;display:block;width:100%}
+.cov b{font:800 22px/1 "Barlow Condensed",sans-serif;height:52px;display:flex;align-items:center}
+.c1{transform:rotate(-2.5deg)}.c2{transform:rotate(1.5deg) translateY(10px)}.c3{transform:rotate(-1deg)}
+.c4{transform:rotate(2deg)}.c5{transform:rotate(-1.5deg) translateY(10px)}.c6{transform:rotate(2.5deg)}
+.cap{position:absolute;left:76px;right:64px;bottom:52px;display:flex;gap:24px;align-items:baseline;border-top:1px solid var(--ln);padding-top:16px}
+.cap strong{color:var(--y);font:800 26px/1 "Barlow Condensed",sans-serif;white-space:nowrap}
+.cap span{font-size:16px;color:var(--g)}
+.panel{background:var(--s1);border-left:1px solid var(--ln);padding:120px 80px 0}
+h1{font:800 58px/1 "Barlow Condensed",sans-serif;letter-spacing:-.5px}
+.lead{margin-top:10px;font-size:17px}
+form{margin-top:32px;display:flex;flex-direction:column;gap:20px}
+label{display:flex;flex-direction:column;gap:7px;font-weight:600}
+input{height:50px;border:1.5px solid #8c8c8c;border-radius:2px;background:var(--s2);padding:0 16px;font:400 17px/1 "Source Sans 3",sans-serif;color:var(--t)}
+input:focus{outline:2px solid var(--y);outline-offset:0;border-color:var(--y)}
+.btn{margin-top:6px;height:52px;border-radius:999px;border:0;background:var(--y);color:var(--k);font:700 17px/1 "Source Sans 3",sans-serif;cursor:pointer}
+.btn:hover{background:#ffd61f}
+.note{margin-top:24px;font-size:15px}
+.quiet{margin-top:20px;padding-top:18px;border-top:1px solid var(--ln);color:var(--g);font-size:14px}
+.quiet a{color:var(--g)}
+</style>
+</head>
+<body>
+<svg width="0" height="0" style="position:absolute" aria-hidden="true">
+  <symbol id="halloween" viewBox="0 0 200 220" preserveAspectRatio="xMidYMid slice"><rect width="200" height="220" fill="#0e0b14"/><circle cx="130" cy="76" r="44" fill="#ff7a1a"/><circle cx="146" cy="64" r="8" fill="#e5650c"/><path d="M0 220V160h26v-24l20-28 20 28v18h22v-34l14-24 14 24v44h84v56z" fill="#05040a"/><rect x="52" y="142" width="7" height="9" fill="#ff7a1a"/><rect x="98" y="128" width="7" height="11" fill="#ff7a1a"/></symbol>
+  <symbol id="noir" viewBox="0 0 200 220" preserveAspectRatio="xMidYMid slice"><rect width="200" height="220" fill="#0b0b0b"/><g fill="#b8bcc2"><rect y="30" width="200" height="8"/><rect y="52" width="200" height="8"/><rect y="74" width="200" height="8"/><rect y="96" width="200" height="8"/></g><path d="M60 156h80l-8-26H68zM44 158h112v8H44z" fill="#0b0b0b" stroke="#b8bcc2" stroke-width="2"/><circle cx="150" cy="192" r="8" fill="#d0213b"/></symbol>
+  <symbol id="viaggio" viewBox="0 0 200 220" preserveAspectRatio="xMidYMid slice"><rect width="200" height="220" fill="#13233f"/><circle cx="100" cy="74" r="40" fill="none" stroke="#c9a24a" stroke-width="5"/><path d="M100 74V44M100 74l22 14" stroke="#c9a24a" stroke-width="5" stroke-linecap="round"/><rect y="140" width="200" height="2" fill="#c9a24a"/><path d="M78 220l20-78M122 220l-20-78" stroke="#c9a24a" stroke-width="4"/><path d="M84 196h32M90 172h20M94 154h12" stroke="#c9a24a" stroke-width="3"/></symbol>
+  <symbol id="natale" viewBox="0 0 200 220" preserveAspectRatio="xMidYMid slice"><rect width="200" height="220" fill="#1f4a35"/><path d="M24 170V100h18V88h10v12h12V72l16-26 16 26v28h12V88h10v12h18V88h10v12h10v70z" fill="#c8263a"/><rect x="88" y="134" width="24" height="36" rx="12" fill="#1f4a35"/><g fill="#f5f5f1"><circle cx="28" cy="30" r="2.5"/><circle cx="64" cy="20" r="2"/><circle cx="150" cy="34" r="2.5"/><circle cx="178" cy="60" r="2"/></g><rect y="170" width="200" height="50" fill="#163827"/></symbol>
+  <symbol id="gatsby" viewBox="0 0 200 220" preserveAspectRatio="xMidYMid slice"><rect width="200" height="220" fill="#101010"/><g fill="none" stroke="#d4af37" stroke-width="3"><path d="M100 150L24 60M100 150L60 40M100 150V30M100 150L140 40M100 150L176 60"/><path d="M40 150a60 60 0 0 1 120 0"/><rect x="12" y="12" width="176" height="196"/></g><rect x="40" y="150" width="120" height="4" fill="#d4af37"/></symbol>
+  <symbol id="sherlock" viewBox="0 0 200 220" preserveAspectRatio="xMidYMid slice"><rect width="200" height="220" fill="#efe6d2"/><g stroke="#1d1a16" stroke-width="1.5" opacity=".35"><path d="M20 40h160M20 56h160M20 72h120M20 88h150"/></g><circle cx="88" cy="118" r="40" fill="#efe6d2" stroke="#1d1a16" stroke-width="7"/><path d="M118 148l40 40" stroke="#1d1a16" stroke-width="12" stroke-linecap="round"/><path d="M70 104a22 22 0 0 1 22-14" stroke="#1d1a16" stroke-width="3" fill="none"/></symbol>
+</svg>
+<header>
+  <a class="brand" href="#"><b>Il Movente</b><span>Gialli da tavola</span></a>
+  <span>Regia</span>
+</header>
+<main class="scene">
+  <div class="fan" aria-hidden="true">
+    <div class="cov c1"><div class="band"><span class="n"><small>N.</small>1</span><span class="ser">Il Movente</span></div><svg class="art"><use href="#noir"/></svg><b>Noir anni '40</b></div>
+    <div class="cov c2"><div class="band"><span class="n"><small>N.</small>2</span><span class="ser">Il Movente</span></div><svg class="art"><use href="#halloween"/></svg><b>Halloween classico</b></div>
+    <div class="cov c3"><div class="band"><span class="n"><small>N.</small>3</span><span class="ser">Il Movente</span></div><svg class="art"><use href="#viaggio"/></svg><b>Delitto in viaggio</b></div>
+    <div class="cov c4"><div class="band"><span class="n"><small>N.</small>4</span><span class="ser">Il Movente</span></div><svg class="art"><use href="#natale"/></svg><b>Natale con delitto</b></div>
+    <div class="cov c5"><div class="band"><span class="n"><small>N.</small>5</span><span class="ser">Il Movente</span></div><svg class="art"><use href="#gatsby"/></svg><b>Anni '20 Gatsby</b></div>
+    <div class="cov c6"><div class="band"><span class="n"><small>N.</small>6</span><span class="ser">Il Movente</span></div><svg class="art"><use href="#sherlock"/></svg><b>Vittoriano alla Sherlock</b></div>
+    <div class="cap"><strong>Il Movente</strong><span>Una collana di cene con delitto: ogni serata è un volume, con la sua copertina.</span></div>
+  </div>
+  <section class="panel">
+    <h1>Entra nella regia</h1>
+    <p class="lead">Prepara e conduci le tue serate.</p>
+    <form>
+      <label>Nome utente<input type="text" name="utente" autocomplete="username" value="marta"></label>
+      <label>Password<input type="password" name="password" autocomplete="current-password"></label>
+      <button class="btn" type="submit">Entra</button>
+    </form>
+    <p class="note">Hai perso la password? Chiedi all'amministrazione un link nuovo.</p>
+    <p class="quiet">Giochi in una squadra? <a href="#">Entra dall'indirizzo della tua serata.</a></p>
+  </section>
+</main>
+</body>
+</html>

@@ -106,6 +106,28 @@ export const TEMI: readonly Tema[] = [
 
 export const PREDEFINITO = TEMI[0];
 
+/**
+ * Il marchio dell'applicazione, Il Movente: veste le pagine fuori da una serata (le tue serate, accesso della regia,
+ * amministrazione). Non è un tema da scegliere per una serata, quindi non sta in TEMI. Vedi DESIGN.md, "Il marchio".
+ */
+export const MARCHIO: Tema = {
+  id: 'marchio',
+  nome: 'Il Movente',
+  descrizione: 'Collana di gialli su una parete di locandine.',
+  scuro: true,
+  colori: {
+    fondo: '#141414', 'fondo-2': '#1c1c1c', 'fondo-3': '#242424', filetto: '#3a3a3a',
+    'testo-1': '#f5f5f1', 'testo-2': '#9e9e99',
+    accento: '#f6c800', 'accento-chiaro': '#ffd61f', 'su-accento': '#111111', disco: '#f6c800', 'su-disco': '#111111',
+    sigillo: '#8e1b24', 'sigillo-luce': '#b8323c', 'sigillo-segno': '#e7a39a', allarme: '#ff8a9a',
+    carta: '#f5f5f1', inchiostro: '#111111', 'carta-filetto': '#c9c9c4', decoro: '#2e2e2e',
+  },
+  titoli: '"Limelight", Georgia, serif',
+  corpo: '"Source Sans 3", system-ui, sans-serif',
+  frasi: [],
+  figure: [],
+};
+
 export function temaDa(id: string | null | undefined): Tema {
   return TEMI.find((t) => t.id === id) ?? PREDEFINITO;
 }

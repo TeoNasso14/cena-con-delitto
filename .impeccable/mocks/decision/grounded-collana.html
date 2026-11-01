@@ -1,0 +1,107 @@
+<!doctype html>
+<html lang="it">
+<head>
+<meta charset="utf-8">
+<title>Le tue serate</title>
+<link href="https://fonts.googleapis.com/css2?family=Barlow+Condensed:wght@600;700;800&family=Source+Sans+3:wght@400;600;700&display=swap" rel="stylesheet">
+<style>
+:root{--y:#f6c800;--k:#111111;--w:#ffffff;--r:#c8102e;--g:#5a5a5a;--l:#e4e0d4}
+*{box-sizing:border-box;margin:0;padding:0}
+html,body{width:1440px;height:900px;overflow:hidden}
+body{background:var(--w);color:var(--k);font:400 15px/1.45 "Source Sans 3",sans-serif}
+a{color:var(--k)}
+.d{font-family:"Barlow Condensed",sans-serif}
+header{background:var(--y);border-bottom:1px solid var(--k)}
+.bar{height:64px;padding:0 48px;display:flex;align-items:center;gap:40px}
+.brand{display:flex;align-items:center;gap:12px;text-decoration:none;font:800 26px/1 "Barlow Condensed",sans-serif;letter-spacing:.2px}
+.brand i{width:28px;height:28px;border:2.5px solid var(--k);border-radius:50%;display:grid;place-items:center}
+.brand i b{width:10px;height:10px;background:var(--k);border-radius:50%}
+nav{display:flex;gap:4px;flex:1}
+nav a{text-decoration:none;font-weight:600;padding:8px 14px;border-radius:999px}
+nav a[aria-current]{background:var(--k);color:var(--y)}
+.user{display:flex;align-items:center;gap:16px;font-weight:600}
+.btn{display:inline-flex;align-items:center;height:38px;padding:0 18px;border-radius:999px;border:1.5px solid var(--k);background:var(--w);font:600 15px/1 "Source Sans 3",sans-serif;color:var(--k);cursor:pointer}
+.btn.p{background:var(--k);color:var(--w)}
+.btn.q{background:transparent}
+.btn:hover{background:var(--k);color:var(--y)}
+.hero{padding:30px 48px 32px;display:flex;align-items:flex-end;justify-content:space-between;border-top:1px solid rgba(17,17,17,.18)}
+h1{font:800 60px/1 "Barlow Condensed",sans-serif;letter-spacing:-.5px}
+.hero p{margin-top:10px;font-size:17px;max-width:620px}
+.hero .btn{height:46px;padding:0 24px;font-size:16px}
+main{padding:28px 48px 0}
+.list{display:flex;flex-direction:column;gap:14px}
+.row{display:grid;grid-template-columns:200px 1fr 300px 316px;border:1px solid var(--k);border-radius:2px;min-height:118px}
+.cover{background:var(--y);border-right:1px solid var(--k);display:flex;align-items:center;justify-content:space-between;padding:0 18px 0 20px}
+.num{font:800 46px/1 "Barlow Condensed",sans-serif;letter-spacing:-.5px}
+.num small{font-size:22px;margin-right:2px}
+.cover svg{width:70px;height:70px;display:block}
+.info{padding:18px 24px;display:flex;flex-direction:column;justify-content:center;gap:8px}
+h2{font:700 29px/1.05 "Barlow Condensed",sans-serif}
+.meta{display:flex;gap:18px;color:var(--g);align-items:center}
+.st{display:inline-flex;align-items:center;gap:7px;color:var(--k);font-weight:700}
+.st::before{content:"";width:10px;height:10px;border-radius:50%;border:2px solid var(--k)}
+.st.on::before{background:var(--k)}
+.addr{padding:18px 24px;border-left:1px solid var(--l);display:flex;flex-direction:column;justify-content:center;gap:4px}
+.addr code{font:600 14px/1.3 "Source Sans 3",sans-serif;word-break:break-all}
+.addr span{color:var(--g);font-size:14px}
+.act{padding:16px 24px;border-left:1px solid var(--l);display:flex;flex-direction:column;justify-content:center;gap:10px}
+.act div{display:flex;gap:8px}
+.act a{font-size:13.5px;color:var(--g)}
+.sec{display:flex;align-items:baseline;gap:14px;margin:34px 0 14px;padding-top:20px;border-top:1px solid var(--k)}
+.sec h3{font:700 32px/1 "Barlow Condensed",sans-serif}
+.sec span{color:var(--g)}
+.row.arch{background:#faf8f1}
+.row.arch .cover{background:#ece6cf}
+</style>
+</head>
+<body>
+<header>
+  <div class="bar">
+    <a class="brand" href="#"><i><b></b></i>Cena con delitto</a>
+    <nav><a href="#" aria-current="page">Le tue serate</a><a href="#">Amministrazione</a></nav>
+    <div class="user">Marta<button class="btn q">Esci</button></div>
+  </div>
+  <div class="hero">
+    <div><h1>Le tue serate</h1><p>Ogni serata ha il suo caso, le sue squadre e il suo indirizzo per entrare.</p></div>
+    <button class="btn p">Nuova serata</button>
+  </div>
+</header>
+<main>
+  <div class="list">
+    <article class="row">
+      <div class="cover"><span class="num"><small>N.</small>2</span>
+        <svg viewBox="0 0 70 70" aria-label="Halloween classico, in corso"><circle cx="35" cy="35" r="33" fill="#111"/><ellipse cx="35" cy="39" rx="16" ry="13" fill="#f6c800"/><rect x="33" y="21" width="4" height="7" fill="#f6c800"/><path d="M27 36l4 3h-6zM43 36l2 3h-6zM28 45h14l-3 2h-8z" fill="#111"/></svg></div>
+      <div class="info"><h2>Villa Corvina, Halloween</h2>
+        <div class="meta"><span class="st on">In corso</span><span>Halloween classico</span><span>4 squadre</span></div></div>
+      <div class="addr"><code>cenacondelitto.it/s/villa-corvina-halloween</code><span>Modificata oggi</span></div>
+      <div class="act"><div><button class="btn p">Apri</button><button class="btn">Duplica</button><button class="btn">Archivia</button></div><a href="#">Indirizzo ed eliminazione</a></div>
+    </article>
+    <article class="row">
+      <div class="cover"><span class="num"><small>N.</small>3</span>
+        <svg viewBox="0 0 70 70" aria-label="Delitto in viaggio, in preparazione"><circle cx="35" cy="35" r="32" fill="none" stroke="#111" stroke-width="3"/><rect x="18" y="24" width="34" height="18" rx="2" fill="#111"/><rect x="22" y="28" width="7" height="6" fill="#f6c800"/><rect x="32" y="28" width="7" height="6" fill="#f6c800"/><rect x="42" y="28" width="6" height="6" fill="#f6c800"/><circle cx="26" cy="46" r="4" fill="#111"/><circle cx="44" cy="46" r="4" fill="#111"/><rect x="14" y="51" width="42" height="2.5" fill="#111"/></svg></div>
+      <div class="info"><h2>Delitto sul treno delle 21.40</h2>
+        <div class="meta"><span class="st">In preparazione</span><span>Delitto in viaggio</span><span>3 squadre</span></div></div>
+      <div class="addr"><code>cenacondelitto.it/s/delitto-sul-treno</code><span>Modificata ieri</span></div>
+      <div class="act"><div><button class="btn p">Apri</button><button class="btn">Duplica</button><button class="btn">Archivia</button></div><a href="#">Indirizzo ed eliminazione</a></div>
+    </article>
+    <article class="row">
+      <div class="cover"><span class="num"><small>N.</small>4</span>
+        <svg viewBox="0 0 70 70" aria-label="Natale con delitto, in preparazione"><circle cx="35" cy="35" r="32" fill="none" stroke="#111" stroke-width="3"/><path d="M19 52V28h5v-4h4v4h4v-4h6v4h4v-4h4v4h5v24z" fill="#111"/><path d="M31 52v-9a4 4 0 0 1 8 0v9z" fill="#f6c800"/><path d="M35 12l2 4h4l-3 3 1 4-4-2-4 2 1-4-3-3h4z" fill="#111"/></svg></div>
+      <div class="info"><h2>Natale al castello</h2>
+        <div class="meta"><span class="st">In preparazione</span><span>Natale con delitto</span><span>Nessuna squadra</span></div></div>
+      <div class="addr"><code>cenacondelitto.it/s/natale-al-castello</code><span>Modificata il 28 ottobre</span></div>
+      <div class="act"><div><button class="btn p">Apri</button><button class="btn">Duplica</button><button class="btn">Archivia</button></div><a href="#">Indirizzo ed eliminazione</a></div>
+    </article>
+  </div>
+  <div class="sec"><h3>Archiviate</h3><span>1 serata</span></div>
+  <article class="row arch">
+    <div class="cover"><span class="num"><small>N.</small>1</span>
+      <svg viewBox="0 0 70 70" aria-label="Noir anni '40, archiviata"><circle cx="35" cy="35" r="32" fill="none" stroke="#111" stroke-width="3"/><path d="M14 42h42v4H14z" fill="#111"/><path d="M23 42l3-16h18l3 16z" fill="#111"/><rect x="24" y="36" width="22" height="3" fill="#ece6cf"/><path d="M13 57L57 13" stroke="#111" stroke-width="3"/></svg></div>
+    <div class="info"><h2>Cena del commissario, prova generale</h2>
+      <div class="meta"><span class="st">Archiviata</span><span>Noir anni '40</span><span>5 squadre</span></div></div>
+    <div class="addr"><code>cenacondelitto.it/s/cena-del-commissario</code><span>Archiviata il 12 ottobre</span></div>
+    <div class="act"><div><button class="btn p">Consulta</button><button class="btn">Duplica</button><button class="btn">Riattiva</button></div></div>
+  </article>
+</main>
+</body>
+</html>

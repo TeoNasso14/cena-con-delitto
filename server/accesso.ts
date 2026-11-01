@@ -229,7 +229,9 @@ export async function cambiaPasswordRegia(req: Request, db: Db) {
 export async function mieSerate(req: Request, db: Db) {
   const u = await utenteSenzaSerata(req, db);
   const serate = await db.q(
-    "SELECT id, titolo, slug, tema, stato, archiviata, creata, aggiornata FROM serata WHERE proprietario_id = $1 ORDER BY archiviata, aggiornata DESC, id DESC",
+    `SELECT id, titolo, slug, tema, stato, archiviata, creata, aggiornata,
+       (SELECT COUNT(*)::int FROM squadra sq WHERE sq.serata_id = serata.id) AS squadre
+     FROM serata WHERE proprietario_id = $1 ORDER BY archiviata, aggiornata DESC, id DESC`,
     [u.id],
   );
   return json({ serate });

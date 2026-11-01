@@ -40,6 +40,25 @@ colors:
   noir-inchiostro: "#111111"
   noir-carta-filetto: "#c4bfb2"
   noir-decoro: "#222224"
+  marchio-fondo: "#141414"
+  marchio-fondo-2: "#1c1c1c"
+  marchio-fondo-3: "#242424"
+  marchio-filetto: "#3a3a3a"
+  marchio-testo-1: "#f5f5f1"
+  marchio-testo-2: "#9e9e99"
+  marchio-accento: "#f6c800"
+  marchio-accento-chiaro: "#ffd61f"
+  marchio-su-accento: "#111111"
+  marchio-disco: "#f6c800"
+  marchio-su-disco: "#111111"
+  marchio-sigillo: "#8e1b24"
+  marchio-sigillo-luce: "#b8323c"
+  marchio-sigillo-segno: "#e7a39a"
+  marchio-allarme: "#ff8a9a"
+  marchio-carta: "#f5f5f1"
+  marchio-inchiostro: "#111111"
+  marchio-carta-filetto: "#c9c9c4"
+  marchio-decoro: "#2e2e2e"
 typography:
   display:
     fontFamily: "Grenze Gotisch, Georgia, serif"
@@ -138,6 +157,45 @@ typography:
     fontWeight: 700
     lineHeight: 1.3
     letterSpacing: "0.04em"
+  marchio-display:
+    fontFamily: "Limelight, Georgia, serif"
+    fontSize: "clamp(40px, 5vw, 56px)"
+    fontWeight: 400
+    lineHeight: 1
+    letterSpacing: "0"
+  marchio-headline:
+    fontFamily: "Limelight, Georgia, serif"
+    fontSize: "28px"
+    fontWeight: 400
+    lineHeight: 1
+    letterSpacing: "0"
+  marchio-marca:
+    fontFamily: "Limelight, Georgia, serif"
+    fontSize: "26px"
+    fontWeight: 400
+    lineHeight: 1
+    letterSpacing: "0"
+  marchio-title:
+    fontFamily: "Limelight, Georgia, serif"
+    fontSize: "24px"
+    fontWeight: 400
+    lineHeight: 1.05
+    letterSpacing: "0"
+  marchio-body:
+    fontFamily: "Source Sans 3, system-ui, sans-serif"
+    fontSize: "17px"
+    fontWeight: 400
+    lineHeight: 1.5
+  marchio-motto:
+    fontFamily: "Source Sans 3, system-ui, sans-serif"
+    fontSize: "16px"
+    fontWeight: 700
+    lineHeight: 1
+  marchio-label:
+    fontFamily: "Source Sans 3, system-ui, sans-serif"
+    fontSize: "12.5px"
+    fontWeight: 700
+    lineHeight: 1.2
 rounded:
   netto: "2px"
   fuoco: "4px"
@@ -233,6 +291,61 @@ components:
     typography: "{typography.label}"
     rounded: "{rounded.netto}"
     padding: "1px 7px"
+  marchio-testata:
+    backgroundColor: "{colors.marchio-accento}"
+    textColor: "{colors.marchio-su-accento}"
+    padding: "10px max(16px, min(3vw, 48px))"
+    height: "64px"
+  marchio-marca:
+    backgroundColor: "{colors.marchio-su-accento}"
+    textColor: "{colors.marchio-accento}"
+    typography: "{typography.marchio-marca}"
+    rounded: "{rounded.netto}"
+    padding: "7px 12px 5px"
+  marchio-bottone-pieno:
+    backgroundColor: "{colors.marchio-accento}"
+    textColor: "{colors.marchio-su-accento}"
+    rounded: "{rounded.pillola}"
+    padding: "0 22px"
+    height: "48px"
+  marchio-bottone-pieno-hover:
+    backgroundColor: "{colors.marchio-accento-chiaro}"
+  marchio-copertina:
+    backgroundColor: "{colors.marchio-accento}"
+    textColor: "{colors.marchio-su-accento}"
+    typography: "{typography.marchio-title}"
+    rounded: "{rounded.netto}"
+    padding: "0 11px"
+  marchio-copertina-stato:
+    backgroundColor: "transparent"
+    textColor: "{colors.marchio-su-accento}"
+    typography: "{typography.marchio-label}"
+    rounded: "{rounded.netto}"
+    padding: "3px 8px"
+  marchio-copertina-stato-vivo:
+    backgroundColor: "{colors.marchio-su-accento}"
+    textColor: "{colors.marchio-accento}"
+    typography: "{typography.marchio-label}"
+    rounded: "{rounded.netto}"
+    padding: "3px 8px"
+  marchio-colophon:
+    backgroundColor: "{colors.marchio-su-accento}"
+    textColor: "{colors.marchio-accento}"
+    typography: "{typography.marchio-label}"
+    rounded: "{rounded.netto}"
+    padding: "3px 7px"
+  marchio-copertina-vuota:
+    backgroundColor: "{colors.marchio-fondo-2}"
+    textColor: "{colors.marchio-testo-2}"
+    rounded: "{rounded.netto}"
+    padding: "0 11px 11px"
+  marchio-copertina-vuota-hover:
+    textColor: "{colors.marchio-testo-1}"
+  marchio-copertina-archiviata:
+    backgroundColor: "{colors.marchio-fondo-3}"
+    textColor: "{colors.marchio-testo-2}"
+    rounded: "{rounded.netto}"
+    padding: "0 7px 7px"
 ---
 
 # Design System: Cena con delitto
@@ -249,6 +362,8 @@ La profondità non viene dalle ombre ma dal fondo a strati e dai filetti sottili
 
 Il tema è una proprietà della serata. La regia lo sceglie in Strumenti; il sito lo applica come variabili CSS su `<html>` (colori per ruolo, `--titoli`, `--corpo`), e un tema sconosciuto vale Halloween classico. I valori predefiniti in `:root` del foglio globale sono quelli di Halloween.
 
+Sopra i temi c'è il marchio dell'applicazione, **Il Movente** (sezione "Il marchio: Il Movente"). Le pagine fuori da una serata vestono il marchio: le tue serate, accesso della regia, amministrazione, inviti, primo avvio. Dal dettaglio di una serata in poi comanda il tema di quella serata: la regia della serata, i telefoni delle squadre, il proiettore e la pagina pubblica `/s/<slug>`. Il marchio usa gli stessi ruoli di colore e le stesse due variabili dei caratteri, quindi i componenti condivisi (bottoni, campi, avvisi) funzionano identici nei due mondi.
+
 **Key Characteristics:**
 - Fondo scuro pieno in tre livelli (`fondo`, `fondo-2`, `fondo-3`), mai bianco, mai gradienti.
 - Un solo colore saturo per tema, l'accento, per ciò che è vivo o in corso: fase corrente, comando principale, prova nuova.
@@ -256,10 +371,11 @@ Il tema è una proprietà della serata. La regia lo sceglie in Strumenti; il sit
 - Nessuna ombra: livelli tonali e filetti da 1px.
 - Oggetti del mondo ad angoli netti (2px), comandi arrotondati.
 - Movimento a cassetto e uscita morbida, sempre ridotto con "riduci movimento".
+- Fuori dalle serate il marchio Il Movente, dentro le serate il tema.
 
 ## Colors
 
-I colori hanno nomi per ruolo, non per tinta: ogni tema dà un valore a ciascun ruolo. Nel frontmatter le chiavi senza prefisso sono Halloween classico (i valori di `:root`), le chiavi `noir-` sono Noir anni '40. Un tema nuovo dà un valore a tutti i diciannove ruoli e aggiunge le sue chiavi col proprio prefisso.
+I colori hanno nomi per ruolo, non per tinta: ogni tema dà un valore a ciascun ruolo. Nel frontmatter le chiavi senza prefisso sono Halloween classico (i valori di `:root`), le chiavi `noir-` sono Noir anni '40, le chiavi `marchio-` sono il marchio Il Movente. Un tema nuovo dà un valore a tutti i diciannove ruoli e aggiunge le sue chiavi col proprio prefisso.
 
 ### Primary
 - **Accento** (`accento`): il colore che urla. La fase corrente nella fila delle fasi, le barre di avanzamento, il bottone pieno, il tasto Apri, l'etichetta "Nuova", il bordo delle prove sigillate che si possono aprire, la scheda del tema scelto, il fuoco da tastiera, i link, la selezione del testo e il cursore.
@@ -353,7 +469,7 @@ Le forme organiche esistono solo nella scenografia: il disegno dentro il disco, 
 
 ## Components
 
-I componenti sono gli stessi in ogni tema e prendono i colori solo dai ruoli; nessun componente conosce il nome di un tema. Ciò che cambia col tema vive in quattro posti: il catalogo dei temi (colori, caratteri, frasi pronte e figure delle nuvolette), il disegno nel disco, lo strato d'atmosfera del proiettore, le figure.
+I componenti sono gli stessi in ogni tema e prendono i colori solo dai ruoli; nessun componente conosce il nome di un tema. Ciò che cambia col tema vive in cinque posti: il catalogo dei temi (colori, caratteri, frasi pronte e figure delle nuvolette), il disegno nel disco, lo strato d'atmosfera del proiettore, le figure, l'illustrazione di copertina nell'elenco delle serate.
 
 ### Buttons
 Comandi pieni e sicuri, a pillola, pensati per un dito al buio.
@@ -413,17 +529,64 @@ Frasi brevi di atmosfera che compaiono ogni tanto sui telefoni e sul proiettore.
 - **Do** garantire obiettivi di tocco di almeno 44px (bottoni e campi 48px, tasti del PIN 64px).
 - **Do** muovere le cose con `--curva-cassetto` (cubic-bezier(0.32, 0.72, 0, 1)) per ciò che entra e `--curva-uscita` (cubic-bezier(0.23, 1, 0.32, 1)) per risposte e pressioni, e ridurre tutto con "riduci movimento".
 - **Do** dimensionare i testi del proiettore in vh perché si leggano dal fondo della sala (corpo almeno 22px, titoli fino a 190px).
-- **Do** aggiungere un tema come una nuova voce del catalogo che dà un valore a tutti i ruoli, due caratteri self-hosted, sei figure e le frasi pronte, più, se serve, un disegno per il disco e uno strato d'atmosfera; e una nuova sezione qui sotto.
+- **Do** aggiungere un tema come una nuova voce del catalogo che dà un valore a tutti i ruoli, due caratteri self-hosted, sei figure e le frasi pronte, l'illustrazione di copertina in `src/app/temi/copertina.ts`, più, se serve, un disegno per il disco e uno strato d'atmosfera; e una nuova sezione qui sotto.
 
 ### Don't:
 - **Don't** usare gradienti, aloni o ombre su elementi fermi: il disco è piatto e la profondità è tonale.
 - **Don't** introdurre un terzo carattere o un carattere che gocciola, sbava o imita la scrittura a mano.
 - **Don't** mettere etichette o occhielli sopra i titoli; il maiuscolo spaziato vive solo nell'intestazione stampata del documento e nel timbro.
 - **Don't** usare il colore d'allarme per altro che errori, e non usare la ceralacca per l'interfaccia.
-- **Don't** spargere clip art del tema nell'interfaccia e non usare emoji: le icone sono SVG a tratto 1.75 in `currentColor`; le uniche figure illustrate sono le sei delle nuvolette e il disegno nel disco.
+- **Don't** spargere clip art del tema nell'interfaccia e non usare emoji: le icone sono SVG a tratto 1.75 in `currentColor`; le uniche figure illustrate sono le sei delle nuvolette, il disegno nel disco e l'illustrazione di copertina della collana.
 - **Don't** arrotondare le prove a pillola né squadrare i bottoni a cartoncino.
 - **Don't** cambiare struttura, componenti o comandi da un tema all'altro: il tema veste, non ridisegna.
 - **Don't** usare trattini lunghi nei testi.
+
+## Il marchio: Il Movente
+
+Il marchio dell'applicazione: **Il Movente**, sottotitolo "Gialli da tavola". Una collana di gialli da edicola su una parete di locandine: la cornice gialla e nera è la stessa per tutti, dentro ogni serata ha la sua copertina illustrata nei colori del suo tema. Rifiuta il gestionale anonimo con un accento e il mistero di maniera. Veste le pagine fuori da una serata (le tue serate, accesso della regia, amministrazione, inviti, primo avvio); dal dettaglio della serata in poi comanda il tema.
+
+Il marchio è una voce a parte del catalogo, `MARCHIO` in `src/app/temi/catalogo.ts` (id `marchio`): dà un valore agli stessi diciannove ruoli dei temi e alle stesse variabili `--titoli` e `--corpo`, ma non compare tra i temi che si possono scegliere per una serata. Lo applica `applicaTema('marchio')` in `src/app/temi/applica.ts`; l'elenco delle serate (`src/app/regia/serate.ts`) lo chiama all'apertura. Il contratto di direzione sta in `.impeccable/surfaces/src-app-regia-serate-ts.md`, gli schizzi in `.impeccable/mocks/decision/`, le schermate di revisione in `.impeccable/review/marchio/`.
+
+### Colori
+Un nero da sala neutro in tre livelli, un bianco da locandina, un solo giallo collana con il nero tipografico sopra. Valori nelle chiavi `marchio-` del frontmatter.
+- **Nero sala**, **Nero velato**, **Grigio parete** (`marchio-fondo`, `marchio-fondo-2`, `marchio-fondo-3`): grigi senza tinta. Il filetto (`marchio-filetto`) è un grafite.
+- **Bianco locandina** (`marchio-testo-1`) e **Grigio didascalia** (`marchio-testo-2`), sopra 5.7:1 su tutti e tre i fondi.
+- **Giallo collana** (`marchio-accento`): testata, cornice delle copertine, numeri dei volumi, comandi principali, fuoco da tastiera. Sopra il giallo, sempre il **Nero tipografico** (`marchio-su-accento`). **Giallo acceso** (`marchio-accento-chiaro`) solo per l'hover dei comandi pieni.
+- **Rosso avviso** (`marchio-allarme`): errori e azioni distruttive. È più chiaro e più rosa dell'allarme di Halloween perché sul nero neutro resti leggibile anche nel velo all'8% degli avvisi.
+- Disco, ceralacca, carta e decoro (`marchio-disco`, `marchio-sigillo`, `marchio-sigillo-luce`, `marchio-sigillo-segno`, `marchio-carta`, `marchio-inchiostro`, `marchio-carta-filetto`, `marchio-decoro`) esistono perché ogni voce del catalogo dà un valore a tutti i ruoli; le pagine del marchio non hanno proiettore né fascicolo, e oggi non li usano.
+
+### Caratteri
+Limelight (con Georgia, serif) per il marchio, i titoli (h1, h2, h3) e i numeri dei volumi: la scritta sulla porta dell'agenzia investigativa. Ha un solo peso, dichiarato come intervallo 100-900. Source Sans 3 (con system-ui, sans-serif) per tutto il resto, compresi il sottotitolo "Gialli da tavola", gli stati e il colophon delle copertine: tre file, 400 dichiarato come 100-499, 600 come 500-649, 700 come 650-900. Tutti in `public/fonti/`, con `@font-face` in `src/styles.css`.
+- **Display** (Limelight 400, clamp(40px, 5vw, 56px), 1): il titolo di pagina, "Le tue serate".
+- **Headline** (Limelight 400, 28px, 1): titoli di sezione, "Archiviate".
+- **Marca** (Limelight 400, 26px, 1; 22px sotto i 480px): la scritta nel riquadro nero della testata e il numero del volume sulla fascia della copertina (19px sulle archiviate).
+- **Title** (Limelight 400, 24px, 1.05): il titolo della serata sulla copertina e accanto alle archiviate, entro due righe.
+- **Body** (Source Sans 3 400, 17px, 1.5): testi correnti; i dati sotto la copertina a 14-17px, il tema in 700.
+- **Motto** (Source Sans 3 700, 16px, 1): "Gialli da tavola" accanto al marchio; sparisce sotto i 480px.
+- **Label** (Source Sans 3 700, 12.5px, 1.2): stato del volume e colophon sulla copertina.
+
+### Componenti
+- **Testata:** fascia gialla (`marchio-accento`) a tutta larghezza, alta almeno 64px, chiusa in basso da un filetto nero da 2px; contenuto entro 1440px con margine laterale fluido da 16 a 48px. A sinistra il riquadro nero con "Il Movente" in giallo (raggio 2px) e il sottotitolo in nero; a destra il nome dell'utente e "Esci", una pillola a contorno nero da 1.5px che in hover si riempie di nero col testo giallo.
+- **Apertura della pagina:** titolo e una riga in `marchio-testo-2` a sinistra, bottone pieno giallo "Nuova serata" a destra, filetto sotto. Il modulo della serata nuova si apre qui, su `marchio-fondo-2`, con campi scuri come in ogni tema.
+- **Parete delle copertine:** griglia auto-fill da 260px con 32px tra le file e 28px tra le colonne.
+- **Copertina del volume (signature):** cornice gialla verticale (9:10) con filetto nero da 1.5px e raggio 2px. In alto la fascia: il numero "N. x" (il numero è l'ordine di nascita della serata), il segno di stato (a contorno nero; pieno nero con testo giallo e un pallino giallo quando la serata è in corso) e, a destra, il colophon nero "Il Movente" col nome in giallo. Al centro la finestra con l'illustrazione del tema (`src/app/temi/copertina.ts`), dentro un filetto nero da 1.5px. In basso il titolo in Limelight, entro due righe. Tutta la copertina è il link per aprire la serata.
+- **Dati e comandi:** sotto la copertina, mai sopra: tema e squadre, indirizzo `/s/<slug>`, ultima modifica; poi Apri (pieno), Duplica e Archivia (a contorno, alti 40px) e il link "Indirizzo ed eliminazione", che apre un riquadro su `marchio-fondo-2` per cambiare indirizzo ed eliminare con conferma scritta.
+- **Il prossimo volume:** l'ultima casella della parete è una copertina vuota delle stesse proporzioni su `marchio-fondo-2` con filetto `marchio-filetto` e una finestra tratteggiata; dentro il numero del prossimo volume in Limelight grande (60px) e una riga che spiega cosa succede. Toccarla apre il modulo della serata nuova. In hover il bordo e il numero diventano gialli e il testo `marchio-testo-1`.
+- **Archiviate:** più in basso, sotto un titolo di sezione, una fila di righe con la copertina piccola (120px, 3:4) a sinistra e titolo, dati e comandi a destra. Spente per scelta, non sbiadite: cornice `marchio-fondo-3` con filetto `marchio-filetto`, numero in `marchio-testo-2`, illustrazione in scala di grigi. Nessuna opacità.
+- **Hover delle copertine:** solo con un puntatore, anello giallo da 2px a 3px di distanza; la copertina sale di 4px (220ms, curva di uscita) solo se "riduci movimento" non è attivo. Nessuna ombra, nemmeno in hover.
+
+### Named Rules
+**The Cornice Uguale Rule.** La cornice gialla e nera, la fascia col numero, lo stato e il colophon sono identici su ogni volume, qualunque sia il tema. Cambia solo l'illustrazione nella finestra, che porta i colori del tema della serata.
+
+**The Limelight Solo in Grande Rule.** Limelight vive dai 18px circa in su: marchio, titoli, numeri dei volumi. In piccolo la sua G si legge come una C, quindi sottotitolo, stati, colophon, dati e comandi sono in Source Sans 3.
+
+**The Giallo Fa da Cornice Rule.** Il giallo collana è per la cornice, la testata, i numeri e i comandi principali, sempre con il nero sopra. Non va mai sotto i campi dei moduli né come fondo di testi lunghi: i moduli restano scuri.
+
+**The Rosso Schiarito Rule.** L'allarme del marchio è un rosso schiarito per il fondo nero neutro e significa errore o azione distruttiva, e solo quello. Non decora e non compete col giallo.
+
+**The Spenta Non Sbiadita Rule.** Una serata archiviata si riconosce da uno stato grigio esplicito (cornice grigia, illustrazione in scala di grigi), mai da un'opacità che renderebbe illeggibili titolo e comandi.
+
+**The Marchio Fuori, Tema Dentro Rule.** Il marchio veste solo le pagine fuori da una serata. Appena si entra in una serata comanda il suo tema; il marchio non mescola i suoi colori con quelli di un tema nella stessa pagina, tranne che dentro la finestra della copertina.
 
 ## Tema: Halloween classico
 

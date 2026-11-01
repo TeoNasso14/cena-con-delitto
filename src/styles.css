@@ -6,6 +6,11 @@
 @font-face { font-family: "Barlow"; font-style: normal; font-weight: 700; font-display: swap; src: url("/fonti/barlow-latin-700-normal.woff2") format("woff2"); }
 @font-face { font-family: "Grenze Gotisch"; font-style: normal; font-weight: 500; font-display: swap; src: url("/fonti/grenze-gotisch-latin-500-normal.woff2") format("woff2"); }
 @font-face { font-family: "Grenze Gotisch"; font-style: normal; font-weight: 700; font-display: swap; src: url("/fonti/grenze-gotisch-latin-700-normal.woff2") format("woff2"); }
+/* Il marchio, Il Movente. Limelight ha un solo peso; i pesi di Source Sans 3 coprono intervalli per non avere grassetti finti. */
+@font-face { font-family: "Limelight"; font-style: normal; font-weight: 100 900; font-display: swap; src: url("/fonti/limelight-latin-400-normal.woff2") format("woff2"); }
+@font-face { font-family: "Source Sans 3"; font-style: normal; font-weight: 100 499; font-display: swap; src: url("/fonti/source-sans-3-latin-400-normal.woff2") format("woff2"); }
+@font-face { font-family: "Source Sans 3"; font-style: normal; font-weight: 500 649; font-display: swap; src: url("/fonti/source-sans-3-latin-600-normal.woff2") format("woff2"); }
+@font-face { font-family: "Source Sans 3"; font-style: normal; font-weight: 650 900; font-display: swap; src: url("/fonti/source-sans-3-latin-700-normal.woff2") format("woff2"); }
 /* Noir. League Gothic ha un solo peso e Courier Prime due: gli intervalli evitano grassetti finti. */
 @font-face { font-family: "League Gothic"; font-style: normal; font-weight: 100 900; font-display: swap; src: url("/fonti/league-gothic-latin-400-normal.woff2") format("woff2"); }
 @font-face { font-family: "Courier Prime"; font-style: normal; font-weight: 100 599; font-display: swap; src: url("/fonti/courier-prime-latin-400-normal.woff2") format("woff2"); }

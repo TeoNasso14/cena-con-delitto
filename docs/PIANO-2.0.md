@@ -26,6 +26,11 @@ Parte da `docs/ROADMAP.md` (architettura e decisioni del 1 novembre 2026) e dal 
 - I file (`/api/file/<chiave>`) non possono portare intestazioni dentro un `<img>`: la serata la dice la chiave stessa (`s<id>-`), e il server controlla che sia dell'utente.
 - Il proiettore aperto dalla regia segue la stessa regola.
 
+## Marchio dell'applicazione
+- Le pagine fuori da una serata (le tue serate, accesso della regia, amministrazione, inviti, primo avvio) hanno il marchio **Il Movente**, "Gialli da tavola"; dal dettaglio della serata in poi comanda il tema della serata, e anche `/s/<slug>` è nel tema.
+- Scelto con la skill Impeccable il 1 novembre 2026: collana gialla da edicola su una parete di locandine, a tema scuro, titoli in Limelight e testi in Source Sans 3. Contratto in `.impeccable/surfaces/src-app-regia-serate-ts.md`, abbozzi in `.impeccable/mocks/decision/`.
+- Nel codice è `MARCHIO` in `src/app/temi/catalogo.ts`: usa le stesse variabili dei temi ma non si sceglie per una serata.
+
 ## Superfici nuove
 - **`/admin`** (solo amministrazione): elenco degli account regia con stato, numero di serate e ultimo accesso; crea un invito (nome, email facoltativa) e copia il link; revoca e rigenera; sospendi e riattiva; link per rimettere la password. Nessun contenuto delle serate: le API dell'amministrazione restituiscono solo conteggi e date.
 - **`/invito/<token>`**: chi apre il link sceglie nome utente e password, che l'amministrazione non vede mai.

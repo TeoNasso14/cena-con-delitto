@@ -1,0 +1,121 @@
+<!doctype html>
+<html lang="it">
+<head>
+<meta charset="utf-8">
+<title>Amministrazione</title>
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Overpass:wght@400;500;600;700;800&display=swap">
+<style>
+:root{--smalto:#0e1a3a;--smalto2:#1b2a55;--porc:#f4f1e8;--carta:#fbfaf5;--inch:#0e1a3a;--muto:#59617c;--filo:#dcd7c8;--scar:#d7263d;--cob:#2a6fdb;--amb:#f2a900;--ver:#2e9e5b;--gri:#9a9fae}
+*{box-sizing:border-box;margin:0;padding:0}
+html,body{width:1440px;height:900px;overflow:hidden}
+body{background:var(--porc);color:var(--inch);font-family:"Overpass",system-ui,sans-serif;font-size:15px;line-height:1.45;-webkit-font-smoothing:antialiased}
+a{color:inherit}
+.top{height:60px;background:var(--smalto);color:var(--porc);display:flex;align-items:center;padding:0 32px 0 24px;gap:40px}
+.marca{display:flex;align-items:center;gap:12px;font-weight:800;font-size:18px;letter-spacing:-.01em;text-decoration:none}
+nav{display:flex;gap:6px;height:100%}
+nav a{display:flex;align-items:center;padding:0 14px;text-decoration:none;font-weight:600;color:#b9bfd2;border-bottom:4px solid transparent;padding-top:4px}
+nav a[aria-current]{color:var(--porc);border-bottom-color:var(--amb)}
+nav a:hover{color:var(--porc)}
+.utente{margin-left:auto;display:flex;align-items:center;gap:16px;font-weight:600}
+.tondo{width:30px;height:30px;border-radius:50%;background:var(--porc);color:var(--smalto);display:grid;place-items:center;font-weight:800;font-size:14px;padding-top:2px}
+.esci{background:transparent;color:var(--porc);border:1.5px solid #4a5a88;border-radius:6px;font:600 14px "Overpass",sans-serif;padding:7px 14px 5px;cursor:pointer}
+.esci:hover{border-color:var(--porc)}
+.corpo{display:flex;height:840px}
+.banda{width:40px;flex:none;background:var(--smalto)}
+main{flex:1;padding:0 56px 0 0}
+.testa{display:flex;align-items:flex-end;justify-content:space-between;padding:40px 0 30px 64px;border-bottom:1px solid var(--filo)}
+h1{font-size:40px;line-height:1.05;font-weight:800;letter-spacing:-.02em}
+.testa p{margin-top:10px;color:var(--muto);font-size:17px;max-width:860px}
+.btn{display:inline-flex;align-items:center;gap:8px;border-radius:6px;font:700 14px "Overpass",sans-serif;padding:8px 14px 6px;cursor:pointer;text-decoration:none;border:1.5px solid var(--inch);background:transparent;color:var(--inch);white-space:nowrap}
+.btn:hover{background:#ece8db}
+.pri{background:var(--smalto);color:var(--porc);border-color:var(--smalto)}
+.pri:hover{background:var(--smalto2)}
+.grande{padding:12px 22px 10px;font-size:16px}
+.sez{padding:26px 0 8px 64px;display:flex;align-items:baseline;gap:12px}
+.sez h2{font-size:20px;line-height:1.2;font-weight:700;letter-spacing:-.01em}
+.sez span{color:var(--muto);font-size:14px}
+table{width:100%;border-collapse:collapse;margin-left:0}
+th{text-align:left;font-weight:600;font-size:13.5px;color:var(--muto);padding:8px 16px 6px 0;border-bottom:1px solid var(--filo)}
+td{padding:14px 16px 12px 0;border-bottom:1px solid var(--filo);vertical-align:middle}
+th:first-child,td:first-child{padding-left:64px}
+td.az{text-align:right;padding-right:0}
+td.az .btn+.btn{margin-left:8px}
+.chi b{display:block;font-weight:700;font-size:16.5px}
+.chi span{color:var(--muto);font-size:14px}
+.stato{display:inline-flex;align-items:center;gap:7px;font-weight:700}
+.stato i{width:9px;height:9px;border-radius:50%;display:inline-block}
+.num{font-weight:700;font-variant-numeric:tabular-nums}
+.muto{color:var(--muto)}
+tr.spento .chi b{color:#4a5068}
+svg.linea{display:block;overflow:visible}
+svg text{font:500 11px "Overpass",sans-serif;fill:var(--muto)}
+svg text.qui{font-weight:800;fill:var(--inch)}
+</style>
+</head>
+<body>
+<header class="top">
+  <a class="marca" href="#"><svg width="26" height="26" viewBox="0 0 26 26" aria-hidden="true"><path d="M2 20h8l10-10h4" fill="none" stroke="#d7263d" stroke-width="4"/><path d="M2 6h8l10 10h4" fill="none" stroke="#f2a900" stroke-width="4"/><circle cx="15" cy="13" r="5" fill="#f4f1e8" stroke="#0e1a3a" stroke-width="2.5"/></svg>Il Movente</a>
+  <nav aria-label="Principale"><a href="#">Le tue serate</a><a href="#" aria-current="page">Amministrazione</a></nav>
+  <div class="utente"><span class="tondo" aria-hidden="true">T</span>Teo<button class="esci">Esci</button></div>
+</header>
+<div class="corpo">
+<div class="banda" aria-hidden="true"></div>
+<main>
+  <div class="testa">
+    <div><h1>Account della regia</h1><p>Chi può creare e condurre serate. Qui vedi solo account e numeri, mai il contenuto delle serate.</p></div>
+    <a class="btn pri grande" href="#"><svg width="14" height="14" viewBox="0 0 14 14" aria-hidden="true"><path d="M7 1v12M1 7h12" stroke="currentColor" stroke-width="2.4"/></svg>Nuovo invito</a>
+  </div>
+
+  <div class="sez"><h2>Account</h2><span>3 account, 6 serate in tutto</span></div>
+  <table>
+    <thead><tr><th style="width:290px">Percorso</th><th>Nome</th><th>Stato</th><th>Serate</th><th>Ultimo accesso</th><th style="text-align:right;padding-right:0">Azioni</th></tr></thead>
+    <tbody>
+      <tr>
+        <td><svg class="linea" width="200" height="40" viewBox="0 0 200 40" role="img" aria-label="Attivo"><path d="M0 4h8l8 8h176" fill="none" stroke="var(--scar)" stroke-width="7"/><path d="M30 12V2M100 12V2" stroke="var(--scar)" stroke-width="3.5"/><circle cx="170" cy="12" r="8" fill="#fff" stroke="var(--inch)" stroke-width="3"/><g text-anchor="middle"><text x="30" y="34">Invito</text><text x="100" y="34">Password</text><text class="qui" x="170" y="34">Attivo</text></g></svg></td>
+        <td class="chi"><b>Marta Rinaldi</b><span>marta</span></td>
+        <td><span class="stato"><i style="background:var(--ver)"></i>Attivo</span></td>
+        <td><span class="num">3</span> serate</td>
+        <td>Oggi</td>
+        <td class="az"><button class="btn">Link per la password</button><button class="btn">Sospendi</button></td>
+      </tr>
+      <tr>
+        <td><svg class="linea" width="200" height="40" viewBox="0 0 200 40" role="img" aria-label="Attivo"><path d="M0 4h8l8 8h176" fill="none" stroke="var(--cob)" stroke-width="7"/><path d="M30 12V2M100 12V2" stroke="var(--cob)" stroke-width="3.5"/><circle cx="170" cy="12" r="8" fill="#fff" stroke="var(--inch)" stroke-width="3"/><g text-anchor="middle"><text x="30" y="34">Invito</text><text x="100" y="34">Password</text><text class="qui" x="170" y="34">Attivo</text></g></svg></td>
+        <td class="chi"><b>Giulia Ferri</b><span>giulia.f</span></td>
+        <td><span class="stato"><i style="background:var(--ver)"></i>Attivo</span></td>
+        <td><span class="num">1</span> serata</td>
+        <td>12 ottobre</td>
+        <td class="az"><button class="btn">Link per la password</button><button class="btn">Sospendi</button></td>
+      </tr>
+      <tr class="spento">
+        <td><svg class="linea" width="200" height="40" viewBox="0 0 200 40" role="img" aria-label="Sospeso"><path d="M0 4h8l8 8h176" fill="none" stroke="var(--gri)" stroke-width="5" stroke-dasharray="10 6"/><path d="M30 12V3M100 12V3" stroke="var(--gri)" stroke-width="3"/><circle cx="170" cy="12" r="7" fill="var(--porc)" stroke="var(--gri)" stroke-width="3"/><g text-anchor="middle"><text x="30" y="34">Invito</text><text x="100" y="34">Password</text><text x="170" y="34">Sospeso</text></g></svg></td>
+        <td class="chi"><b>Sandro Neri</b><span>sandro</span></td>
+        <td><span class="stato muto"><i style="background:var(--gri)"></i>Sospeso</span></td>
+        <td><span class="num">2</span> serate</td>
+        <td>3 settembre</td>
+        <td class="az"><button class="btn">Riattiva</button></td>
+      </tr>
+    </tbody>
+  </table>
+
+  <div class="sez" style="padding-top:34px"><h2>Inviti in attesa</h2><span>2 inviti</span></div>
+  <table>
+    <thead><tr><th style="width:290px">Percorso</th><th>Invitato</th><th>Scadenza</th><th style="text-align:right;padding-right:0">Azioni</th></tr></thead>
+    <tbody>
+      <tr>
+        <td><svg class="linea" width="200" height="40" viewBox="0 0 200 40" role="img" aria-label="Invito inviato, password da scegliere"><path d="M0 4h8l8 8h14" fill="none" stroke="var(--amb)" stroke-width="7"/><path d="M30 12h162" fill="none" stroke="var(--amb)" stroke-width="7" stroke-opacity=".35"/><path d="M100 12V2M170 12V2" stroke="var(--amb)" stroke-width="3.5" stroke-opacity=".6"/><circle cx="30" cy="12" r="8" fill="#fff" stroke="var(--inch)" stroke-width="3"/><g text-anchor="middle"><text class="qui" x="30" y="34">Invito</text><text x="100" y="34">Password</text><text x="170" y="34">Attivo</text></g></svg></td>
+        <td class="chi"><b>Paolo Costa</b><span>paolo@esempio.it</span></td>
+        <td>Scade tra 5 giorni</td>
+        <td class="az"><button class="btn">Copia il link</button><button class="btn">Revoca</button></td>
+      </tr>
+      <tr class="spento">
+        <td><svg class="linea" width="200" height="40" viewBox="0 0 200 40" role="img" aria-label="Invito scaduto"><path d="M0 4h8l8 8h176" fill="none" stroke="var(--gri)" stroke-width="5" stroke-dasharray="10 6"/><path d="M100 12V3M170 12V3" stroke="var(--gri)" stroke-width="3"/><circle cx="30" cy="12" r="7" fill="var(--porc)" stroke="var(--gri)" stroke-width="3"/><g text-anchor="middle"><text x="30" y="34">Scaduto</text><text x="100" y="34">Password</text><text x="170" y="34">Attivo</text></g></svg></td>
+        <td class="chi"><b>Elena</b><span>Nessuna email</span></td>
+        <td class="muto">Scaduto il 20 ottobre</td>
+        <td class="az"><button class="btn">Rigenera</button></td>
+      </tr>
+    </tbody>
+  </table>
+</main>
+</div>
+</body>
+</html>

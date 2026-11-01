@@ -1,0 +1,88 @@
+<!doctype html>
+<html lang="it">
+<head>
+<meta charset="utf-8">
+<title>Entra nella regia</title>
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Overpass:wght@400;500;600;700;800&display=swap">
+<style>
+:root{--smalto:#0e1a3a;--smalto2:#1b2a55;--porc:#f4f1e8;--carta:#fbfaf5;--inch:#0e1a3a;--muto:#59617c;--filo:#dcd7c8;--scar:#d7263d;--cob:#2a6fdb;--amb:#f2a900;--ver:#2e9e5b;--gri:#9a9fae}
+*{box-sizing:border-box;margin:0;padding:0}
+html,body{width:1440px;height:900px;overflow:hidden}
+body{background:var(--porc);color:var(--inch);font-family:"Overpass",system-ui,sans-serif;font-size:15px;line-height:1.45;-webkit-font-smoothing:antialiased}
+a{color:inherit;text-underline-offset:3px}
+.top{height:60px;background:var(--smalto);color:var(--porc);display:flex;align-items:center;padding:0 32px 0 24px}
+.marca{display:flex;align-items:center;gap:12px;font-weight:800;font-size:18px;letter-spacing:-.01em;text-decoration:none}
+.corpo{display:flex;height:840px}
+.banda{width:40px;flex:none;background:var(--smalto)}
+main{width:600px;flex:none;display:flex;flex-direction:column;justify-content:center;padding:0 0 40px 96px}
+h1{font-size:40px;line-height:1.05;font-weight:800;letter-spacing:-.02em}
+.sotto{margin-top:10px;color:var(--muto);font-size:17px}
+form{margin-top:36px;width:400px;display:flex;flex-direction:column;gap:20px}
+label{display:block;font-weight:700;font-size:15px;margin-bottom:6px}
+input{width:100%;height:48px;border:1.5px solid var(--inch);border-radius:6px;background:#fff;color:var(--inch);font:500 16px "Overpass",sans-serif;padding:4px 14px 0}
+input:focus{outline:3px solid var(--amb);outline-offset:2px}
+.btn{display:inline-flex;align-items:center;justify-content:center;gap:10px;border-radius:6px;font:700 16px "Overpass",sans-serif;padding:13px 22px 11px;cursor:pointer;border:1.5px solid var(--smalto);background:var(--smalto);color:var(--porc);margin-top:6px}
+.btn:hover{background:var(--smalto2)}
+.nota{margin-top:24px;width:400px;font-size:15px}
+.nota a{font-weight:600}
+.quieta{margin-top:28px;padding-top:18px;border-top:1px solid var(--filo);width:400px;color:var(--muto);font-size:14px}
+.rete{flex:1;border-left:1px solid var(--filo);background:var(--carta)}
+svg text{font:500 12px "Overpass",sans-serif;fill:var(--muto)}
+svg text.nome{font:700 14px "Overpass",sans-serif;fill:var(--inch)}
+svg text.regia{font:800 15px "Overpass",sans-serif;fill:var(--inch)}
+</style>
+</head>
+<body>
+<header class="top">
+  <a class="marca" href="#"><svg width="26" height="26" viewBox="0 0 26 26" aria-hidden="true"><path d="M2 20h8l10-10h4" fill="none" stroke="#d7263d" stroke-width="4"/><path d="M2 6h8l10 10h4" fill="none" stroke="#f2a900" stroke-width="4"/><circle cx="15" cy="13" r="5" fill="#f4f1e8" stroke="#0e1a3a" stroke-width="2.5"/></svg>Il Movente</a>
+</header>
+<div class="corpo">
+<div class="banda" aria-hidden="true"></div>
+<main>
+  <h1>Entra nella regia</h1>
+  <p class="sotto">Prepara e conduci le tue serate.</p>
+  <form action="#" method="post">
+    <div><label for="utente">Nome utente</label><input id="utente" name="utente" type="text" autocomplete="username" value="marta"></div>
+    <div><label for="password">Password</label><input id="password" name="password" type="password" autocomplete="current-password"></div>
+    <button class="btn" type="submit">Entra<svg width="16" height="14" viewBox="0 0 16 14" aria-hidden="true"><path d="M1 7h12M8 2l5 5-5 5" fill="none" stroke="currentColor" stroke-width="2.4"/></svg></button>
+  </form>
+  <p class="nota">Hai perso la password? <a href="#">Chiedi all'amministrazione un link nuovo.</a></p>
+  <p class="quieta">Giochi in una squadra? Entra dall'indirizzo della tua serata.</p>
+</main>
+<div class="rete" aria-hidden="true">
+  <svg width="799" height="840" viewBox="0 0 799 840">
+    <g transform="translate(0 70)" fill="none" stroke-width="10">
+      <path d="M40 122H160L360 322H500L640 182H780" stroke="var(--scar)"/>
+      <path d="M40 340H780" stroke="var(--amb)"/>
+      <path d="M40 576H142L360 358H500L690 548H780" stroke="var(--cob)"/>
+      <path d="M440 376H380V560L220 720H40" stroke="var(--ver)"/>
+      <g stroke-width="5">
+        <path d="M90 122V106M710 182V166" stroke="var(--scar)"/>
+        <path d="M110 340V324M620 340V324" stroke="var(--amb)"/>
+        <path d="M80 576V592M740 548V564" stroke="var(--cob)"/>
+        <path d="M380 470H396M120 720V736" stroke="var(--ver)"/>
+      </g>
+      <rect x="418" y="310" width="28" height="78" rx="14" fill="#fff" stroke="var(--inch)" stroke-width="4"/>
+    </g>
+    <g transform="translate(0 70)">
+      <text class="regia" x="432" y="296" text-anchor="middle">Regia</text>
+      <text x="90" y="98" text-anchor="middle">Villa Corvina</text>
+      <text x="710" y="158" text-anchor="middle">Cripta</text>
+      <text x="110" y="316" text-anchor="middle">Hotel Splendor</text>
+      <text x="620" y="316" text-anchor="middle">Porto</text>
+      <text x="80" y="608" text-anchor="middle">Binario 3</text>
+      <text x="740" y="580" text-anchor="middle">Vagone letto</text>
+      <text x="404" y="474">Castello</text>
+      <text x="120" y="752" text-anchor="middle">Rifugio</text>
+    </g>
+    <g transform="translate(540 680)">
+      <path d="M0 10h28" stroke="var(--scar)" stroke-width="8"/><text class="nome" x="40" y="15">Halloween classico</text>
+      <path d="M0 38h28" stroke="var(--amb)" stroke-width="8"/><text class="nome" x="40" y="43">Noir anni '40</text>
+      <path d="M0 66h28" stroke="var(--cob)" stroke-width="8"/><text class="nome" x="40" y="71">Delitto in viaggio</text>
+      <path d="M0 94h28" stroke="var(--ver)" stroke-width="8"/><text class="nome" x="40" y="99">Natale con delitto</text>
+    </g>
+  </svg>
+</div>
+</div>
+</body>
+</html>

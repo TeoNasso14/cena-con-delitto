@@ -1,0 +1,124 @@
+<!doctype html>
+<html lang="it">
+<head>
+<meta charset="utf-8">
+<title>Le tue serate</title>
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Overpass:wght@400;500;600;700;800&display=swap">
+<style>
+:root{--smalto:#0e1a3a;--smalto2:#1b2a55;--porc:#f4f1e8;--carta:#fbfaf5;--inch:#0e1a3a;--muto:#59617c;--filo:#dcd7c8;--scar:#d7263d;--cob:#2a6fdb;--amb:#f2a900;--ver:#2e9e5b;--gri:#9a9fae}
+*{box-sizing:border-box;margin:0;padding:0}
+html,body{width:1440px;height:900px;overflow:hidden}
+body{background:var(--porc);color:var(--inch);font-family:"Overpass",system-ui,sans-serif;font-size:15px;line-height:1.45;-webkit-font-smoothing:antialiased}
+a{color:inherit}
+.top{height:60px;background:var(--smalto);color:var(--porc);display:flex;align-items:center;padding:0 32px 0 24px;gap:40px}
+.marca{display:flex;align-items:center;gap:12px;font-weight:800;font-size:18px;letter-spacing:-.01em;text-decoration:none}
+nav{display:flex;gap:6px;height:100%}
+nav a{display:flex;align-items:center;padding:0 14px;text-decoration:none;font-weight:600;color:#b9bfd2;border-bottom:4px solid transparent;padding-top:4px}
+nav a[aria-current]{color:var(--porc);border-bottom-color:var(--amb)}
+nav a:hover{color:var(--porc)}
+.utente{margin-left:auto;display:flex;align-items:center;gap:16px;font-weight:600}
+.tondo{width:30px;height:30px;border-radius:50%;background:var(--porc);color:var(--smalto);display:grid;place-items:center;font-weight:800;font-size:14px;padding-top:2px}
+.esci{background:transparent;color:var(--porc);border:1.5px solid #4a5a88;border-radius:6px;font:600 14px "Overpass",sans-serif;padding:7px 14px 5px;cursor:pointer}
+.esci:hover{border-color:var(--porc)}
+.corpo{display:flex;height:840px}
+.banda{width:40px;flex:none;background:var(--smalto)}
+main{flex:1;padding:0 56px 0 0}
+.testa{display:flex;align-items:flex-end;justify-content:space-between;padding:40px 0 30px 64px;border-bottom:1px solid var(--filo)}
+h1{font-size:40px;line-height:1.05;font-weight:800;letter-spacing:-.02em}
+.testa p{margin-top:10px;color:var(--muto);font-size:17px;max-width:620px}
+.btn{display:inline-flex;align-items:center;gap:8px;border-radius:6px;font:700 15px "Overpass",sans-serif;padding:10px 18px 8px;cursor:pointer;text-decoration:none;border:1.5px solid var(--inch);background:transparent;color:var(--inch)}
+.btn:hover{background:#ece8db}
+.pri{background:var(--smalto);color:var(--porc);border-color:var(--smalto)}
+.pri:hover{background:var(--smalto2)}
+.grande{padding:12px 22px 10px;font-size:16px}
+.riga{display:grid;grid-template-columns:460px 1fr auto;align-items:center;gap:32px;padding:22px 0;border-bottom:1px solid var(--filo)}
+.riga.viva{background:var(--carta)}
+svg.linea{display:block;overflow:visible}
+svg text{font:500 11.5px "Overpass",sans-serif;fill:var(--muto)}
+svg text.qui{font-weight:800;fill:var(--inch)}
+svg text.fatta{fill:var(--inch)}
+h2{font-size:22px;line-height:1.2;font-weight:700;letter-spacing:-.01em}
+.dati{margin-top:6px;display:flex;flex-wrap:wrap;gap:4px 18px;color:var(--muto);font-size:14.5px}
+.dati b{color:var(--inch);font-weight:600}
+.stato{display:inline-flex;align-items:center;gap:7px;font-weight:700;color:var(--inch)}
+.stato i{width:9px;height:9px;border-radius:50%;display:inline-block}
+.ind{margin-top:4px;font-size:14px;color:var(--muto)}
+.ind code{font-family:inherit;font-weight:600;color:var(--inch)}
+.az{display:flex;align-items:center;gap:8px}
+.az .link{font-size:13.5px;color:var(--muto);margin-left:10px;text-underline-offset:3px;white-space:nowrap}
+.az .link:hover{color:var(--inch)}
+.sez{padding:26px 0 0 64px;display:flex;align-items:baseline;gap:12px}
+.sez h2{font-size:18px}
+.sez span{color:var(--muto);font-size:14px}
+.archiviata h2{color:#4a5068}
+</style>
+</head>
+<body>
+<header class="top">
+  <a class="marca" href="#"><svg width="26" height="26" viewBox="0 0 26 26" aria-hidden="true"><path d="M2 20h8l10-10h4" fill="none" stroke="#d7263d" stroke-width="4"/><path d="M2 6h8l10 10h4" fill="none" stroke="#f2a900" stroke-width="4"/><circle cx="15" cy="13" r="5" fill="#f4f1e8" stroke="#0e1a3a" stroke-width="2.5"/></svg>Cena con delitto</a>
+  <nav aria-label="Principale"><a href="#" aria-current="page">Le tue serate</a><a href="#">Amministrazione</a></nav>
+  <div class="utente"><span class="tondo" aria-hidden="true">M</span>Marta<button class="esci">Esci</button></div>
+</header>
+<div class="corpo">
+<div class="banda" aria-hidden="true"></div>
+<main>
+  <div class="testa">
+    <div><h1>Le tue serate</h1><p>Ogni serata ha il suo caso, le sue squadre e il suo indirizzo per entrare.</p></div>
+    <a class="btn pri grande" href="#"><svg width="14" height="14" viewBox="0 0 14 14" aria-hidden="true"><path d="M7 1v12M1 7h12" stroke="currentColor" stroke-width="2.4"/></svg>Nuova serata</a>
+  </div>
+
+  <article class="riga viva">
+    <svg class="linea" width="460" height="74" viewBox="0 0 460 74" role="img" aria-label="Fase attuale: In corso">
+      <path d="M0 8h14l22 22h390" fill="none" stroke="var(--scar)" stroke-width="11"/>
+      <g stroke="var(--scar)" stroke-width="5"><path d="M72 30V16M156 30V16M240 30V16M408 30V16"/></g>
+      <circle cx="324" cy="30" r="11" fill="#fff" stroke="var(--inch)" stroke-width="4"/>
+      <g text-anchor="middle"><text class="fatta" x="72" y="60">Preparazione</text><text class="fatta" x="156" y="60">Squadre</text><text class="fatta" x="240" y="60">Fasi</text><text class="qui" x="324" y="60">In corso</text><text x="408" y="60">Rivelazione</text></g>
+    </svg>
+    <div><h2>Villa Corvina, Halloween</h2>
+      <div class="dati"><span class="stato"><i style="background:var(--scar)"></i>In corso</span><span>Tema <b>Halloween classico</b></span><span><b>4</b> squadre</span></div>
+      <p class="ind">Indirizzo <code>/s/villa-corvina-halloween</code> · modificata oggi</p></div>
+    <div class="az"><a class="btn pri" href="#">Apri</a><button class="btn">Duplica</button><button class="btn">Archivia</button><a class="link" href="#">Indirizzo ed eliminazione</a></div>
+  </article>
+
+  <article class="riga">
+    <svg class="linea" width="460" height="74" viewBox="0 0 460 74" role="img" aria-label="Fase attuale: Squadre">
+      <path d="M0 8h14l22 22h390" fill="none" stroke="var(--cob)" stroke-width="8"/>
+      <g stroke="var(--cob)" stroke-width="4"><path d="M72 30V18M240 30V18M324 30V18M408 30V18"/></g>
+      <circle cx="156" cy="30" r="10" fill="#fff" stroke="var(--inch)" stroke-width="3.5"/>
+      <g text-anchor="middle"><text class="fatta" x="72" y="60">Preparazione</text><text class="qui" x="156" y="60">Squadre</text><text x="240" y="60">Fasi</text><text x="324" y="60">In corso</text><text x="408" y="60">Rivelazione</text></g>
+    </svg>
+    <div><h2>Delitto sul treno delle 21.40</h2>
+      <div class="dati"><span class="stato"><i style="background:var(--cob)"></i>In preparazione</span><span>Tema <b>Delitto in viaggio</b></span><span><b>3</b> squadre</span></div>
+      <p class="ind">Indirizzo <code>/s/delitto-sul-treno</code> · modificata ieri</p></div>
+    <div class="az"><a class="btn pri" href="#">Apri</a><button class="btn">Duplica</button><button class="btn">Archivia</button><a class="link" href="#">Indirizzo ed eliminazione</a></div>
+  </article>
+
+  <article class="riga">
+    <svg class="linea" width="460" height="74" viewBox="0 0 460 74" role="img" aria-label="Fase attuale: Preparazione">
+      <path d="M0 8h14l22 22h390" fill="none" stroke="var(--ver)" stroke-width="8"/>
+      <g stroke="var(--ver)" stroke-width="4"><path d="M156 30V18M240 30V18M324 30V18M408 30V18"/></g>
+      <circle cx="72" cy="30" r="10" fill="#fff" stroke="var(--inch)" stroke-width="3.5"/>
+      <g text-anchor="middle"><text class="qui" x="72" y="60">Preparazione</text><text x="156" y="60">Squadre</text><text x="240" y="60">Fasi</text><text x="324" y="60">In corso</text><text x="408" y="60">Rivelazione</text></g>
+    </svg>
+    <div><h2>Natale al castello</h2>
+      <div class="dati"><span class="stato"><i style="background:var(--ver)"></i>In preparazione</span><span>Tema <b>Natale con delitto</b></span><span>Nessuna squadra</span></div>
+      <p class="ind">Indirizzo <code>/s/natale-al-castello</code> · modificata il 28 ottobre</p></div>
+    <div class="az"><a class="btn pri" href="#">Apri</a><button class="btn">Duplica</button><button class="btn">Archivia</button><a class="link" href="#">Indirizzo ed eliminazione</a></div>
+  </article>
+
+  <div class="sez"><h2>Archiviate</h2><span>1 serata</span></div>
+  <article class="riga archiviata" style="border-bottom:0">
+    <svg class="linea" width="460" height="74" viewBox="0 0 460 74" role="img" aria-label="Serata archiviata, conclusa">
+      <path d="M0 8h14l22 22h390" fill="none" stroke="var(--gri)" stroke-width="6" stroke-dasharray="12 7"/>
+      <g stroke="var(--gri)" stroke-width="3.5"><path d="M72 30V19M156 30V19M240 30V19M324 30V19"/></g>
+      <circle cx="408" cy="30" r="8" fill="var(--porc)" stroke="var(--gri)" stroke-width="3"/>
+      <g text-anchor="middle"><text x="72" y="60">Preparazione</text><text x="156" y="60">Squadre</text><text x="240" y="60">Fasi</text><text x="324" y="60">In corso</text><text x="408" y="60">Rivelazione</text></g>
+    </svg>
+    <div><h2>Cena del commissario, prova generale</h2>
+      <div class="dati"><span class="stato" style="color:var(--muto)"><i style="background:var(--gri)"></i>Archiviata</span><span>Tema <b>Noir anni '40</b></span></div></div>
+    <div class="az"><button class="btn">Consulta</button><button class="btn">Duplica</button><button class="btn">Riattiva</button></div>
+  </article>
+</main>
+</div>
+</body>
+</html>

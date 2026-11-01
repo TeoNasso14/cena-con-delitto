@@ -1,0 +1,119 @@
+<!doctype html>
+<html lang="it">
+<head>
+<meta charset="utf-8">
+<title>Amministrazione</title>
+<link href="https://fonts.googleapis.com/css2?family=Barlow+Condensed:wght@600;700;800&family=Source+Sans+3:wght@400;600;700&display=swap" rel="stylesheet">
+<style>
+:root{--y:#f6c800;--k:#111111;--w:#ffffff;--r:#c8102e;--g:#5a5a5a;--l:#e4e0d4}
+*{box-sizing:border-box;margin:0;padding:0}
+html,body{width:1440px;height:900px;overflow:hidden}
+body{background:var(--w);color:var(--k);font:400 15px/1.45 "Source Sans 3",sans-serif}
+a{color:var(--k)}
+header{background:var(--y);border-bottom:1px solid var(--k)}
+.bar{height:64px;padding:0 48px;display:flex;align-items:center;gap:40px}
+.brand{display:flex;align-items:center;gap:12px;text-decoration:none;font:800 26px/1 "Barlow Condensed",sans-serif;letter-spacing:.2px}
+.brand i{width:28px;height:28px;border:2.5px solid var(--k);border-radius:50%;display:grid;place-items:center}
+.brand i b{width:10px;height:10px;background:var(--k);border-radius:50%}
+nav{display:flex;gap:4px;flex:1}
+nav a{text-decoration:none;font-weight:600;padding:8px 14px;border-radius:999px}
+nav a[aria-current]{background:var(--k);color:var(--y)}
+.user{display:flex;align-items:center;gap:16px;font-weight:600}
+.btn{display:inline-flex;align-items:center;height:36px;padding:0 16px;border-radius:999px;border:1.5px solid var(--k);background:var(--w);font:600 14.5px/1 "Source Sans 3",sans-serif;color:var(--k);cursor:pointer;white-space:nowrap}
+.btn.p{background:var(--k);color:var(--w)}
+.btn.q{background:transparent}
+.btn.x{border-color:var(--r);color:var(--r)}
+.btn:hover{background:var(--k);color:var(--y);border-color:var(--k)}
+.hero{padding:26px 48px 28px;display:flex;align-items:flex-end;justify-content:space-between;border-top:1px solid rgba(17,17,17,.18)}
+h1{font:800 56px/1 "Barlow Condensed",sans-serif;letter-spacing:-.5px}
+.hero p{margin-top:10px;font-size:17px;max-width:720px}
+.hero .btn{height:46px;padding:0 24px;font-size:16px}
+main{padding:26px 48px 0}
+table{width:100%;border-collapse:collapse;border:1px solid var(--k)}
+th{text-align:left;font:600 14px/1 "Source Sans 3",sans-serif;color:var(--g);padding:13px 20px;border-bottom:1px solid var(--k);background:#faf8f1}
+td{padding:0 20px;height:72px;border-top:1px solid var(--l);vertical-align:middle}
+tr:first-child td{border-top:0}
+.name{font:700 24px/1 "Barlow Condensed",sans-serif}
+.who{display:flex;align-items:center;gap:14px}
+.who svg{width:36px;height:36px;flex:none}
+code{font:600 14.5px/1 "Source Sans 3",sans-serif}
+.st{display:inline-flex;align-items:center;gap:7px;font-weight:700}
+.st::before{content:"";width:10px;height:10px;border-radius:50%;border:2px solid var(--k)}
+.st.on::before{background:var(--k)}
+.vols{display:flex;align-items:center;gap:14px}
+.shelf{display:flex;align-items:flex-end;gap:3px;height:40px;width:58px}
+.shelf i{width:12px;background:var(--y);border:1.5px solid var(--k);border-radius:1px}
+.shelf i:nth-child(1){height:40px}.shelf i:nth-child(2){height:34px}.shelf i:nth-child(3){height:38px}
+.vols b{font:700 22px/1 "Barlow Condensed",sans-serif}
+.vols span{color:var(--g)}
+.dim td{background:#faf8f1;color:var(--g)}
+.dim .name,.dim .st{color:var(--k)}
+.dim .shelf i{background:#ece6cf}
+.acts{display:flex;gap:8px;justify-content:flex-end}
+.sec{display:flex;align-items:baseline;gap:14px;margin:30px 0 14px;padding-top:18px;border-top:1px solid var(--k)}
+.sec h2{font:700 32px/1 "Barlow Condensed",sans-serif}
+.sec span{color:var(--g)}
+.inv td{height:64px}
+.late{color:var(--r);font-weight:700}
+.soft{color:var(--g)}
+</style>
+</head>
+<body>
+<header>
+  <div class="bar">
+    <a class="brand" href="#"><i><b></b></i>Il Movente</a>
+    <nav><a href="#">Le tue serate</a><a href="#" aria-current="page">Amministrazione</a></nav>
+    <div class="user">Teo<button class="btn q">Esci</button></div>
+  </div>
+  <div class="hero">
+    <div><h1>Account della regia</h1><p>Chi può creare e condurre serate. Qui vedi solo account e numeri, mai il contenuto delle serate.</p></div>
+    <button class="btn p">Nuovo invito</button>
+  </div>
+</header>
+<main>
+  <table>
+    <thead><tr><th style="width:300px">Nome</th><th style="width:170px">Nome utente</th><th style="width:140px">Stato</th><th style="width:200px">Serate</th><th style="width:180px">Ultimo accesso</th><th></th></tr></thead>
+    <tbody>
+      <tr>
+        <td><div class="who"><svg viewBox="0 0 36 36" aria-hidden="true"><circle cx="18" cy="18" r="17" fill="#f6c800" stroke="#111" stroke-width="2"/><circle cx="18" cy="18" r="6" fill="#111"/></svg><span class="name">Marta Rinaldi</span></div></td>
+        <td><code>marta</code></td><td><span class="st on">Attivo</span></td>
+        <td><div class="vols"><span class="shelf"><i></i><i></i><i></i></span><b>3</b><span>serate</span></div></td>
+        <td>Oggi</td>
+        <td><div class="acts"><button class="btn">Link per la password</button><button class="btn x">Sospendi</button></div></td>
+      </tr>
+      <tr>
+        <td><div class="who"><svg viewBox="0 0 36 36" aria-hidden="true"><circle cx="18" cy="18" r="17" fill="#f6c800" stroke="#111" stroke-width="2"/><circle cx="18" cy="18" r="6" fill="#111"/></svg><span class="name">Giulia Ferri</span></div></td>
+        <td><code>giulia.f</code></td><td><span class="st on">Attivo</span></td>
+        <td><div class="vols"><span class="shelf"><i></i></span><b>1</b><span>serata</span></div></td>
+        <td>12 ottobre</td>
+        <td><div class="acts"><button class="btn">Link per la password</button><button class="btn x">Sospendi</button></div></td>
+      </tr>
+      <tr class="dim">
+        <td><div class="who"><svg viewBox="0 0 36 36" aria-hidden="true"><circle cx="18" cy="18" r="17" fill="none" stroke="#111" stroke-width="2"/><path d="M7 29L29 7" stroke="#111" stroke-width="2"/></svg><span class="name">Sandro Neri</span></div></td>
+        <td><code>sandro</code></td><td><span class="st">Sospeso</span></td>
+        <td><div class="vols"><span class="shelf"><i></i><i></i></span><b>2</b><span>serate</span></div></td>
+        <td>3 settembre</td>
+        <td><div class="acts"><button class="btn">Riattiva</button></div></td>
+      </tr>
+    </tbody>
+  </table>
+  <div class="sec"><h2>Inviti in attesa</h2><span>2 inviti</span></div>
+  <table class="inv">
+    <tbody>
+      <tr>
+        <td style="width:300px"><span class="name">Paolo Costa</span></td>
+        <td style="width:350px">paolo@esempio.it</td>
+        <td style="width:340px">Scade tra 5 giorni</td>
+        <td><div class="acts"><button class="btn">Copia il link</button><button class="btn x">Revoca</button></div></td>
+      </tr>
+      <tr>
+        <td><span class="name">Elena</span></td>
+        <td class="soft">Nessuna email</td>
+        <td><span class="late">Scaduto il 20 ottobre</span></td>
+        <td><div class="acts"><button class="btn">Rigenera</button></div></td>
+      </tr>
+    </tbody>
+  </table>
+</main>
+</body>
+</html>

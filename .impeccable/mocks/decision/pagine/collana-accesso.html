@@ -1,0 +1,74 @@
+<!doctype html>
+<html lang="it">
+<head>
+<meta charset="utf-8">
+<title>Accesso della regia</title>
+<link href="https://fonts.googleapis.com/css2?family=Barlow+Condensed:wght@600;700;800&family=Source+Sans+3:wght@400;600;700&display=swap" rel="stylesheet">
+<style>
+:root{--y:#f6c800;--k:#111111;--w:#ffffff;--r:#c8102e;--g:#5a5a5a;--l:#e4e0d4}
+*{box-sizing:border-box;margin:0;padding:0}
+html,body{width:1440px;height:900px;overflow:hidden}
+body{background:var(--y);color:var(--k);font:400 15px/1.45 "Source Sans 3",sans-serif;position:relative}
+a{color:var(--k)}
+.top{position:absolute;left:0;right:0;top:0;height:64px;padding:0 56px;display:flex;align-items:center;justify-content:space-between;border-bottom:1px solid var(--k)}
+.brand{display:flex;align-items:center;gap:12px;text-decoration:none;font:800 26px/1 "Barlow Condensed",sans-serif;letter-spacing:.2px}
+.brand i{width:28px;height:28px;border:2.5px solid var(--k);border-radius:50%;display:grid;place-items:center}
+.brand i b{width:10px;height:10px;background:var(--k);border-radius:50%}
+.top span{font:700 20px/1 "Barlow Condensed",sans-serif}
+.cover{position:absolute;left:56px;top:64px;bottom:0;width:700px;display:flex;flex-direction:column;justify-content:center}
+.series{display:flex;align-items:flex-end;gap:28px}
+.num{font:800 168px/.8 "Barlow Condensed",sans-serif;letter-spacing:-3px}
+.num small{font-size:64px;letter-spacing:0;margin-right:4px}
+.title{font:800 92px/.9 "Barlow Condensed",sans-serif;letter-spacing:-1px}
+.disc{margin:44px 0 40px 0;width:400px;height:400px;display:block}
+.tag{display:flex;gap:28px;align-items:baseline;border-top:2px solid var(--k);padding-top:16px;width:640px}
+.tag b{font:700 26px/1 "Barlow Condensed",sans-serif}
+.tag span{font-size:16px}
+.panel{position:absolute;right:96px;top:196px;width:512px;background:var(--w);border:1.5px solid var(--k);border-radius:2px}
+.strip{background:var(--k);color:var(--y);height:12px}
+.body{padding:40px 48px 36px}
+h1{font:800 56px/1 "Barlow Condensed",sans-serif;letter-spacing:-.5px}
+.lead{margin-top:10px;font-size:17px}
+form{margin-top:30px;display:flex;flex-direction:column;gap:20px}
+label{display:flex;flex-direction:column;gap:7px;font-weight:600;font-size:15px}
+input{height:50px;border:1.5px solid var(--k);border-radius:2px;background:var(--w);padding:0 16px;font:400 17px/1 "Source Sans 3",sans-serif;color:var(--k)}
+input:focus{outline:3px solid var(--y);outline-offset:0;border-color:var(--k)}
+.btn{margin-top:6px;height:52px;border-radius:999px;border:1.5px solid var(--k);background:var(--k);color:var(--w);font:700 17px/1 "Source Sans 3",sans-serif;cursor:pointer}
+.btn:hover{color:var(--y)}
+.note{margin-top:24px;font-size:15px}
+.quiet{margin-top:18px;padding-top:18px;border-top:1px solid var(--l);color:var(--g);font-size:14px}
+.quiet a{color:var(--g)}
+</style>
+</head>
+<body>
+<header class="top">
+  <a class="brand" href="#"><i><b></b></i>Il Movente</a>
+  <span>Gialli da tavola</span>
+</header>
+<section class="cover" aria-label="Copertina">
+  <div class="series"><span class="num"><small>N.</small>1</span><span class="title">La regia<br>apre il caso</span></div>
+  <svg class="disc" viewBox="0 0 400 400" aria-hidden="true">
+    <circle cx="200" cy="200" r="196" fill="#111"/>
+    <circle cx="200" cy="200" r="170" fill="none" stroke="#f6c800" stroke-width="3"/>
+    <circle cx="200" cy="168" r="46" fill="#f6c800"/>
+    <path d="M176 196h48l22 104H154z" fill="#f6c800"/>
+    <circle cx="200" cy="168" r="12" fill="#111"/>
+  </svg>
+  <div class="tag"><b>Il Movente</b><span>Collana per cene con delitto: casi, squadre e proiettore in una sola serata.</span></div>
+</section>
+<main class="panel">
+  <div class="strip"></div>
+  <div class="body">
+    <h1>Entra nella regia</h1>
+    <p class="lead">Prepara e conduci le tue serate.</p>
+    <form>
+      <label>Nome utente<input type="text" name="utente" autocomplete="username" value="marta"></label>
+      <label>Password<input type="password" name="password" autocomplete="current-password"></label>
+      <button class="btn" type="submit">Entra</button>
+    </form>
+    <p class="note">Hai perso la password? Chiedi all'amministrazione un link nuovo.</p>
+    <p class="quiet">Giochi in una squadra? <a href="#">Entra dall'indirizzo della tua serata.</a></p>
+  </div>
+</main>
+</body>
+</html>

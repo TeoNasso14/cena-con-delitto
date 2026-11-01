@@ -1,0 +1,150 @@
+<!doctype html>
+<html lang="it">
+<head>
+<meta charset="utf-8">
+<title>Le tue serate</title>
+<link href="https://fonts.googleapis.com/css2?family=Barlow+Condensed:wght@600;700;800&family=Source+Sans+3:wght@400;600;700&display=swap" rel="stylesheet">
+<style>
+:root{--y:#f6c800;--k:#111111;--bg:#141414;--s1:#1c1c1c;--s2:#242424;--ln:#2e2e2e;--t:#f5f5f1;--g:#8c8c8c;--r:#c8102e}
+*{box-sizing:border-box;margin:0;padding:0}
+html,body{width:1440px;height:900px;overflow:hidden}
+body{background:var(--bg);color:var(--t);font:400 15px/1.45 "Source Sans 3",sans-serif}
+a{color:var(--t)}
+header{color:var(--k)}header a{color:var(--k)}
+header{background:var(--y);border-bottom:2px solid var(--k)}
+.bar{height:64px;padding:0 48px;display:flex;align-items:center;gap:36px}
+.brand{display:flex;align-items:baseline;gap:10px;text-decoration:none}
+.brand b{background:var(--k);color:var(--y);font:800 27px/1 "Barlow Condensed",sans-serif;padding:6px 12px 5px;border-radius:2px;letter-spacing:.2px}
+.brand span{font:700 17px/1 "Barlow Condensed",sans-serif}
+nav{display:flex;gap:4px;flex:1}
+nav a{text-decoration:none;font-weight:600;padding:8px 14px;border-radius:999px}
+nav a[aria-current]{background:var(--k);color:var(--y)}
+.user{display:flex;align-items:center;gap:16px;font-weight:600}
+.btn{display:inline-flex;align-items:center;height:36px;padding:0 15px;border-radius:999px;border:1px solid #4a4a4a;background:var(--s2);font:600 14.5px/1 "Source Sans 3",sans-serif;color:var(--t);cursor:pointer;white-space:nowrap}
+.btn.p{background:var(--y);border-color:var(--y);color:var(--k)}
+.btn.q{background:transparent;border:1.5px solid var(--k);color:var(--k)}
+.btn:hover{background:#333}.btn.p:hover{background:#ffd61f}.btn.q:hover{background:var(--k);color:var(--y)}
+.hero{padding:26px 48px 22px;display:flex;align-items:flex-end;justify-content:space-between;border-bottom:1px solid var(--ln)}
+h1{font:800 54px/1 "Barlow Condensed",sans-serif;letter-spacing:-.5px}
+.hero p{margin-top:8px;font-size:17px;color:#c9c9c4}
+.hero .btn{height:46px;padding:0 24px;font-size:16px}
+main{padding:24px 48px 0}
+.wall{display:grid;grid-template-columns:repeat(4,312px);gap:32px}
+.cov{color:var(--k);height:348px;background:var(--y);border:1.5px solid var(--k);border-radius:2px;padding:0 11px 0;display:flex;flex-direction:column}
+.band{height:40px;display:flex;align-items:center;gap:10px}
+.n{font:800 26px/1 "Barlow Condensed",sans-serif}
+.n small{font-size:16px;margin-right:2px}
+.mark{font:700 12.5px/1 "Source Sans 3",sans-serif;padding:4px 8px;border-radius:2px;border:1.5px solid var(--k);display:inline-flex;gap:6px;align-items:center}
+.mark.on{background:var(--k);color:var(--y)}
+.mark.on::before{content:"";width:7px;height:7px;border-radius:50%;background:var(--y)}
+.ser{margin-left:auto;font:800 16px/1 "Barlow Condensed",sans-serif}
+.art{flex:1;border:1.5px solid var(--k);border-radius:1px;overflow:hidden;display:block}
+.art svg{width:100%;height:100%;display:block}
+.cov h2{font:800 27px/.98 "Barlow Condensed",sans-serif;height:76px;display:flex;align-items:center;letter-spacing:-.2px}
+.det{padding:14px 2px 0;display:flex;flex-direction:column;gap:3px}
+.det .t{font-weight:700}
+.det .t span{font-weight:400;color:var(--g);margin-left:6px}
+.det code{font:600 14px/1.4 "Source Sans 3",sans-serif}
+.det .m{color:var(--g);font-size:14px}
+.acts{display:flex;gap:8px;margin-top:10px}
+.det>a{margin-top:6px;font-size:13.5px;color:var(--g)}
+.blank{height:348px;border:1px solid var(--ln);border-radius:2px;background:var(--s1);color:var(--g);display:flex;flex-direction:column;padding:0 11px}
+.blank .in{flex:1;border:1px dashed #3a3a3a;margin-bottom:11px;display:flex;flex-direction:column;justify-content:center;align-items:center;gap:8px;color:var(--g);text-align:center;padding:0 24px}
+.blank .in b{font:800 64px/1 "Barlow Condensed",sans-serif;color:#3a3a3a}
+.sec{display:flex;align-items:baseline;gap:14px;margin:22px 0 14px;padding-top:14px;border-top:1px solid var(--ln)}
+.sec h3{font:700 30px/1 "Barlow Condensed",sans-serif}
+.sec span{color:var(--g)}
+.arch{display:flex;gap:24px;align-items:flex-start}
+.arch .cov{width:150px;height:200px;padding:0 7px}
+.arch .band{height:30px}.arch .n{font-size:20px}
+.arch .art{filter:grayscale(1);margin-bottom:7px}
+.arch .cov{opacity:.5}
+.arch .det{padding-top:4px;flex:1;display:grid;grid-template-columns:auto 1fr;align-items:center;column-gap:40px}
+.arch .det .acts{grid-row:1/3;grid-column:2;margin:0;justify-self:start}
+.arch h2{font:700 26px/1.05 "Barlow Condensed",sans-serif;margin-bottom:4px}
+</style>
+</head>
+<body>
+<svg width="0" height="0" style="position:absolute" aria-hidden="true">
+  <symbol id="halloween" viewBox="0 0 200 180" preserveAspectRatio="xMidYMid slice"><rect width="200" height="180" fill="#0e0b14"/><circle cx="132" cy="62" r="40" fill="#ff7a1a"/><circle cx="146" cy="52" r="7" fill="#e5650c"/><path d="M0 180V132h26v-22l20-26 20 26v16h22V98l14-22 14 22v38h84v44z" fill="#05040a"/><rect x="52" y="116" width="7" height="9" fill="#ff7a1a"/><rect x="98" y="104" width="7" height="11" fill="#ff7a1a"/><path d="M34 40q6-6 12 0q6-6 12 0" stroke="#f5f5f1" stroke-width="2" fill="none"/></symbol>
+  <symbol id="viaggio" viewBox="0 0 200 180" preserveAspectRatio="xMidYMid slice"><rect width="200" height="180" fill="#13233f"/><circle cx="100" cy="62" r="36" fill="none" stroke="#c9a24a" stroke-width="5"/><path d="M100 62V36M100 62l20 12" stroke="#c9a24a" stroke-width="5" stroke-linecap="round"/><rect y="118" width="200" height="2" fill="#c9a24a"/><path d="M80 180l18-60M120 180l-18-60" stroke="#c9a24a" stroke-width="4"/><path d="M86 160h28M91 140h18M95 128h10" stroke="#c9a24a" stroke-width="3"/></symbol>
+  <symbol id="natale" viewBox="0 0 200 180" preserveAspectRatio="xMidYMid slice"><rect width="200" height="180" fill="#1f4a35"/><path d="M24 140V78h18V66h10v12h12V54l16-24 16 24v24h12V66h10v12h18V66h10v12h10v62z" fill="#c8263a"/><rect x="88" y="108" width="24" height="32" rx="12" fill="#1f4a35"/><g fill="#f5f5f1"><circle cx="28" cy="26" r="2.5"/><circle cx="64" cy="18" r="2"/><circle cx="150" cy="30" r="2.5"/><circle cx="178" cy="52" r="2"/><circle cx="122" cy="12" r="2"/></g><rect y="140" width="200" height="40" fill="#163827"/></symbol>
+  <symbol id="noir" viewBox="0 0 200 180" preserveAspectRatio="xMidYMid slice"><rect width="200" height="180" fill="#0b0b0b"/><g fill="#b8bcc2"><rect y="24" width="200" height="7"/><rect y="42" width="200" height="7"/><rect y="60" width="200" height="7"/><rect y="78" width="200" height="7"/></g><path d="M60 130h80l-8-24H68zM44 132h112v8H44z" fill="#0b0b0b" stroke="#b8bcc2" stroke-width="2"/><circle cx="150" cy="158" r="7" fill="#d0213b"/></symbol>
+</svg>
+<header>
+  <div class="bar">
+    <a class="brand" href="#"><b>Il Movente</b><span>Gialli da tavola</span></a>
+    <nav><a href="#" aria-current="page">Le tue serate</a><a href="#">Amministrazione</a></nav>
+    <div class="user">Marta<button class="btn q">Esci</button></div>
+  </div>
+</header>
+<div class="hero">
+  <div><h1>Le tue serate</h1><p>Ogni serata ha il suo caso, le sue squadre e il suo indirizzo per entrare.</p></div>
+  <button class="btn p">Nuova serata</button>
+</div>
+<main>
+  <div class="wall">
+    <article>
+      <div class="cov">
+        <div class="band"><span class="n"><small>N.</small>2</span><span class="mark on">In corso</span><span class="ser">Il Movente</span></div>
+        <svg class="art" role="img" aria-label="Copertina Halloween classico"><use href="#halloween"/></svg>
+        <h2>Villa Corvina, Halloween</h2>
+      </div>
+      <div class="det">
+        <span class="t">Halloween classico<span>4 squadre</span></span>
+        <code>/s/villa-corvina-halloween</code>
+        <span class="m">Modificata oggi</span>
+        <div class="acts"><button class="btn p">Apri</button><button class="btn">Duplica</button><button class="btn">Archivia</button></div>
+        <a href="#">Indirizzo ed eliminazione</a>
+      </div>
+    </article>
+    <article>
+      <div class="cov">
+        <div class="band"><span class="n"><small>N.</small>3</span><span class="mark">In preparazione</span><span class="ser">Il Movente</span></div>
+        <svg class="art" role="img" aria-label="Copertina Delitto in viaggio"><use href="#viaggio"/></svg>
+        <h2>Delitto sul treno delle 21.40</h2>
+      </div>
+      <div class="det">
+        <span class="t">Delitto in viaggio<span>3 squadre</span></span>
+        <code>/s/delitto-sul-treno</code>
+        <span class="m">Modificata ieri</span>
+        <div class="acts"><button class="btn p">Apri</button><button class="btn">Duplica</button><button class="btn">Archivia</button></div>
+        <a href="#">Indirizzo ed eliminazione</a>
+      </div>
+    </article>
+    <article>
+      <div class="cov">
+        <div class="band"><span class="n"><small>N.</small>4</span><span class="mark">In preparazione</span><span class="ser">Il Movente</span></div>
+        <svg class="art" role="img" aria-label="Copertina Natale con delitto"><use href="#natale"/></svg>
+        <h2>Natale al castello</h2>
+      </div>
+      <div class="det">
+        <span class="t">Natale con delitto<span>nessuna squadra</span></span>
+        <code>/s/natale-al-castello</code>
+        <span class="m">Modificata il 28 ottobre</span>
+        <div class="acts"><button class="btn p">Apri</button><button class="btn">Duplica</button><button class="btn">Archivia</button></div>
+        <a href="#">Indirizzo ed eliminazione</a>
+      </div>
+    </article>
+    <article>
+      <div class="blank">
+        <div class="band"><span class="n"><small>N.</small>5</span><span class="ser" style="color:var(--g)">Il Movente</span></div>
+        <div class="in"><b>N. 5</b><p>Il prossimo volume della collana. Scegli un tema e la copertina si disegna da sola.</p></div>
+      </div>
+    </article>
+  </div>
+  <div class="sec"><h3>Archiviate</h3><span>1 serata</span></div>
+  <div class="arch">
+    <div class="cov">
+      <div class="band"><span class="n"><small>N.</small>1</span><span class="ser">Il Movente</span></div>
+      <svg class="art" role="img" aria-label="Copertina Noir anni '40"><use href="#noir"/></svg>
+    </div>
+    <div class="det">
+      <h2>Cena del commissario, prova generale</h2>
+      <span class="t">Noir anni '40<span>archiviata il 12 ottobre</span></span>
+      <div class="acts"><button class="btn p">Consulta</button><button class="btn">Duplica</button><button class="btn">Riattiva</button></div>
+    </div>
+  </div>
+</main>
+</body>
+</html>

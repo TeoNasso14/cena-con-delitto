@@ -1,6 +1,6 @@
 {
   "schemaVersion": 2,
-  "generatedAt": "2026-11-01T13:19:33+00:00",
+  "generatedAt": "2026-11-01T14:57:14+00:00",
   "title": "Design System: Cena con delitto",
   "extensions": {
     "colorMeta": {
@@ -687,6 +687,348 @@
           "#c9c9cb",
           "#eeeeef"
         ]
+      },
+      "marchio-fondo": {
+        "role": "neutral",
+        "displayName": "Nero sala",
+        "theme": "marchio",
+        "cssVar": "--fondo",
+        "canonical": "#141414",
+        "oklch": "oklch(19.1% 0.000 0.0)",
+        "tonalRamp": [
+          "#0b0b0b",
+          "#252525",
+          "#424242",
+          "#616161",
+          "#828282",
+          "#a5a5a5",
+          "#c9c9c9",
+          "#eeeeee"
+        ]
+      },
+      "marchio-fondo-2": {
+        "role": "neutral",
+        "displayName": "Nero velato",
+        "theme": "marchio",
+        "cssVar": "--fondo-2",
+        "canonical": "#1c1c1c",
+        "oklch": "oklch(22.6% 0.000 0.0)",
+        "tonalRamp": [
+          "#0b0b0b",
+          "#252525",
+          "#424242",
+          "#616161",
+          "#828282",
+          "#a5a5a5",
+          "#c9c9c9",
+          "#eeeeee"
+        ]
+      },
+      "marchio-fondo-3": {
+        "role": "neutral",
+        "displayName": "Grigio parete",
+        "theme": "marchio",
+        "cssVar": "--fondo-3",
+        "canonical": "#242424",
+        "oklch": "oklch(26.0% 0.000 0.0)",
+        "tonalRamp": [
+          "#0b0b0b",
+          "#252525",
+          "#424242",
+          "#616161",
+          "#828282",
+          "#a5a5a5",
+          "#c9c9c9",
+          "#eeeeee"
+        ]
+      },
+      "marchio-filetto": {
+        "role": "neutral",
+        "displayName": "Filetto grafite",
+        "theme": "marchio",
+        "cssVar": "--filetto",
+        "canonical": "#3a3a3a",
+        "oklch": "oklch(34.8% 0.000 0.0)",
+        "tonalRamp": [
+          "#0b0b0b",
+          "#252525",
+          "#424242",
+          "#616161",
+          "#828282",
+          "#a5a5a5",
+          "#c9c9c9",
+          "#eeeeee"
+        ]
+      },
+      "marchio-testo-1": {
+        "role": "neutral",
+        "displayName": "Bianco locandina",
+        "theme": "marchio",
+        "cssVar": "--testo-1",
+        "canonical": "#f5f5f1",
+        "oklch": "oklch(96.9% 0.005 106.5)",
+        "tonalRamp": [
+          "#0b0b0b",
+          "#252523",
+          "#42423f",
+          "#61615e",
+          "#82827f",
+          "#a5a5a1",
+          "#c9c9c7",
+          "#eeeeee"
+        ]
+      },
+      "marchio-testo-2": {
+        "role": "neutral",
+        "displayName": "Grigio didascalia",
+        "theme": "marchio",
+        "cssVar": "--testo-2",
+        "canonical": "#9e9e99",
+        "oklch": "oklch(69.8% 0.007 106.6)",
+        "tonalRamp": [
+          "#0b0b0a",
+          "#252523",
+          "#42423e",
+          "#61615d",
+          "#83837e",
+          "#a5a5a0",
+          "#c9c9c6",
+          "#eeeeee"
+        ]
+      },
+      "marchio-accento": {
+        "role": "primary",
+        "displayName": "Giallo collana",
+        "theme": "marchio",
+        "cssVar": "--accento",
+        "canonical": "#f6c800",
+        "oklch": "oklch(84.8% 0.174 92.0)",
+        "tonalRamp": [
+          "#100a00",
+          "#2e2401",
+          "#514002",
+          "#755f06",
+          "#9c7f0d",
+          "#c5a11c",
+          "#e2c775",
+          "#f5eeda"
+        ]
+      },
+      "marchio-accento-chiaro": {
+        "role": "primary",
+        "displayName": "Giallo acceso",
+        "theme": "marchio",
+        "cssVar": "--accento-chiaro",
+        "canonical": "#ffd61f",
+        "oklch": "oklch(88.5% 0.177 94.4)",
+        "tonalRamp": [
+          "#0f0b00",
+          "#2e2400",
+          "#4f4100",
+          "#746002",
+          "#9a8005",
+          "#c2a315",
+          "#e0c873",
+          "#f4efda"
+        ]
+      },
+      "marchio-su-accento": {
+        "role": "primary",
+        "displayName": "Nero tipografico",
+        "theme": "marchio",
+        "cssVar": "--su-accento",
+        "canonical": "#111111",
+        "oklch": "oklch(17.8% 0.000 0.0)",
+        "tonalRamp": [
+          "#0b0b0b",
+          "#252525",
+          "#424242",
+          "#616161",
+          "#828282",
+          "#a5a5a5",
+          "#c9c9c9",
+          "#eeeeee"
+        ]
+      },
+      "marchio-disco": {
+        "role": "neutral",
+        "displayName": "Giallo collana (disco)",
+        "theme": "marchio",
+        "cssVar": "--disco",
+        "canonical": "#f6c800",
+        "oklch": "oklch(84.8% 0.174 92.0)",
+        "tonalRamp": [
+          "#100a00",
+          "#2e2401",
+          "#514002",
+          "#755f06",
+          "#9c7f0d",
+          "#c5a11c",
+          "#e2c775",
+          "#f5eeda"
+        ]
+      },
+      "marchio-su-disco": {
+        "role": "neutral",
+        "displayName": "Nero tipografico (su disco)",
+        "theme": "marchio",
+        "cssVar": "--su-disco",
+        "canonical": "#111111",
+        "oklch": "oklch(17.8% 0.000 0.0)",
+        "tonalRamp": [
+          "#0b0b0b",
+          "#252525",
+          "#424242",
+          "#616161",
+          "#828282",
+          "#a5a5a5",
+          "#c9c9c9",
+          "#eeeeee"
+        ]
+      },
+      "marchio-sigillo": {
+        "role": "secondary",
+        "displayName": "Ceralacca",
+        "theme": "marchio",
+        "cssVar": "--sigillo",
+        "canonical": "#8e1b24",
+        "oklch": "oklch(42.4% 0.150 22.8)",
+        "tonalRamp": [
+          "#130707",
+          "#401515",
+          "#722224",
+          "#a2383a",
+          "#cc5757",
+          "#ef7f7c",
+          "#ffada8",
+          "#ffe0dc"
+        ]
+      },
+      "marchio-sigillo-luce": {
+        "role": "secondary",
+        "displayName": "Riflesso di cera",
+        "theme": "marchio",
+        "cssVar": "--sigillo-luce",
+        "canonical": "#b8323c",
+        "oklch": "oklch(52.5% 0.170 21.4)",
+        "tonalRamp": [
+          "#140707",
+          "#431214",
+          "#781921",
+          "#a92d36",
+          "#d54e53",
+          "#f87878",
+          "#ffa8a6",
+          "#ffdddb"
+        ]
+      },
+      "marchio-sigillo-segno": {
+        "role": "secondary",
+        "displayName": "Falce cipria",
+        "theme": "marchio",
+        "cssVar": "--sigillo-segno",
+        "canonical": "#e7a39a",
+        "oklch": "oklch(77.8% 0.082 27.5)",
+        "tonalRamp": [
+          "#100908",
+          "#351e1b",
+          "#5f342f",
+          "#884f49",
+          "#ae6f67",
+          "#d1938b",
+          "#eebbb4",
+          "#ffe7e3"
+        ]
+      },
+      "marchio-allarme": {
+        "role": "tertiary",
+        "displayName": "Rosso avviso",
+        "theme": "marchio",
+        "cssVar": "--allarme",
+        "canonical": "#ff8a9a",
+        "oklch": "oklch(76.5% 0.142 12.3)",
+        "tonalRamp": [
+          "#150608",
+          "#480818",
+          "#7b0c2d",
+          "#a1364b",
+          "#c8596b",
+          "#f07c8d",
+          "#fdb2ba",
+          "#fde9ea"
+        ]
+      },
+      "marchio-carta": {
+        "role": "neutral",
+        "displayName": "Carta bianca",
+        "theme": "marchio",
+        "cssVar": "--carta",
+        "canonical": "#f5f5f1",
+        "oklch": "oklch(96.9% 0.005 106.5)",
+        "tonalRamp": [
+          "#0b0b0b",
+          "#252523",
+          "#42423f",
+          "#61615e",
+          "#82827f",
+          "#a5a5a1",
+          "#c9c9c7",
+          "#eeeeee"
+        ]
+      },
+      "marchio-inchiostro": {
+        "role": "neutral",
+        "displayName": "Inchiostro nero",
+        "theme": "marchio",
+        "cssVar": "--inchiostro",
+        "canonical": "#111111",
+        "oklch": "oklch(17.8% 0.000 0.0)",
+        "tonalRamp": [
+          "#0b0b0b",
+          "#252525",
+          "#424242",
+          "#616161",
+          "#828282",
+          "#a5a5a5",
+          "#c9c9c9",
+          "#eeeeee"
+        ]
+      },
+      "marchio-carta-filetto": {
+        "role": "neutral",
+        "displayName": "Filetto carta",
+        "theme": "marchio",
+        "cssVar": "--carta-filetto",
+        "canonical": "#c9c9c4",
+        "oklch": "oklch(83.4% 0.007 106.5)",
+        "tonalRamp": [
+          "#0b0b0a",
+          "#252523",
+          "#42423e",
+          "#61615d",
+          "#83837e",
+          "#a5a5a0",
+          "#c9c9c6",
+          "#eeeeee"
+        ]
+      },
+      "marchio-decoro": {
+        "role": "neutral",
+        "displayName": "Decoro grafite",
+        "theme": "marchio",
+        "cssVar": "--decoro",
+        "canonical": "#2e2e2e",
+        "oklch": "oklch(30.1% 0.000 0.0)",
+        "tonalRamp": [
+          "#0b0b0b",
+          "#252525",
+          "#424242",
+          "#616161",
+          "#828282",
+          "#a5a5a5",
+          "#c9c9c9",
+          "#eeeeee"
+        ]
       }
     },
     "typographyMeta": {
@@ -757,6 +1099,34 @@
       "noir-label": {
         "displayName": "Noir label",
         "purpose": "Courier Prime 700 per intestazioni del rapporto e numeri di catalogo."
+      },
+      "marchio-display": {
+        "displayName": "Marchio display",
+        "purpose": "Limelight per il titolo di pagina fuori dalle serate (\"Le tue serate\")."
+      },
+      "marchio-headline": {
+        "displayName": "Marchio headline",
+        "purpose": "Limelight per i titoli di sezione (\"Archiviate\")."
+      },
+      "marchio-marca": {
+        "displayName": "Marchio marca",
+        "purpose": "Limelight per la scritta Il Movente nel riquadro nero e per i numeri dei volumi."
+      },
+      "marchio-title": {
+        "displayName": "Marchio title",
+        "purpose": "Limelight per il titolo della serata sulla copertina, entro due righe."
+      },
+      "marchio-body": {
+        "displayName": "Marchio body",
+        "purpose": "Source Sans 3 per testi correnti, dati e comandi."
+      },
+      "marchio-motto": {
+        "displayName": "Marchio motto",
+        "purpose": "Source Sans 3 700 per il sottotitolo \"Gialli da tavola\"."
+      },
+      "marchio-label": {
+        "displayName": "Marchio label",
+        "purpose": "Source Sans 3 700 per stato del volume e colophon sulla copertina."
       }
     },
     "shadows": [],
@@ -849,6 +1219,25 @@
           "impronta"
         ],
         "screenshots": ".impeccable/review/noir/"
+      },
+      {
+        "id": "marchio",
+        "name": "Il Movente",
+        "kind": "brand",
+        "brand": true,
+        "selectable": false,
+        "default": false,
+        "colorPrefix": "marchio-",
+        "tagline": "Gialli da tavola",
+        "titoli": "\"Limelight\", Georgia, serif",
+        "corpo": "\"Source Sans 3\", system-ui, sans-serif",
+        "source": "src/app/temi/catalogo.ts (MARCHIO)",
+        "apply": "src/app/temi/applica.ts: applicaTema('marchio')",
+        "scope": "Pagine fuori da una serata: le tue serate, accesso della regia, amministrazione, inviti, primo avvio. Dal dettaglio della serata in poi comanda il tema.",
+        "copertine": "src/app/temi/copertina.ts",
+        "contract": ".impeccable/surfaces/src-app-regia-serate-ts.md",
+        "mocks": ".impeccable/mocks/decision/",
+        "screenshots": ".impeccable/review/marchio/"
       }
     ],
     "themeMechanics": {
@@ -857,9 +1246,11 @@
       "slots": {
         "disco": "src/app/temi/decoro.ts",
         "atmosfera": "src/app/temi/atmosfera.ts",
-        "figure": "src/app/temi/figura.ts"
+        "figure": "src/app/temi/figura.ts",
+        "copertina": "src/app/temi/copertina.ts"
       },
-      "defaults": "src/styles.css :root (Halloween classico)"
+      "defaults": "src/styles.css :root (Halloween classico)",
+      "brand": "src/app/temi/catalogo.ts (MARCHIO), applicato da applicaTema('marchio')"
     }
   },
   "components": [
@@ -942,18 +1333,43 @@
       "description": "Scelta del tema della serata in Strumenti: anteprima dipinta coi colori e il carattere di ciascun tema.",
       "html": "<ul class=\"ds-temi\"><li><button class=\"ds-tema ds-tema--scelto\" type=\"button\" aria-pressed=\"true\"><span class=\"ds-anteprima\" style=\"background:#0e0b14;border-color:#3a2f48\"><i style=\"background:#ff7a1a\"></i><b style=\"font-family:'Grenze Gotisch',Georgia,serif;color:#eee6d6\">Villa Corvina</b></span><span class=\"ds-nome\">Halloween classico <span class=\"ds-pillola\">In uso</span></span><span class=\"ds-descrizione\">Notte viola, luna arancio e gotico.</span></button></li><li><button class=\"ds-tema\" type=\"button\" aria-pressed=\"false\"><span class=\"ds-anteprima\" style=\"background:#0c0c0d;border-color:#3a3a3d\"><i style=\"background:#d9d6ce\"></i><b style=\"font-family:'League Gothic','Arial Narrow',sans-serif;color:#e7e6e2\">Villa Corvina</b></span><span class=\"ds-nome\">Noir anni '40</span><span class=\"ds-descrizione\">Bianco e nero, pioggia e macchina da scrivere.</span></button></li></ul>",
       "css": ":host{--fondo:#0e0b14;--fondo-2:#17121f;--fondo-3:#231b2e;--filetto:#3a2f48;--testo-1:#eee6d6;--testo-2:#b8aec4;--accento:#ff7a1a;--accento-chiaro:#ff9a4d;--su-accento:#0e0b14;--disco:#ff7a1a;--su-disco:#0e0b14;--sigillo:#8e1b24;--sigillo-luce:#b8323c;--sigillo-segno:#e7a39a;--allarme:#ff5a5f;--carta:#eee6d6;--inchiostro:#0e0b14;--carta-filetto:#c9bfae;--decoro:#f47318;--titoli:'Grenze Gotisch',Georgia,serif;--corpo:'Barlow',system-ui,sans-serif;--curva-uscita:cubic-bezier(0.23,1,0.32,1);--curva-cassetto:cubic-bezier(0.32,0.72,0,1);}.ds-temi{list-style:none;margin:0;padding:0;display:grid;grid-template-columns:repeat(auto-fill,minmax(220px,1fr));gap:12px;max-width:480px;}.ds-tema{width:100%;display:grid;gap:6px;padding:10px 10px 14px;text-align:left;border-radius:14px;border:1px solid transparent;background:var(--fondo-2,#17121f);color:var(--testo-1,#eee6d6);font:400 17px/1.5 var(--corpo,'Barlow',system-ui,sans-serif);cursor:pointer;transition:transform 120ms var(--curva-uscita),background-color 160ms ease;}.ds-tema:hover{background:var(--fondo-3,#231b2e);}.ds-tema:active{transform:scale(0.97);}.ds-tema:focus-visible{outline:2px solid var(--accento,#ff7a1a);outline-offset:3px;}.ds-tema--scelto{border-color:var(--accento,#ff7a1a);}.ds-anteprima{position:relative;display:block;aspect-ratio:16/9;margin-bottom:4px;border-radius:10px;border:1px solid;overflow:hidden;}.ds-anteprima i{position:absolute;width:62%;aspect-ratio:1;border-radius:50%;right:-14%;top:50%;transform:translateY(-50%);}.ds-anteprima b{position:absolute;left:8%;top:50%;transform:translateY(-50%);max-width:42%;font-size:18px;line-height:1;font-weight:700;}.ds-nome{display:flex;flex-wrap:wrap;align-items:center;gap:8px;font-weight:600;}.ds-pillola{font-size:13px;font-weight:700;border-radius:999px;padding:2px 10px;background:var(--accento,#ff7a1a);color:var(--su-accento,#0e0b14);}.ds-descrizione{font-size:14px;color:var(--testo-2,#b8aec4);}"
+    },
+    {
+      "name": "Testata del marchio",
+      "kind": "nav",
+      "refersTo": "marchio-testata",
+      "description": "Fascia gialla delle pagine fuori dalle serate: riquadro nero Il Movente, sottotitolo, utente ed Esci.",
+      "html": "<header class=\"ds-testata\"><div class=\"ds-barra\"><a class=\"ds-marchio\" href=\"#\"><b>Il Movente</b><span>Gialli da tavola</span></a><div class=\"ds-utente\"><span>regia</span><button class=\"ds-esci\" type=\"button\">Esci</button></div></div></header>",
+      "css": ":host{--fondo:#141414;--fondo-2:#1c1c1c;--fondo-3:#242424;--filetto:#3a3a3a;--testo-1:#f5f5f1;--testo-2:#9e9e99;--accento:#f6c800;--accento-chiaro:#ffd61f;--su-accento:#111111;--disco:#f6c800;--su-disco:#111111;--sigillo:#8e1b24;--sigillo-luce:#b8323c;--sigillo-segno:#e7a39a;--allarme:#ff8a9a;--carta:#f5f5f1;--inchiostro:#111111;--carta-filetto:#c9c9c4;--decoro:#2e2e2e;--titoli:'Limelight',Georgia,serif;--corpo:'Source Sans 3',system-ui,sans-serif;--curva-uscita:cubic-bezier(0.23,1,0.32,1);}.ds-testata{background:var(--accento);color:var(--su-accento);border-bottom:2px solid var(--su-accento);font:400 17px/1.5 var(--corpo);}.ds-barra{min-height:64px;padding:10px max(16px,min(3vw,48px));display:flex;flex-wrap:wrap;align-items:center;gap:12px 32px;}.ds-marchio{display:flex;align-items:baseline;gap:10px;color:var(--su-accento);text-decoration:none;}.ds-marchio b{background:var(--su-accento);color:var(--accento);font:400 26px/1 var(--titoli);padding:7px 12px 5px;border-radius:2px;}.ds-marchio span{font:700 16px/1 var(--corpo);}.ds-marchio:focus-visible{outline:2px solid var(--su-accento);outline-offset:3px;}.ds-utente{margin-left:auto;display:flex;align-items:center;gap:14px;font-weight:600;}.ds-esci{min-height:40px;padding:0 16px;border-radius:999px;border:1.5px solid var(--su-accento);background:transparent;color:var(--su-accento);font:600 15px/1 var(--corpo);cursor:pointer;}.ds-esci:hover{background:var(--su-accento);color:var(--accento);}.ds-esci:focus-visible{outline:2px solid var(--su-accento);outline-offset:3px;}@media (max-width:480px){.ds-barra{flex-wrap:nowrap;gap:12px;}.ds-marchio span,.ds-utente>span{display:none;}.ds-marchio b{font-size:22px;}}"
+    },
+    {
+      "name": "Copertina del volume",
+      "kind": "card",
+      "refersTo": "marchio-copertina",
+      "description": "Ogni serata è un volume della collana: cornice gialla uguale per tutti, illustrazione del tema nella finestra; l'ultima casella è il prossimo volume.",
+      "html": "<ul class=\"ds-parete\"><li><a class=\"ds-copertina\" href=\"#\"><span class=\"ds-fascia\"><span class=\"ds-numero\"><small>N.</small>1</span><span class=\"ds-stato ds-stato--vivo\">In corso</span><span class=\"ds-collana\">Il Movente</span></span><span class=\"ds-arte\"><svg viewBox=\"0 0 200 180\" preserveAspectRatio=\"xMidYMid slice\" aria-hidden=\"true\"><rect width=\"200\" height=\"180\" fill=\"#0e0b14\"/><circle cx=\"132\" cy=\"62\" r=\"40\" fill=\"#ff7a1a\"/><circle cx=\"146\" cy=\"52\" r=\"7\" fill=\"#e5650c\"/><path d=\"M0 180V132h26v-22l20-26 20 26v16h22V98l14-22 14 22v38h84v44z\" fill=\"#05040a\"/><rect x=\"52\" y=\"116\" width=\"7\" height=\"9\" fill=\"#ff7a1a\"/><rect x=\"98\" y=\"104\" width=\"7\" height=\"11\" fill=\"#ff7a1a\"/><path d=\"M34 40q6-6 12 0q6-6 12 0\" stroke=\"#f5f5f1\" stroke-width=\"2\" fill=\"none\"/></svg></span><h2>Villa Corvina</h2></a></li><li><a class=\"ds-copertina\" href=\"#\"><span class=\"ds-fascia\"><span class=\"ds-numero\"><small>N.</small>2</span><span class=\"ds-stato\">In preparazione</span><span class=\"ds-collana\">Il Movente</span></span><span class=\"ds-arte\"><svg viewBox=\"0 0 200 180\" preserveAspectRatio=\"xMidYMid slice\" aria-hidden=\"true\"><rect width=\"200\" height=\"180\" fill=\"#0b0b0b\"/><g fill=\"#b8bcc2\"><rect y=\"24\" width=\"200\" height=\"7\"/><rect y=\"42\" width=\"200\" height=\"7\"/><rect y=\"60\" width=\"200\" height=\"7\"/><rect y=\"78\" width=\"200\" height=\"7\"/></g><path d=\"M60 130h80l-8-24H68zM44 132h112v8H44z\" fill=\"#0b0b0b\" stroke=\"#b8bcc2\" stroke-width=\"2\"/><circle cx=\"150\" cy=\"158\" r=\"7\" fill=\"#d0213b\"/></svg></span><h2>Pioggia su Porta Nuova</h2></a></li><li><button class=\"ds-vuota\" type=\"button\"><span class=\"ds-fascia\"><span class=\"ds-numero\"><small>N.</small>3</span></span><span class=\"ds-dentro\"><b>N. 3</b><span>Il prossimo volume della collana.</span></span></button></li></ul>",
+      "css": ":host{--fondo:#141414;--fondo-2:#1c1c1c;--fondo-3:#242424;--filetto:#3a3a3a;--testo-1:#f5f5f1;--testo-2:#9e9e99;--accento:#f6c800;--accento-chiaro:#ffd61f;--su-accento:#111111;--disco:#f6c800;--su-disco:#111111;--sigillo:#8e1b24;--sigillo-luce:#b8323c;--sigillo-segno:#e7a39a;--allarme:#ff8a9a;--carta:#f5f5f1;--inchiostro:#111111;--carta-filetto:#c9c9c4;--decoro:#2e2e2e;--titoli:'Limelight',Georgia,serif;--corpo:'Source Sans 3',system-ui,sans-serif;--curva-uscita:cubic-bezier(0.23,1,0.32,1);}.ds-parete{list-style:none;margin:0;padding:16px;display:grid;grid-template-columns:repeat(auto-fill,minmax(220px,1fr));gap:32px 28px;background:var(--fondo);font:400 17px/1.5 var(--corpo);color:var(--testo-1);}.ds-copertina{position:relative;display:flex;flex-direction:column;aspect-ratio:9/10;padding:0 11px;background:var(--accento);color:var(--su-accento);border:1.5px solid var(--su-accento);border-radius:2px;text-decoration:none;}@media (prefers-reduced-motion:no-preference){.ds-copertina,.ds-vuota{transition:transform 220ms var(--curva-uscita),outline-color 160ms var(--curva-uscita),border-color 160ms var(--curva-uscita);}}.ds-copertina:hover{outline:2px solid var(--accento);outline-offset:3px;}@media (prefers-reduced-motion:no-preference){.ds-copertina:hover{transform:translateY(-4px);}}.ds-copertina:focus-visible,.ds-vuota:focus-visible{outline:2px solid var(--accento);outline-offset:3px;}.ds-fascia{min-height:40px;display:flex;align-items:center;gap:10px;}.ds-numero{font:400 26px/1 var(--titoli);}.ds-numero small{font-size:15px;margin-right:2px;}.ds-stato{display:inline-flex;align-items:center;gap:6px;padding:3px 8px;border:1.5px solid var(--su-accento);border-radius:2px;font:700 12.5px/1.2 var(--corpo);}.ds-stato--vivo{background:var(--su-accento);color:var(--accento);}.ds-stato--vivo::before{content:'';width:7px;height:7px;border-radius:50%;background:var(--accento);}.ds-collana{margin-left:auto;padding:3px 7px;border-radius:2px;background:var(--su-accento);color:var(--accento);font:700 12.5px/1.2 var(--corpo);}.ds-arte{flex:1;min-height:0;border:1.5px solid var(--su-accento);overflow:hidden;background:var(--su-accento);}.ds-arte svg{display:block;width:100%;height:100%;}.ds-copertina h2{margin:0;min-height:76px;display:flex;align-items:center;font:400 24px/1.05 var(--titoli);text-wrap:balance;}.ds-vuota{width:100%;aspect-ratio:9/10;display:flex;flex-direction:column;padding:0 11px 11px;background:var(--fondo-2);color:var(--testo-2);border:1px solid var(--filetto);border-radius:2px;font:inherit;text-align:center;cursor:pointer;}.ds-vuota .ds-fascia{width:100%;}.ds-dentro{flex:1;display:flex;flex-direction:column;justify-content:center;align-items:center;gap:10px;padding:0 20px;border:1px dashed var(--filetto);}.ds-dentro b{font:400 60px/1 var(--titoli);color:var(--filetto);}.ds-vuota:hover{border-color:var(--accento);color:var(--testo-1);}.ds-vuota:hover .ds-dentro b{color:var(--accento);}"
+    },
+    {
+      "name": "Copertina archiviata",
+      "kind": "card",
+      "refersTo": "marchio-copertina-archiviata",
+      "description": "Volume archiviato: spento per scelta con cornice grigia e illustrazione in scala di grigi, mai con opacità.",
+      "html": "<div class=\"ds-archiviata\"><a class=\"ds-copertina\" href=\"#\"><span class=\"ds-fascia\"><span class=\"ds-numero\"><small>N.</small>4</span></span><span class=\"ds-arte\"><svg viewBox=\"0 0 200 180\" preserveAspectRatio=\"xMidYMid slice\" aria-hidden=\"true\"><rect width=\"200\" height=\"180\" fill=\"#0e0b14\"/><circle cx=\"132\" cy=\"62\" r=\"40\" fill=\"#ff7a1a\"/><circle cx=\"146\" cy=\"52\" r=\"7\" fill=\"#e5650c\"/><path d=\"M0 180V132h26v-22l20-26 20 26v16h22V98l14-22 14 22v38h84v44z\" fill=\"#05040a\"/><rect x=\"52\" y=\"116\" width=\"7\" height=\"9\" fill=\"#ff7a1a\"/><rect x=\"98\" y=\"104\" width=\"7\" height=\"11\" fill=\"#ff7a1a\"/><path d=\"M34 40q6-6 12 0q6-6 12 0\" stroke=\"#f5f5f1\" stroke-width=\"2\" fill=\"none\"/></svg></span></a><div><h3>La cena dei corvi</h3><p class=\"ds-dati\"><b>Halloween classico</b> <span>archiviata</span></p></div></div>",
+      "css": ":host{--fondo:#141414;--fondo-2:#1c1c1c;--fondo-3:#242424;--filetto:#3a3a3a;--testo-1:#f5f5f1;--testo-2:#9e9e99;--accento:#f6c800;--accento-chiaro:#ffd61f;--su-accento:#111111;--disco:#f6c800;--su-disco:#111111;--sigillo:#8e1b24;--sigillo-luce:#b8323c;--sigillo-segno:#e7a39a;--allarme:#ff8a9a;--carta:#f5f5f1;--inchiostro:#111111;--carta-filetto:#c9c9c4;--decoro:#2e2e2e;--titoli:'Limelight',Georgia,serif;--corpo:'Source Sans 3',system-ui,sans-serif;--curva-uscita:cubic-bezier(0.23,1,0.32,1);}.ds-archiviata{display:grid;grid-template-columns:120px minmax(0,1fr);gap:20px;align-items:start;padding:16px;background:var(--fondo);color:var(--testo-1);font:400 17px/1.5 var(--corpo);}.ds-copertina{display:flex;flex-direction:column;aspect-ratio:3/4;padding:0 7px 7px;background:var(--fondo-3);color:var(--testo-2);border:1.5px solid var(--filetto);border-radius:2px;text-decoration:none;}.ds-copertina:hover,.ds-copertina:focus-visible{outline:2px solid var(--accento);outline-offset:3px;}.ds-fascia{min-height:30px;display:flex;align-items:center;}.ds-numero{font:400 19px/1 var(--titoli);}.ds-numero small{font-size:15px;margin-right:2px;}.ds-arte{flex:1;min-height:0;border:1.5px solid var(--filetto);overflow:hidden;filter:grayscale(1);}.ds-arte svg{display:block;width:100%;height:100%;}h3{margin:0;font:400 24px/1.05 var(--titoli);text-wrap:balance;}.ds-dati{margin:4px 0 0;}.ds-dati span{color:var(--testo-2);margin-left:6px;}"
     }
   ],
   "narrative": {
     "northStar": "La sala di proiezione e il fascicolo",
-    "overview": "**Creative North Star: \"La sala di proiezione e il fascicolo\"**\n\nLa serata è un film proiettato in sala, e le prove sono i file di un videogioco investigativo. Il film cambia genere col tema della serata: oggi Halloween classico (il predefinito) e Noir anni '40, domani altri. Il tema veste colori, caratteri, il disegno nel disco del proiettore, lo strato d'atmosfera della sala e le figure delle nuvolette. Struttura, componenti, forme, movimento e comandi restano gli stessi per tutti i temi: chi gioca riconosce lo strumento anche quando il film cambia.\n\nLe tre superfici parlano la stessa lingua con densità diverse. Il proiettore è scena pura: titoli enormi, testo grande leggibile dal fondo della sala, il disco come scenografia che cambia posto e misura da scena a scena. Il telefono e la regia sono strumenti: ereditano fondo, testo, accento e titoli del tema, ma con misura, con obiettivi di tocco ampi e una gerarchia che si legge al buio con un'occhiata.\n\nLa profondità non viene dalle ombre ma dal fondo a strati e dai filetti sottili. La forma distingue gli oggetti del mondo (schede prova, documenti, timbri: angoli quasi netti, carta e inchiostro) dai comandi da toccare (pillole e tasti morbidi). La firma del sistema è il sigillo di ceralacca: si spacca in due quando il codice è giusto, trema una volta quando è sbagliato, in ogni tema.\n\nIl tema è una proprietà della serata. La regia lo sceglie in Strumenti; il sito lo applica come variabili CSS su `<html>` (colori per ruolo, `--titoli`, `--corpo`), e un tema sconosciuto vale Halloween classico. I valori predefiniti in `:root` del foglio globale sono quelli di Halloween.",
+    "overview": "**Creative North Star: \"La sala di proiezione e il fascicolo\"**\n\nLa serata è un film proiettato in sala, e le prove sono i file di un videogioco investigativo. Il film cambia genere col tema della serata: oggi Halloween classico (il predefinito) e Noir anni '40, domani altri. Il tema veste colori, caratteri, il disegno nel disco del proiettore, lo strato d'atmosfera della sala e le figure delle nuvolette. Struttura, componenti, forme, movimento e comandi restano gli stessi per tutti i temi: chi gioca riconosce lo strumento anche quando il film cambia.\n\nLe tre superfici parlano la stessa lingua con densità diverse. Il proiettore è scena pura: titoli enormi, testo grande leggibile dal fondo della sala, il disco come scenografia che cambia posto e misura da scena a scena. Il telefono e la regia sono strumenti: ereditano fondo, testo, accento e titoli del tema, ma con misura, con obiettivi di tocco ampi e una gerarchia che si legge al buio con un'occhiata.\n\nLa profondità non viene dalle ombre ma dal fondo a strati e dai filetti sottili. La forma distingue gli oggetti del mondo (schede prova, documenti, timbri: angoli quasi netti, carta e inchiostro) dai comandi da toccare (pillole e tasti morbidi). La firma del sistema è il sigillo di ceralacca: si spacca in due quando il codice è giusto, trema una volta quando è sbagliato, in ogni tema.\n\nIl tema è una proprietà della serata. La regia lo sceglie in Strumenti; il sito lo applica come variabili CSS su `<html>` (colori per ruolo, `--titoli`, `--corpo`), e un tema sconosciuto vale Halloween classico. I valori predefiniti in `:root` del foglio globale sono quelli di Halloween.\n\nSopra i temi c'è il marchio dell'applicazione, **Il Movente** (sezione \"Il marchio: Il Movente\"). Le pagine fuori da una serata vestono il marchio: le tue serate, accesso della regia, amministrazione, inviti, primo avvio. Dal dettaglio di una serata in poi comanda il tema di quella serata: la regia della serata, i telefoni delle squadre, il proiettore e la pagina pubblica `/s/<slug>`. Il marchio usa gli stessi ruoli di colore e le stesse due variabili dei caratteri, quindi i componenti condivisi (bottoni, campi, avvisi) funzionano identici nei due mondi.",
     "keyCharacteristics": [
       "Fondo scuro pieno in tre livelli (`fondo`, `fondo-2`, `fondo-3`), mai bianco, mai gradienti.",
       "Un solo colore saturo per tema, l'accento, per ciò che è vivo o in corso: fase corrente, comando principale, prova nuova.",
       "Il carattere dei titoli solo per i nomi (titoli, nomi di scene, intestazioni di sezione); il carattere del corpo per tutto il resto. Due caratteri per tema.",
       "Nessuna ombra: livelli tonali e filetti da 1px.",
       "Oggetti del mondo ad angoli netti (2px), comandi arrotondati.",
-      "Movimento a cassetto e uscita morbida, sempre ridotto con \"riduci movimento\"."
+      "Movimento a cassetto e uscita morbida, sempre ridotto con \"riduci movimento\".",
+      "Fuori dalle serate il marchio Il Movente, dentro le serate il tema."
     ],
     "rules": [
       {
@@ -1035,6 +1451,36 @@
         "name": "The Argento Non Accento Rule",
         "body": "La luna è argento: il disco del Noir non prende mai il rossetto, così l'accento resta raro anche quando la luna occupa mezzo schermo.",
         "section": "tema-noir"
+      },
+      {
+        "name": "The Cornice Uguale Rule",
+        "body": "La cornice gialla e nera, la fascia col numero, lo stato e il colophon sono identici su ogni volume, qualunque sia il tema. Cambia solo l'illustrazione nella finestra, che porta i colori del tema della serata.",
+        "section": "marchio"
+      },
+      {
+        "name": "The Limelight Solo in Grande Rule",
+        "body": "Limelight vive dai 18px circa in su: marchio, titoli, numeri dei volumi. In piccolo la sua G si legge come una C, quindi sottotitolo, stati, colophon, dati e comandi sono in Source Sans 3.",
+        "section": "marchio"
+      },
+      {
+        "name": "The Giallo Fa da Cornice Rule",
+        "body": "Il giallo collana è per la cornice, la testata, i numeri e i comandi principali, sempre con il nero sopra. Non va mai sotto i campi dei moduli né come fondo di testi lunghi: i moduli restano scuri.",
+        "section": "marchio"
+      },
+      {
+        "name": "The Rosso Schiarito Rule",
+        "body": "L'allarme del marchio è un rosso schiarito per il fondo nero neutro e significa errore o azione distruttiva, e solo quello. Non decora e non compete col giallo.",
+        "section": "marchio"
+      },
+      {
+        "name": "The Spenta Non Sbiadita Rule",
+        "body": "Una serata archiviata si riconosce da uno stato grigio esplicito (cornice grigia, illustrazione in scala di grigi), mai da un'opacità che renderebbe illeggibili titolo e comandi.",
+        "section": "marchio"
+      },
+      {
+        "name": "The Marchio Fuori, Tema Dentro Rule",
+        "body": "Il marchio veste solo le pagine fuori da una serata. Appena si entra in una serata comanda il suo tema; il marchio non mescola i suoi colori con quelli di un tema nella stessa pagina, tranne che dentro la finestra della copertina.",
+        "section": "marchio"
       }
     ],
     "dos": [
@@ -1046,14 +1492,14 @@
       "**Do** garantire obiettivi di tocco di almeno 44px (bottoni e campi 48px, tasti del PIN 64px).",
       "**Do** muovere le cose con `--curva-cassetto` (cubic-bezier(0.32, 0.72, 0, 1)) per ciò che entra e `--curva-uscita` (cubic-bezier(0.23, 1, 0.32, 1)) per risposte e pressioni, e ridurre tutto con \"riduci movimento\".",
       "**Do** dimensionare i testi del proiettore in vh perché si leggano dal fondo della sala (corpo almeno 22px, titoli fino a 190px).",
-      "**Do** aggiungere un tema come una nuova voce del catalogo che dà un valore a tutti i ruoli, due caratteri self-hosted, sei figure e le frasi pronte, più, se serve, un disegno per il disco e uno strato d'atmosfera; e una nuova sezione qui sotto."
+      "**Do** aggiungere un tema come una nuova voce del catalogo che dà un valore a tutti i ruoli, due caratteri self-hosted, sei figure e le frasi pronte, l'illustrazione di copertina in `src/app/temi/copertina.ts`, più, se serve, un disegno per il disco e uno strato d'atmosfera; e una nuova sezione qui sotto."
     ],
     "donts": [
       "**Don't** usare gradienti, aloni o ombre su elementi fermi: il disco è piatto e la profondità è tonale.",
       "**Don't** introdurre un terzo carattere o un carattere che gocciola, sbava o imita la scrittura a mano.",
       "**Don't** mettere etichette o occhielli sopra i titoli; il maiuscolo spaziato vive solo nell'intestazione stampata del documento e nel timbro.",
       "**Don't** usare il colore d'allarme per altro che errori, e non usare la ceralacca per l'interfaccia.",
-      "**Don't** spargere clip art del tema nell'interfaccia e non usare emoji: le icone sono SVG a tratto 1.75 in `currentColor`; le uniche figure illustrate sono le sei delle nuvolette e il disegno nel disco.",
+      "**Don't** spargere clip art del tema nell'interfaccia e non usare emoji: le icone sono SVG a tratto 1.75 in `currentColor`; le uniche figure illustrate sono le sei delle nuvolette, il disegno nel disco e l'illustrazione di copertina della collana.",
       "**Don't** arrotondare le prove a pillola né squadrare i bottoni a cartoncino.",
       "**Don't** cambiare struttura, componenti o comandi da un tema all'altro: il tema veste, non ridisegna.",
       "**Don't** usare trattini lunghi nei testi."

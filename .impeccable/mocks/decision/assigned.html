@@ -1,0 +1,117 @@
+<!doctype html>
+<html lang="it">
+<head>
+<meta charset="utf-8">
+<title>Le tue serate</title>
+<link href="https://fonts.googleapis.com/css2?family=Barlow+Condensed:wght@500;600;700&family=Barlow:wght@400;500;600&display=swap" rel="stylesheet">
+<style>
+:root{--nero:#121417;--fondo:#f4f4f1;--giallo:#f5c518;--bianco:#fff;--rosso:#d64545;--testo:#1c1e22;--muto:#62666d;--riga:#d9d9d3;--tono:#e9e9e4}
+*{box-sizing:border-box;margin:0;padding:0}
+html,body{width:1440px;height:900px;overflow:hidden}
+body{background:var(--fondo);color:var(--testo);font:400 15px/1.4 "Barlow",sans-serif;font-variant-numeric:tabular-nums}
+a{color:inherit}
+.cond{font-family:"Barlow Condensed",sans-serif}
+header{background:var(--nero);height:64px;display:flex;align-items:center;padding:0 48px;gap:40px;color:var(--bianco)}
+.marchio{display:flex;gap:3px;text-decoration:none}
+.marchio span{position:relative;display:inline-block;width:22px;height:32px;background:#23262b;border-radius:2px;font:700 20px/32px "Barlow Condensed",sans-serif;text-align:center;color:var(--bianco)}
+.marchio span::after{content:"";position:absolute;left:0;right:0;top:50%;height:1px;background:var(--nero)}
+.marchio .sp{width:8px;background:none}
+.marchio .sp::after{display:none}
+nav{display:flex;gap:4px;margin-left:16px}
+nav a{font:600 17px/1 "Barlow Condensed",sans-serif;text-decoration:none;padding:10px 14px;border-radius:2px;color:#b9bcc2}
+nav a[aria-current]{color:var(--bianco);background:#23262b;border-bottom:2px solid var(--giallo)}
+.utente{margin-left:auto;display:flex;align-items:center;gap:16px;font-size:15px;color:#d6d8dc}
+button,.btn{font:600 15px/1 "Barlow",sans-serif;border-radius:999px;padding:9px 18px;border:1px solid transparent;cursor:pointer;text-decoration:none;display:inline-block}
+.esci{background:none;color:var(--bianco);border-color:#4a4e55}
+main{padding:36px 48px 0}
+.testa{display:flex;align-items:flex-end;justify-content:space-between;margin-bottom:28px}
+h1{font:700 44px/1.05 "Barlow Condensed",sans-serif}
+.testa p{margin-top:8px;color:var(--muto);font-size:16px;max-width:620px}
+.primario{background:var(--nero);color:var(--bianco)}
+.primario:hover{background:#2a2d33}
+.secondario{background:var(--bianco);color:var(--testo);border-color:var(--riga)}
+.nuova{padding:12px 24px;font-size:16px}
+.tab{border-top:2px solid var(--nero)}
+.col,.riga{display:grid;grid-template-columns:150px 1fr 200px 250px 150px 300px;column-gap:24px;align-items:center}
+.col{height:38px;border-bottom:1px solid var(--riga);font:600 14px/1 "Barlow Condensed",sans-serif;letter-spacing:.06em;color:var(--muto);padding:0 20px}
+.riga{min-height:100px;padding:14px 20px;border-bottom:1px solid var(--riga);background:var(--bianco);border-radius:2px}
+.ora{background:var(--nero);border-radius:2px;padding:8px 10px;color:var(--giallo);font:600 15px/1.2 "Barlow Condensed",sans-serif;position:relative}
+.ora b{display:block;font-size:22px;font-weight:700;color:var(--giallo)}
+.ora::after{content:"";position:absolute;left:0;right:0;top:50%;height:1px;background:#000}
+.titolo{font:700 23px/1.15 "Barlow Condensed",sans-serif}
+.meta{color:var(--muto);font-size:14px;margin-top:4px}
+.binario{font-size:14px;color:var(--testo);text-decoration:none;border-bottom:1px solid var(--riga)}
+.stato{font:600 16px/1 "Barlow Condensed",sans-serif;color:var(--muto)}
+.flap{display:inline-flex;gap:2px}
+.flap i{position:relative;font-style:normal;display:inline-block;width:15px;height:26px;background:var(--nero);color:var(--giallo);border-radius:2px;font:700 16px/26px "Barlow Condensed",sans-serif;text-align:center}
+.flap i::after{content:"";position:absolute;left:0;right:0;top:50%;height:1px;background:#000}
+.flap .s{background:none;width:5px}
+.flap .s::after{display:none}
+.azioni{display:flex;flex-direction:column;gap:8px;align-items:flex-start}
+.azioni div{display:flex;gap:8px}
+.azioni button{padding:8px 16px;font-size:14px}
+.piccolo{font-size:13px;color:var(--muto)}
+.live{border-left:5px solid var(--giallo);padding-left:15px;background:#fffdf3}
+.nuovo{background:var(--tono)}
+.nuovo .stato em{display:inline-block;margin-top:6px;font:500 13px/1 "Barlow",sans-serif;font-style:normal;color:var(--testo);padding:4px 8px;border:1px solid #b9b9b1;border-radius:2px}
+h2{font:700 28px/1.1 "Barlow Condensed",sans-serif;margin:36px 0 12px}
+.arch{background:transparent;color:var(--muto)}
+.arch .ora{background:#3a3d42;color:#d6d8dc}
+.arch .ora b{color:#d6d8dc}
+</style>
+</head>
+<body>
+<header>
+  <a class="marchio" href="#" aria-label="Cena con delitto"><span>C</span><span>E</span><span>N</span><span>A</span><span class="sp"></span><span>C</span><span>O</span><span>N</span><span class="sp"></span><span>D</span><span>E</span><span>L</span><span>I</span><span>T</span><span>T</span><span>O</span></a>
+  <nav><a href="#" aria-current="page">Le tue serate</a><a href="#">Amministrazione</a></nav>
+  <div class="utente"><span>Marta</span><button class="esci">Esci</button></div>
+</header>
+<main>
+  <div class="testa">
+    <div>
+      <h1>Le tue serate</h1>
+      <p>Ogni serata ha il suo caso, le sue squadre e il suo indirizzo per entrare.</p>
+    </div>
+    <button class="primario nuova">Nuova serata</button>
+  </div>
+  <div class="tab">
+    <div class="col"><span>ORA</span><span>SERATA</span><span>TEMA</span><span>BINARIO</span><span>STATO</span><span></span></div>
+    <div class="riga live">
+      <div class="ora">sab 31 ott<b>20.30</b></div>
+      <div><div class="titolo">Villa Corvina, Halloween</div><div class="meta">4 squadre · modificata oggi</div></div>
+      <div>Halloween classico</div>
+      <div><a class="binario" href="#">/s/villa-corvina-halloween</a></div>
+      <div class="stato"><span class="flap" aria-label="In corso"><i>I</i><i>N</i><i class="s"></i><i>C</i><i>O</i><i>R</i><i>S</i><i>O</i></span></div>
+      <div class="azioni"><div><button class="primario">Apri</button><button class="secondario">Duplica</button><button class="secondario">Archivia</button></div><a class="piccolo" href="#">Indirizzo ed eliminazione</a></div>
+    </div>
+    <div class="riga nuovo">
+      <div class="ora">ven 13 nov<b>21.40</b></div>
+      <div><div class="titolo">Delitto sul treno delle 21.40</div><div class="meta">3 squadre · modificata ieri</div></div>
+      <div>Delitto in viaggio</div>
+      <div><a class="binario" href="#">/s/delitto-sul-treno</a></div>
+      <div class="stato">In preparazione<br><em>nuovo stato</em></div>
+      <div class="azioni"><div><button class="primario">Apri</button><button class="secondario">Duplica</button><button class="secondario">Archivia</button></div><a class="piccolo" href="#">Indirizzo ed eliminazione</a></div>
+    </div>
+    <div class="riga">
+      <div class="ora">sab 19 dic<b>20.00</b></div>
+      <div><div class="titolo">Natale al castello</div><div class="meta">Nessuna squadra · modificata il 28 ottobre</div></div>
+      <div>Natale con delitto</div>
+      <div><a class="binario" href="#">/s/natale-al-castello</a></div>
+      <div class="stato">In preparazione</div>
+      <div class="azioni"><div><button class="primario">Apri</button><button class="secondario">Duplica</button><button class="secondario">Archivia</button></div><a class="piccolo" href="#">Indirizzo ed eliminazione</a></div>
+    </div>
+  </div>
+  <h2>Archiviate</h2>
+  <div class="tab">
+    <div class="riga arch">
+      <div class="ora">sab 10 ott<b>20.00</b></div>
+      <div><div class="titolo">Cena del commissario, prova generale</div><div class="meta">5 squadre · archiviata</div></div>
+      <div>Noir anni '40</div>
+      <div><span class="binario">/s/cena-del-commissario</span></div>
+      <div class="stato">Archiviata</div>
+      <div class="azioni"><div><button class="secondario">Consulta</button><button class="secondario">Duplica</button><button class="secondario">Riattiva</button></div></div>
+    </div>
+  </div>
+</main>
+</body>
+</html>

@@ -1,0 +1,122 @@
+<!doctype html>
+<html lang="it">
+<head>
+<meta charset="utf-8">
+<title>Amministrazione</title>
+<link href="https://fonts.googleapis.com/css2?family=Barlow+Condensed:wght@600;700;800&family=Source+Sans+3:wght@400;600;700&display=swap" rel="stylesheet">
+<style>
+:root{--y:#f6c800;--k:#111111;--bg:#141414;--s1:#1c1c1c;--s2:#242424;--ln:#2e2e2e;--t:#f5f5f1;--g:#8c8c8c;--r:#c8102e}
+*{box-sizing:border-box;margin:0;padding:0}
+html,body{width:1440px;height:900px;overflow:hidden}
+body{background:var(--bg);color:var(--t);font:400 15px/1.45 "Source Sans 3",sans-serif}
+a{color:var(--t)}
+header{background:var(--y);color:var(--k);border-bottom:2px solid var(--k)}
+header a{color:var(--k)}
+.bar{height:64px;padding:0 48px;display:flex;align-items:center;gap:36px}
+.brand{display:flex;align-items:baseline;gap:10px;text-decoration:none}
+.brand b{background:var(--k);color:var(--y);font:800 27px/1 "Barlow Condensed",sans-serif;padding:6px 12px 5px;border-radius:2px;letter-spacing:.2px}
+.brand span{font:700 17px/1 "Barlow Condensed",sans-serif}
+nav{display:flex;gap:4px;flex:1}
+nav a{text-decoration:none;font-weight:600;padding:8px 14px;border-radius:999px}
+nav a[aria-current]{background:var(--k);color:var(--y)}
+.user{display:flex;align-items:center;gap:16px;font-weight:600}
+.btn{display:inline-flex;align-items:center;height:36px;padding:0 15px;border-radius:999px;border:1px solid #4a4a4a;background:var(--s2);font:600 14.5px/1 "Source Sans 3",sans-serif;color:var(--t);cursor:pointer;white-space:nowrap}
+.btn.p{background:var(--y);border-color:var(--y);color:var(--k)}
+.btn.q{background:transparent;border:1.5px solid var(--k);color:var(--k)}
+.btn.x{border-color:#e0475e;color:#ff8a9a;background:transparent}
+.btn:hover{background:#333}.btn.p:hover{background:#ffd61f}
+.hero{padding:26px 48px 22px;display:flex;align-items:flex-end;justify-content:space-between;border-bottom:1px solid var(--ln)}
+h1{font:800 54px/1 "Barlow Condensed",sans-serif;letter-spacing:-.5px}
+.hero p{margin-top:8px;font-size:17px;color:#c9c9c4}
+.hero .btn{height:46px;padding:0 24px;font-size:16px}
+main{padding:26px 48px 0}
+table{width:100%;border-collapse:collapse;background:var(--s1);border:1px solid var(--ln);border-radius:2px}
+th{text-align:left;font:600 14px/1 "Source Sans 3",sans-serif;color:var(--g);padding:13px 20px;border-bottom:1px solid var(--ln);background:var(--s2)}
+td{padding:0 20px;height:70px;border-top:1px solid var(--ln);vertical-align:middle}
+tr:first-child td{border-top:0}
+.name{font:700 24px/1 "Barlow Condensed",sans-serif}
+.who{display:flex;align-items:center;gap:14px}
+.av{width:34px;height:34px;border-radius:50%;background:var(--y);color:var(--k);display:grid;place-items:center;font:800 17px/1 "Barlow Condensed",sans-serif;flex:none}
+code{font:600 14.5px/1 "Source Sans 3",sans-serif}
+.st{display:inline-flex;align-items:center;gap:7px;font-weight:700}
+.st::before{content:"";width:9px;height:9px;border-radius:50%;border:2px solid var(--t)}
+.st.on::before{background:var(--y);border-color:var(--y)}
+.vols{display:flex;align-items:center;gap:14px}
+.shelf{display:flex;align-items:flex-end;gap:3px;height:40px;width:58px}
+.shelf i{width:13px;background:var(--y);border-radius:1px;position:relative}
+.shelf i::after{content:"";position:absolute;left:3px;right:3px;top:7px;bottom:7px;background:var(--k)}
+.shelf i:nth-child(1){height:40px}.shelf i:nth-child(2){height:35px}.shelf i:nth-child(3){height:38px}
+.vols b{font:700 22px/1 "Barlow Condensed",sans-serif;color:var(--y)}
+.vols span{color:var(--g)}
+.dim td{color:var(--g)}
+.dim .name{color:#c9c9c4}
+.dim .av{background:var(--s2);color:var(--g);border:1px solid #4a4a4a}
+.dim .shelf i{opacity:.45}
+.acts{display:flex;gap:8px;justify-content:flex-end}
+.sec{display:flex;align-items:baseline;gap:14px;margin:30px 0 14px}
+.sec h2{font:700 30px/1 "Barlow Condensed",sans-serif}
+.sec span{color:var(--g)}
+.inv td{height:64px}
+.late{color:#ff8a9a;font-weight:700}
+.soft{color:var(--g)}
+</style>
+</head>
+<body>
+<header>
+  <div class="bar">
+    <a class="brand" href="#"><b>Il Movente</b><span>Gialli da tavola</span></a>
+    <nav><a href="#">Le tue serate</a><a href="#" aria-current="page">Amministrazione</a></nav>
+    <div class="user">Teo<button class="btn q">Esci</button></div>
+  </div>
+</header>
+<div class="hero">
+  <div><h1>Account della regia</h1><p>Chi può creare e condurre serate. Qui vedi solo account e numeri, mai il contenuto delle serate.</p></div>
+  <button class="btn p">Nuovo invito</button>
+</div>
+<main>
+  <table>
+    <thead><tr><th style="width:300px">Nome</th><th style="width:170px">Nome utente</th><th style="width:140px">Stato</th><th style="width:200px">Serate</th><th style="width:170px">Ultimo accesso</th><th></th></tr></thead>
+    <tbody>
+      <tr>
+        <td><div class="who"><span class="av">M</span><span class="name">Marta Rinaldi</span></div></td>
+        <td><code>marta</code></td><td><span class="st on">Attivo</span></td>
+        <td><div class="vols"><span class="shelf" aria-hidden="true"><i></i><i></i><i></i></span><b>3</b><span>serate</span></div></td>
+        <td>Oggi</td>
+        <td><div class="acts"><button class="btn">Link per la password</button><button class="btn x">Sospendi</button></div></td>
+      </tr>
+      <tr>
+        <td><div class="who"><span class="av">G</span><span class="name">Giulia Ferri</span></div></td>
+        <td><code>giulia.f</code></td><td><span class="st on">Attivo</span></td>
+        <td><div class="vols"><span class="shelf" aria-hidden="true"><i></i></span><b>1</b><span>serata</span></div></td>
+        <td>12 ottobre</td>
+        <td><div class="acts"><button class="btn">Link per la password</button><button class="btn x">Sospendi</button></div></td>
+      </tr>
+      <tr class="dim">
+        <td><div class="who"><span class="av">S</span><span class="name">Sandro Neri</span></div></td>
+        <td><code>sandro</code></td><td><span class="st">Sospeso</span></td>
+        <td><div class="vols"><span class="shelf" aria-hidden="true"><i></i><i></i></span><b>2</b><span>serate</span></div></td>
+        <td>3 settembre</td>
+        <td><div class="acts"><button class="btn">Riattiva</button></div></td>
+      </tr>
+    </tbody>
+  </table>
+  <div class="sec"><h2>Inviti in attesa</h2><span>2 inviti</span></div>
+  <table class="inv">
+    <tbody>
+      <tr>
+        <td style="width:300px"><span class="name">Paolo Costa</span></td>
+        <td style="width:340px">paolo@esempio.it</td>
+        <td style="width:340px">Scade tra 5 giorni</td>
+        <td><div class="acts"><button class="btn">Copia il link</button><button class="btn x">Revoca</button></div></td>
+      </tr>
+      <tr>
+        <td><span class="name">Elena</span></td>
+        <td class="soft">Nessuna email</td>
+        <td><span class="late">Scaduto il 20 ottobre</span></td>
+        <td><div class="acts"><button class="btn">Rigenera</button></div></td>
+      </tr>
+    </tbody>
+  </table>
+</main>
+</body>
+</html>

@@ -1,0 +1,72 @@
+<!doctype html>
+<html lang="it">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Il Movente, quattro direzioni</title>
+<style>
+  :root { --fondo: #f3f3f1; --testo: #151515; --spento: #5c5c5c; --filetto: #d6d6d2; }
+  body { margin: 0; background: var(--fondo); color: var(--testo); font: 16px/1.45 system-ui, sans-serif; }
+  main { padding: 32px 24px 64px; display: grid; gap: 48px; }
+  h1 { margin: 0; font-size: 32px; }
+  h2 { margin: 0 0 4px; font-size: 22px; }
+  p { margin: 0; color: var(--spento); }
+  .riga { display: grid; grid-template-columns: repeat(3, 720px); gap: 16px; overflow-x: auto; padding-bottom: 8px; }
+  figure { margin: 0; }
+  .cornice { width: 720px; height: 450px; overflow: hidden; border: 1px solid var(--filetto); background: #fff; }
+  iframe { width: 1440px; height: 900px; border: 0; transform: scale(0.5); transform-origin: 0 0; pointer-events: none; }
+  figcaption { margin-top: 6px; font-size: 14px; }
+  figcaption a { color: var(--testo); }
+</style>
+</head>
+<body>
+<main>
+  <header><h1>Il Movente, quattro direzioni a confronto</h1><p>Per ognuna: le tue serate, accesso della regia, amministrazione. Clicca il nome sotto una schermata per aprirla a grandezza piena.</p></header>
+
+  <section>
+    <h2>Il mix: collana gialla e locandine</h2><p>La cornice gialla della collana è la stessa per tutti; dentro, ogni serata ha la sua copertina nei colori del tema.</p>
+    <div class="riga">
+      <figure><div class="cornice"><iframe src="mix-serate.html" title="Mix, le tue serate"></iframe></div><figcaption><a href="mix-serate.html">Le tue serate</a></figcaption></figure>
+      <figure><div class="cornice"><iframe src="mix-accesso.html" title="Mix, accesso"></iframe></div><figcaption><a href="mix-accesso.html">Accesso della regia</a></figcaption></figure>
+      <figure><div class="cornice"><iframe src="mix-admin.html" title="Mix, amministrazione"></iframe></div><figcaption><a href="mix-admin.html">Amministrazione</a></figcaption></figure>
+    </div>
+  </section>
+
+  <section>
+    <h2>La collana gialla</h2><p>Ogni serata è un volume numerato della collana.</p>
+    <div class="riga">
+      <figure><div class="cornice"><iframe src="../grounded-collana.html" title="Collana gialla, le tue serate"></iframe></div><figcaption><a href="../grounded-collana.html">Le tue serate</a></figcaption></figure>
+      <figure><div class="cornice"><iframe src="collana-accesso.html" title="Collana gialla, accesso"></iframe></div><figcaption><a href="collana-accesso.html">Accesso della regia</a></figcaption></figure>
+      <figure><div class="cornice"><iframe src="collana-admin.html" title="Collana gialla, amministrazione"></iframe></div><figcaption><a href="collana-admin.html">Amministrazione</a></figcaption></figure>
+    </div>
+  </section>
+
+  <section>
+    <h2>La parete delle locandine</h2><p>Ogni serata ha la sua locandina, disegnata dal suo tema.</p>
+    <div class="riga">
+      <figure><div class="cornice"><iframe src="../challenger-locandine.html" title="Locandine, le tue serate"></iframe></div><figcaption><a href="../challenger-locandine.html">Le tue serate</a></figcaption></figure>
+      <figure><div class="cornice"><iframe src="locandine-accesso.html" title="Locandine, accesso"></iframe></div><figcaption><a href="locandine-accesso.html">Accesso della regia</a></figcaption></figure>
+      <figure><div class="cornice"><iframe src="locandine-admin.html" title="Locandine, amministrazione"></iframe></div><figcaption><a href="locandine-admin.html">Amministrazione</a></figcaption></figure>
+    </div>
+  </section>
+
+  <section>
+    <h2>Il tableau dei tavoli</h2><p>Ogni serata è una sala apparecchiata: tavoli numerati, segnaposto delle squadre.</p>
+    <div class="riga">
+      <figure><div class="cornice"><iframe src="../model-pick.html" title="Tableau, le tue serate"></iframe></div><figcaption><a href="../model-pick.html">Le tue serate</a></figcaption></figure>
+      <figure><div class="cornice"><iframe src="tableau-accesso.html" title="Tableau, accesso"></iframe></div><figcaption><a href="tableau-accesso.html">Accesso della regia</a></figcaption></figure>
+      <figure><div class="cornice"><iframe src="tableau-admin.html" title="Tableau, amministrazione"></iframe></div><figcaption><a href="tableau-admin.html">Amministrazione</a></figcaption></figure>
+    </div>
+  </section>
+
+  <section>
+    <h2>La mappa della metropolitana</h2><p>Ogni serata è una linea, le fasi sono le stazioni.</p>
+    <div class="riga">
+      <figure><div class="cornice"><iframe src="../challenger-metropolitana.html" title="Metropolitana, le tue serate"></iframe></div><figcaption><a href="../challenger-metropolitana.html">Le tue serate</a></figcaption></figure>
+      <figure><div class="cornice"><iframe src="metropolitana-accesso.html" title="Metropolitana, accesso"></iframe></div><figcaption><a href="metropolitana-accesso.html">Accesso della regia</a></figcaption></figure>
+      <figure><div class="cornice"><iframe src="metropolitana-admin.html" title="Metropolitana, amministrazione"></iframe></div><figcaption><a href="metropolitana-admin.html">Amministrazione</a></figcaption></figure>
+    </div>
+  </section>
+</main>
+</body>
+</html>

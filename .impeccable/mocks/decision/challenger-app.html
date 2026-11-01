@@ -1,0 +1,143 @@
+<!doctype html>
+<html lang="it">
+<head>
+<meta charset="utf-8">
+<title>Le tue serate</title>
+<link href="https://fonts.googleapis.com/css2?family=Nunito:wght@500;600;700;800&display=swap" rel="stylesheet">
+<style>
+:root{--ground:#f6efe6;--card:#ffffff;--ink:#2b2118;--soft:#6f6157;--line:#eadfd2;--tint:#efe5d8;--act:#e8590c;--act-press:#c94a07;--ok:#2f7a4b;--ok-bg:#e4f1e7;--prep:#8a6a2c;--prep-bg:#f5ead2}
+*{box-sizing:border-box;margin:0;padding:0}
+html,body{width:1440px;height:900px;overflow:hidden}
+body{background:var(--ground);color:var(--ink);font-family:"Nunito",system-ui,sans-serif;font-size:16px;line-height:1.5;-webkit-font-smoothing:antialiased}
+a{color:inherit}
+button{font:inherit;cursor:pointer;border:0}
+.nav{height:76px;display:flex;align-items:center;gap:8px;padding:0 48px}
+.brand{display:flex;align-items:center;gap:10px;font-weight:800;font-size:19px;margin-right:28px;text-decoration:none}
+.mark{width:34px;height:34px;border-radius:11px;background:var(--ink);color:var(--ground);display:grid;place-items:center;font-size:17px;font-weight:800}
+.nav-link{padding:9px 16px;border-radius:999px;font-weight:700;font-size:15px;text-decoration:none;color:var(--soft)}
+.nav-link:hover{background:var(--tint);color:var(--ink)}
+.nav-link.on{background:var(--act);color:#fff}
+.spacer{flex:1}
+.user{display:flex;align-items:center;gap:10px;font-weight:700;font-size:15px;padding:5px 14px 5px 5px;border-radius:999px;background:var(--card);border:1px solid var(--line)}
+.avatar{width:30px;height:30px;border-radius:50%;background:var(--prep-bg);color:var(--prep);display:grid;place-items:center;font-size:14px;font-weight:800}
+.out{margin-left:6px;padding:9px 16px;border-radius:999px;background:transparent;color:var(--ink);font-weight:700;font-size:15px;border:1px solid var(--line)}
+.out:hover{background:var(--card)}
+main{width:1104px;margin:0 auto;padding-top:36px}
+.head{display:flex;align-items:flex-end;justify-content:space-between;gap:32px;margin-bottom:32px}
+h1{font-size:44px;line-height:1.1;font-weight:800;letter-spacing:-.01em;margin-bottom:10px}
+.intro{font-size:18px;color:var(--soft);max-width:560px}
+.btn{display:inline-flex;align-items:center;gap:8px;height:48px;padding:0 24px;border-radius:999px;font-weight:800;font-size:16px;background:var(--act);color:#fff}
+.btn:hover{background:var(--act-press)}
+.btn:focus-visible,.ghost:focus-visible,.out:focus-visible{outline:3px solid var(--ink);outline-offset:2px}
+.btn .plus{font-size:22px;line-height:1;margin-top:-2px}
+.btn.sm{height:42px;padding:0 22px;font-size:15px}
+.grid{display:grid;grid-template-columns:1fr 1fr;gap:20px}
+.card{background:var(--card);border:1px solid var(--line);border-radius:24px;padding:26px 28px 22px;display:flex;flex-direction:column}
+.top{display:flex;justify-content:space-between;align-items:flex-start;gap:16px;margin-bottom:6px}
+h2{font-size:23px;line-height:1.25;font-weight:800}
+.state{flex:none;display:inline-flex;align-items:center;gap:7px;padding:5px 12px;border-radius:999px;font-size:14px;font-weight:700}
+.state::before{content:"";width:8px;height:8px;border-radius:50%;background:currentColor}
+.live{background:var(--ok-bg);color:var(--ok)}
+.prep{background:var(--prep-bg);color:var(--prep)}
+.arch{background:var(--tint);color:var(--soft)}
+.theme{color:var(--soft);font-weight:600;margin-bottom:18px}
+.facts{display:grid;grid-template-columns:auto 1fr;gap:6px 18px;background:var(--ground);border-radius:16px;padding:14px 18px;font-size:15px;margin-bottom:20px}
+.facts dt{color:var(--soft);font-weight:600}
+.facts dd{font-weight:700}
+.addr{font-family:inherit;font-weight:700;color:var(--ink)}
+.actions{display:flex;align-items:center;gap:8px;margin-top:auto}
+.ghost{height:42px;padding:0 18px;border-radius:999px;background:var(--card);color:var(--ink);font-weight:700;font-size:15px;border:1px solid var(--line)}
+.ghost:hover{background:var(--tint)}
+.ghost:disabled,.btn:disabled{background:var(--tint);color:#a99a8c;border-color:transparent;cursor:not-allowed}
+.small{margin-left:auto;font-size:14px;font-weight:600;color:var(--soft);text-underline-offset:3px}
+.small:hover{color:var(--ink)}
+.hint{font-size:13px;color:var(--soft);margin-top:10px}
+.newcard{border:1.5px dashed #d9c9b6;background:transparent;align-items:center;justify-content:center;text-align:center;gap:12px}
+.newcard p{color:var(--soft);max-width:300px}
+.newcard .circle{width:56px;height:56px;border-radius:50%;background:var(--act);color:#fff;font-size:30px;font-weight:700;display:grid;place-items:center}
+h3{font-size:22px;font-weight:800;margin:40px 0 14px}
+</style>
+</head>
+<body>
+<nav class="nav">
+  <a class="brand" href="#"><span class="mark">C</span>Cena con delitto</a>
+  <a class="nav-link on" href="#" aria-current="page">Le tue serate</a>
+  <a class="nav-link" href="#">Amministrazione</a>
+  <span class="spacer"></span>
+  <span class="user"><span class="avatar">M</span>Marta</span>
+  <button class="out">Esci</button>
+</nav>
+<main>
+  <div class="head">
+    <div>
+      <h1>Le tue serate</h1>
+      <p class="intro">Ogni serata ha il suo caso, le sue squadre e il suo indirizzo per entrare.</p>
+    </div>
+    <button class="btn"><span class="plus">+</span>Nuova serata</button>
+  </div>
+  <div class="grid">
+    <article class="card">
+      <div class="top"><h2>Villa Corvina, Halloween</h2><span class="state live">In corso</span></div>
+      <p class="theme">Tema Halloween classico</p>
+      <dl class="facts">
+        <dt>Squadre</dt><dd>4 squadre</dd>
+        <dt>Indirizzo</dt><dd class="addr">/s/villa-corvina-halloween</dd>
+        <dt>Modifica</dt><dd>Oggi</dd>
+      </dl>
+      <div class="actions">
+        <button class="btn sm">Apri</button>
+        <button class="ghost">Duplica</button>
+        <button class="ghost" disabled title="Chiudi la serata prima di archiviarla">Archivia</button>
+        <a class="small" href="#">Indirizzo ed eliminazione</a>
+      </div>
+      <p class="hint">Puoi archiviarla quando la serata è finita.</p>
+    </article>
+    <article class="card">
+      <div class="top"><h2>Delitto sul treno delle 21.40</h2><span class="state prep">In preparazione</span></div>
+      <p class="theme">Tema Delitto in viaggio</p>
+      <dl class="facts">
+        <dt>Squadre</dt><dd>3 squadre</dd>
+        <dt>Indirizzo</dt><dd class="addr">/s/delitto-sul-treno</dd>
+        <dt>Modifica</dt><dd>Ieri</dd>
+      </dl>
+      <div class="actions">
+        <button class="btn sm">Apri</button>
+        <button class="ghost">Duplica</button>
+        <button class="ghost">Archivia</button>
+        <a class="small" href="#">Indirizzo ed eliminazione</a>
+      </div>
+    </article>
+    <article class="card">
+      <div class="top"><h2>Natale al castello</h2><span class="state prep">In preparazione</span></div>
+      <p class="theme">Tema Natale con delitto</p>
+      <dl class="facts">
+        <dt>Squadre</dt><dd>Nessuna squadra</dd>
+        <dt>Indirizzo</dt><dd class="addr">/s/natale-al-castello</dd>
+        <dt>Modifica</dt><dd>28 ottobre</dd>
+      </dl>
+      <div class="actions">
+        <button class="btn sm">Apri</button>
+        <button class="ghost">Duplica</button>
+        <button class="ghost">Archivia</button>
+        <a class="small" href="#">Indirizzo ed eliminazione</a>
+      </div>
+    </article>
+    <article class="card newcard">
+      <span class="circle" aria-hidden="true">+</span>
+      <h2>Prepara un altro caso</h2>
+      <p>Parti da zero o duplica una serata che ti è piaciuta.</p>
+    </article>
+  </div>
+  <h3>Archiviate</h3>
+  <article class="card">
+    <div class="top"><h2>Cena del commissario, prova generale</h2><span class="state arch">Archiviata</span></div>
+    <p class="theme">Tema Noir anni '40</p>
+    <div class="actions">
+      <button class="ghost">Consulta</button>
+      <button class="ghost">Duplica</button>
+      <button class="ghost">Riattiva</button>
+    </div>
+  </article>
+</main>
+</body>
+</html>

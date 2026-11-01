@@ -1,0 +1,119 @@
+<!doctype html>
+<html lang="it">
+<head>
+<meta charset="utf-8">
+<title>Le tue serate</title>
+<link href="https://fonts.googleapis.com/css2?family=Archivo:wdth,wght@62..125,400..800&family=Courier+Prime:wght@400;700&display=swap" rel="stylesheet">
+<style>
+:root{--ink:#141414;--paper:#e9e7e1;--paper2:#dfddd6;--paper3:#f2f1ec;--rule:#141414;--soft:#5a5853;--cyan:#1aa0c8;--pen:#2747c9}
+*{box-sizing:border-box;margin:0;padding:0}
+html,body{width:1440px;height:900px;overflow:hidden}
+body{background:var(--paper);color:var(--ink);font-family:Archivo,sans-serif;font-size:14px;line-height:1.4}
+a{color:inherit}
+.mono{font-family:"Courier Prime",monospace}
+header{display:flex;align-items:center;height:56px;padding:0 48px;border-bottom:1px solid var(--rule);gap:40px}
+.brand{display:flex;align-items:center;gap:10px;font-weight:800;font-stretch:75%;font-size:20px;letter-spacing:-.01em;text-decoration:none}
+.brand i{display:block;width:22px;height:22px;border:2px solid var(--ink);border-radius:50%;position:relative}
+.brand i:after{content:"";position:absolute;left:4px;top:4px;width:10px;height:10px;background:var(--ink);border-radius:50%}
+nav{display:flex;gap:4px;flex:1}
+nav a{text-decoration:none;padding:8px 14px;border-radius:999px;font-weight:500}
+nav a[aria-current]{background:var(--ink);color:var(--paper)}
+nav a:not([aria-current]):hover{background:var(--paper2)}
+.user{display:flex;align-items:center;gap:14px}
+.user b{font-weight:600}
+button,.btn{font:inherit;font-weight:600;font-size:13px;border-radius:999px;padding:7px 16px;border:1px solid var(--ink);background:transparent;color:var(--ink);cursor:pointer;text-decoration:none;display:inline-block}
+.btn-p{background:var(--ink);color:var(--paper3)}
+.btn-big{font-size:15px;padding:11px 24px}
+.intro{display:flex;align-items:flex-end;justify-content:space-between;padding:32px 48px 26px}
+h1{font-weight:800;font-stretch:70%;font-size:64px;line-height:.95;letter-spacing:-.02em}
+.intro p{margin-top:10px;font-size:16px;color:var(--soft)}
+.div{display:flex;align-items:baseline;gap:16px;margin:0 48px;padding:8px 0 7px;border-top:3px solid var(--cyan);border-bottom:1px solid var(--cyan)}
+h2{font-weight:700;font-stretch:80%;font-size:19px}
+.div span{font-size:13px;color:var(--soft)}
+.grid{display:grid;grid-template-columns:repeat(4,1fr);margin:0 48px;border-left:1px solid var(--rule)}
+.cell{position:relative;border-right:1px solid var(--rule);border-bottom:1px solid var(--rule);padding:14px 16px 14px;border-radius:2px;background:var(--paper)}
+.cell.sel{background:var(--paper3)}
+.top{display:flex;justify-content:space-between;align-items:flex-start}
+.code{font-family:"Courier Prime",monospace;font-weight:700;font-size:26px;line-height:1;position:relative}
+.stamp{width:46px;height:54px;padding:4px;border:1px dashed var(--ink);border-radius:2px;background:var(--paper3)}
+.stamp svg{display:block;width:36px;height:44px}
+h3{font-weight:700;font-stretch:78%;font-size:22px;line-height:1.05;margin:10px 0 10px;position:relative;max-width:96%}
+dl{display:grid;grid-template-columns:auto 1fr;gap:2px 10px;font-size:12px}
+dt{color:var(--soft)}dd{font-weight:500}
+.addr{font-family:"Courier Prime",monospace;font-size:12px;margin:8px 0 12px;padding:5px 0;border-top:1px solid var(--paper2);border-bottom:1px solid var(--paper2);white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
+.sel .addr{border-color:#cfccc4}
+.acts{display:flex;gap:6px;flex-wrap:wrap;align-items:center}
+.small{display:inline-block;margin-top:9px;font-size:12px;color:var(--soft)}
+.state{display:inline-flex;align-items:center;gap:6px}
+.dot{width:8px;height:8px;border-radius:50%;background:var(--ink)}
+.dot.o{background:transparent;border:1.5px solid var(--ink)}
+.pen{position:absolute;pointer-events:none;overflow:visible}
+.empty{display:flex;flex-direction:column;justify-content:center;align-items:flex-start;gap:12px;background:var(--paper2);color:var(--soft)}
+.empty p{font-size:13px;max-width:240px}
+.ghost{background:var(--paper2)}
+.ghost .code{color:#a9a69f}
+.arch h3,.arch .code{color:var(--soft)}
+.sec2{margin-top:22px}
+</style>
+</head>
+<body>
+<header>
+  <a class="brand" href="#"><i></i>Cena con delitto</a>
+  <nav aria-label="Principale"><a href="#" aria-current="page">Le tue serate</a><a href="#">Amministrazione</a></nav>
+  <div class="user"><span>Accesso come <b>Marta</b></span><button>Esci</button></div>
+</header>
+
+<section class="intro">
+  <div><h1>Le tue serate</h1><p>Ogni serata ha il suo caso, le sue squadre e il suo indirizzo per entrare.</p></div>
+  <button class="btn-p btn-big">Nuova serata</button>
+</section>
+
+<div class="div"><h2>In corso e in preparazione</h2><span>3 serate</span></div>
+<div class="grid">
+  <article class="cell sel">
+    <svg class="pen" style="left:6px;top:4px;width:72px;height:44px" viewBox="0 0 72 44"><path d="M40 5C18 2 4 10 5 22c1 13 22 19 42 16 17-3 23-12 19-21-4-9-17-13-33-12-6 1-11 3-14 6" fill="none" stroke="#2747c9" stroke-width="2" stroke-linecap="round"/></svg>
+    <div class="top"><span class="code">A-01</span><span class="stamp"><svg viewBox="0 0 36 44"><rect x="16" y="6" width="4" height="7" fill="#141414"/><ellipse cx="18" cy="26" rx="15" ry="13" fill="#141414"/><path d="M10 22l4 4h-6zM26 22l2 4h-6zM10 32h16l-3 3-2-3-3 3-3-3-2 3z" fill="#f2f1ec"/></svg></span></div>
+    <h3>Villa Corvina, Halloween</h3>
+    <dl><dt>Tema</dt><dd>Halloween classico</dd><dt>Stato</dt><dd class="state"><span class="dot"></span>In corso</dd><dt>Squadre</dt><dd>4 squadre</dd><dt>Modifica</dt><dd>oggi</dd></dl>
+    <div class="addr">cenacondelitto.it/s/villa-corvina-halloween</div>
+    <div class="acts"><button class="btn-p">Apri</button><button>Duplica</button><button>Archivia</button></div>
+    <a class="small" href="#">Indirizzo ed eliminazione</a>
+  </article>
+  <article class="cell">
+    <div class="top"><span class="code">A-02</span><span class="stamp"><svg viewBox="0 0 36 44"><rect x="4" y="10" width="28" height="20" rx="2" fill="#141414"/><rect x="8" y="14" width="8" height="6" fill="#f2f1ec"/><rect x="20" y="14" width="8" height="6" fill="#f2f1ec"/><circle cx="11" cy="34" r="4" fill="#141414"/><circle cx="25" cy="34" r="4" fill="#141414"/><rect x="2" y="39" width="32" height="2" fill="#141414"/></svg></span></div>
+    <h3>Delitto sul treno delle 21.40</h3>
+    <dl><dt>Tema</dt><dd>Delitto in viaggio</dd><dt>Stato</dt><dd class="state"><span class="dot o"></span>In preparazione</dd><dt>Squadre</dt><dd>3 squadre</dd><dt>Modifica</dt><dd>ieri</dd></dl>
+    <div class="addr">cenacondelitto.it/s/delitto-sul-treno</div>
+    <div class="acts"><button class="btn-p">Apri</button><button>Duplica</button><button>Archivia</button></div>
+    <a class="small" href="#">Indirizzo ed eliminazione</a>
+  </article>
+  <article class="cell">
+    <div class="top"><span class="code">A-03</span><span class="stamp"><svg viewBox="0 0 36 44"><path d="M18 3l7 10h-4l8 11h-5l9 12H3l9-12H7l8-11h-4z" fill="#141414"/><rect x="15" y="36" width="6" height="5" fill="#141414"/></svg></span></div>
+    <h3>Natale al castello</h3>
+    <dl><dt>Tema</dt><dd>Natale con delitto</dd><dt>Stato</dt><dd class="state"><span class="dot o"></span>In preparazione</dd><dt>Squadre</dt><dd>nessuna squadra</dd><dt>Modifica</dt><dd>il 28 ottobre</dd></dl>
+    <div class="addr">cenacondelitto.it/s/natale-al-castello</div>
+    <div class="acts"><button class="btn-p">Apri</button><button>Duplica</button><button>Archivia</button></div>
+    <a class="small" href="#">Indirizzo ed eliminazione</a>
+  </article>
+  <article class="cell empty">
+    <span class="code" style="color:#a9a69f">A-04</span>
+    <p>Spazio libero. Parti da zero o duplica una serata che hai già preparato.</p>
+    <button>Nuova serata</button>
+  </article>
+</div>
+
+<div class="div sec2"><h2>Archiviate</h2><span>1 serata, consultabile e riattivabile</span></div>
+<div class="grid">
+  <article class="cell arch">
+    <div class="top"><span class="code">B-01</span><span class="stamp"><svg viewBox="0 0 36 44"><path d="M10 12h16l2 12H8z" fill="#141414"/><rect x="2" y="24" width="32" height="4" rx="2" fill="#141414"/><rect x="9" y="20" width="18" height="2" fill="#f2f1ec"/><path d="M4 36h28M8 40h20" stroke="#141414" stroke-width="2"/></svg></span></div>
+    <h3>Cena del commissario, prova generale
+      <svg class="pen" style="left:-4px;top:4px;width:300px;height:40px" viewBox="0 0 300 40"><path d="M2 14C60 11 140 13 236 9M4 33c40-2 70-1 112-3" fill="none" stroke="#2747c9" stroke-width="2" stroke-linecap="round"/></svg></h3>
+    <dl><dt>Tema</dt><dd>Noir anni '40</dd><dt>Stato</dt><dd>Archiviata</dd></dl>
+    <div class="acts" style="margin-top:12px"><button class="btn-p">Consulta</button><button>Duplica</button><button>Riattiva</button></div>
+  </article>
+  <div class="cell ghost"><span class="code">B-02</span></div>
+  <div class="cell ghost"><span class="code">B-03</span></div>
+  <div class="cell ghost"><span class="code">B-04</span></div>
+</div>
+</body>
+</html>
