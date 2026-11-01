@@ -1,6 +1,6 @@
 import { NetlifyDB } from "@netlify/database-dev";
 import { afterAll, beforeAll, describe, expect, test } from "vitest";
-import { apriDb, Db, migra } from "../base.ts";
+import { apriDb, Db, hashPassword, migra } from "../base.ts";
 import { rispostaFile } from "../file.ts";
 import { combacia } from "../regia.ts";
 import { gestisci } from "../router.ts";
@@ -23,10 +23,15 @@ afterAll(async () => {
   await pg.stop();
 });
 
-async function chiama(metodo: string, path: string, body?: unknown, cookie?: string) {
+/** La regia lavora sulla serata scelta: le sue chiamate portano x-serata (vedi utente() in accesso.ts). */
+let serataRegia = 0;
+
+async function chiama(metodo: string, path: string, body?: unknown, cookie?: string, serata?: number) {
   const headers: Record<string, string> = {};
   if (body !== undefined) headers["content-type"] = "application/json";
   if (cookie) headers.cookie = cookie;
+  const sid = serata ?? (cookie && cookie === regia ? serataRegia : 0);
+  if (sid) headers["x-serata"] = String(sid);
   const res = await gestisci(new Request(`https://cena.test${path}`, { method: metodo, headers, body: body === undefined ? undefined : JSON.stringify(body) }), db);
   const set = res.headers.get("set-cookie");
   return { stato: res.status, dati: (await res.json()) as any, cookie: set ? set.split(";")[0] : undefined };
@@ -52,6 +57,11 @@ describe("primo avvio e accesso", () => {
     const di_nuovo = await chiama("POST", "/api/avvio", { codice: "codice-avvio", username: "altro", password: "una-password-lunga" });
     expect(di_nuovo.stato).toBe(409);
     expect((await chiama("GET", "/api/io", undefined, regia)).dati).toMatchObject({ ruolo: "regia", username: "regia" });
+    const serate = (await chiama("GET", "/api/regia/serate", undefined, regia)).dati.serate;
+    expect(serate).toMatchObject([{ titolo: "La notte di Villa Corvina", slug: "la-notte-di-villa-corvina", archiviata: false }]);
+    // senza serata scelta la regia non può lavorare
+    expect((await chiama("GET", "/api/regia", undefined, regia)).stato).toBe(400);
+    serataRegia = serate[0].id;
   });
 
   test("senza sessione la regia è chiusa", async () => {
@@ -544,4 +554,86 @@ test("confronto delle risposte", () => {
   expect(combacia("la Governante!", "Governante")).toBe(true);
   expect(combacia("Il maggiordomo", "La governante")).toBe(false);
   expect(combacia("", "x")).toBe(false);
+});
+
+describe("2.0: più regie e più serate", () => {
+  test("il passaggio dalla 1.1 tiene la regia, le squadre e i dati", async () => {
+    const { MIGRAZIONI } = await import("../migrazioni.ts");
+    const altro = new NetlifyDB();
+    const d2 = apriDb(await altro.start());
+    // Database fermo alla 1.1: tutte le migrazioni prima della 2.0.
+    const fino = MIGRAZIONI.findIndex((m) => m.nome === "20261101180000_utenti_e_serate");
+    await d2.q("CREATE TABLE migrazione (nome TEXT PRIMARY KEY, applicata TIMESTAMPTZ NOT NULL DEFAULT NOW())");
+    for (const m of MIGRAZIONI.slice(0, fino)) {
+      await d2.q(m.sql);
+      await d2.q("INSERT INTO migrazione (nome) VALUES ($1)", [m.nome]);
+    }
+    const s = await d2.uno<{ id: number }>("INSERT INTO serata (titolo, tema) VALUES ('Villa Corvina, Halloween', 'noir') RETURNING id");
+    const hash = await hashPassword("password-della-regia");
+    await d2.q("INSERT INTO account (serata_id, ruolo, username, password_hash) VALUES ($1, 'regia', 'organizza', $2)", [s!.id, hash]);
+    const sq = await d2.uno<{ id: number }>("INSERT INTO squadra (serata_id, nome) VALUES ($1, 'Gufi') RETURNING id", [s!.id]);
+    const hashSq = await hashPassword("gufo-notte-12");
+    await d2.q("INSERT INTO account (serata_id, ruolo, username, password_hash, squadra_id) VALUES ($1, 'squadra', 'gufi', $2, $3)", [s!.id, hashSq, sq!.id]);
+    await d2.q("INSERT INTO prova (serata_id, numero, titolo) VALUES ($1, 1, 'Prova vecchia')", [s!.id]);
+
+    await migra(d2);
+    const chiama2 = async (metodo: string, path: string, body?: unknown, cookie?: string, serata?: number) => {
+      const headers: Record<string, string> = {};
+      if (body !== undefined) headers["content-type"] = "application/json";
+      if (cookie) headers.cookie = cookie;
+      if (serata) headers["x-serata"] = String(serata);
+      const res = await gestisci(new Request(`https://cena.test${path}`, { method: metodo, headers, body: body === undefined ? undefined : JSON.stringify(body) }), d2);
+      const set = res.headers.get("set-cookie");
+      return { stato: res.status, dati: (await res.json()) as any, cookie: set ? set.split(";")[0] : undefined };
+    };
+
+    // l'organizzatrice è un utente regia, non amministratore, proprietario della sua serata
+    const u = await d2.uno<{ id: number; admin: boolean; password_hash: string }>("SELECT id, admin, password_hash FROM utente WHERE username = 'organizza'");
+    expect(u).toMatchObject({ admin: false, password_hash: hash });
+    expect(await d2.uno("SELECT proprietario_id, slug, tema FROM serata WHERE id = $1", [s!.id])).toEqual({ proprietario_id: u!.id, slug: "villa-corvina-halloween", tema: "noir" });
+    expect((await d2.uno<{ attivo: boolean }>("SELECT attivo FROM account WHERE username = 'organizza'"))!.attivo).toBe(false);
+    // entra con le credenziali di sempre e ritrova la sua serata
+    const rg = await chiama2("POST", "/api/accesso", { username: "organizza", password: "password-della-regia" });
+    expect(rg.dati).toEqual({ ruolo: "regia", admin: false });
+    expect((await chiama2("GET", "/api/regia/serate", undefined, rg.cookie)).dati.serate.map((x: any) => x.id)).toEqual([s!.id]);
+    expect((await chiama2("GET", "/api/regia", undefined, rg.cookie, s!.id)).dati.prove).toHaveLength(1);
+    // la squadra entra da /accesso come prima
+    expect((await chiama2("POST", "/api/accesso", { username: "gufi", password: "gufo-notte-12" })).dati).toEqual({ ruolo: "squadra" });
+    // nessun amministratore ancora: il primo avvio resta chiuso perché esiste già un utente
+    expect((await chiama2("GET", "/api/avvio")).dati).toEqual({ configurato: true, tema: "noir" });
+    await d2.fine?.();
+    await altro.stop();
+  }, 60_000);
+
+  test("una regia non vede né tocca le serate di un'altra", async () => {
+    const hash = await hashPassword("password-di-marta");
+    const m = await db.uno<{ id: number }>("INSERT INTO utente (username, password_hash) VALUES ('marta', $1) RETURNING id", [hash]);
+    const sM = await db.uno<{ id: number }>("INSERT INTO serata (titolo, proprietario_id, slug) VALUES ('Delitto sul treno', $1, 'delitto-sul-treno') RETURNING id", [m!.id]);
+    const marta = (await chiama("POST", "/api/accesso", { username: "marta", password: "password-di-marta" })).cookie!;
+
+    expect((await chiama("GET", "/api/regia/serate", undefined, marta)).dati.serate.map((x: any) => x.titolo)).toEqual(["Delitto sul treno"]);
+    expect((await chiama("GET", "/api/regia", undefined, marta, sM!.id)).stato).toBe(200);
+    // la serata della prima regia, per Marta, non esiste
+    expect((await chiama("GET", "/api/regia", undefined, marta, serataRegia)).stato).toBe(404);
+    expect((await chiama("PUT", "/api/regia/tema", { tema: "noir" }, marta, serataRegia)).stato).toBe(404);
+    expect((await chiama("POST", "/api/regia/squadre", { nome: "Intrusi" }, marta, serataRegia)).stato).toBe(404);
+    expect((await chiama("GET", `/api/file/s${serataRegia}-qualcosa`, undefined, marta)).stato).toBe(404);
+    // e viceversa
+    expect((await chiama("GET", "/api/regia", undefined, regia, sM!.id)).stato).toBe(404);
+
+    // stesso nome di squadra in due serate: lo slug sceglie la serata, senza slug vale la serata storica
+    const c = await chiama("POST", "/api/regia/squadre", { nome: "Corvi" }, marta, sM!.id);
+    expect(c.stato).toBe(201);
+    expect(c.dati.username).toBe(credCorvi.username);
+    const suo = await chiama("POST", "/api/accesso", { username: c.dati.username, password: c.dati.password, slug: "delitto-sul-treno" });
+    expect(suo.dati).toEqual({ ruolo: "squadra" });
+    expect((await chiama("GET", "/api/squadra/stato", undefined, suo.cookie)).dati.serata.titolo).toBe("Delitto sul treno");
+    expect((await chiama("POST", "/api/accesso", { username: c.dati.username, password: c.dati.password })).stato).toBe(401);
+
+    // serata archiviata: le squadre non entrano e la sessione aperta si ferma
+    await db.q("UPDATE serata SET archiviata = TRUE WHERE id = $1", [sM!.id]);
+    expect((await chiama("POST", "/api/accesso", { username: c.dati.username, password: c.dati.password, slug: "delitto-sul-treno" })).stato).toBe(403);
+    expect((await chiama("GET", "/api/squadra/stato", undefined, suo.cookie)).stato).toBe(403);
+    await db.q("UPDATE serata SET archiviata = FALSE WHERE id = $1", [sM!.id]);
+  });
 });

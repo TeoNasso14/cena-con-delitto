@@ -31,7 +31,9 @@ export async function carica(req: Request, db: Db) {
 
 /** Serve un allegato solo a chi può vederlo. */
 export async function servi(req: Request, db: Db, key: string) {
-  const u = await utente(req, db, ["regia", "squadra", "schermo"]);
+  // La serata sta nella chiave (s<id>-...): un <img> non porta l'intestazione x-serata della regia.
+  const daChiave = Number(/^s(\d+)-/.exec(key)?.[1]);
+  const u = await utente(req, db, ["regia", "squadra", "schermo"], Number.isInteger(daChiave) ? daChiave : undefined);
   if (!key.startsWith(`s${u.serata_id}-`)) throw new Errore(404, "File non trovato.");
 
   if (u.ruolo === "squadra") {

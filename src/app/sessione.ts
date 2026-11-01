@@ -28,6 +28,7 @@ export class Sessione {
 
   async esci() {
     await this.api.post('/api/uscita').catch(() => undefined);
+    this.api.scegliSerata(null);
     this.io.set(null);
     this.caricato = true;
     await this.router.navigateByUrl('/accesso');

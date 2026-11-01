@@ -118,9 +118,10 @@ export async function salvaFasi(req: Request, db: Db) {
 
 /* ---------- Squadre e account ---------- */
 
-async function usernameLibero(db: Db, base: string) {
+/** Nomi utente di squadre e proiettore: unici dentro la serata. */
+async function usernameLibero(db: Db, base: string, serataId: number) {
   let nome = base;
-  for (let i = 2; await db.uno("SELECT id FROM account WHERE username = $1", [nome]); i++) nome = `${base}-${i}`;
+  for (let i = 2; await db.uno("SELECT id FROM account WHERE username = $1 AND serata_id = $2", [nome, serataId]); i++) nome = `${base}-${i}`;
   return nome;
 }
 
@@ -139,7 +140,7 @@ export async function creaSquadra(req: Request, db: Db) {
   const out = await db.transazione(async (t) => {
     const doppia = await t.uno("SELECT id FROM squadra WHERE serata_id = $1 AND lower(nome) = lower($2)", [u.serata_id, nome]);
     if (doppia) throw new Errore(409, "Esiste già una squadra con questo nome.");
-    const username = await usernameLibero(t, slug(b.username || nome));
+    const username = await usernameLibero(t, slug(b.username || nome), u.serata_id);
     const sq = await t.uno<{ id: number }>(
       "INSERT INTO squadra (serata_id, nome, colore) VALUES ($1, $2, $3) RETURNING id",
       [u.serata_id, nome, colore(b.colore)],
@@ -188,7 +189,7 @@ export async function nuovaPassword(req: Request, db: Db, accountId: number) {
 export async function creaSchermo(req: Request, db: Db) {
   const u = await regia(req, db);
   const password = passwordLeggibile();
-  const username = await usernameLibero(db, "proiettore");
+  const username = await usernameLibero(db, "proiettore", u.serata_id);
   const r = await db.uno<{ id: number }>(
     "INSERT INTO account (serata_id, ruolo, username, password_hash) VALUES ($1, 'schermo', $2, $3) RETURNING id",
     [u.serata_id, username, await hashPassword(password)],

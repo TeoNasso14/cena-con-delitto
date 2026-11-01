@@ -367,4 +367,70 @@ SELECT s.id, f.testo, f.ordine FROM serata s CROSS JOIN (VALUES
 WHERE NOT EXISTS (SELECT 1 FROM sussurro x WHERE x.serata_id = s.id);
 `,
   },
+  {
+    // 2.0: più regie e più serate. Le persone (amministrazione e regia) stanno in utente; squadre e proiettore restano in account,
+    // con il nome utente unico dentro la serata. L'account regia della 1.x diventa un utente regia proprietario della sua serata
+    // e resta in account, disattivato. L'amministratore nasce dopo, con SETUP_CODE.
+    nome: "20261101180000_utenti_e_serate",
+    sql: String.raw`
+CREATE TABLE IF NOT EXISTS utente (
+  id             SERIAL PRIMARY KEY,
+  username       TEXT NOT NULL UNIQUE,
+  password_hash  TEXT NOT NULL,
+  nome           TEXT NOT NULL DEFAULT '',
+  email          TEXT,
+  admin          BOOLEAN NOT NULL DEFAULT FALSE,
+  stato          TEXT NOT NULL DEFAULT 'attivo' CHECK (stato IN ('attivo', 'sospeso')),
+  versione_token INTEGER NOT NULL DEFAULT 1,
+  creato         TIMESTAMPTZ NOT NULL DEFAULT NOW(),
+  ultimo_accesso TIMESTAMPTZ
+);
+
+-- Link monouso: invito a diventare regia, o nuova password per un utente che l'ha persa. Del token si salva solo l'hash.
+CREATE TABLE IF NOT EXISTS invito (
+  id          SERIAL PRIMARY KEY,
+  token_hash  TEXT NOT NULL UNIQUE,
+  tipo        TEXT NOT NULL DEFAULT 'regia' CHECK (tipo IN ('regia', 'password')),
+  nome        TEXT NOT NULL DEFAULT '',
+  email       TEXT,
+  utente_id   INTEGER REFERENCES utente(id) ON DELETE CASCADE,
+  creato_da   INTEGER REFERENCES utente(id) ON DELETE SET NULL,
+  creato      TIMESTAMPTZ NOT NULL DEFAULT NOW(),
+  scade       TIMESTAMPTZ NOT NULL,
+  usato       TIMESTAMPTZ,
+  revocato    TIMESTAMPTZ
+);
+
+ALTER TABLE serata ADD COLUMN IF NOT EXISTS proprietario_id INTEGER REFERENCES utente(id) ON DELETE SET NULL;
+ALTER TABLE serata ADD COLUMN IF NOT EXISTS slug TEXT;
+ALTER TABLE serata ADD COLUMN IF NOT EXISTS archiviata BOOLEAN NOT NULL DEFAULT FALSE;
+ALTER TABLE serata ADD COLUMN IF NOT EXISTS aggiornata TIMESTAMPTZ NOT NULL DEFAULT NOW();
+CREATE UNIQUE INDEX IF NOT EXISTS serata_slug ON serata (slug);
+
+ALTER TABLE account ADD COLUMN IF NOT EXISTS attivo BOOLEAN NOT NULL DEFAULT TRUE;
+ALTER TABLE account DROP CONSTRAINT IF EXISTS account_username_key;
+CREATE UNIQUE INDEX IF NOT EXISTS account_serata_username ON account (serata_id, username);
+ALTER TABLE tentativo_login ADD COLUMN IF NOT EXISTS serata_id INTEGER;
+
+-- L'account regia della 1.x diventa un utente con lo stesso nome e la stessa password (la sessione aperta va rifatta).
+INSERT INTO utente (username, password_hash, creato, ultimo_accesso)
+SELECT username, password_hash, creato, ultimo_accesso FROM account WHERE ruolo = 'regia'
+ON CONFLICT (username) DO NOTHING;
+UPDATE serata s SET proprietario_id = u.id
+FROM account a JOIN utente u ON u.username = a.username
+WHERE a.ruolo = 'regia' AND a.serata_id = s.id AND s.proprietario_id IS NULL;
+UPDATE account SET attivo = FALSE WHERE ruolo = 'regia';
+
+-- Indirizzo pubblico dal titolo, senza accenti; a parità di titolo si aggiunge l'id.
+UPDATE serata SET slug = x.slug FROM (
+  SELECT id, base || CASE WHEN ROW_NUMBER() OVER (PARTITION BY base ORDER BY id) > 1 THEN '-' || id ELSE '' END AS slug
+  FROM (
+    SELECT id, COALESCE(NULLIF(LEFT(TRIM(BOTH '-' FROM REGEXP_REPLACE(
+      LOWER(TRANSLATE(titolo, 'àáâäèéêëìíîïòóôöùúûüçÀÁÂÄÈÉÊËÌÍÎÏÒÓÔÖÙÚÛÜÇ', 'aaaaeeeeiiiioooouuuucaaaaeeeeiiiioooouuuuc')),
+      '[^a-z0-9]+', '-', 'g')), 40), ''), 'serata') AS base
+    FROM serata WHERE slug IS NULL
+  ) b
+) x WHERE serata.id = x.id;
+`,
+  },
 ];

@@ -52,8 +52,22 @@ export class RegiaStato {
   }
   arresta() { this.ferma?.(); }
 
+  /** Senza una serata scelta (o con una che non è più nostra) apre la prima non archiviata. */
+  private async assicuraSerata() {
+    if (this.api.serata()) return;
+    const { serate } = await this.api.get<{ serate: Array<{ id: number; archiviata: boolean }> }>('/api/regia/serate');
+    this.api.scegliSerata((serate.find((s) => !s.archiviata) ?? serate[0])?.id ?? null);
+  }
+
   async aggiorna() {
-    const t = await this.api.get<Tutto>('/api/regia');
+    await this.assicuraSerata();
+    let t: Tutto;
+    try {
+      t = await this.api.get<Tutto>('/api/regia');
+    } catch (e) {
+      if (e instanceof ErroreApi && (e.codice === 'serata_non_trovata' || e.codice === 'serata_mancante')) this.api.scegliSerata(null);
+      throw e;
+    }
     this.t.set(t);
     applicaTema(t.serata.tema);
   }

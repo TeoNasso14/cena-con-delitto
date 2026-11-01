@@ -98,7 +98,7 @@ export async function migra(db: Db) {
 
 /** Segnala ai telefoni e al proiettore che qualcosa è cambiato. */
 export async function tocca(db: Db, serataId: number) {
-  await db.q("UPDATE serata SET versione = versione + 1 WHERE id = $1", [serataId]);
+  await db.q("UPDATE serata SET versione = versione + 1, aggiornata = NOW() WHERE id = $1", [serataId]);
 }
 
 /* ---------- Errori e risposte ---------- */
@@ -181,10 +181,19 @@ export function slug(t: string): string {
     .slice(0, 40) || "utente";
 }
 
+/** Indirizzo pubblico di una serata (/s/<slug>), dal titolo e libero: a parità si aggiunge un numero. */
+export async function slugSerata(db: Db, titolo: string, tranne?: number): Promise<string> {
+  const base = slug(titolo) === "utente" ? "serata" : slug(titolo);
+  let s = base;
+  for (let i = 2; await db.uno("SELECT id FROM serata WHERE slug = $1 AND id IS DISTINCT FROM $2", [s, tranne ?? null]); i++) s = `${base}-${i}`;
+  return s;
+}
+
 /* ---------- Sessioni ---------- */
 
 export type Ruolo = "regia" | "squadra" | "schermo";
-export interface Sessione { a: number; r: Ruolo; v: number; e: number }
+/** k: "u" per un utente (regia, amministrazione, tabella utente); assente per squadre e proiettore (tabella account). */
+export interface Sessione { k?: "u"; a: number; r: Ruolo; v: number; e: number }
 
 const COOKIE = "cena_sessione";
 const DURATA_MS = 1000 * 60 * 60 * 20;

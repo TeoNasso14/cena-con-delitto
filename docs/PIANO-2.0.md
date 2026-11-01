@@ -46,7 +46,7 @@ Parte da `docs/ROADMAP.md` (architettura e decisioni del 1 novembre 2026) e dal 
 - `/accesso` senza slug resta valido per la serata di Halloween finché serve: accetta squadre e proiettore di quella serata e manda la regia a `/regia/accedi`.
 
 ## Passi, uno per commit
-1. **Schema e sessioni**: tabelle `utente` e `invito`, colonne nuove di `serata`, vincolo per serata su `account`, migrazione dell'account regia; sessioni dei due tipi; `x-serata` e controllo del proprietario in tutte le API della regia e nei file. La regia di oggi funziona sulla serata scelta.
+1. **Schema e sessioni**. Fatto: tabelle `utente` e `invito`, colonne nuove di `serata`, vincolo per serata su `account`, migrazione dell'account regia; sessioni dei due tipi; `x-serata` e controllo del proprietario in tutte le API della regia e nei file. La regia di oggi funziona sulla serata scelta.
 2. **Le mie serate**: elenco, crea, duplica (con allegati), archivia, riattiva, elimina, slug.
 3. **Amministrazione e inviti**: primo amministratore con `SETUP_CODE`, `/admin`, inviti, sospensione, password dimenticata.
 4. **Accesso per serata**: `/s/<slug>` a tema, accessi di squadre e proiettore dentro la serata, serate archiviate chiuse, compatibilità di `/accesso`.

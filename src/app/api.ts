@@ -10,16 +10,49 @@ export type Ruolo = 'regia' | 'squadra' | 'schermo';
 export interface Io {
   ruolo: Ruolo;
   username: string;
+  admin?: boolean;
   squadra: { nome: string; colore: string } | null;
+}
+
+/** Chiave della serata aperta dalla regia: per scheda, così due schede possono stare su due serate. */
+const SERATA = 'cena-serata';
+
+function serataIniziale(): number | null {
+  // Il proiettore aperto dalla regia in un'altra scheda riceve la serata nell'indirizzo (?serata=).
+  const daIndirizzo = Number(new URLSearchParams(location.search).get('serata'));
+  if (Number.isInteger(daIndirizzo) && daIndirizzo > 0) return daIndirizzo;
+  try {
+    const n = Number(sessionStorage.getItem(SERATA));
+    return Number.isInteger(n) && n > 0 ? n : null;
+  } catch {
+    return null;
+  }
 }
 
 @Injectable({ providedIn: 'root' })
 export class Api {
   /** Diventa true quando una chiamata riceve 401: le pagine riportano all'accesso. */
   readonly sessioneScaduta = signal(false);
+  /** La serata su cui lavora la regia: va al server come x-serata. Squadre e proiettore non ne hanno bisogno. */
+  readonly serata = signal<number | null>(serataIniziale());
+
+  scegliSerata(id: number | null) {
+    this.serata.set(id);
+    try {
+      if (id) sessionStorage.setItem(SERATA, String(id));
+      else sessionStorage.removeItem(SERATA);
+    } catch {
+      // Memoria della scheda bloccata: la scelta vale finché la pagina resta aperta.
+    }
+  }
+
+  private intestazioni(): Record<string, string> {
+    const s = this.serata();
+    return s ? { 'x-serata': String(s) } : {};
+  }
 
   async chiama<T>(metodo: string, path: string, corpo?: unknown): Promise<T> {
-    const init: RequestInit = { method: metodo, credentials: 'same-origin', headers: {} };
+    const init: RequestInit = { method: metodo, credentials: 'same-origin', headers: this.intestazioni() };
     if (corpo !== undefined) {
       init.body = JSON.stringify(corpo);
       (init.headers as Record<string, string>)['content-type'] = 'application/json';
@@ -44,7 +77,7 @@ export class Api {
   del<T>(p: string) { return this.chiama<T>('DELETE', p); }
 
   async carica(file: File): Promise<{ key: string; tipo: string }> {
-    const res = await fetch('/api/regia/allegati', { method: 'POST', body: file, headers: { 'content-type': file.type }, credentials: 'same-origin' });
+    const res = await fetch('/api/regia/allegati', { method: 'POST', body: file, headers: { ...this.intestazioni(), 'content-type': file.type }, credentials: 'same-origin' });
     const dati = await res.json().catch(() => ({}));
     if (!res.ok) throw new ErroreApi(res.status, dati.errore ?? 'Caricamento non riuscito.');
     return dati;

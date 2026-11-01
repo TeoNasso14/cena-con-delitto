@@ -14,6 +14,7 @@ const rotte: Array<[string, RegExp, Gestore]> = [
   ["POST", /^\/api\/accesso$/, (r, db) => A.accedi(r, db)],
   ["POST", /^\/api\/uscita$/, () => A.esci()],
   ["GET", /^\/api\/io$/, (r, db) => A.io(r, db)],
+  ["GET", /^\/api\/regia\/serate$/, (r, db) => A.mieSerate(r, db)],
 
   ["GET", /^\/api\/squadra\/stato$/, (r, db) => S.stato(r, db)],
   ["POST", /^\/api\/squadra\/codice$/, (r, db) => S.pin(r, db)],

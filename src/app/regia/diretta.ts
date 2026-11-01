@@ -111,7 +111,7 @@ interface EsitoConsegna { aperta: number; mostrata: number; gia: number; catena?
                   <span class="secondario">{{ notaRivela() }}</span>
                 }
             </div>
-            <div class="vedi"><a class="r-link" href="/schermo" target="_blank" rel="noopener">Apri il proiettore in un'altra scheda</a></div>
+            <div class="vedi"><a class="r-link" [href]="'/schermo?serata=' + st.t()!.serata.id" target="_blank" rel="noopener">Apri il proiettore in un'altra scheda</a></div>
             @if (t.scene.length) {
               <div class="scelta-scene" role="group" aria-label="Manda in onda una scena">
                 @for (sc of t.scene; track sc.id) {
