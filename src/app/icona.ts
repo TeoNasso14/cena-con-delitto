@@ -48,9 +48,9 @@ export class Icona {
   host: { 'aria-hidden': 'true', style: 'display:inline-block' },
   template: `
     <svg viewBox="0 0 100 100" width="100%" height="100%">
-      <path fill="var(--cera)" d="M50 4c6 0 9 5 14 6s11-2 15 2 2 10 5 14 9 6 9 12-5 9-5 14 4 10 1 15-10 4-13 8-3 10-8 12-11-1-16 0-9 6-15 3-6-9-11-12-12-2-14-7 3-10 1-15-8-8-6-13 8-7 9-12-2-12 3-15 11 0 15-3 6-9 11-10Z"/>
-      <circle cx="50" cy="50" r="29" fill="none" stroke="var(--cera-luce)" stroke-width="2.5"/>
-      <path fill="none" stroke="#e7a39a" stroke-width="3" stroke-linecap="round" d="M57 34a17 17 0 1 0 0 32 13 13 0 1 1 0-32Z"/>
+      <path fill="var(--sigillo)" d="M50 4c6 0 9 5 14 6s11-2 15 2 2 10 5 14 9 6 9 12-5 9-5 14 4 10 1 15-10 4-13 8-3 10-8 12-11-1-16 0-9 6-15 3-6-9-11-12-12-2-14-7 3-10 1-15-8-8-6-13 8-7 9-12-2-12 3-15 11 0 15-3 6-9 11-10Z"/>
+      <circle cx="50" cy="50" r="29" fill="none" stroke="var(--sigillo-luce)" stroke-width="2.5"/>
+      <path fill="none" stroke="var(--sigillo-segno)" stroke-width="3" stroke-linecap="round" d="M57 34a17 17 0 1 0 0 32 13 13 0 1 1 0-32Z"/>
     </svg>
   `,
 })

@@ -14,37 +14,37 @@ interface EsitoConsegna { aperta: number; mostrata: number; gia: number; catena?
   styles: `
     .rivela { display: flex; flex-wrap: wrap; gap: 10px; align-items: center; padding-top: 4px; }
     .rivela .secondario { font-size: 14px; }
-    .anteprima { position: relative; aspect-ratio: 16 / 9; max-width: 100%; border-radius: 10px; background: var(--notte); overflow: hidden; padding: 28px 6%;
+    .anteprima { position: relative; aspect-ratio: 16 / 9; max-width: 100%; border-radius: 10px; background: var(--fondo); overflow: hidden; padding: 28px 6%;
       display: flex; flex-direction: column; justify-content: center; gap: 6px; }
-    .anteprima .luna { position: absolute; width: 82%; aspect-ratio: 1; border-radius: 50%; background: var(--zucca); right: -40%; top: 50%; transform: translateY(-50%); }
+    .anteprima .luna { position: absolute; width: 82%; aspect-ratio: 1; border-radius: 50%; background: var(--accento); right: -40%; top: 50%; transform: translateY(-50%); }
     .anteprima.nero .luna { display: none; }
-    .anteprima strong { position: relative; font-family: var(--gotico); font-size: clamp(18px, 2.4vw, 28px); line-height: 1; max-width: 46%; }
-    .anteprima small { position: relative; color: var(--osso-2); max-width: 46%; }
+    .anteprima strong { position: relative; font-family: var(--titoli); font-size: clamp(18px, 2.4vw, 28px); line-height: 1; max-width: 46%; }
+    .anteprima small { position: relative; color: var(--testo-2); max-width: 46%; }
     .anteprima .stato { position: absolute; left: 10px; top: 10px; z-index: 1; }
-    .media-onda { position: absolute; inset: 0; width: 100%; height: 100%; object-fit: contain; background: var(--notte); }
+    .media-onda { position: absolute; inset: 0; width: 100%; height: 100%; object-fit: contain; background: var(--fondo); }
     .vedi { display: flex; justify-content: flex-end; }
-    .prossima { display: flex; justify-content: space-between; align-items: center; gap: 12px; font-size: 15px; color: var(--osso-2); }
-    .prossima b { color: var(--osso); font-weight: 600; }
+    .prossima { display: flex; justify-content: space-between; align-items: center; gap: 12px; font-size: 15px; color: var(--testo-2); }
+    .prossima b { color: var(--testo-1); font-weight: 600; }
     .comandi { display: grid; grid-template-columns: repeat(auto-fit, minmax(150px, 1fr)); gap: 10px; }
     .comandi .bottone { padding: 0 16px; }
     .scelta-scene { display: flex; flex-wrap: wrap; gap: 8px; }
-    .scelta-scene button { min-height: 40px; padding: 0 14px; border-radius: 999px; border: 1px solid var(--filetto); background: transparent; font-size: 14px; color: var(--osso-2); }
-    .scelta-scene button.in-onda { border-color: var(--zucca); color: var(--zucca); font-weight: 700; }
-    @media (hover: hover) { .scelta-scene button:hover { color: var(--osso); border-color: var(--osso-2); } }
+    .scelta-scene button { min-height: 40px; padding: 0 14px; border-radius: 999px; border: 1px solid var(--filetto); background: transparent; font-size: 14px; color: var(--testo-2); }
+    .scelta-scene button.in-onda { border-color: var(--accento); color: var(--accento); font-weight: 700; }
+    @media (hover: hover) { .scelta-scene button:hover { color: var(--testo-1); border-color: var(--testo-2); } }
     .squadra-testa { display: flex; justify-content: space-between; align-items: baseline; gap: 12px; }
     .squadra-testa b { font-size: 17px; display: flex; align-items: center; gap: 8px; }
     .pallino { width: 12px; height: 12px; border-radius: 50%; display: inline-block; }
-    .squadra-testa span { color: var(--osso-2); font-size: 15px; }
+    .squadra-testa span { color: var(--testo-2); font-size: 15px; }
     .tacche { display: grid; gap: 4px; }
-    .tacche i { height: 8px; border-radius: 4px; background: var(--notte-3); }
-    .tacche i.si { background: var(--zucca); }
-    .nota-squadra { font-size: 14px; color: var(--osso-2); }
-    .nota-squadra.ferma { color: var(--sangue); font-weight: 600; }
-    .registro { list-style: none; margin: 0; padding: 4px 16px; background: var(--notte-2); border-radius: 14px; max-height: 520px; overflow-y: auto; }
-    .registro li { display: grid; grid-template-columns: 52px 1fr; gap: 10px; padding: 11px 0; border-bottom: 1px solid var(--notte-3); font-size: 15px; }
+    .tacche i { height: 8px; border-radius: 4px; background: var(--fondo-3); }
+    .tacche i.si { background: var(--accento); }
+    .nota-squadra { font-size: 14px; color: var(--testo-2); }
+    .nota-squadra.ferma { color: var(--allarme); font-weight: 600; }
+    .registro { list-style: none; margin: 0; padding: 4px 16px; background: var(--fondo-2); border-radius: 14px; max-height: 520px; overflow-y: auto; }
+    .registro li { display: grid; grid-template-columns: 52px 1fr; gap: 10px; padding: 11px 0; border-bottom: 1px solid var(--fondo-3); font-size: 15px; }
     .registro li:last-child { border-bottom: 0; }
-    .registro time { color: var(--osso-2); }
-    .registro .pin_errato { color: var(--sangue); }
+    .registro time { color: var(--testo-2); }
+    .registro .pin_errato { color: var(--allarme); }
     .fasi-rapide { display: flex; flex-wrap: wrap; gap: 8px; }
   `,
   template: `
@@ -75,7 +75,7 @@ interface EsitoConsegna { aperta: number; mostrata: number; gia: number; catena?
           <h2 id="t-onda">In onda</h2>
           <div class="r-scheda">
             <div class="anteprima" [class.nero]="s.schermo_nero">
-              <span class="r-pillola r-pillola--zucca stato">{{ s.schermo_nero ? 'Schermo nero' : 'In onda' }}</span>
+              <span class="r-pillola r-pillola--accento stato">{{ s.schermo_nero ? 'Schermo nero' : 'In onda' }}</span>
               @if (!s.schermo_nero && scenaInOnda()?.allegato_key && scenaInOnda()!.tipo === 'immagine') {
                 <img class="media-onda" [src]="'/api/file/' + scenaInOnda()!.allegato_key" alt="">
               } @else if (!s.schermo_nero && scenaInOnda()?.allegato_key && scenaInOnda()!.tipo === 'video') {
@@ -99,7 +99,7 @@ interface EsitoConsegna { aperta: number; mostrata: number; gia: number; catena?
             </div>
             <div class="rivela">
                 @if (s.rivelata) {
-                  <span class="r-pillola r-pillola--zucca">Soluzione rivelata sul proiettore</span>
+                  <span class="r-pillola r-pillola--accento">Soluzione rivelata sul proiettore</span>
                   <button class="r-link" type="button" (click)="nascondi()">Nascondi di nuovo la soluzione</button>
                 } @else if (!s.colpevole) {
                   <p class="secondario">Per rivelare serve la soluzione: scrivila in <a routerLink="/regia/caso">Il caso e le fasi</a>.</p>

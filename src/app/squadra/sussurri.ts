@@ -147,9 +147,9 @@ const DURATA = 10_000;
     .sussurro { pointer-events: auto; display: flex; flex-direction: column; align-items: center; gap: 4px; border: 0; background: none; padding: 0; cursor: pointer; font: inherit;
       animation: entra 520ms var(--curva-cassetto) both; }
     .sussurro.via { animation: esce 380ms var(--curva-uscita) forwards; }
-    .nuvola { position: relative; max-width: 290px; padding: 9px 15px; border-radius: 18px; background: var(--osso); color: var(--notte);
-      font-family: var(--gotico); font-size: 19px; line-height: 1.2; text-align: center; }
-    .nuvola::after { content: ''; position: absolute; left: 50%; bottom: -6px; width: 13px; height: 13px; background: var(--osso); transform: translateX(-50%) rotate(45deg); border-radius: 2px; }
+    .nuvola { position: relative; max-width: 290px; padding: 9px 15px; border-radius: 18px; background: var(--testo-1); color: var(--fondo);
+      font-family: var(--titoli); font-size: 19px; line-height: 1.2; text-align: center; }
+    .nuvola::after { content: ''; position: absolute; left: 50%; bottom: -6px; width: 13px; height: 13px; background: var(--testo-1); transform: translateX(-50%) rotate(45deg); border-radius: 2px; }
     svg { width: 56px; height: 56px; overflow: visible; }
     /* Sul proiettore: più grandi, in basso al centro, senza barra delle schede sotto. */
     :host(.proiettore) { bottom: 4vh; z-index: 20; }
@@ -201,35 +201,35 @@ const DURATA = 10_000;
         @switch (figura()) {
           @case ('fantasma') {
             <svg viewBox="0 0 56 56"><g class="fantasma">
-              <path d="M14 46V24a14 14 0 0 1 28 0v22l-4.7-4-4.6 4-4.7-4-4.6 4-4.7-4z" fill="var(--osso)"/>
-              <ellipse cx="23" cy="24" rx="2.6" ry="3.6" fill="var(--notte)"/><ellipse cx="33" cy="24" rx="2.6" ry="3.6" fill="var(--notte)"/>
-              <ellipse cx="28" cy="33" rx="3" ry="2.2" fill="var(--notte)"/>
+              <path d="M14 46V24a14 14 0 0 1 28 0v22l-4.7-4-4.6 4-4.7-4-4.6 4-4.7-4z" fill="var(--testo-1)"/>
+              <ellipse cx="23" cy="24" rx="2.6" ry="3.6" fill="var(--fondo)"/><ellipse cx="33" cy="24" rx="2.6" ry="3.6" fill="var(--fondo)"/>
+              <ellipse cx="28" cy="33" rx="3" ry="2.2" fill="var(--fondo)"/>
             </g></svg>
           }
           @case ('pipistrello') {
             <svg viewBox="0 0 56 56"><g class="volo">
-              <path class="ala sx" d="M24 28c-4-6-10-7-18-4 4 2 5 6 4 9 3-2 6-2 8 1 1-3 3-5 6-6z" fill="var(--osso-2)"/>
-              <path class="ala dx" d="M32 28c4-6 10-7 18-4-4 2-5 6-4 9-3-2-6-2-8 1-1-3-3-5-6-6z" fill="var(--osso-2)"/>
-              <ellipse cx="28" cy="30" rx="5" ry="7" fill="var(--osso-2)"/>
-              <path d="M24 24l1.5-5 2 4M32 24l-1.5-5-2 4" fill="var(--osso-2)"/>
-              <circle cx="26" cy="27" r="1.2" fill="var(--zucca)"/><circle cx="30" cy="27" r="1.2" fill="var(--zucca)"/>
+              <path class="ala sx" d="M24 28c-4-6-10-7-18-4 4 2 5 6 4 9 3-2 6-2 8 1 1-3 3-5 6-6z" fill="var(--testo-2)"/>
+              <path class="ala dx" d="M32 28c4-6 10-7 18-4-4 2-5 6-4 9-3-2-6-2-8 1-1-3-3-5-6-6z" fill="var(--testo-2)"/>
+              <ellipse cx="28" cy="30" rx="5" ry="7" fill="var(--testo-2)"/>
+              <path d="M24 24l1.5-5 2 4M32 24l-1.5-5-2 4" fill="var(--testo-2)"/>
+              <circle cx="26" cy="27" r="1.2" fill="var(--accento)"/><circle cx="30" cy="27" r="1.2" fill="var(--accento)"/>
             </g></svg>
           }
           @case ('ragno') {
             <svg viewBox="0 0 56 56"><g class="ragno">
-              <line x1="28" y1="-30" x2="28" y2="22" stroke="var(--osso-2)" stroke-width="1"/>
-              <g class="zampe" stroke="var(--osso-2)" stroke-width="2" fill="none" stroke-linecap="round">
+              <line x1="28" y1="-30" x2="28" y2="22" stroke="var(--testo-2)" stroke-width="1"/>
+              <g class="zampe" stroke="var(--testo-2)" stroke-width="2" fill="none" stroke-linecap="round">
                 <path d="M23 28l-8-5-3 3M23 31l-9 0-3 4M23 34l-8 4-2 5M33 28l8-5 3 3M33 31l9 0 3 4M33 34l8 4 2 5"/>
               </g>
-              <ellipse cx="28" cy="31" rx="7" ry="8" fill="var(--osso-2)"/>
-              <circle cx="25.5" cy="29" r="1.6" fill="var(--sangue)"/><circle cx="30.5" cy="29" r="1.6" fill="var(--sangue)"/>
+              <ellipse cx="28" cy="31" rx="7" ry="8" fill="var(--testo-2)"/>
+              <circle cx="25.5" cy="29" r="1.6" fill="var(--allarme)"/><circle cx="30.5" cy="29" r="1.6" fill="var(--allarme)"/>
             </g></svg>
           }
           @case ('zucca') {
             <svg viewBox="0 0 56 56"><g class="zucca">
               <path d="M28 14c1-4 4-6 7-6" stroke="#6b8f3a" stroke-width="3" fill="none" stroke-linecap="round"/>
-              <ellipse cx="20" cy="32" rx="11" ry="15" fill="var(--zucca)"/><ellipse cx="36" cy="32" rx="11" ry="15" fill="var(--zucca)"/>
-              <ellipse cx="28" cy="32" rx="10" ry="16" fill="var(--zucca-chiara)"/>
+              <ellipse cx="20" cy="32" rx="11" ry="15" fill="var(--accento)"/><ellipse cx="36" cy="32" rx="11" ry="15" fill="var(--accento)"/>
+              <ellipse cx="28" cy="32" rx="10" ry="16" fill="var(--accento-chiaro)"/>
               <g class="bagliore" fill="#ffe08a">
                 <path d="M18 27l5 4h-6zM38 27l-5 4h6z"/>
                 <path d="M17 37q11 8 22 0l-3 1-2 3-3-2-3 2-3-2-3 2-2-3z"/>
@@ -238,22 +238,22 @@ const DURATA = 10_000;
           }
           @case ('occhi') {
             <svg viewBox="0 0 56 56">
-              <circle cx="28" cy="30" r="24" fill="var(--notte-3)"/>
+              <circle cx="28" cy="30" r="24" fill="var(--fondo-3)"/>
               <g class="sguardo">
-                <g class="palpebra"><ellipse cx="18" cy="26" rx="5" ry="3.4" fill="#ffe08a"/><circle cx="18.5" cy="26" r="1.6" fill="var(--notte)"/>
-                  <ellipse cx="29" cy="26" rx="5" ry="3.4" fill="#ffe08a"/><circle cx="29.5" cy="26" r="1.6" fill="var(--notte)"/></g>
-                <g class="palpebra due"><ellipse cx="36" cy="38" rx="3.6" ry="2.4" fill="var(--sangue)"/><ellipse cx="44" cy="38" rx="3.6" ry="2.4" fill="var(--sangue)"/></g>
+                <g class="palpebra"><ellipse cx="18" cy="26" rx="5" ry="3.4" fill="#ffe08a"/><circle cx="18.5" cy="26" r="1.6" fill="var(--fondo)"/>
+                  <ellipse cx="29" cy="26" rx="5" ry="3.4" fill="#ffe08a"/><circle cx="29.5" cy="26" r="1.6" fill="var(--fondo)"/></g>
+                <g class="palpebra due"><ellipse cx="36" cy="38" rx="3.6" ry="2.4" fill="var(--allarme)"/><ellipse cx="44" cy="38" rx="3.6" ry="2.4" fill="var(--allarme)"/></g>
               </g>
             </svg>
           }
           @case ('candela') {
             <svg viewBox="0 0 56 56">
-              <ellipse cx="28" cy="20" rx="9" ry="11" fill="var(--zucca)" opacity="0.18" class="fiamma"/>
-              <path class="fiamma" d="M28 9c4 5 5 8 5 11a5 5 0 0 1-10 0c0-3 1-6 5-11z" fill="var(--zucca)"/>
+              <ellipse cx="28" cy="20" rx="9" ry="11" fill="var(--accento)" opacity="0.18" class="fiamma"/>
+              <path class="fiamma" d="M28 9c4 5 5 8 5 11a5 5 0 0 1-10 0c0-3 1-6 5-11z" fill="var(--accento)"/>
               <path class="fiamma" d="M28 15c2 3 2.5 4.5 2.5 6a2.5 2.5 0 0 1-5 0c0-1.5.5-3 2.5-6z" fill="#ffe08a"/>
-              <rect x="22" y="27" width="12" height="22" rx="2" fill="var(--osso)"/>
-              <path d="M22 30q3 4 2 9" stroke="var(--osso-2)" stroke-width="2" fill="none"/>
-              <rect x="17" y="48" width="22" height="4" rx="2" fill="var(--osso-2)"/>
+              <rect x="22" y="27" width="12" height="22" rx="2" fill="var(--testo-1)"/>
+              <path d="M22 30q3 4 2 9" stroke="var(--testo-2)" stroke-width="2" fill="none"/>
+              <rect x="17" y="48" width="22" height="4" rx="2" fill="var(--testo-2)"/>
             </svg>
           }
         }

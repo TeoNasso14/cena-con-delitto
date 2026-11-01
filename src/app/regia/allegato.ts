@@ -10,7 +10,7 @@ import { Api, ErroreApi } from '../api';
     .riga { display: flex; flex-wrap: wrap; gap: 10px; align-items: center; }
     .anteprima { max-width: 220px; max-height: 160px; border-radius: 2px; object-fit: cover; }
     .scegli { justify-self: start; cursor: pointer; }
-    input:focus-visible + .scegli, .scegli:has(+ input:focus-visible) { outline: 2px solid var(--zucca); outline-offset: 3px; }
+    input:focus-visible + .scegli, .scegli:has(+ input:focus-visible) { outline: 2px solid var(--accento); outline-offset: 3px; }
   `,
   template: `
     <span class="etichetta" style="font-weight:600">{{ etichetta() }} <small>JPG, PNG, WEBP, MP3, M4A, MP4, WEBM o PDF fino a 4 MB.</small></span>

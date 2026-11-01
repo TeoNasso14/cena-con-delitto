@@ -7,14 +7,14 @@ import { Firma } from '../firma';
 
 const STILE = `
   :host { display: block; min-height: 100dvh; position: relative; overflow: hidden; }
-  .luna { position: absolute; width: min(70vw, 560px); aspect-ratio: 1; border-radius: 50%; background: var(--zucca);
+  .luna { position: absolute; width: min(70vw, 560px); aspect-ratio: 1; border-radius: 50%; background: var(--accento);
     right: max(-22vw, -200px); top: -12vh; opacity: 0.95; }
   .pagina { position: relative; z-index: 1; min-height: 100dvh; display: grid; align-content: center; gap: 28px;
     max-width: 440px; margin: 0 auto; padding-block: 48px; padding-left: max(20px, env(safe-area-inset-left)); padding-right: max(20px, env(safe-area-inset-right)); }
-  h1 { font-family: var(--gotico); font-size: clamp(44px, 12vw, 64px); line-height: 0.95; }
-  .intro { color: var(--osso-2); }
-  form { display: grid; gap: 16px; padding: 24px; background: var(--notte-2); border-radius: 16px; }
-  .nota { color: var(--osso-2); font-size: 15px; }
+  h1 { font-family: var(--titoli); font-size: clamp(44px, 12vw, 64px); line-height: 0.95; }
+  .intro { color: var(--testo-2); }
+  form { display: grid; gap: 16px; padding: 24px; background: var(--fondo-2); border-radius: 16px; }
+  .nota { color: var(--testo-2); font-size: 15px; }
   .bottone { width: 100%; }
 `;
 

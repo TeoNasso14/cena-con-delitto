@@ -11,10 +11,10 @@ import { PersonaggioR, RegiaStato } from './stato';
   changeDetection: ChangeDetectionStrategy.OnPush,
   styles: `
     .fase { display: grid; grid-template-columns: auto minmax(0, 1fr) 120px auto; gap: 10px; align-items: end; }
-    .fase .n { font-family: var(--gotico); font-size: 28px; width: 32px; padding-bottom: 6px; color: var(--osso-2); }
-    .togli { width: 44px; height: 48px; border-radius: 10px; border: 1px solid var(--filetto); background: transparent; color: var(--osso-2); display: grid; place-items: center; }
+    .fase .n { font-family: var(--titoli); font-size: 28px; width: 32px; padding-bottom: 6px; color: var(--testo-2); }
+    .togli { width: 44px; height: 48px; border-radius: 10px; border: 1px solid var(--filetto); background: transparent; color: var(--testo-2); display: grid; place-items: center; }
     @media (max-width: 520px) { .fase { grid-template-columns: auto minmax(0, 1fr) auto; } .fase .durata { grid-column: 2; } }
-    .soluzione { border: 1px solid var(--cera-luce); }
+    .soluzione { border: 1px solid var(--sigillo-luce); }
   `,
   template: `
     <header class="r-testa">

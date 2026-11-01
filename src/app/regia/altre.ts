@@ -14,19 +14,19 @@ import { RegiaStato, ScenaR, TIPI_SCENA } from './stato';
   styles: `
     .voce-scena { grid-template-columns: auto minmax(0, 1fr) auto; }
     .ordine { display: grid; gap: 2px; }
-    .ordine button { width: 36px; height: 30px; border-radius: 10px; border: 1px solid var(--filetto); background: transparent; color: var(--osso-2); font-size: 14px; }
+    .ordine button { width: 36px; height: 30px; border-radius: 10px; border: 1px solid var(--filetto); background: transparent; color: var(--testo-2); font-size: 14px; }
     .ordine button:disabled { opacity: 0.35; }
     .bottoni { display: flex; gap: 8px; flex-wrap: wrap; justify-content: flex-end; }
-    .aiuto { font-size: 14px; color: var(--osso-2); }
+    .aiuto { font-size: 14px; color: var(--testo-2); }
     .sfondo { display: grid; grid-template-columns: minmax(0, 260px) minmax(0, 1fr); gap: 20px; align-items: start; margin-bottom: 24px; }
     @media (max-width: 640px) { .sfondo { grid-template-columns: minmax(0, 1fr); } }
-    .sfondo h2 { font-family: var(--gotico); font-size: 24px; line-height: 1.1; }
-    .anteprima-sfondo { position: relative; aspect-ratio: 16 / 9; border-radius: 10px; overflow: hidden; background: var(--notte); border: 1px solid var(--filetto); }
+    .sfondo h2 { font-family: var(--titoli); font-size: 24px; line-height: 1.1; }
+    .anteprima-sfondo { position: relative; aspect-ratio: 16 / 9; border-radius: 10px; overflow: hidden; background: var(--fondo); border: 1px solid var(--filetto); }
     .anteprima-sfondo img { position: absolute; inset: 0; width: 100%; height: 100%; object-fit: cover; }
-    .anteprima-sfondo .luna-mini { position: absolute; width: 62%; aspect-ratio: 1; border-radius: 50%; background: var(--zucca); right: -14%; top: 50%; transform: translateY(-50%); }
-    .anteprima-sfondo span { position: absolute; left: 8%; top: 40%; font-family: var(--gotico); font-size: 22px; color: var(--osso); }
+    .anteprima-sfondo .luna-mini { position: absolute; width: 62%; aspect-ratio: 1; border-radius: 50%; background: var(--accento); right: -14%; top: 50%; transform: translateY(-50%); }
+    .anteprima-sfondo span { position: absolute; left: 8%; top: 40%; font-family: var(--titoli); font-size: 22px; color: var(--testo-1); }
     .sfondo-campi { display: grid; gap: 12px; }
-    .sfondo-campi input[type=range] { width: 100%; accent-color: var(--zucca); }
+    .sfondo-campi input[type=range] { width: 100%; accent-color: var(--accento); }
   `,
   template: `
     <header class="r-testa">
@@ -62,7 +62,7 @@ import { RegiaStato, ScenaR, TIPI_SCENA } from './stato';
             <div>
               <h3>{{ s.titolo || nome(s.tipo) }}</h3>
               <p>{{ nome(s.tipo) }}{{ s.fase_numero ? ', fase ' + s.fase_numero : '' }}{{ s.avvio_automatico ? ', parte da sola' : '' }}
-                @if (s.id === st.t()!.serata.scena_in_onda) { <span class="r-pillola r-pillola--zucca">In onda</span> }</p>
+                @if (s.id === st.t()!.serata.scena_in_onda) { <span class="r-pillola r-pillola--accento">In onda</span> }</p>
             </div>
             <div class="bottoni">
               <button class="bottone bottone--piccolo" type="button" (click)="inOnda(s.id)">In onda</button>
@@ -179,7 +179,7 @@ export class SceneRegia {
     .voce-sq { grid-template-columns: minmax(0, 1fr); }
     .righe { display: flex; flex-wrap: wrap; gap: 8px; }
     .colore { display: grid; grid-template-columns: 56px minmax(0, 1fr); gap: 10px; align-items: center; }
-    .colore input[type=color] { width: 56px; height: 48px; border-radius: 10px; border: 1px solid var(--filetto); background: var(--notte); padding: 4px; }
+    .colore input[type=color] { width: 56px; height: 48px; border-radius: 10px; border: 1px solid var(--filetto); background: var(--fondo); padding: 4px; }
   `,
   template: `
     <header class="r-testa">
@@ -191,7 +191,7 @@ export class SceneRegia {
         <p><strong>{{ c.titolo }}</strong>. Scrivila adesso: dopo non si potrà più leggere.</p>
         <dl><dt>Nome utente</dt><dd>{{ c.username }}</dd><dt>Password</dt><dd>{{ c.password }}</dd></dl>
         <button class="bottone bottone--piccolo" type="button" (click)="copia(c)">{{ copiato() ? 'Copiate' : 'Copia le credenziali' }}</button>
-        <button class="r-link" type="button" style="color:var(--notte); justify-self:start" (click)="credenziali.set(null)">Fatto, nascondi</button>
+        <button class="r-link" type="button" style="color:var(--fondo); justify-self:start" (click)="credenziali.set(null)">Fatto, nascondi</button>
       </div>
     }
 
@@ -212,7 +212,7 @@ export class SceneRegia {
           <div class="r-scheda">
             <p class="secondario">Apri il sito sul computer collegato al proiettore ed entra con questo accesso. Vede solo le scene che mandi in onda.</p>
             @for (s of st.t()!.schermi; track s.id) {
-              <div class="r-voce" style="background:var(--notte)">
+              <div class="r-voce" style="background:var(--fondo)">
                 <div><h3>{{ s.username }}</h3><p>{{ s.ultimo_accesso ? 'Ultimo accesso alle ' + ora(s.ultimo_accesso) : 'Mai entrato' }}</p></div>
                 <div class="righe">
                   <button class="bottone bottone--piccolo" type="button" (click)="password(s.id, 'Nuova password del proiettore')">Nuova password</button>
@@ -318,7 +318,7 @@ export class SquadreRegia {
   styles: `
     .accusa { display: grid; gap: 10px; }
     .accusa dl { margin: 0; display: grid; grid-template-columns: auto minmax(0, 1fr); gap: 4px 14px; }
-    .accusa dt { color: var(--osso-2); font-size: 14px; }
+    .accusa dt { color: var(--testo-2); font-size: 14px; }
     .accusa dd { margin: 0; }
     .punti { display: flex; gap: 10px; align-items: end; flex-wrap: wrap; }
     .punti .campo { width: 110px; }
@@ -329,7 +329,7 @@ export class SquadreRegia {
       <div><h1>Accuse e verdetto</h1><p>Ogni squadra consegna una sola accusa. Quando riveli, il sito assegna i punti confrontando le risposte con la soluzione: 2 per il colpevole, 1 per il movente, 1 per l'arma. Puoi correggerli a mano prima o dopo.</p></div>
       <div class="r-azioni">
         @if (t.serata.rivelata) {
-          <span class="r-pillola r-pillola--zucca">Soluzione rivelata</span>
+          <span class="r-pillola r-pillola--accento">Soluzione rivelata</span>
           <button class="r-link" type="button" (click)="nascondi()">Nascondi di nuovo</button>
         }
         @else if (conferma()) {

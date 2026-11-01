@@ -5,8 +5,8 @@ import { StatoSquadraService } from './stato';
 
 const BASE = `
   :host { display: block; padding: 32px 20px 24px; }
-  h1 { font-family: var(--gotico); font-size: clamp(34px, 10vw, 44px); line-height: 1; }
-  .intro { color: var(--osso-2); margin-top: 10px; max-width: 60ch; }
+  h1 { font-family: var(--titoli); font-size: clamp(34px, 10vw, 44px); line-height: 1; }
+  .intro { color: var(--testo-2); margin-top: 10px; max-width: 60ch; }
 `;
 
 @Component({
@@ -14,12 +14,12 @@ const BASE = `
   changeDetection: ChangeDetectionStrategy.OnPush,
   styles: BASE + `
     .elenco { display: grid; gap: 12px; margin-top: 24px; }
-    article { display: grid; grid-template-columns: auto minmax(0, 1fr); gap: 14px; padding: 14px; border: 1px solid var(--filetto); border-radius: 2px; background: var(--notte-2); }
-    .ritratto { width: 72px; height: 88px; border-radius: 2px; background: var(--notte-3); object-fit: cover; display: grid; place-items: center;
-      font-family: var(--gotico); font-size: 34px; color: var(--osso-2); }
-    h2 { font-family: var(--gotico); font-size: 24px; line-height: 1.05; }
-    .ruolo { color: var(--zucca); font-weight: 600; font-size: 15px; margin-top: 2px; }
-    .scheda { color: var(--osso); font-size: 15px; margin-top: 8px; white-space: pre-line; }
+    article { display: grid; grid-template-columns: auto minmax(0, 1fr); gap: 14px; padding: 14px; border: 1px solid var(--filetto); border-radius: 2px; background: var(--fondo-2); }
+    .ritratto { width: 72px; height: 88px; border-radius: 2px; background: var(--fondo-3); object-fit: cover; display: grid; place-items: center;
+      font-family: var(--titoli); font-size: 34px; color: var(--testo-2); }
+    h2 { font-family: var(--titoli); font-size: 24px; line-height: 1.05; }
+    .ruolo { color: var(--accento); font-weight: 600; font-size: 15px; margin-top: 2px; }
+    .scheda { color: var(--testo-1); font-size: 15px; margin-top: 8px; white-space: pre-line; }
   `,
   template: `
     <h1>I personaggi</h1>
@@ -48,9 +48,9 @@ export class PersonaggiVista {
   selector: 'app-taccuino',
   changeDetection: ChangeDetectionStrategy.OnPush,
   styles: BASE + `
-    textarea { margin-top: 20px; width: 100%; min-height: 50dvh; border-radius: 2px; border: 1px solid var(--filetto); background: var(--notte-2);
+    textarea { margin-top: 20px; width: 100%; min-height: 50dvh; border-radius: 2px; border: 1px solid var(--filetto); background: var(--fondo-2);
       padding: 16px; font-size: 17px; line-height: 1.6; resize: vertical; }
-    .stato { margin-top: 8px; font-size: 14px; color: var(--osso-2); min-height: 20px; }
+    .stato { margin-top: 8px; font-size: 14px; color: var(--testo-2); min-height: 20px; }
   `,
   template: `
     <h1>Il taccuino</h1>
@@ -104,12 +104,12 @@ export class TaccuinoVista implements OnDestroy {
   changeDetection: ChangeDetectionStrategy.OnPush,
   styles: BASE + `
     form { display: grid; gap: 16px; margin-top: 24px; }
-    .verbale { margin-top: 24px; background: var(--osso); color: var(--notte); border-radius: 2px; padding: 0 18px 22px; display: grid; gap: 10px; position: relative; }
-    .verbale .intestazione { padding: 12px 0 10px; border-bottom: 1.5px solid var(--notte); font-size: 13px; font-weight: 700; letter-spacing: 0.04em; }
+    .verbale { margin-top: 24px; background: var(--carta); color: var(--inchiostro); border-radius: 2px; padding: 0 18px 22px; display: grid; gap: 10px; position: relative; }
+    .verbale .intestazione { padding: 12px 0 10px; border-bottom: 1.5px solid var(--inchiostro); font-size: 13px; font-weight: 700; letter-spacing: 0.04em; }
     .verbale dl { margin: 0; display: grid; gap: 10px; }
     .verbale dt { font-size: 14px; font-weight: 700; }
     .verbale dd { margin: 0; font-size: 17px; white-space: pre-line; }
-    .conferma { display: grid; gap: 12px; padding: 16px; background: var(--notte-2); border-radius: 14px; }
+    .conferma { display: grid; gap: 12px; padding: 16px; background: var(--fondo-2); border-radius: 14px; }
     .azioni { display: flex; gap: 10px; flex-wrap: wrap; }
   `,
   template: `
