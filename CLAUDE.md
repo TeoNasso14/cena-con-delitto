@@ -30,10 +30,5 @@ Per uccidere il server locale: `pkill -f "[s]cripts/locale.ts"` (le parentesi ev
 ## Pubblicare
 Netlify, sito `cena-con-delitto` (id `00a1ac5d-8403-4f32-bc71-2e3bbdd49fd1`). Build e cartella in `netlify.toml`. Piano gratuito: le variabili d'ambiente vanno salvate non segrete e con ambito "all".
 
-## Prossimi rilasci (idee concordate)
-1. Tema della serata selezionabile (Halloween classico resta il predefinito).
-2. Più serate per account: crea, duplica, archivia, scegli quella attiva.
-3. Nuvolette gestite dalla regia (invitati, frasi, frequenza, on/off) invece che scritte nel codice.
-4. Invitati e sorteggio squadre, biglietti con QR.
-5. Esportazione del caso con gli allegati.
-6. Aggiornamenti in tempo reale al posto del polling.
+## Prossimi rilasci
+Vedi docs/ROADMAP.md: temi (1.1), poi più regie con dashboard di amministrazione, accesso regia unico, più serate per regia e accesso dei partecipanti separato e a tema per ogni serata (2.0), poi invitati, QR e nuvolette gestite dalla regia (2.1), caso completo con allegati (2.2).
