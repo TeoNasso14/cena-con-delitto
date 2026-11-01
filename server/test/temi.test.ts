@@ -35,6 +35,11 @@ describe.each(CATALOGO.map((t) => [t.nome, t] as const))("%s", (_nome, t) => {
     expect(t.titoli).not.toBe(t.corpo);
   });
 
+  test("ha sei figure diverse per le nuvolette", () => {
+    expect(t.figure).toHaveLength(6);
+    expect(new Set(t.figure).size).toBe(6);
+  });
+
   test("ha frasi pronte per le nuvolette, brevi", () => {
     expect(t.frasi.length).toBeGreaterThanOrEqual(12);
     for (const f of t.frasi) expect(f.length, f).toBeLessThanOrEqual(120);

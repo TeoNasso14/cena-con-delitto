@@ -11,6 +11,10 @@ export const COLORI = [
 ] as const;
 export type Colore = (typeof COLORI)[number];
 
+/** Le figure disegnate in figura.ts. */
+export const FIGURE = ['fantasma', 'pipistrello', 'ragno', 'zucca', 'occhi', 'candela'] as const;
+export type Figura = (typeof FIGURE)[number];
+
 export interface Tema {
   id: string;
   nome: string;
@@ -22,6 +26,8 @@ export interface Tema {
   corpo: string;
   /** Frasi pronte delle nuvolette, per le serate che non ne hanno di proprie. Solo atmosfera, mai indizi. */
   frasi: readonly string[];
+  /** Sei figure che parlano dalle nuvolette. */
+  figure: readonly Figura[];
 }
 
 export const TEMI: readonly Tema[] = [
@@ -57,6 +63,7 @@ export const TEMI: readonly Tema[] = [
       'Non era il gatto.',
       'Fa più freddo di prima, vero?',
     ],
+    figure: ['fantasma', 'pipistrello', 'ragno', 'zucca', 'occhi', 'candela'],
   },
 ];
 

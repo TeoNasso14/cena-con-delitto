@@ -386,6 +386,7 @@ export class AccuseRegia {
   imports: [FormsModule],
   changeDetection: ChangeDetectionStrategy.OnPush,
   styles: `
+    .in-alto { margin-bottom: 32px; }
     .temi { list-style: none; margin: 0; padding: 0; display: grid; grid-template-columns: repeat(auto-fill, minmax(220px, 1fr)); gap: 12px; }
     .tema { width: 100%; height: 100%; display: grid; align-content: start; gap: 6px; padding: 10px 10px 14px; text-align: left; border-radius: 14px;
       border: 1px solid transparent; background: var(--fondo-2); color: var(--testo-1); font: inherit; cursor: pointer; }
@@ -393,7 +394,7 @@ export class AccuseRegia {
     @media (hover: hover) { .tema:hover { background: var(--fondo-3); } }
     .tema-anteprima { position: relative; display: block; aspect-ratio: 16 / 9; margin-bottom: 4px; border-radius: 10px; border: 1px solid; overflow: hidden; }
     .tema-anteprima i { position: absolute; width: 62%; aspect-ratio: 1; border-radius: 50%; right: -14%; top: 50%; transform: translateY(-50%); }
-    .tema-anteprima b { position: absolute; left: 8%; top: 50%; transform: translateY(-50%); max-width: 56%; font-size: 20px; line-height: 1; font-weight: 700;
+    .tema-anteprima b { position: absolute; left: 8%; top: 50%; transform: translateY(-50%); max-width: 42%; font-size: 18px; line-height: 1; font-weight: 700;
       text-wrap: balance; display: -webkit-box; -webkit-line-clamp: 2; -webkit-box-orient: vertical; overflow: hidden; }
     .tema-nome { display: flex; flex-wrap: wrap; align-items: center; gap: 8px; font-weight: 600; }
     .tema-descrizione { font-size: 14px; color: var(--testo-2); }
@@ -401,7 +402,7 @@ export class AccuseRegia {
   template: `
     @let t = st.t()!;
     <header class="r-testa"><div><h1>Strumenti</h1><p>Tema e nuvolette, accesso della regia, stato della serata, salvataggio del caso e ripartenza da zero.</p></div></header>
-    <section class="r-blocco">
+    <section class="r-blocco in-alto">
       <h2>Tema della serata</h2>
       <p class="secondario">Colori, caratteri e decorazioni di telefoni, proiettore e regia. Cambia per tutti entro pochi secondi, anche a serata in corso.</p>
       <ul class="temi">
@@ -419,7 +420,7 @@ export class AccuseRegia {
         }
       </ul>
     </section>
-    <section class="r-blocco">
+    <section class="r-blocco in-alto">
       <h2>Nuvolette</h2>
       <div class="r-scheda r-modulo">
         <p class="secondario">Frasi brevi che compaiono ogni tanto sui telefoni e sul proiettore, con una piccola figura del tema. Solo atmosfera: niente che sembri un indizio.</p>

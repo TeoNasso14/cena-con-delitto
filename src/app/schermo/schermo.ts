@@ -2,6 +2,7 @@ import { ChangeDetectionStrategy, Component, computed, effect, ElementRef, injec
 import { Router } from '@angular/router';
 import { Api, ora, ripeti } from '../api';
 import { Sussurri } from '../squadra/sussurri';
+import { Decoro } from '../temi/decoro';
 import { applicaTema } from '../temi/applica';
 import { frasiDaMostrare } from '../temi/catalogo';
 
@@ -23,7 +24,7 @@ interface StatoSchermo {
 
 @Component({
   selector: 'app-schermo',
-  imports: [Sussurri],
+  imports: [Sussurri, Decoro],
   changeDetection: ChangeDetectionStrategy.OnPush,
   styleUrl: './schermo.css',
   templateUrl: './schermo.html',

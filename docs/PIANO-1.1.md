@@ -12,7 +12,7 @@ Concordato il 1 novembre 2026. Il tema è un'impostazione della serata, scelta d
 | `gatsby` | Anni '20 Gatsby | oro, nero, art déco |
 | `natale` | Natale con delitto | per dicembre |
 
-Ogni tema cambia: colori, i due caratteri (titoli e testo), decorazione del proiettore, sei figure delle nuvolette, frasi pronte delle nuvolette, un piccolo lessico di testi. La regia prende il tema della serata come telefoni e proiettore.
+Ogni tema cambia: colori, i due caratteri (titoli e testo), decorazione del proiettore, sei figure delle nuvolette, frasi pronte delle nuvolette. La regia prende il tema della serata come telefoni e proiettore.
 
 ## Decisioni
 - **Dati**: `serata.tema TEXT NOT NULL DEFAULT 'halloween'`. Il catalogo dei temi è nel codice (oggetti TypeScript); il server accetta solo id conosciuti.
@@ -44,7 +44,7 @@ Le regole di DESIGN.md valgono per tutti: niente gradienti, niente ombre su elem
 1. **Colori per ruolo**, senza differenze visibili. Fatto: variabili rinominate, colori scritti a mano sostituiti (velo e allarmi con `color-mix`), superfici di carta su `--carta` e `--inchiostro`.
 2. **Infrastruttura**. Fatto: migrazione `…_tema_serata`, `tema` nelle risposte di squadra e proiettore, `PUT /api/regia/tema`, tema in `GET /api/avvio`, catalogo con il solo Halloween, `data-tema` e anti-lampo, scelta del tema in regia con anteprime. Revisione dei `var(--fondo)` usati come testo sull'accento, che diventano `--su-accento`.
 3. **Nuvolette dalla regia**. Fatto: migrazione `…_sussurri` con copia delle frasi attuali, API, sezione in regia, componente che legge le frasi dalla serata.
-4. **Spazi per tema**: decorazione del proiettore, figure, frasi pronte, lessico, caratteri. Halloween passa dentro questi spazi senza cambiare aspetto.
+4. **Spazi per tema**. Fatto: decorazione del proiettore (`temi/decoro.ts`), figure delle nuvolette (`temi/figura.ts`), frasi pronte e caratteri nel catalogo. Halloween è identico a prima (screenshot di proiettore, telefono e accesso confrontati con `main`, uguali byte per byte). Il lessico per tema non serve: l'inventario dei testi ha trovato solo parole da indagine (sigillo, fascicolo, prova, "Agli atti") che valgono per ogni tema; si aggiunge se un tema lo chiederà.
 5. **I cinque temi nuovi**, un commit ciascuno, con la loro sezione in DESIGN.md.
 6. **Documenti**: DESIGN.md diviso in regole comuni e sezioni per tema, PRODUCT.md, README, CHANGELOG 1.1.0, STORIA.
 

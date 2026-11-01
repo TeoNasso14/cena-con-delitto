@@ -52,7 +52,7 @@ import { frasiDaMostrare } from '../temi/catalogo';
       <router-outlet />
       <app-firma />
     </div>
-    <app-sussurri [frasi]="frasi()" />
+    <app-sussurri [frasi]="frasi()" [tema]="st.stato()?.tema" />
     <nav class="schede" aria-label="Sezioni">
       <ul>
         <li><a routerLink="/squadra" routerLinkActive="attiva" [routerLinkActiveOptions]="{ exact: true }" ariaCurrentWhenActive="page"><app-icona nome="prove" />Prove</a></li>
