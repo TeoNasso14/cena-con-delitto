@@ -3,6 +3,7 @@ import { apriDb, Db, Errore, json, migra } from "./base.ts";
 import * as F from "./file.ts";
 import * as R from "./regia.ts";
 import * as S from "./squadra.ts";
+import * as SE from "./serate.ts";
 import { statoSchermo } from "./schermo.ts";
 
 type Gestore = (req: Request, db: Db, p: Record<string, string>) => Promise<Response> | Response;
@@ -15,6 +16,11 @@ const rotte: Array<[string, RegExp, Gestore]> = [
   ["POST", /^\/api\/uscita$/, () => A.esci()],
   ["GET", /^\/api\/io$/, (r, db) => A.io(r, db)],
   ["GET", /^\/api\/regia\/serate$/, (r, db) => A.mieSerate(r, db)],
+  ["POST", /^\/api\/regia\/serate$/, (r, db) => SE.crea(r, db)],
+  ["PUT", /^\/api\/regia\/serate\/(?<id>\d+)$/, (r, db, p) => SE.modifica(r, db, n(p.id))],
+  ["POST", /^\/api\/regia\/serate\/(?<id>\d+)\/duplica$/, (r, db, p) => SE.duplica(r, db, n(p.id))],
+  ["POST", /^\/api\/regia\/serate\/(?<id>\d+)\/archivia$/, (r, db, p) => SE.archivia(r, db, n(p.id))],
+  ["POST", /^\/api\/regia\/serate\/(?<id>\d+)\/elimina$/, (r, db, p) => SE.elimina(r, db, n(p.id))],
 
   ["GET", /^\/api\/squadra\/stato$/, (r, db) => S.stato(r, db)],
   ["POST", /^\/api\/squadra\/codice$/, (r, db) => S.pin(r, db)],

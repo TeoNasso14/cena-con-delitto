@@ -64,7 +64,7 @@ interface EsitoConsegna { aperta: number; mostrata: number; gia: number; catena?
         @if (prossimaFase(); as f) {
           <button class="bottone bottone--pieno" type="button" (click)="avviaFase(f.numero)">Avvia fase {{ f.numero }}, {{ f.nome }}</button>
         } @else if (!t.fasi.length) {
-          <a class="bottone bottone--pieno" routerLink="/regia/caso">Prepara le fasi</a>
+          <a class="bottone bottone--pieno" [routerLink]="st.base() + '/caso'">Prepara le fasi</a>
         }
       </div>
     </header>
@@ -102,7 +102,7 @@ interface EsitoConsegna { aperta: number; mostrata: number; gia: number; catena?
                   <span class="r-pillola r-pillola--accento">Soluzione rivelata sul proiettore</span>
                   <button class="r-link" type="button" (click)="nascondi()">Nascondi di nuovo la soluzione</button>
                 } @else if (!s.colpevole) {
-                  <p class="secondario">Per rivelare serve la soluzione: scrivila in <a routerLink="/regia/caso">Il caso e le fasi</a>.</p>
+                  <p class="secondario">Per rivelare serve la soluzione: scrivila in <a [routerLink]="st.base() + '/caso'">Il caso e le fasi</a>.</p>
                 } @else if (confermaRivela()) {
                   <button class="bottone bottone--pieno" type="button" (click)="rivela()">Sì, rivela sul proiettore</button>
                   <button class="bottone" type="button" (click)="confermaRivela.set(false)">Non ancora</button>
@@ -119,7 +119,7 @@ interface EsitoConsegna { aperta: number; mostrata: number; gia: number; catena?
                 }
               </div>
             } @else {
-              <p class="secondario">Nessuna scena. <a routerLink="/regia/scene">Preparale qui</a>.</p>
+              <p class="secondario">Nessuna scena. <a [routerLink]="st.base() + '/scene'">Preparale qui</a>.</p>
             }
           </div>
         </section>
@@ -171,7 +171,7 @@ interface EsitoConsegna { aperta: number; mostrata: number; gia: number; catena?
               }
             </div>
           } @empty {
-            <p class="r-vuoto">Nessuna squadra. <a routerLink="/regia/squadre">Creale qui</a> con i loro accessi.</p>
+            <p class="r-vuoto">Nessuna squadra. <a [routerLink]="st.base() + '/squadre'">Creale qui</a> con i loro accessi.</p>
           }
         </section>
 

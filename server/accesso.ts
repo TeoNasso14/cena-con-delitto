@@ -63,8 +63,10 @@ export async function utente(req: Request, db: Db, ruoli: Ruolo[], serataDelFile
   if (!ruoli.includes("regia")) throw new Errore(403, "Questa pagina non è per il tuo account.", "vietato");
   const sid = serataDelFile ?? Number(req.headers.get("x-serata"));
   if (!Number.isInteger(sid) || sid <= 0) throw new Errore(400, "Scegli prima una serata.", "serata_mancante");
-  const se = await db.uno("SELECT id FROM serata WHERE id = $1 AND proprietario_id = $2", [sid, p.id]);
+  const se = await db.uno<{ archiviata: boolean }>("SELECT archiviata FROM serata WHERE id = $1 AND proprietario_id = $2", [sid, p.id]);
   if (!se) throw new Errore(404, "Serata non trovata.", "serata_non_trovata");
+  // Archiviata: la regia la consulta ma non la cambia finché non la riattiva.
+  if (se.archiviata && req.method !== "GET") throw new Errore(409, "Questa serata è archiviata: riattivala per modificarla.", "serata_archiviata");
   return { id: p.id, serata_id: sid, ruolo: "regia", username: p.username, squadra_id: null, versione_token: p.versione_token, admin: p.admin };
 }
 

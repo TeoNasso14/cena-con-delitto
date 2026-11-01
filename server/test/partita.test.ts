@@ -7,6 +7,7 @@ import { gestisci } from "../router.ts";
 
 process.env.SESSION_SECRET = "segreto-di-prova-lungo-almeno-trentadue-caratteri";
 process.env.SETUP_CODE = "codice-avvio";
+process.env.CENA_ARCHIVIO_MEMORIA = "1";
 
 let pg: NetlifyDB;
 let db: Db;
@@ -635,5 +636,76 @@ describe("2.0: più regie e più serate", () => {
     expect((await chiama("POST", "/api/accesso", { username: c.dati.username, password: c.dati.password, slug: "delitto-sul-treno" })).stato).toBe(403);
     expect((await chiama("GET", "/api/squadra/stato", undefined, suo.cookie)).stato).toBe(403);
     await db.q("UPDATE serata SET archiviata = FALSE WHERE id = $1", [sM!.id]);
+  });
+
+  test("le mie serate: crea, indirizzo, duplica, archivia, elimina", async () => {
+    const statoFile = async (k: string) =>
+      (await gestisci(new Request(`https://cena.test/api/file/${k}`, { headers: { cookie: regia } }), db)).status;
+    const serate = async () => (await chiama("GET", "/api/regia/serate", undefined, regia)).dati.serate;
+    const prima = await serate();
+
+    // crea, e l'indirizzo si può cambiare ma non rubare
+    const nuova = await chiama("POST", "/api/regia/serate", { titolo: "Natale al castello" }, regia);
+    expect(nuova.stato).toBe(201);
+    expect(nuova.dati.slug).toBe("natale-al-castello");
+    expect((await chiama("PUT", `/api/regia/serate/${nuova.dati.id}`, { slug: "Delitto sul treno" }, regia)).stato).toBe(409);
+    expect((await chiama("PUT", `/api/regia/serate/${nuova.dati.id}`, { slug: "Castello, 24 dicembre!" }, regia)).dati.slug).toBe("castello-24-dicembre");
+    expect((await serate()).length).toBe(prima.length + 1);
+
+    // un allegato vero, per vedere che la copia ha i suoi file
+    const file = await gestisci(new Request("https://cena.test/api/regia/allegati", {
+      method: "POST", headers: { cookie: regia, "x-serata": String(serataRegia), "content-type": "image/png" }, body: new Uint8Array([137, 80, 78, 71, 1, 2, 3]),
+    }), db);
+    const { key } = (await file.json()) as { key: string };
+    await chiama("PUT", "/api/regia/sfondo", { key }, regia);
+
+    // duplica: tutto il caso, niente di ciò che è successo in sala
+    const orig = (await chiama("GET", "/api/regia", undefined, regia)).dati;
+    const copia = await chiama("POST", `/api/regia/serate/${serataRegia}/duplica`, {}, regia);
+    expect(copia.stato).toBe(201);
+    expect(copia.dati.slug).toBe("la-notte-di-villa-corvina-copia");
+    const dup = (await chiama("GET", "/api/regia", undefined, regia, copia.dati.id)).dati;
+    expect(dup.serata).toMatchObject({ titolo: "La notte di Villa Corvina (copia)", tema: orig.serata.tema, colpevole: orig.serata.colpevole, stato: "bozza", rivelata: false });
+    expect(dup.fasi.map((f: any) => f.nome)).toEqual(orig.fasi.map((f: any) => f.nome));
+    expect(dup.fasi.every((f: any) => f.avviata_alle === null)).toBe(true);
+    expect(dup.personaggi.map((p: any) => p.nome)).toEqual(orig.personaggi.map((p: any) => p.nome));
+    expect(dup.scene.map((x: any) => x.titolo)).toEqual(orig.scene.map((x: any) => x.titolo));
+    expect(dup.cartelle.map((c: any) => [c.nome, c.visibile])).toEqual(orig.cartelle.map((c: any) => [c.nome, c.visibile]));
+    expect(dup.prove.map((p: any) => p.titolo)).toEqual(orig.prove.map((p: any) => p.titolo));
+    expect(dup.sussurri).toEqual(orig.sussurri);
+    expect(dup.squadre).toEqual([]);
+    expect(dup.accuse).toEqual([]);
+    // le regole riservate a una squadra non passano; le altre puntano alle prove della copia
+    const regole = (x: any) => x.prove.flatMap((p: any) => p.regole);
+    expect(regole(dup).some((r: any) => r.squadra_id)).toBe(false);
+    const idCopia = new Set(dup.prove.map((p: any) => p.id));
+    expect(regole(dup).filter((r: any) => r.prova_richiesta_id).every((r: any) => idCopia.has(r.prova_richiesta_id))).toBe(true);
+    const gruppiDiSquadra = new Set(orig.prove.flatMap((p: any) => p.regole.filter((r: any) => r.squadra_id).map((r: any) => `${p.id}/${r.gruppo}`)));
+    const attese = orig.prove.flatMap((p: any) => p.regole.filter((r: any) => !gruppiDiSquadra.has(`${p.id}/${r.gruppo}`)));
+    expect(regole(dup).length).toBe(attese.length);
+    // lo sfondo è un file nuovo della copia, leggibile, e quello di prima resta
+    expect(dup.serata.sfondo_key).toMatch(new RegExp(`^s${copia.dati.id}-`));
+    expect(await statoFile(dup.serata.sfondo_key)).toBe(200);
+    expect(await statoFile(key)).toBe(200);
+
+    // archiviata: si legge, non si cambia, e torna attiva
+    expect((await chiama("POST", `/api/regia/serate/${copia.dati.id}/archivia`, { archiviata: true }, regia)).stato).toBe(200);
+    expect((await chiama("GET", "/api/regia", undefined, regia, copia.dati.id)).stato).toBe(200);
+    expect((await chiama("PUT", "/api/regia/tema", { tema: "noir" }, regia, copia.dati.id)).stato).toBe(409);
+    expect((await serate()).at(-1).id).toBe(copia.dati.id);
+    expect((await chiama("POST", `/api/regia/serate/${copia.dati.id}/archivia`, { archiviata: false }, regia)).stato).toBe(200);
+    expect((await chiama("PUT", "/api/regia/tema", { tema: "noir" }, regia, copia.dati.id)).stato).toBe(200);
+
+    // elimina: solo scrivendo il titolo, e se ne vanno anche i file
+    expect((await chiama("POST", `/api/regia/serate/${copia.dati.id}/elimina`, { conferma: "sì" }, regia)).stato).toBe(400);
+    expect((await chiama("POST", `/api/regia/serate/${copia.dati.id}/elimina`, { conferma: "La notte di Villa Corvina (copia)" }, regia)).stato).toBe(200);
+    expect((await chiama("GET", "/api/regia", undefined, regia, copia.dati.id)).stato).toBe(404);
+    expect(await statoFile(dup.serata.sfondo_key)).toBe(404);
+    expect(await statoFile(key)).toBe(200);
+    // un'altra regia non può né duplicare né eliminare
+    const marta = (await chiama("POST", "/api/accesso", { username: "marta", password: "password-di-marta" })).cookie!;
+    expect((await chiama("POST", `/api/regia/serate/${serataRegia}/duplica`, {}, marta)).stato).toBe(404);
+    expect((await chiama("POST", `/api/regia/serate/${serataRegia}/elimina`, { conferma: "La notte di Villa Corvina" }, marta)).stato).toBe(404);
+    await chiama("POST", `/api/regia/serate/${nuova.dati.id}/elimina`, { conferma: "Natale al castello" }, regia);
   });
 });

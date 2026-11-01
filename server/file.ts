@@ -6,15 +6,30 @@ import { Db, env, Errore, json } from "./base.ts";
 const MAX_BYTE = 4 * 1024 * 1024;
 const TIPI = /^(image\/(jpeg|png|webp|gif)|audio\/(mpeg|mp4|ogg|wav|webm)|video\/(mp4|webm)|application\/pdf)$/;
 
-type Archivio = Pick<ReturnType<typeof getStore>, "set" | "getWithMetadata">;
+type Archivio = Pick<ReturnType<typeof getStore>, "set" | "getWithMetadata" | "delete">;
 const memoria = new Map<string, { data: ArrayBuffer; metadata: Record<string, unknown> }>();
 const archivioMemoria = {
   async set(key: string, data: ArrayBuffer, o?: { metadata?: Record<string, unknown> }) { memoria.set(key, { data, metadata: o?.metadata ?? {} }); },
   async getWithMetadata(key: string) { return memoria.get(key) ?? null; },
+  async delete(key: string) { memoria.delete(key); },
 } as unknown as Archivio;
 
 /** Su Netlify gli allegati vanno in Netlify Blobs; in locale (CENA_ARCHIVIO_MEMORIA=1) restano in memoria. */
 const archivio = (): Archivio => (env("CENA_ARCHIVIO_MEMORIA") === "1" ? archivioMemoria : getStore({ name: "allegati", consistency: "strong" }));
+
+/** Copia un allegato in un'altra serata con una chiave nuova (per duplicare una serata). Un file sparito resta senza copia. */
+export async function copiaAllegato(key: string, serataId: number): Promise<string | null> {
+  const r = await archivio().getWithMetadata(key, { type: "arrayBuffer" });
+  if (!r) return null;
+  const nuova = `s${serataId}-${randomBytes(12).toString("base64url")}`;
+  await archivio().set(nuova, r.data as ArrayBuffer, { metadata: { ...(r.metadata as Record<string, unknown>), serata: serataId } });
+  return nuova;
+}
+
+/** Cancella gli allegati di una serata eliminata. */
+export async function eliminaAllegati(keys: string[]) {
+  for (const k of keys) await archivio().delete(k);
+}
 
 /** La regia carica un file (foto, audio, video breve, PDF). Restituisce la chiave da salvare sulla prova o sulla scena. */
 export async function carica(req: Request, db: Db) {

@@ -37,7 +37,7 @@ Parte da `docs/ROADMAP.md` (architettura e decisioni del 1 novembre 2026) e dal 
 ## Regole delle serate
 - **Duplica**: copia caso, fasi, personaggi, prove con le regole (tranne quelle riservate a una squadra, come nell'esportazione), cartelle, scene, tema, frasi delle nuvolette, sfondo, e gli allegati (copiati su Blobs con chiavi nuove). Non copia squadre, accessi, prove aperte, accuse, registro.
 - **Archivia**: esce dall'elenco principale, si apre in sola lettura, gli accessi di squadre e proiettore non funzionano. Si riattiva o si duplica.
-- **Elimina**: solo con conferma scritta; cancella anche gli allegati su Blobs.
+- **Elimina**: solo scrivendo il titolo esatto della serata; cancella anche gli allegati su Blobs.
 - **Slug**: proposto dal titolo, unico, modificabile dalla regia.
 
 ## Passaggio dalla 1.x
@@ -47,7 +47,7 @@ Parte da `docs/ROADMAP.md` (architettura e decisioni del 1 novembre 2026) e dal 
 
 ## Passi, uno per commit
 1. **Schema e sessioni**. Fatto: tabelle `utente` e `invito`, colonne nuove di `serata`, vincolo per serata su `account`, migrazione dell'account regia; sessioni dei due tipi; `x-serata` e controllo del proprietario in tutte le API della regia e nei file. La regia di oggi funziona sulla serata scelta.
-2. **Le mie serate**: elenco, crea, duplica (con allegati), archivia, riattiva, elimina, slug.
+2. **Le mie serate**. Fatto: elenco, crea, duplica (con allegati), archivia, riattiva, elimina, slug.
 3. **Amministrazione e inviti**: primo amministratore con `SETUP_CODE`, `/admin`, inviti, sospensione, password dimenticata.
 4. **Accesso per serata**: `/s/<slug>` a tema, accessi di squadre e proiettore dentro la serata, serate archiviate chiuse, compatibilità di `/accesso`.
 5. **Documenti**: README (pubblicare e primo avvio), CHANGELOG 2.0.0, STORIA, CLAUDE.md, PRODUCT.md, ROADMAP.

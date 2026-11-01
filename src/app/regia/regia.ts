@@ -1,5 +1,5 @@
 import { ChangeDetectionStrategy, Component, effect, inject, OnDestroy, OnInit } from '@angular/core';
-import { Router, RouterLink, RouterLinkActive, RouterOutlet } from '@angular/router';
+import { ActivatedRoute, Router, RouterLink, RouterLinkActive, RouterOutlet } from '@angular/router';
 import { Api } from '../api';
 import { Icona } from '../icona';
 import { Sessione } from '../sessione';
@@ -19,6 +19,8 @@ import { Firma } from '../firma';
     .menu a.attiva { background: var(--fondo-2); color: var(--testo-1); font-weight: 600; }
     .menu a.attiva app-icona { color: var(--accento); }
     .menu .fondo { margin-top: auto; padding-top: 16px; }
+    .titolo-serata { padding: 4px 12px 14px; color: var(--testo-1); font-weight: 600; font-size: 15px; line-height: 1.3; }
+    .archiviata { display: flex; flex-wrap: wrap; align-items: center; gap: 10px 16px; margin: 0 0 24px; }
     @media (hover: hover) { .menu a:hover, .menu button:hover { color: var(--testo-1); background: var(--fondo-2); } }
     .centro { flex: 999 1 640px; min-width: 0; padding: 28px max(16px, min(3vw, 40px)) 64px; }
     .avviso-regia { position: fixed; z-index: 30; left: 50%; bottom: calc(20px + env(safe-area-inset-bottom)); transform: translateX(-50%); max-width: min(560px, calc(100vw - 32px));
@@ -29,23 +31,30 @@ import { Firma } from '../firma';
       .menu { flex: 1 1 100%; flex-direction: row; overflow-x: auto; border-right: 0; border-bottom: 1px solid var(--fondo-3); padding: 12px 12px; gap: 4px;
         padding-left: max(12px, env(safe-area-inset-left)); padding-right: max(12px, env(safe-area-inset-right)); }
       .marchio { font-size: 24px; padding: 8px 8px 0 4px; }
+      .titolo-serata { display: none; }
       .menu .fondo { margin: 0; padding: 0; }
     }
   `,
   template: `
     <nav class="menu" aria-label="Regia">
       <span class="marchio">Regia</span>
-      <a routerLink="/regia" routerLinkActive="attiva" [routerLinkActiveOptions]="{ exact: true }" ariaCurrentWhenActive="page"><app-icona nome="onda" />In diretta</a>
-      <a routerLink="/regia/scene" routerLinkActive="attiva" ariaCurrentWhenActive="page"><app-icona nome="scene" />Scene del proiettore</a>
-      <a routerLink="/regia/caso" routerLinkActive="attiva" ariaCurrentWhenActive="page"><app-icona nome="caso" />Il caso e le fasi</a>
-      <a routerLink="/regia/personaggi" routerLinkActive="attiva" ariaCurrentWhenActive="page"><app-icona nome="volti" />Personaggi</a>
-      <a routerLink="/regia/prove" routerLinkActive="attiva" ariaCurrentWhenActive="page"><app-icona nome="prove" />Prove e codici</a>
-      <a routerLink="/regia/squadre" routerLinkActive="attiva" ariaCurrentWhenActive="page"><app-icona nome="squadre" />Squadre e accessi</a>
-      <a routerLink="/regia/accuse" routerLinkActive="attiva" ariaCurrentWhenActive="page"><app-icona nome="accusa" />Accuse e verdetto</a>
-      <a routerLink="/regia/strumenti" routerLinkActive="attiva" ariaCurrentWhenActive="page"><app-icona nome="strumenti" />Strumenti</a>
+      <a routerLink="/regia" class="serate"><app-icona nome="indietro" />Le tue serate</a>
+      @if (st.t(); as t) { <p class="titolo-serata">{{ t.serata.titolo }}</p> }
+      <a routerLink="./" routerLinkActive="attiva" [routerLinkActiveOptions]="{ exact: true }" ariaCurrentWhenActive="page"><app-icona nome="onda" />In diretta</a>
+      <a routerLink="scene" routerLinkActive="attiva" ariaCurrentWhenActive="page"><app-icona nome="scene" />Scene del proiettore</a>
+      <a routerLink="caso" routerLinkActive="attiva" ariaCurrentWhenActive="page"><app-icona nome="caso" />Il caso e le fasi</a>
+      <a routerLink="personaggi" routerLinkActive="attiva" ariaCurrentWhenActive="page"><app-icona nome="volti" />Personaggi</a>
+      <a routerLink="prove" routerLinkActive="attiva" ariaCurrentWhenActive="page"><app-icona nome="prove" />Prove e codici</a>
+      <a routerLink="squadre" routerLinkActive="attiva" ariaCurrentWhenActive="page"><app-icona nome="squadre" />Squadre e accessi</a>
+      <a routerLink="accuse" routerLinkActive="attiva" ariaCurrentWhenActive="page"><app-icona nome="accusa" />Accuse e verdetto</a>
+      <a routerLink="strumenti" routerLinkActive="attiva" ariaCurrentWhenActive="page"><app-icona nome="strumenti" />Strumenti</a>
       <div class="fondo"><button type="button" (click)="sessione.esci()"><app-icona nome="esci" />Esci</button></div>
     </nav>
     <main class="centro">
+      @if (st.t()?.serata?.archiviata) {
+        <p class="avviso archiviata" role="status">Questa serata è archiviata: la consulti in sola lettura e le squadre non possono entrare.
+          <button class="bottone bottone--piccolo" type="button" (click)="riattiva()">Riattiva</button></p>
+      }
       @if (st.t()) { <router-outlet /> } @else { <p class="secondario" role="status">Apro la regia…</p> }
       <app-firma />
     </main>
@@ -59,11 +68,17 @@ export class RegiaShell implements OnInit, OnDestroy {
   readonly sessione = inject(Sessione);
   private api = inject(Api);
   private router = inject(Router);
+  private rotta = inject(ActivatedRoute);
   constructor() {
     effect(() => {
       if (this.api.sessioneScaduta()) this.router.navigateByUrl('/accesso');
+      else if (this.st.persa()) this.router.navigateByUrl('/regia');
     });
   }
-  ngOnInit() { this.st.avvia(); }
+  ngOnInit() { this.st.avvia(Number(this.rotta.snapshot.paramMap.get('serata'))); }
+  riattiva() {
+    const id = this.st.t()!.serata.id;
+    this.st.fai(() => this.api.post(`/api/regia/serate/${id}/archivia`, { archiviata: false }), 'Serata riattivata');
+  }
   ngOnDestroy() { this.st.arresta(); }
 }
