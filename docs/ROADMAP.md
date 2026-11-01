@@ -16,7 +16,7 @@ Proposta di architettura concordata il 1 novembre 2026, da rifinire prima di scr
 - Sessioni con due tipi: sessione di **regia** (utente, può aprire solo le sue serate) e sessione di **partecipante** (valida solo per una serata).
 
 ## Passaggio dalla 1.0
-- L'account regia esistente diventa il primo `utente` con ruolo `admin` e `regia`, proprietario della serata di Halloween 2026.
+- L'account regia esistente diventa un `utente` regia (non amministratore), proprietario della serata di Halloween 2026: è dell'organizzatrice. L'amministratore è Teo, con un account separato creato con `SETUP_CODE` (decisione del 1 novembre 2026).
 - `SETUP_CODE` crea solo il primo amministratore; gli altri account regia nascono dagli inviti della dashboard.
 - Gli indirizzi attuali (`/regia`, `/squadra`, `/schermo`) restano validi per la serata di Halloween finché serve.
 
