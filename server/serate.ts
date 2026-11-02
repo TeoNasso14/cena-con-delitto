@@ -71,7 +71,7 @@ export async function duplica(req: Request, db: Db, id: number) {
   const sid = nuova!.id;
   const copie = new Map<string, string | null>();
   try {
-    for (const k of await chiaviAllegati(db, id)) copie.set(k, await copiaAllegato(k, sid));
+    for (const k of await chiaviAllegati(db, id)) copie.set(k, await copiaAllegato(db, k, sid));
     const nuovaChiave = (k: string | null) => (k ? copie.get(k) ?? null : null);
 
     await db.transazione(async (t) => {
@@ -118,7 +118,7 @@ export async function duplica(req: Request, db: Db, id: number) {
   } catch (e) {
     // Niente serate a metà: si toglie la copia e i file già copiati.
     await db.q("DELETE FROM serata WHERE id = $1", [sid]);
-    await eliminaAllegati([...copie.values()].filter((k): k is string => !!k));
+    await eliminaAllegati(db, [...copie.values()].filter((k): k is string => !!k));
     throw e;
   }
   return json(nuova, 201);
@@ -142,6 +142,6 @@ export async function elimina(req: Request, db: Db, id: number) {
   if ((b.conferma ?? "").trim() !== s.titolo.trim()) throw new Errore(400, "Per eliminare la serata scrivi il suo titolo esatto.");
   const chiavi = await chiaviAllegati(db, id);
   await db.q("DELETE FROM serata WHERE id = $1", [id]);
-  await eliminaAllegati(chiavi);
+  await eliminaAllegati(db, chiavi);
   return json({ ok: true });
 }

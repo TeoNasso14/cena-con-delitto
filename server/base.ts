@@ -6,6 +6,9 @@ const scrypt = promisify(scryptCb) as (pw: string, salt: Buffer, len: number) =>
 
 /* ---------- Ambiente ---------- */
 
+/** La versione dell'applicazione, per lo stato del sito nell'amministrazione. Un test la confronta con package.json. */
+export const VERSIONE = "2.3.0";
+
 export function env(nome: string): string | undefined {
   const n = (globalThis as { Netlify?: { env: { get(k: string): string | undefined } } }).Netlify;
   return n?.env.get(nome) ?? process.env[nome];

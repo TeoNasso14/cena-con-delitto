@@ -138,7 +138,10 @@ export async function primoAvvio(req: Request, db: Db) {
     return t.uno<{ id: number; versione_token: number }>(
       "INSERT INTO utente (username, password_hash, nome, admin) VALUES ($1, $2, $3, TRUE) RETURNING id, versione_token",
       [username, hash, nome],
-    );
+    ).then(async (n) => {
+      await t.q("INSERT INTO registro_admin (autore_id, autore, azione) VALUES ($1, $2, 'Amministrazione creata')", [n!.id, username]);
+      return n;
+    });
   });
   const token = firmaSessione({ k: "u", a: u!.id, r: "regia", v: u!.versione_token });
   return json({ ruolo: "regia", admin: true }, 201, { "set-cookie": cookieSessione(token) });

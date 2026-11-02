@@ -509,4 +509,29 @@ ALTER TABLE serata ADD COLUMN IF NOT EXISTS ambiente_attivo BOOLEAN NOT NULL DEF
 ALTER TABLE serata ADD COLUMN IF NOT EXISTS ambiente_volume INTEGER NOT NULL DEFAULT 50;
 `,
   },
+  {
+    // 3.0: registro dell'amministrazione e grandezza degli allegati (Netlify Blobs non la dice senza scaricare il file).
+    nome: "20261102160000_amministrazione_3_0",
+    sql: String.raw`
+CREATE TABLE IF NOT EXISTS registro_admin (
+  id        SERIAL PRIMARY KEY,
+  autore_id INTEGER REFERENCES utente(id) ON DELETE SET NULL,
+  autore    TEXT NOT NULL DEFAULT '',
+  azione    TEXT NOT NULL,
+  bersaglio TEXT NOT NULL DEFAULT '',
+  ora       TIMESTAMPTZ NOT NULL DEFAULT NOW()
+);
+CREATE INDEX IF NOT EXISTS registro_admin_ora ON registro_admin (ora DESC);
+
+-- Senza vincolo verso serata: un file rimasto senza serata si conta lo stesso, con serata_id NULL.
+CREATE TABLE IF NOT EXISTS allegato (
+  chiave    TEXT PRIMARY KEY,
+  serata_id INTEGER,
+  byte      BIGINT NOT NULL,
+  tipo      TEXT NOT NULL DEFAULT '',
+  creato    TIMESTAMPTZ NOT NULL DEFAULT NOW()
+);
+CREATE INDEX IF NOT EXISTS allegato_serata ON allegato (serata_id);
+`,
+  },
 ];

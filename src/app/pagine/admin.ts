@@ -7,7 +7,15 @@ import { Sessione } from '../sessione';
 import { applicaTema } from '../temi/applica';
 import { Testata } from './testata';
 
-interface Utente { id: number; username: string; nome: string; email: string | null; admin: boolean; stato: 'attivo' | 'sospeso'; ultimo_accesso: string | null; creato: string; serate: number }
+interface Utente {
+  id: number; username: string; nome: string; email: string | null; admin: boolean; stato: 'attivo' | 'sospeso'; ultimo_accesso: string | null; creato: string;
+  serate: number; in_preparazione: number; in_corso: number; chiuse: number; archiviate: number; squadre: number; ultima_partita: string | null; spazio: number;
+}
+interface Sito {
+  versione: string; database: { ultimaMigrazione: string | null; migrazioni: number }; tempoReale: boolean; serate: number; squadre: number;
+  allegati: { file: number; byte: number; daMisurare: number } | null;
+}
+interface Voce { id: number; autore: string; azione: string; bersaglio: string; ora: string }
 interface Invito { id: number; tipo: 'regia' | 'password'; nome: string; email: string | null; creato: string; scade: string; utente_id: number | null; username: string | null; stato: 'attesa' | 'scaduto' }
 interface Link { per: string; url: string; scade: string; tipo: 'regia' | 'password' }
 
@@ -59,12 +67,28 @@ interface Link { per: string; url: string; scade: string; tipo: 'regia' | 'passw
     .tenue { color: var(--testo-2); }
     .vuoto { padding: 18px 20px; color: var(--testo-2); }
     .caricamento { margin-top: 28px; }
+    .numeri { margin-top: 6px; color: var(--testo-2); font-size: 14px; line-height: 1.4; }
+    .sito { display: grid; grid-template-columns: repeat(auto-fit, minmax(190px, 1fr)); border: 1px solid var(--filetto); border-radius: 2px; background: var(--fondo-2); }
+    .sito > div { padding: 16px 20px; border-right: 1px solid var(--filetto); display: grid; gap: 4px; align-content: start; }
+    .sito > div:last-child { border-right: 0; }
+    .sito dt { color: var(--testo-2); font-size: 14px; font-weight: 600; }
+    .sito dd { margin: 0; font: 700 22px/1.15 var(--corpo); }
+    .sito small { color: var(--testo-2); font-size: 14px; }
+    .sito .bottone { justify-self: start; min-height: 36px; padding: 0 14px; font-size: 14px; margin-top: 6px; }
+    .azione-riga td { background: var(--fondo-3); }
+    .azione { display: flex; flex-wrap: wrap; align-items: end; gap: 12px; }
+    .azione .etichetta { flex: 1 1 240px; max-width: 360px; }
+    .registro { list-style: none; margin: 0; padding: 4px 20px; border: 1px solid var(--filetto); border-radius: 2px; background: var(--fondo-2); max-height: 420px; overflow-y: auto; }
+    .registro li { display: grid; grid-template-columns: 130px minmax(0, 1fr); gap: 12px; padding: 10px 0; border-top: 1px solid var(--filetto); }
+    .registro li:first-child { border-top: 0; }
+    .registro time { color: var(--testo-2); font-size: 14px; }
+    @media (max-width: 560px) { .registro li { grid-template-columns: minmax(0, 1fr); gap: 2px; } }
   `,
   template: `
     <app-testata casa="/admin" />
     <main class="pagina">
       <div class="apertura">
-        <div><h1>Account della regia</h1><p>Chi può creare e condurre serate. Qui vedi solo account e numeri, mai il contenuto delle serate.</p></div>
+        <div><h1>Amministrazione</h1><p>Il sito, gli account della regia e il registro. Qui vedi solo account, numeri e date, mai il contenuto delle serate.</p></div>
         @if (!nuovo()) { <button class="bottone bottone--pieno" type="button" (click)="nuovo.set(true)">Nuovo invito</button> }
       </div>
 
@@ -97,6 +121,19 @@ interface Link { per: string; url: string; scade: string; tipo: 'regia' | 'passw
       }
 
       @if (vista(); as v) {
+        <div class="sezione"><h2>Il sito</h2></div>
+        <dl class="sito">
+          <div><dt>Versione</dt><dd>{{ v.sito.versione }}</dd><small>{{ v.sito.database.migrazioni }} aggiornamenti del database</small></div>
+          <div><dt>Serate e squadre</dt><dd>{{ v.sito.serate }} e {{ v.sito.squadre }}</dd><small>in tutto, di tutte le regie</small></div>
+          <div><dt>Tempo reale</dt><dd>{{ v.sito.tempoReale ? 'Acceso' : 'Spento' }}</dd><small>{{ v.sito.tempoReale ? 'Con Ably: i cambi arrivano subito' : 'Senza ABLY_API_KEY: aggiornamenti in circa un secondo' }}</small></div>
+          <div><dt>Allegati</dt>
+            @if (v.sito.allegati; as a) {
+              <dd>{{ peso(a.byte) }}</dd><small>{{ conta(a.file, 'file', 'file') }}{{ a.daMisurare ? ', ' + a.daMisurare + ' ancora da misurare' : '' }}</small>
+              @if (a.daMisurare) { <button class="bottone" type="button" [disabled]="occupato()" (click)="misura()">{{ misurando() ? 'Misuro…' : 'Misura i file di prima' }}</button> }
+            } @else { <dd>Non raggiungibili</dd><small>L'archivio degli allegati non risponde: riprova tra poco.</small> }
+          </div>
+        </dl>
+
         <div class="sezione"><h2>Account</h2><span>{{ conta(v.utenti.length, 'account', 'account') }}</span></div>
         <div class="scorre">
           <table>
@@ -114,6 +151,7 @@ interface Link { per: string; url: string; scade: string; tipo: 'regia' | 'passw
                         @if (u.serate) { <span class="dorsi" aria-hidden="true">@for (x of dorsi(u.serate); track $index) { <i></i> }</span> }
                         <b>{{ u.serate }}</b><span>{{ u.serate === 1 ? 'serata' : 'serate' }}</span>
                       </div>
+                      @if (u.serate || u.spazio) { <p class="numeri">{{ numeri(u) }}</p> }
                     }
                   </td>
                   <td>{{ u.ultimo_accesso ? quando(u.ultimo_accesso) : 'mai' }}</td>
@@ -124,9 +162,35 @@ interface Link { per: string; url: string; scade: string; tipo: 'regia' | 'passw
                         @if (u.stato === 'attivo') { <button class="bottone bottone--pericolo" type="button" [disabled]="occupato()" (click)="sospendi(u, true)">Sospendi</button> }
                         @else { <button class="bottone" type="button" [disabled]="occupato()" (click)="sospendi(u, false)">Riattiva</button> }
                       }
+                      @if (!u.admin && u.serate && riceventi(u).length) { <button class="bottone" type="button" [disabled]="occupato()" (click)="apri('passa', u)">Passa le serate</button> }
+                      @if (!u.admin && !u.serate && u.id !== v.io.id) { <button class="bottone bottone--pericolo" type="button" [disabled]="occupato()" (click)="apri('elimina', u)">Elimina</button> }
                     </div>
                   </td>
                 </tr>
+                @if (azione()?.u?.id === u.id) {
+                  <tr class="azione-riga"><td colspan="5">
+                    @if (azione()!.tipo === 'passa') {
+                      <form class="azione" (ngSubmit)="passa(u)">
+                        <label class="etichetta" for="passa-a">Passa {{ u.serate === 1 ? 'la sua serata' : 'le sue ' + u.serate + ' serate' }} a <small>Cambia solo chi le gestisce: tu non le vedi.</small>
+                          <select id="passa-a" name="passa-a" class="campo" [(ngModel)]="ricevente" required>
+                            <option [ngValue]="null" disabled>Scegli l'account</option>
+                            @for (x of riceventi(u); track x.id) { <option [ngValue]="x.id">{{ x.nome || x.username }} ({{ x.username }})</option> }
+                          </select>
+                        </label>
+                        <button class="bottone bottone--pieno" type="submit" [disabled]="!ricevente || occupato()">Passa le serate</button>
+                        <button class="bottone" type="button" (click)="azione.set(null)">Annulla</button>
+                      </form>
+                    } @else {
+                      <form class="azione" (ngSubmit)="elimina(u)">
+                        <label class="etichetta" for="elimina-conf">Per eliminare l'account scrivi {{ u.username }} <small>Non ha serate. Si elimina per sempre, insieme ai suoi link aperti.</small>
+                          <input id="elimina-conf" name="elimina-conf" class="campo" autocomplete="off" [(ngModel)]="conferma">
+                        </label>
+                        <button class="bottone bottone--pericolo" type="submit" [disabled]="conferma !== u.username || occupato()">Elimina l'account</button>
+                        <button class="bottone" type="button" (click)="azione.set(null)">Annulla</button>
+                      </form>
+                    }
+                  </td></tr>
+                }
               }
             </tbody>
           </table>
@@ -155,6 +219,15 @@ interface Link { per: string; url: string; scade: string; tipo: 'regia' | 'passw
             </table>
           } @else { <p class="vuoto">Nessun invito in attesa.</p> }
         </div>
+
+        <div class="sezione"><h2>Registro</h2><span>le ultime {{ v.registro.length }} azioni</span></div>
+        @if (v.registro.length) {
+          <ol class="registro">
+            @for (r of v.registro; track r.id) {
+              <li><time>{{ quando(r.ora) }}, {{ orario(r.ora) }}</time><span>{{ r.azione }}{{ r.bersaglio ? ': ' + r.bersaglio : '' }}{{ r.autore && r.autore !== v.io.username ? ', da ' + r.autore : '' }}</span></li>
+            }
+          </ol>
+        } @else { <p class="vuoto">Ancora nessuna azione.</p> }
       } @else if (!errore()) { <p class="secondario caricamento" role="status">Carico gli account…</p> }
 
       <app-firma />
@@ -165,7 +238,11 @@ export class AdminVista implements OnInit {
   private api = inject(Api);
   private router = inject(Router);
   readonly sessione = inject(Sessione);
-  readonly vista = signal<{ io: { id: number; username: string }; utenti: Utente[]; inviti: Invito[] } | null>(null);
+  readonly vista = signal<{ io: { id: number; username: string }; utenti: Utente[]; inviti: Invito[]; registro: Voce[]; sito: Sito } | null>(null);
+  readonly azione = signal<{ tipo: 'passa' | 'elimina'; u: Utente } | null>(null);
+  readonly misurando = signal(false);
+  ricevente: number | null = null;
+  conferma = '';
   readonly nuovo = signal(false);
   readonly link = signal<Link | null>(null);
   readonly copiato = signal(false);
@@ -187,6 +264,47 @@ export class AdminVista implements OnInit {
   quando(d: string) {
     const giorno = new Date(d).toDateString();
     return giorno === new Date().toDateString() ? 'oggi' : this.data(d);
+  }
+  orario(d: string) { return new Date(d).toLocaleTimeString('it-IT', { hour: '2-digit', minute: '2-digit' }); }
+  peso(b: number) {
+    if (b < 1024 * 1024) return `${Math.round(b / 1024)} kB`;
+    return `${(b / (1024 * 1024)).toLocaleString('it-IT', { maximumFractionDigits: 1 })} MB`;
+  }
+  /** I numeri di un account in una riga: stati delle serate, squadre, ultima partita, spazio. */
+  numeri(u: Utente) {
+    const stati = [
+      u.in_preparazione ? `${u.in_preparazione} in preparazione` : '', u.in_corso ? `${u.in_corso} in corso` : '',
+      u.chiuse ? `${u.chiuse} ${u.chiuse === 1 ? 'chiusa' : 'chiuse'}` : '', u.archiviate ? `${u.archiviate} ${u.archiviate === 1 ? 'archiviata' : 'archiviate'}` : '',
+    ].filter(Boolean).join(', ');
+    const altro = [this.conta(u.squadre, 'squadra', 'squadre'), u.ultima_partita ? `ultima partita ${this.quando(u.ultima_partita)}` : 'mai giocato', u.spazio ? `${this.peso(u.spazio)} di allegati` : ''];
+    return [stati, ...altro].filter(Boolean).map((x) => x.charAt(0).toUpperCase() + x.slice(1)).join('. ') + '.';
+  }
+  /** Chi può ricevere le serate: un altro account regia. */
+  riceventi(u: Utente) { return (this.vista()?.utenti ?? []).filter((x) => !x.admin && x.id !== u.id); }
+  apri(tipo: 'passa' | 'elimina', u: Utente) {
+    this.ricevente = null;
+    this.conferma = '';
+    this.azione.set({ tipo, u });
+  }
+  async passa(u: Utente) {
+    const r = await this.fai(() => this.api.post<{ serate: number }>(`/api/admin/utenti/${u.id}/trasferisci`, { a: this.ricevente }));
+    if (r) this.azione.set(null);
+  }
+  async elimina(u: Utente) {
+    const r = await this.fai(() => this.api.post(`/api/admin/utenti/${u.id}/elimina`, { conferma: this.conferma }));
+    if (r) this.azione.set(null);
+  }
+  /** Misura i file di prima della 3.0, dieci alla volta, finché non ne restano. */
+  async misura() {
+    this.misurando.set(true);
+    try {
+      for (let giri = 0; giri < 200; giri++) {
+        const r = await this.fai(() => this.api.post<{ misurati: number; restanti: number }>('/api/admin/allegati/misura'));
+        if (!r || !r.restanti || !r.misurati) break;
+      }
+    } finally {
+      this.misurando.set(false);
+    }
   }
   private url(token: string) { return `${location.origin}/invito/${token}`; }
 

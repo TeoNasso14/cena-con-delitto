@@ -6,29 +6,59 @@ import { Db, env, Errore, json } from "./base.ts";
 const MAX_BYTE = 4 * 1024 * 1024;
 const TIPI = /^(image\/(jpeg|png|webp|gif)|audio\/(mpeg|mp4|ogg|wav|webm)|video\/(mp4|webm)|application\/pdf)$/;
 
-type Archivio = Pick<ReturnType<typeof getStore>, "set" | "getWithMetadata" | "delete">;
+type Archivio = Pick<ReturnType<typeof getStore>, "set" | "getWithMetadata" | "delete" | "list">;
 const memoria = new Map<string, { data: ArrayBuffer; metadata: Record<string, unknown> }>();
 const archivioMemoria = {
   async set(key: string, data: ArrayBuffer, o?: { metadata?: Record<string, unknown> }) { memoria.set(key, { data, metadata: o?.metadata ?? {} }); },
   async getWithMetadata(key: string) { return memoria.get(key) ?? null; },
   async delete(key: string) { memoria.delete(key); },
+  async list() { return { blobs: [...memoria.keys()].map((key) => ({ key, etag: "" })), directories: [] }; },
 } as unknown as Archivio;
 
 /** Su Netlify gli allegati vanno in Netlify Blobs; in locale (CENA_ARCHIVIO_MEMORIA=1) restano in memoria. */
 const archivio = (): Archivio => (env("CENA_ARCHIVIO_MEMORIA") === "1" ? archivioMemoria : getStore({ name: "allegati", consistency: "strong" }));
 
+/** Ricorda la grandezza di un allegato: serve allo stato del sito e ai numeri per account dell'amministrazione. */
+async function registra(db: Db, key: string, serataId: number | null, byte: number, tipo: string) {
+  await db.q("INSERT INTO allegato (chiave, serata_id, byte, tipo) VALUES ($1, $2, $3, $4) ON CONFLICT (chiave) DO NOTHING", [key, serataId, byte, tipo]);
+}
+
 /** Copia un allegato in un'altra serata con una chiave nuova (per duplicare una serata). Un file sparito resta senza copia. */
-export async function copiaAllegato(key: string, serataId: number): Promise<string | null> {
+export async function copiaAllegato(db: Db, key: string, serataId: number): Promise<string | null> {
   const r = await archivio().getWithMetadata(key, { type: "arrayBuffer" });
   if (!r) return null;
   const nuova = `s${serataId}-${randomBytes(12).toString("base64url")}`;
-  await archivio().set(nuova, r.data as ArrayBuffer, { metadata: { ...(r.metadata as Record<string, unknown>), serata: serataId } });
+  const metadata: Record<string, unknown> = { ...(r.metadata as Record<string, unknown>), serata: serataId };
+  await archivio().set(nuova, r.data as ArrayBuffer, { metadata });
+  await registra(db, nuova, serataId, (r.data as ArrayBuffer).byteLength, String(metadata.tipo ?? ""));
   return nuova;
 }
 
 /** Cancella gli allegati di una serata eliminata. */
-export async function eliminaAllegati(keys: string[]) {
+export async function eliminaAllegati(db: Db, keys: string[]) {
   for (const k of keys) await archivio().delete(k);
+  if (keys.length) await db.q("DELETE FROM allegato WHERE chiave = ANY($1::text[])", [keys]);
+}
+
+/** Gli allegati nell'archivio: quanti, quanto pesano quelli misurati, quanti non sono ancora misurati (caricati prima della 3.0). */
+export async function contaAllegati(db: Db) {
+  const chiavi = (await archivio().list()).blobs.map((b) => b.key);
+  const misurati = await db.q<{ chiave: string; byte: string }>("SELECT chiave, byte FROM allegato WHERE chiave = ANY($1::text[])", [chiavi]);
+  return { file: chiavi.length, byte: misurati.reduce((n, m) => n + Number(m.byte), 0), daMisurare: chiavi.length - misurati.length, chiavi, misurati: new Set(misurati.map((m) => m.chiave)) };
+}
+
+/** Misura fino a `quanti` allegati di prima della 3.0, scaricandoli uno alla volta. Restituisce quanti ne restano. */
+export async function misuraAllegati(db: Db, quanti = 10) {
+  const c = await contaAllegati(db);
+  const da = c.chiavi.filter((k) => !c.misurati.has(k)).slice(0, quanti);
+  for (const k of da) {
+    const r = await archivio().getWithMetadata(k, { type: "arrayBuffer" });
+    if (!r) continue;
+    const sid = Number(/^s(\d+)-/.exec(k)?.[1]);
+    const esiste = Number.isInteger(sid) && (await db.uno("SELECT 1 FROM serata WHERE id = $1", [sid]));
+    await registra(db, k, esiste ? sid : null, (r.data as ArrayBuffer).byteLength, String((r.metadata as Record<string, unknown>)?.tipo ?? ""));
+  }
+  return { misurati: da.length, restanti: c.daMisurare - da.length };
 }
 
 /** La regia carica un file (foto, audio, video breve, PDF). Restituisce la chiave da salvare sulla prova o sulla scena. */
@@ -41,6 +71,7 @@ export async function carica(req: Request, db: Db) {
   if (dati.byteLength > MAX_BYTE) throw new Errore(413, "Il file supera 4 MB. Riducilo e riprova.");
   const key = `s${u.serata_id}-${randomBytes(12).toString("base64url")}`;
   await archivio().set(key, dati, { metadata: { tipo, serata: u.serata_id } });
+  await registra(db, key, u.serata_id, dati.byteLength, tipo);
   return json({ key, tipo }, 201);
 }
 
