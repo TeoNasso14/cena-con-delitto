@@ -23,7 +23,7 @@
 .titolo { font-family: var(--titoli); font-weight: 700; line-height: 0.95; color: var(--testo-1); text-wrap: balance; }
 
 .narrazione { max-width: 54vw; gap: 4vh; }
-.narrazione .titolo { font-size: clamp(56px, 14vh, 190px); }
+.narrazione .titolo { font-size: calc(clamp(56px, 14vh, 190px) * var(--scala-titoli)); }
 .narrazione p { font-size: clamp(22px, 3.6vh, 44px); line-height: 1.38; max-width: 32ch; white-space: pre-line; }
 
 .media { align-items: center; gap: 2vh; }
@@ -36,7 +36,7 @@
 .conto .sotto-testo { font-size: 2.6vh; color: var(--su-disco); max-width: 52vh; font-weight: 600; }
 
 .avanzamento { gap: 6vh; max-width: 68vw; }
-.avanzamento .titolo { font-size: clamp(48px, 10vh, 120px); }
+.avanzamento .titolo { font-size: calc(clamp(48px, 10vh, 120px) * var(--scala-titoli)); }
 .classifica { display: grid; gap: 4vh; }
 .riga { display: grid; grid-template-columns: minmax(0, 16ch) minmax(0, 1fr) auto; align-items: center; gap: 3vw; font-size: clamp(24px, 4vh, 48px); font-weight: 600; }
 .barra { height: 2.4vh; border-radius: 999px; background: var(--fondo-3); overflow: hidden; }
@@ -46,12 +46,12 @@
 .quante { color: var(--testo-2); font-weight: 500; }
 
 .rivelazione { align-items: center; text-align: center; gap: 3vh; }
-.rivelazione .titolo { font-size: 10vh; max-width: 64vh; }
+.rivelazione .titolo { font-size: calc(10vh * var(--scala-titoli)); max-width: 64vh; }
 .dettagli { display: grid; gap: 0.6vh; font-size: 3.6vh; font-weight: 600; color: var(--accento); max-width: 60vh; }
 .vince { font-size: 2.8vh; max-width: 60vh; color: var(--testo-2); }
 
 .attesa { max-width: 54vw; gap: 3vh; }
-.attesa .titolo { font-size: clamp(64px, 15vh, 190px); }
+.attesa .titolo { font-size: calc(clamp(64px, 15vh, 190px) * var(--scala-titoli)); }
 .attesa p { font-size: clamp(24px, 4vh, 48px); color: var(--testo-2); font-weight: 500; }
 
 .fasi { position: relative; z-index: 2; list-style: none; margin: 0; padding: 2.4vh 0 0; display: flex; flex-wrap: wrap; gap: 1vh 3.2vw; font-size: clamp(16px, 2.4vh, 30px); font-weight: 600; color: var(--testo-2); transition: opacity 400ms ease; }

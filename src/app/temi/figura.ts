@@ -64,6 +64,19 @@ import { Figura as NomeFigura } from './catalogo';
     .impronta { stroke-dasharray: 60; animation: rileva 3.2s ease-in-out infinite; }
     @keyframes rileva { 0% { stroke-dashoffset: 60; } 50%, 100% { stroke-dashoffset: 0; } }
 
+    /* Gesti comuni dei temi Vittoriano, Viaggio, Gatsby e Natale. */
+    .f-oscilla { transform-box: fill-box; transform-origin: 50% 0%; animation: f-oscilla 2.6s ease-in-out infinite; }
+    @keyframes f-oscilla { 0%, 100% { transform: rotate(-7deg); } 50% { transform: rotate(7deg); } }
+    .f-galleggia { animation: f-galleggia 2.8s ease-in-out infinite; }
+    @keyframes f-galleggia { 0%, 100% { transform: translateY(0); } 50% { transform: translateY(-4px); } }
+    .f-sale { animation: f-sale 2.6s ease-out infinite; }
+    .f-sale.due { animation-delay: 1.3s; }
+    @keyframes f-sale { from { opacity: 0.85; transform: translateY(0); } to { opacity: 0; transform: translateY(-10px); } }
+    .f-brilla { animation: f-brilla 1.8s steps(1) infinite; }
+    @keyframes f-brilla { 0%, 100% { opacity: 1; } 40% { opacity: 0.45; } 60% { opacity: 1; } 80% { opacity: 0.7; } }
+    .f-gira { transform-box: fill-box; transform-origin: 50% 50%; animation: f-gira 5s linear infinite; }
+    @keyframes f-gira { to { transform: rotate(360deg); } }
+
     @media (prefers-reduced-motion: reduce) {
       svg * { animation: none !important; }
       .impronta { stroke-dasharray: none; }
@@ -180,6 +193,180 @@ import { Figura as NomeFigura } from './catalogo';
             <path d="M15 32c0-9 5-16 13-16s13 7 13 16"/>
           </g>
         </svg>
+      }
+      @case ('taccuino') {
+        <svg viewBox="0 0 56 56"><g class="f-galleggia">
+          <rect x="14" y="10" width="28" height="36" rx="1.5" fill="var(--testo-1)"/>
+          <path d="M20 18h16M20 24h16M20 30h12M20 36h14" stroke="var(--fondo)" stroke-width="1.6"/>
+          <path d="M14 14h-3M14 22h-3M14 30h-3M14 38h-3" stroke="var(--testo-2)" stroke-width="2.4" stroke-linecap="round"/>
+          <path d="M38 10v14l3-2 3 2V10" fill="var(--sigillo)"/>
+        </g></svg>
+      }
+      @case ('lente') {
+        <svg viewBox="0 0 56 56"><g class="f-oscilla">
+          <circle cx="24" cy="22" r="12" fill="none" stroke="var(--testo-1)" stroke-width="3.5"/>
+          <path d="M19 15a8 8 0 0 1 7-2" stroke="var(--testo-2)" stroke-width="2" fill="none" stroke-linecap="round"/>
+          <path d="M33 31l12 12" stroke="var(--testo-1)" stroke-width="5" stroke-linecap="round"/>
+        </g></svg>
+      }
+      @case ('cilindro') {
+        <svg viewBox="0 0 56 56"><g class="f-galleggia">
+          <rect x="18" y="12" width="20" height="24" rx="1.5" fill="var(--testo-1)"/>
+          <rect x="18" y="29" width="20" height="4" fill="var(--accento)"/>
+          <ellipse cx="28" cy="37" rx="18" ry="4" fill="var(--testo-1)"/>
+        </g></svg>
+      }
+      @case ('orologio') {
+        <svg viewBox="0 0 56 56"><g class="f-oscilla">
+          <path d="M28 2v12" stroke="var(--testo-2)" stroke-width="1.6" stroke-dasharray="2 2"/>
+          <circle cx="28" cy="14" r="2.5" fill="none" stroke="var(--testo-1)" stroke-width="2"/>
+          <circle cx="28" cy="32" r="14" fill="var(--carta)" stroke="var(--testo-1)" stroke-width="3"/>
+          <path d="M28 32v-8M28 32l6 3" stroke="var(--inchiostro)" stroke-width="2" stroke-linecap="round"/>
+        </g></svg>
+      }
+      @case ('calamaio') {
+        <svg viewBox="0 0 56 56">
+          <path class="f-oscilla" d="M34 6c8 4 10 14 4 22l-6 6c0-8-2-16 2-28z" fill="var(--testo-2)"/>
+          <path d="M16 34h22l2 14H14z" fill="var(--testo-1)"/>
+          <rect x="21" y="29" width="12" height="6" rx="1" fill="var(--testo-1)"/>
+        </svg>
+      }
+      @case ('chiave') {
+        <svg viewBox="0 0 56 56"><g class="f-oscilla">
+          <circle cx="28" cy="14" r="8" fill="none" stroke="var(--testo-1)" stroke-width="3.5"/>
+          <path d="M28 22v24M28 38h7M28 44h5" stroke="var(--testo-1)" stroke-width="3.5" stroke-linecap="square"/>
+        </g></svg>
+      }
+      @case ('biglietto') {
+        <svg viewBox="0 0 56 56"><g class="f-galleggia">
+          <path d="M8 18h40v6a4 4 0 0 0 0 8v6H8v-6a4 4 0 0 0 0-8z" fill="var(--carta)"/>
+          <path d="M16 24h14M16 29h20M16 34h10" stroke="var(--inchiostro)" stroke-width="1.6"/>
+          <circle cx="41" cy="28" r="2.5" fill="var(--fondo)"/>
+        </g></svg>
+      }
+      @case ('valigia') {
+        <svg viewBox="0 0 56 56"><g class="f-galleggia">
+          <path d="M22 18v-4h12v4" fill="none" stroke="var(--testo-1)" stroke-width="2.6"/>
+          <rect x="10" y="18" width="36" height="26" rx="2" fill="var(--testo-2)"/>
+          <path d="M18 18v26M38 18v26" stroke="var(--accento)" stroke-width="3"/>
+        </g></svg>
+      }
+      @case ('locomotiva') {
+        <svg viewBox="0 0 56 56">
+          <circle class="f-sale" cx="16" cy="12" r="4" fill="var(--testo-2)"/>
+          <circle class="f-sale due" cx="22" cy="8" r="3" fill="var(--testo-2)"/>
+          <path d="M12 18h6v8h14v-8h10v20H8V26h4z" fill="var(--testo-1)"/>
+          <rect x="34" y="21" width="6" height="5" fill="var(--accento)"/>
+          <g fill="var(--fondo)" stroke="var(--testo-1)" stroke-width="2"><circle cx="16" cy="40" r="5"/><circle cx="34" cy="40" r="5"/></g>
+        </svg>
+      }
+      @case ('fischietto') {
+        <svg viewBox="0 0 56 56">
+          <path d="M10 26h22a9 9 0 1 1-9 9H10z" fill="var(--accento)"/>
+          <g class="f-brilla" stroke="var(--testo-1)" stroke-width="2" stroke-linecap="round"><path d="M38 18l5-6M43 26h7M40 21l7-3"/></g>
+        </svg>
+      }
+      @case ('lanterna') {
+        <svg viewBox="0 0 56 56"><g class="f-oscilla">
+          <path d="M28 4v6M20 10h16" stroke="var(--testo-1)" stroke-width="2.6"/>
+          <path d="M18 14h20l-2 26H20z" fill="none" stroke="var(--testo-1)" stroke-width="2.6"/>
+          <path class="f-brilla" d="M28 20c4 5 5 8 5 11a5 5 0 0 1-10 0c0-3 1-6 5-11z" fill="var(--accento)"/>
+          <rect x="16" y="40" width="24" height="4" fill="var(--testo-1)"/>
+        </g></svg>
+      }
+      @case ('tazza') {
+        <svg viewBox="0 0 56 56">
+          <path class="f-sale" d="M22 18c-3-4 3-7 0-11" stroke="var(--testo-2)" stroke-width="1.6" fill="none" stroke-linecap="round"/>
+          <path class="f-sale due" d="M30 18c-3-4 3-7 0-11" stroke="var(--testo-2)" stroke-width="1.6" fill="none" stroke-linecap="round"/>
+          <path d="M12 24h28v6a12 12 0 0 1-24 0z" fill="var(--testo-1)"/>
+          <path d="M40 27a5 5 0 0 1 0 8" stroke="var(--testo-1)" stroke-width="3" fill="none"/>
+          <ellipse cx="27" cy="44" rx="17" ry="3" fill="var(--testo-2)"/>
+        </svg>
+      }
+      @case ('coppa') {
+        <svg viewBox="0 0 56 56">
+          <g fill="var(--accento)"><circle class="f-sale" cx="24" cy="16" r="1.6"/><circle class="f-sale due" cx="31" cy="13" r="1.4"/></g>
+          <path d="M12 20h32c0 9-7 14-16 14s-16-5-16-14z" fill="var(--accento)" opacity="0.85"/>
+          <path d="M28 34v12M20 47h16" stroke="var(--testo-1)" stroke-width="2.4" stroke-linecap="round"/>
+        </svg>
+      }
+      @case ('grammofono') {
+        <svg viewBox="0 0 56 56">
+          <path d="M26 30L40 8c6 4 10 12 8 20z" fill="var(--accento)"/>
+          <path d="M26 30v8" stroke="var(--testo-1)" stroke-width="2.4"/>
+          <rect x="12" y="38" width="30" height="9" rx="1" fill="var(--testo-2)"/>
+          <ellipse class="f-gira" cx="22" cy="37" rx="9" ry="2.4" fill="var(--testo-1)"/>
+        </svg>
+      }
+      @case ('bocchino') {
+        <svg viewBox="0 0 56 56">
+          <path class="f-sale" d="M42 22c-3-4 3-7 0-11" stroke="var(--testo-2)" stroke-width="1.6" fill="none" stroke-linecap="round"/>
+          <path class="f-sale due" d="M46 20c-3-4 3-7 0-11" stroke="var(--testo-2)" stroke-width="1.6" fill="none" stroke-linecap="round"/>
+          <path d="M8 38L36 28" stroke="var(--testo-1)" stroke-width="3" stroke-linecap="round"/>
+          <path d="M22 33l2 5" stroke="var(--accento)" stroke-width="3"/>
+          <path d="M36 28l6-2" stroke="var(--testo-1)" stroke-width="5" stroke-linecap="round"/>
+          <circle class="f-brilla" cx="43" cy="25.6" r="1.8" fill="var(--accento)"/>
+        </svg>
+      }
+      @case ('carte') {
+        <svg viewBox="0 0 56 56"><g class="f-galleggia">
+          <rect x="12" y="14" width="20" height="28" rx="2" fill="var(--carta)" transform="rotate(-12 22 28)"/>
+          <rect x="24" y="12" width="20" height="28" rx="2" fill="var(--carta)" stroke="var(--fondo)" stroke-width="1" transform="rotate(10 34 26)"/>
+          <path d="M34 20l4 6-4 6-4-6z" fill="var(--sigillo)" transform="rotate(10 34 26)"/>
+        </g></svg>
+      }
+      @case ('bottiglia') {
+        <svg viewBox="0 0 56 56"><g class="f-galleggia">
+          <path d="M24 6h8v10c5 3 6 7 6 12v20H18V28c0-5 1-9 6-12z" fill="var(--testo-2)"/>
+          <rect x="20" y="30" width="16" height="10" fill="var(--accento)"/>
+        </g></svg>
+      }
+      @case ('perle') {
+        <svg viewBox="0 0 56 56"><g class="f-oscilla" fill="var(--testo-1)">
+          <circle cx="12" cy="14" r="3"/><circle cx="15" cy="22" r="3"/><circle cx="20" cy="29" r="3"/><circle cx="28" cy="32" r="3.4"/>
+          <circle cx="36" cy="29" r="3"/><circle cx="41" cy="22" r="3"/><circle cx="44" cy="14" r="3"/>
+          <circle cx="28" cy="40" r="4" fill="var(--accento)"/>
+        </g></svg>
+      }
+      @case ('pallina') {
+        <svg viewBox="0 0 56 56"><g class="f-oscilla">
+          <path d="M28 2v10" stroke="var(--testo-2)" stroke-width="1.4"/>
+          <rect x="24" y="11" width="8" height="5" rx="1" fill="var(--testo-2)"/>
+          <circle cx="28" cy="30" r="14" fill="var(--accento)"/>
+          <path d="M20 24a10 10 0 0 1 6-5" stroke="var(--testo-1)" stroke-width="2.4" fill="none" stroke-linecap="round"/>
+        </g></svg>
+      }
+      @case ('regalo') {
+        <svg viewBox="0 0 56 56"><g class="f-galleggia">
+          <rect x="12" y="22" width="32" height="24" fill="var(--accento)"/>
+          <rect x="10" y="16" width="36" height="7" fill="var(--accento)"/>
+          <path d="M28 16v30" stroke="var(--testo-1)" stroke-width="4"/>
+          <path d="M28 16c-6-8-14-4-8 0zM28 16c6-8 14-4 8 0z" fill="var(--testo-1)"/>
+        </g></svg>
+      }
+      @case ('stella') {
+        <svg viewBox="0 0 56 56"><path class="f-brilla" d="M28 6l6 15h16l-13 10 5 16-14-10-14 10 5-16L6 21h16z" fill="var(--testo-1)"/></svg>
+      }
+      @case ('campanella') {
+        <svg viewBox="0 0 56 56"><g class="f-oscilla">
+          <path d="M28 6v5" stroke="var(--testo-1)" stroke-width="2.4"/>
+          <path d="M16 38c3-4 3-10 3-14a9 9 0 0 1 18 0c0 4 0 10 3 14z" fill="var(--testo-1)"/>
+          <circle cx="28" cy="42" r="3.6" fill="var(--accento)"/>
+        </g></svg>
+      }
+      @case ('bastoncino') {
+        <svg viewBox="0 0 56 56"><g class="f-oscilla">
+          <path d="M34 48V18a7 7 0 0 0-14 0" fill="none" stroke="var(--testo-1)" stroke-width="7" stroke-linecap="round"/>
+          <path d="M34 48V18a7 7 0 0 0-14 0" fill="none" stroke="var(--accento)" stroke-width="7" stroke-dasharray="4 5" stroke-linecap="butt"/>
+        </g></svg>
+      }
+      @case ('pupazzo') {
+        <svg viewBox="0 0 56 56"><g class="f-galleggia">
+          <circle cx="28" cy="38" r="12" fill="var(--testo-1)"/>
+          <circle cx="28" cy="18" r="8" fill="var(--testo-1)"/>
+          <path d="M20 26h16l-2 4h-6z" fill="var(--accento)"/>
+          <g fill="var(--fondo)"><circle cx="25" cy="17" r="1.4"/><circle cx="31" cy="17" r="1.4"/><circle cx="28" cy="36" r="1.6"/><circle cx="28" cy="42" r="1.6"/></g>
+        </g></svg>
       }
     }
   `,

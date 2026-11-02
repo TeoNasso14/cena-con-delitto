@@ -7,7 +7,7 @@ const regia = (req: Request, db: Db) => utente(req, db, ["regia"]);
 const TIPI_PROVA = ["documento", "oggetto", "testimonianza", "foto", "audio", "video"];
 const TIPI_SCENA = ["narrazione", "immagine", "video", "audio", "conto", "avanzamento", "annuncio", "rivelazione", "attesa"];
 /** Gli stessi id del catalogo in src/app/temi/catalogo.ts: un test controlla che coincidano. */
-export const TEMI = ["halloween", "noir"];
+export const TEMI = ["halloween", "noir", "vittoriano", "viaggio", "gatsby", "natale"];
 
 async function evento(db: Db, sid: number, testoEvento: string, tipo = "regia", squadraId: number | null = null) {
   await db.q("INSERT INTO evento (serata_id, squadra_id, tipo, testo) VALUES ($1, $2, $3, $4)", [sid, squadraId, tipo, testoEvento]);
@@ -67,9 +67,11 @@ export async function tutto(req: Request, db: Db) {
     [sid],
   );
   const sussurri = (await db.q<{ testo: string }>("SELECT testo FROM sussurro WHERE serata_id = $1 ORDER BY ordine, id", [sid])).map((r) => r.testo);
+  const invitati = await db.q("SELECT id, nome, squadra_id FROM invitato WHERE serata_id = $1 ORDER BY ordine, id", [sid]);
+  const vincoli = await db.q("SELECT id, a, b, tipo FROM vincolo WHERE serata_id = $1 ORDER BY id", [sid]);
   return json({
     io: { username: u.username },
-    serata, sussurri, fasi, totaleProve: totale?.n ?? 0, squadre, schermi, personaggi, prove, cartelle, scene, annunci, accuse, eventi,
+    serata, sussurri, invitati, vincoli, fasi, totaleProve: totale?.n ?? 0, squadre, schermi, personaggi, prove, cartelle, scene, annunci, accuse, eventi,
   });
 }
 
@@ -691,8 +693,17 @@ export async function tema(req: Request, db: Db) {
 /** Nuvolette: accese o spente, e le frasi della serata (sostituite tutte insieme). */
 export async function sussurri(req: Request, db: Db) {
   const u = await regia(req, db);
-  const b = await corpo<{ attivi?: boolean; frasi?: unknown }>(req);
+  const b = await corpo<{ attivi?: boolean; frasi?: unknown; attesa_min?: number; attesa_max?: number; durata?: number }>(req);
   if (b.attivi !== undefined && typeof b.attivi !== "boolean") throw new Errore(400, "Valore non valido.");
+  // Tempi in secondi: attesa tra una nuvoletta e l'altra (da min a max) e quanto resta visibile.
+  const tempi: Array<[string, number]> = [];
+  if (b.attesa_min !== undefined || b.attesa_max !== undefined) {
+    const min = intero(b.attesa_min, "attesa minima", { min: 5, max: 600 });
+    const max = intero(b.attesa_max, "attesa massima", { min: 5, max: 600 });
+    if (min > max) throw new Errore(400, "L'attesa minima non può superare la massima.");
+    tempi.push(["sussurri_attesa_min", min], ["sussurri_attesa_max", max]);
+  }
+  if (b.durata !== undefined) tempi.push(["sussurri_durata", intero(b.durata, "durata", { min: 3, max: 60 })]);
   let frasi: string[] | undefined;
   if (b.frasi !== undefined) {
     if (!Array.isArray(b.frasi)) throw new Errore(400, "Le frasi devono essere un elenco.");
@@ -702,6 +713,7 @@ export async function sussurri(req: Request, db: Db) {
   }
   await db.transazione(async (t) => {
     if (b.attivi !== undefined) await t.q("UPDATE serata SET sussurri_attivi = $1 WHERE id = $2", [b.attivi, u.serata_id]);
+    for (const [colonna, valore] of tempi) await t.q(`UPDATE serata SET ${colonna} = $1 WHERE id = $2`, [valore, u.serata_id]);
     if (frasi) {
       await t.q("DELETE FROM sussurro WHERE serata_id = $1", [u.serata_id]);
       for (const [i, f] of frasi.entries()) await t.q("INSERT INTO sussurro (serata_id, testo, ordine) VALUES ($1, $2, $3)", [u.serata_id, f, i]);
@@ -741,11 +753,13 @@ export async function azzera(req: Request, db: Db) {
 export async function esporta(req: Request, db: Db) {
   const u = await regia(req, db);
   const sid = u.serata_id;
-  const serata = await db.uno("SELECT titolo, premessa, colpevole, movente, arma, tema FROM serata WHERE id = $1", [sid]);
+  // Formato 2: con le chiavi degli allegati, che il browser della regia scarica e mette nel file (vedi Strumenti).
+  const serata = await db.uno("SELECT titolo, premessa, colpevole, movente, arma, tema, sfondo_key, sfondo_opacita, sussurri_attivi, sussurri_attesa_min, sussurri_attesa_max, sussurri_durata FROM serata WHERE id = $1", [sid]);
   const fasi = await db.q("SELECT numero, nome, durata_minuti FROM fase WHERE serata_id = $1 ORDER BY numero", [sid]);
-  const personaggi = await db.q("SELECT nome, ruolo, scheda, note_regia, ordine FROM personaggio WHERE serata_id = $1 ORDER BY ordine, id", [sid]);
+  const personaggi = await db.q("SELECT nome, ruolo, scheda, note_regia, ordine, foto_key FROM personaggio WHERE serata_id = $1 ORDER BY ordine, id", [sid]);
+  const sussurri = (await db.q<{ testo: string }>("SELECT testo FROM sussurro WHERE serata_id = $1 ORDER BY ordine, id", [sid])).map((r) => r.testo);
   const prove = await db.q<{ id: number; numero: number }>(
-    `SELECT p.id, p.numero, p.titolo, p.tipo, p.testo, p.nota_sigillo, p.titolo_visibile, p.in_elenco, c.nome AS cartella
+    `SELECT p.id, p.numero, p.titolo, p.tipo, p.testo, p.nota_sigillo, p.titolo_visibile, p.in_elenco, p.allegato_key, p.allegato_tipo, c.nome AS cartella
      FROM prova p LEFT JOIN cartella c ON c.id = p.cartella_id WHERE p.serata_id = $1 ORDER BY p.numero`,
     [sid],
   );
@@ -758,13 +772,13 @@ export async function esporta(req: Request, db: Db) {
      ORDER BY r.id`,
     [sid],
   );
-  const scene = await db.q("SELECT ordine, tipo, titolo, testo, fase_numero, avvio_automatico FROM scena WHERE serata_id = $1 ORDER BY ordine, id", [sid]);
+  const scene = await db.q("SELECT ordine, tipo, titolo, testo, fase_numero, avvio_automatico, allegato_key, allegato_tipo FROM scena WHERE serata_id = $1 ORDER BY ordine, id", [sid]);
   const righe = await db.q<{ nome: string; visibile: boolean }>("SELECT nome, visibile FROM cartella WHERE serata_id = $1 ORDER BY ordine, id", [sid]);
   const cartelle = righe.map((c) => c.nome);
   const cartelle_visibili = righe.filter((c) => c.visibile).map((c) => c.nome);
   return json({
-    formato: "cena-con-delitto/1",
-    serata, fasi, personaggi, scene, cartelle, cartelle_visibili,
+    formato: "cena-con-delitto/2",
+    serata, fasi, personaggi, scene, cartelle, cartelle_visibili, sussurri,
     prove: prove.map(({ id, ...p }) => ({
       ...p,
       regole: regole.filter((r) => r.prova_id === id).map((r) => ({
@@ -782,13 +796,17 @@ export async function importa(req: Request, db: Db) {
     caso?: {
       formato?: string; serata?: Record<string, unknown>; fasi?: Array<Record<string, unknown>>; personaggi?: Array<Record<string, unknown>>; cartelle?: unknown[]; cartelle_visibili?: unknown[];
       scene?: Array<Record<string, unknown>>;
+      sussurri?: unknown[];
       prove?: Array<Record<string, unknown> & { regole?: Array<{ tipo: string; pin?: string; prova_richiesta?: number; fase_numero?: number; gruppo?: number }> }>;
     };
   }>(req);
   if (b.conferma !== "SOSTITUISCI") throw new Errore(400, "Per sostituire il caso scrivi SOSTITUISCI.");
   const c = b.caso;
-  if (!c || c.formato !== "cena-con-delitto/1") throw new Errore(400, "Il file non è un caso esportato da questo sito.");
+  if (!c || (c.formato !== "cena-con-delitto/1" && c.formato !== "cena-con-delitto/2")) throw new Errore(400, "Il file non è un caso esportato da questo sito.");
   const sid = u.serata_id;
+  // Gli allegati arrivano già ricaricati in questa serata dal browser: si accettano solo chiavi di questa serata.
+  const chiave = (v: unknown) => (typeof v === "string" && v.startsWith(`s${sid}-`) ? v : null);
+  const tipoFile = (k: string | null, v: unknown) => (k && typeof v === "string" ? v.slice(0, 80) : null);
   await db.transazione(async (t) => {
     await t.q("UPDATE serata SET scena_in_onda = NULL WHERE id = $1", [sid]);
     for (const tab of ["prova", "personaggio", "scena", "fase", "cartella"]) await t.q(`DELETE FROM ${tab} WHERE serata_id = $1`, [sid]);
@@ -809,29 +827,45 @@ export async function importa(req: Request, db: Db) {
     ]);
     // I file esportati prima della 1.1 non hanno il tema: resta quello attuale.
     if (typeof s.tema === "string" && TEMI.includes(s.tema)) await t.q("UPDATE serata SET tema = $1 WHERE id = $2", [s.tema, sid]);
+    if (c.formato === "cena-con-delitto/2") {
+      const o = Number(s.sfondo_opacita);
+      await t.q("UPDATE serata SET sfondo_key = $1, sfondo_opacita = $2 WHERE id = $3", [chiave(s.sfondo_key), Number.isFinite(o) ? Math.min(0.8, Math.max(0.05, o)) : 0.25, sid]);
+      if (typeof s.sussurri_attivi === "boolean") await t.q("UPDATE serata SET sussurri_attivi = $1 WHERE id = $2", [s.sussurri_attivi, sid]);
+      const [mn, mx, du] = [Number(s.sussurri_attesa_min), Number(s.sussurri_attesa_max), Number(s.sussurri_durata)];
+      if ([mn, mx, du].every(Number.isInteger) && mn >= 5 && mx <= 600 && mn <= mx && du >= 3 && du <= 60) {
+        await t.q("UPDATE serata SET sussurri_attesa_min = $1, sussurri_attesa_max = $2, sussurri_durata = $3 WHERE id = $4", [mn, mx, du, sid]);
+      }
+      if (Array.isArray(c.sussurri)) {
+        await t.q("DELETE FROM sussurro WHERE serata_id = $1", [sid]);
+        const frasi = c.sussurri.map((f) => String(f ?? "").trim().slice(0, 200)).filter(Boolean).slice(0, 500);
+        for (const [i, f] of frasi.entries()) await t.q("INSERT INTO sussurro (serata_id, testo, ordine) VALUES ($1, $2, $3)", [sid, f, i]);
+      }
+    }
     for (const [i, f] of (c.fasi ?? []).entries()) {
       await t.q("INSERT INTO fase (serata_id, numero, nome, durata_minuti) VALUES ($1,$2,$3,$4)", [
         sid, i + 1, testo(f.nome, "fase", { max: 80 }), f.durata_minuti ?? null,
       ]);
     }
     for (const p of c.personaggi ?? []) {
-      await t.q("INSERT INTO personaggio (serata_id, nome, ruolo, scheda, note_regia, ordine) VALUES ($1,$2,$3,$4,$5,$6)", [
-        sid, testo(p.nome, "nome", { max: 80 }), String(p.ruolo ?? ""), String(p.scheda ?? ""), String(p.note_regia ?? ""), Number(p.ordine ?? 0),
+      await t.q("INSERT INTO personaggio (serata_id, nome, ruolo, scheda, note_regia, ordine, foto_key) VALUES ($1,$2,$3,$4,$5,$6,$7)", [
+        sid, testo(p.nome, "nome", { max: 80 }), String(p.ruolo ?? ""), String(p.scheda ?? ""), String(p.note_regia ?? ""), Number(p.ordine ?? 0), chiave(p.foto_key),
       ]);
     }
     for (const sc of c.scene ?? []) {
       await t.q(
-        "INSERT INTO scena (serata_id, ordine, tipo, titolo, testo, fase_numero, avvio_automatico) VALUES ($1,$2,$3,$4,$5,$6,$7)",
-        [sid, Number(sc.ordine ?? 0), TIPI_SCENA.includes(String(sc.tipo)) ? sc.tipo : "narrazione", String(sc.titolo ?? ""), String(sc.testo ?? ""), sc.fase_numero ?? null, sc.avvio_automatico === true],
+        "INSERT INTO scena (serata_id, ordine, tipo, titolo, testo, fase_numero, avvio_automatico, allegato_key, allegato_tipo) VALUES ($1,$2,$3,$4,$5,$6,$7,$8,$9)",
+        [sid, Number(sc.ordine ?? 0), TIPI_SCENA.includes(String(sc.tipo)) ? sc.tipo : "narrazione", String(sc.titolo ?? ""), String(sc.testo ?? ""), sc.fase_numero ?? null, sc.avvio_automatico === true,
+          chiave(sc.allegato_key), tipoFile(chiave(sc.allegato_key), sc.allegato_tipo)],
       );
     }
     const idDi = new Map<number, number>();
     for (const p of c.prove ?? []) {
       const d = datiProva({ ...p, cartella_id: null });
       const r = await t.uno<{ id: number }>(
-        "INSERT INTO prova (serata_id, numero, titolo, tipo, testo, nota_sigillo, titolo_visibile, in_elenco, cartella_id) VALUES ($1,$2,$3,$4,$5,$6,$7,$8,$9) RETURNING id",
+        "INSERT INTO prova (serata_id, numero, titolo, tipo, testo, nota_sigillo, titolo_visibile, in_elenco, cartella_id, allegato_key, allegato_tipo) VALUES ($1,$2,$3,$4,$5,$6,$7,$8,$9,$10,$11) RETURNING id",
         [sid, d.numero, d.titolo, d.tipo, d.testo, d.nota_sigillo, d.titolo_visibile, d.in_elenco,
-          typeof p.cartella === "string" ? cartellaDi.get(p.cartella.trim().slice(0, 60).toLowerCase()) ?? null : null],
+          typeof p.cartella === "string" ? cartellaDi.get(p.cartella.trim().slice(0, 60).toLowerCase()) ?? null : null,
+          chiave(p.allegato_key), tipoFile(chiave(p.allegato_key), p.allegato_tipo)],
       );
       idDi.set(d.numero, r!.id);
     }

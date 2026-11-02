@@ -40,6 +40,82 @@ colors:
   noir-inchiostro: "#111111"
   noir-carta-filetto: "#c4bfb2"
   noir-decoro: "#222224"
+  vittoriano-fondo: "#f3ead8"
+  vittoriano-fondo-2: "#ebe0c9"
+  vittoriano-fondo-3: "#e0d3b8"
+  vittoriano-filetto: "#c2b190"
+  vittoriano-testo-1: "#2a1f17"
+  vittoriano-testo-2: "#5e4b3a"
+  vittoriano-accento: "#1f3a5f"
+  vittoriano-accento-chiaro: "#2c5282"
+  vittoriano-su-accento: "#f8f2e4"
+  vittoriano-disco: "#e6d8b8"
+  vittoriano-su-disco: "#2a1f17"
+  vittoriano-sigillo: "#8e1b24"
+  vittoriano-sigillo-luce: "#b8323c"
+  vittoriano-sigillo-segno: "#e7a39a"
+  vittoriano-allarme: "#a8261b"
+  vittoriano-carta: "#fbf7ee"
+  vittoriano-inchiostro: "#1d1712"
+  vittoriano-carta-filetto: "#d9ccb2"
+  vittoriano-decoro: "#2a1f17"
+  viaggio-fondo: "#0e1626"
+  viaggio-fondo-2: "#152036"
+  viaggio-fondo-3: "#1d2a44"
+  viaggio-filetto: "#33415f"
+  viaggio-testo-1: "#eee6d4"
+  viaggio-testo-2: "#a9b0c0"
+  viaggio-accento: "#c9a24a"
+  viaggio-accento-chiaro: "#ddb85e"
+  viaggio-su-accento: "#0e1626"
+  viaggio-disco: "#eee6d4"
+  viaggio-su-disco: "#0e1626"
+  viaggio-sigillo: "#7a1f2a"
+  viaggio-sigillo-luce: "#a3313d"
+  viaggio-sigillo-segno: "#e7a39a"
+  viaggio-allarme: "#ff7a6b"
+  viaggio-carta: "#efe4c8"
+  viaggio-inchiostro: "#1a1410"
+  viaggio-carta-filetto: "#cdbf9f"
+  viaggio-decoro: "#0e1626"
+  gatsby-fondo: "#0d0c0a"
+  gatsby-fondo-2: "#171511"
+  gatsby-fondo-3: "#211e18"
+  gatsby-filetto: "#3b3529"
+  gatsby-testo-1: "#f1e7cf"
+  gatsby-testo-2: "#b3a587"
+  gatsby-accento: "#d6b25e"
+  gatsby-accento-chiaro: "#e6c677"
+  gatsby-su-accento: "#0d0c0a"
+  gatsby-disco: "#d6b25e"
+  gatsby-su-disco: "#0d0c0a"
+  gatsby-sigillo: "#7a2030"
+  gatsby-sigillo-luce: "#a3354a"
+  gatsby-sigillo-segno: "#e7a39a"
+  gatsby-allarme: "#ff7f6e"
+  gatsby-carta: "#f1e7cf"
+  gatsby-inchiostro: "#14110c"
+  gatsby-carta-filetto: "#cfc0a0"
+  gatsby-decoro: "#8f6f2c"
+  natale-fondo: "#0f1d17"
+  natale-fondo-2: "#15261e"
+  natale-fondo-3: "#1d3328"
+  natale-filetto: "#2f4a3c"
+  natale-testo-1: "#f4ecdc"
+  natale-testo-2: "#b8c2b4"
+  natale-accento: "#f24b4b"
+  natale-accento-chiaro: "#f56b6b"
+  natale-su-accento: "#0f1d17"
+  natale-disco: "#f4ecdc"
+  natale-su-disco: "#0f1d17"
+  natale-sigillo: "#8e1b24"
+  natale-sigillo-luce: "#b8323c"
+  natale-sigillo-segno: "#e7a39a"
+  natale-allarme: "#f2c14e"
+  natale-carta: "#fbf4e4"
+  natale-inchiostro: "#1a1410"
+  natale-carta-filetto: "#d9ccb2"
+  natale-decoro: "#0f1d17"
   marchio-fondo: "#141414"
   marchio-fondo-2: "#1c1c1c"
   marchio-fondo-3: "#242424"
@@ -155,6 +231,118 @@ typography:
     fontFamily: "Courier Prime, Courier New, monospace"
     fontSize: "13px"
     fontWeight: 700
+    lineHeight: 1.3
+    letterSpacing: "0.04em"
+  vittoriano-display:
+    fontFamily: "IM Fell English, Georgia, serif"
+    fontSize: "clamp(56px, 14vh, 190px)"
+    fontWeight: 700
+    lineHeight: 0.95
+    letterSpacing: "0"
+  vittoriano-title:
+    fontFamily: "IM Fell English, Georgia, serif"
+    fontSize: "clamp(38px, 11vw, 48px)"
+    fontWeight: 700
+    lineHeight: 1
+    letterSpacing: "0"
+  vittoriano-body-sala:
+    fontFamily: "EB Garamond, Georgia, serif"
+    fontSize: "clamp(22px, 3.6vh, 44px)"
+    fontWeight: 400
+    lineHeight: 1.38
+  vittoriano-body:
+    fontFamily: "EB Garamond, Georgia, serif"
+    fontSize: "17px"
+    fontWeight: 400
+    lineHeight: 1.5
+  vittoriano-label:
+    fontFamily: "EB Garamond, Georgia, serif"
+    fontSize: "13px"
+    fontWeight: 600
+    lineHeight: 1.3
+    letterSpacing: "0.04em"
+  viaggio-display:
+    fontFamily: "Cinzel, Georgia, serif"
+    fontSize: "calc(clamp(56px, 14vh, 190px) * 0.72)"
+    fontWeight: 700
+    lineHeight: 0.95
+    letterSpacing: "0"
+  viaggio-title:
+    fontFamily: "Cinzel, Georgia, serif"
+    fontSize: "clamp(38px, 11vw, 48px)"
+    fontWeight: 700
+    lineHeight: 1
+    letterSpacing: "0"
+  viaggio-body-sala:
+    fontFamily: "Work Sans, system-ui, sans-serif"
+    fontSize: "clamp(22px, 3.6vh, 44px)"
+    fontWeight: 400
+    lineHeight: 1.38
+  viaggio-body:
+    fontFamily: "Work Sans, system-ui, sans-serif"
+    fontSize: "17px"
+    fontWeight: 400
+    lineHeight: 1.5
+  viaggio-label:
+    fontFamily: "Work Sans, system-ui, sans-serif"
+    fontSize: "13px"
+    fontWeight: 600
+    lineHeight: 1.3
+    letterSpacing: "0.04em"
+  gatsby-display:
+    fontFamily: "Federo, Georgia, serif"
+    fontSize: "clamp(56px, 14vh, 190px)"
+    fontWeight: 700
+    lineHeight: 0.95
+    letterSpacing: "0"
+  gatsby-title:
+    fontFamily: "Federo, Georgia, serif"
+    fontSize: "clamp(38px, 11vw, 48px)"
+    fontWeight: 700
+    lineHeight: 1
+    letterSpacing: "0"
+  gatsby-body-sala:
+    fontFamily: "Josefin Sans, system-ui, sans-serif"
+    fontSize: "clamp(22px, 3.6vh, 44px)"
+    fontWeight: 400
+    lineHeight: 1.38
+  gatsby-body:
+    fontFamily: "Josefin Sans, system-ui, sans-serif"
+    fontSize: "17px"
+    fontWeight: 400
+    lineHeight: 1.5
+  gatsby-label:
+    fontFamily: "Josefin Sans, system-ui, sans-serif"
+    fontSize: "13px"
+    fontWeight: 600
+    lineHeight: 1.3
+    letterSpacing: "0.04em"
+  natale-display:
+    fontFamily: "Gloock, Georgia, serif"
+    fontSize: "clamp(56px, 14vh, 190px)"
+    fontWeight: 700
+    lineHeight: 0.95
+    letterSpacing: "0"
+  natale-title:
+    fontFamily: "Gloock, Georgia, serif"
+    fontSize: "clamp(38px, 11vw, 48px)"
+    fontWeight: 700
+    lineHeight: 1
+    letterSpacing: "0"
+  natale-body-sala:
+    fontFamily: "Nunito, system-ui, sans-serif"
+    fontSize: "clamp(22px, 3.6vh, 44px)"
+    fontWeight: 400
+    lineHeight: 1.38
+  natale-body:
+    fontFamily: "Nunito, system-ui, sans-serif"
+    fontSize: "17px"
+    fontWeight: 400
+    lineHeight: 1.5
+  natale-label:
+    fontFamily: "Nunito, system-ui, sans-serif"
+    fontSize: "13px"
+    fontWeight: 600
     lineHeight: 1.3
     letterSpacing: "0.04em"
   marchio-display:
@@ -354,18 +542,18 @@ components:
 
 **Creative North Star: "La sala di proiezione e il fascicolo"**
 
-La serata è un film proiettato in sala, e le prove sono i file di un videogioco investigativo. Il film cambia genere col tema della serata: oggi Halloween classico (il predefinito) e Noir anni '40, domani altri. Il tema veste colori, caratteri, il disegno nel disco del proiettore, lo strato d'atmosfera della sala e le figure delle nuvolette. Struttura, componenti, forme, movimento e comandi restano gli stessi per tutti i temi: chi gioca riconosce lo strumento anche quando il film cambia.
+La serata è un film proiettato in sala, e le prove sono i file di un videogioco investigativo. Il film cambia genere col tema della serata: Halloween classico (il predefinito), Noir anni '40, Vittoriano alla Sherlock, Delitto in viaggio, Anni '20 Gatsby e Natale con delitto, domani altri. Il tema veste colori, caratteri, il disegno nel disco del proiettore, lo strato d'atmosfera della sala e le figure delle nuvolette. Struttura, componenti, forme, movimento e comandi restano gli stessi per tutti i temi: chi gioca riconosce lo strumento anche quando il film cambia.
 
 Le tre superfici parlano la stessa lingua con densità diverse. Il proiettore è scena pura: titoli enormi, testo grande leggibile dal fondo della sala, il disco come scenografia che cambia posto e misura da scena a scena. Il telefono e la regia sono strumenti: ereditano fondo, testo, accento e titoli del tema, ma con misura, con obiettivi di tocco ampi e una gerarchia che si legge al buio con un'occhiata.
 
 La profondità non viene dalle ombre ma dal fondo a strati e dai filetti sottili. La forma distingue gli oggetti del mondo (schede prova, documenti, timbri: angoli quasi netti, carta e inchiostro) dai comandi da toccare (pillole e tasti morbidi). La firma del sistema è il sigillo di ceralacca: si spacca in due quando il codice è giusto, trema una volta quando è sbagliato, in ogni tema.
 
-Il tema è una proprietà della serata. La regia lo sceglie in Strumenti; il sito lo applica come variabili CSS su `<html>` (colori per ruolo, `--titoli`, `--corpo`), e un tema sconosciuto vale Halloween classico. I valori predefiniti in `:root` del foglio globale sono quelli di Halloween.
+Il tema è una proprietà della serata. La regia lo sceglie in Strumenti; il sito lo applica come variabili CSS su `<html>` (colori per ruolo, `--titoli`, `--corpo`, `--scala-titoli`), insieme a `color-scheme`, al colore della barra del browser e a `data-tema`, e un tema sconosciuto vale Halloween classico. I valori predefiniti in `:root` del foglio globale sono quelli di Halloween. Ogni tema dichiara se è scuro o chiaro (`scuro` nel catalogo): tutti sono scuri tranne il Vittoriano, il primo tema chiaro, che porta `color-scheme: light`. Un tema con un carattere dei titoli molto largo dichiara anche `scalaTitoli`, che riduce i titoli del proiettore (oggi solo Delitto in viaggio, 0.72).
 
 Sopra i temi c'è il marchio dell'applicazione, **Il Movente** (sezione "Il marchio: Il Movente"). Le pagine fuori da una serata vestono il marchio: le tue serate, accesso della regia, amministrazione, inviti, primo avvio. Dal dettaglio di una serata in poi comanda il tema di quella serata: la regia della serata, i telefoni delle squadre, il proiettore e la pagina pubblica `/s/<slug>`. Il marchio usa gli stessi ruoli di colore e le stesse due variabili dei caratteri, quindi i componenti condivisi (bottoni, campi, avvisi) funzionano identici nei due mondi.
 
 **Key Characteristics:**
-- Fondo scuro pieno in tre livelli (`fondo`, `fondo-2`, `fondo-3`), mai bianco, mai gradienti.
+- Fondo pieno in tre livelli (`fondo`, `fondo-2`, `fondo-3`), mai gradienti: scuro in ogni tema tranne il Vittoriano, che è carta avorio e mai bianco puro.
 - Un solo colore saturo per tema, l'accento, per ciò che è vivo o in corso: fase corrente, comando principale, prova nuova.
 - Il carattere dei titoli solo per i nomi (titoli, nomi di scene, intestazioni di sezione); il carattere del corpo per tutto il resto. Due caratteri per tema.
 - Nessuna ombra: livelli tonali e filetti da 1px.
@@ -375,12 +563,12 @@ Sopra i temi c'è il marchio dell'applicazione, **Il Movente** (sezione "Il marc
 
 ## Colors
 
-I colori hanno nomi per ruolo, non per tinta: ogni tema dà un valore a ciascun ruolo. Nel frontmatter le chiavi senza prefisso sono Halloween classico (i valori di `:root`), le chiavi `noir-` sono Noir anni '40, le chiavi `marchio-` sono il marchio Il Movente. Un tema nuovo dà un valore a tutti i diciannove ruoli e aggiunge le sue chiavi col proprio prefisso.
+I colori hanno nomi per ruolo, non per tinta: ogni tema dà un valore a ciascun ruolo. Nel frontmatter le chiavi senza prefisso sono Halloween classico (i valori di `:root`), le chiavi `noir-` sono Noir anni '40, le chiavi `vittoriano-`, `viaggio-`, `gatsby-` e `natale-` sono i temi omonimi, le chiavi `marchio-` sono il marchio Il Movente. Un tema nuovo dà un valore a tutti i diciannove ruoli e aggiunge le sue chiavi col proprio prefisso.
 
 ### Primary
 - **Accento** (`accento`): il colore che urla. La fase corrente nella fila delle fasi, le barre di avanzamento, il bottone pieno, il tasto Apri, l'etichetta "Nuova", il bordo delle prove sigillate che si possono aprire, la scheda del tema scelto, il fuoco da tastiera, i link, la selezione del testo e il cursore.
 - **Accento acceso** (`accento-chiaro`): solo lo stato hover dei comandi pieni e dei link. Non è un secondo accento.
-- **Su accento** (`su-accento`): il testo sopra l'accento, sempre scuro.
+- **Su accento** (`su-accento`): il testo sopra l'accento, sempre in pieno contrasto con lui: scuro nei temi scuri, avorio nel Vittoriano, dove l'accento è un blu scuro.
 
 ### Secondary
 - **Sigillo** (`sigillo`): il corpo del sigillo di ceralacca, l'inchiostro del timbro "AGLI ATTI" e dei link sul documento. Appartiene agli oggetti, non all'interfaccia.
@@ -399,8 +587,8 @@ I colori hanno nomi per ruolo, non per tinta: ogni tema dà un valore a ciascun 
 - **Testo spento** (`testo-2`): testo secondario, metadati, orari, fasi non correnti, voci di navigazione a riposo, bordo delle prove aperte. Su `fondo` resta sopra 4.5:1 in ogni tema.
 
 ### Carta e scenografia
-- **Carta** (`carta`), **Inchiostro** (`inchiostro`), **Filetto carta** (`carta-filetto`): il documento rivelato, il verbale e le credenziali della regia. La carta è l'unica superficie chiara.
-- **Disco** (`disco`) e **Su disco** (`su-disco`): il grande disco del proiettore, le sue miniature in regia e nella pagina d'accesso, il colore proposto per una squadra nuova; `su-disco` è l'orologio e il testo del conto alla rovescia sopra il disco. Il disco è scenografia, non accento: può coincidere con l'accento (Halloween) o no (Noir).
+- **Carta** (`carta`), **Inchiostro** (`inchiostro`), **Filetto carta** (`carta-filetto`): il documento rivelato, il verbale e le credenziali della regia. Nei temi scuri la carta è l'unica superficie chiara; nel Vittoriano è un avorio più chiaro del fondo, e il documento si stacca per tono e filetto.
+- **Disco** (`disco`) e **Su disco** (`su-disco`): il grande disco del proiettore, le sue miniature in regia e nella pagina d'accesso, il colore proposto per una squadra nuova; `su-disco` è l'orologio e il testo del conto alla rovescia sopra il disco. Il disco è scenografia, non accento: può coincidere con l'accento (Halloween, Gatsby) o no (Noir, Vittoriano, Viaggio, Natale).
 - **Decoro** (`decoro`): il colore del disegno dentro il disco, quando il tema ne ha uno a colore.
 
 ### Dai nomi vecchi ai ruoli
@@ -418,7 +606,7 @@ Fino alla 1.0 i token avevano i nomi di Halloween. Corrispondenza, una volta per
 **Display Font:** il carattere dei titoli del tema (`--titoli`)
 **Body Font:** il carattere del corpo del tema (`--corpo`)
 
-**Character:** Ogni tema sceglie una coppia: un carattere di carattere forte che dà voce alla locandina e ai nomi delle cose, accanto a un carattere che porta istruzioni, numeri e comandi senza esitazione. I caratteri sono self-hosted in `public/fonti/` con `@font-face` nel foglio globale. Le misure sotto valgono per ogni tema; famiglie e pesi reali stanno nelle sezioni dei temi.
+**Character:** Ogni tema sceglie una coppia: un carattere di carattere forte che dà voce alla locandina e ai nomi delle cose, accanto a un carattere che porta istruzioni, numeri e comandi senza esitazione. I caratteri sono self-hosted in `public/fonti/` con `@font-face` nel foglio globale. Le misure sotto valgono per ogni tema; famiglie e pesi reali stanno nelle sezioni dei temi. Sul proiettore i titoli delle scene (narrazione, avanzamento, rivelazione, attesa) si moltiplicano per `--scala-titoli`: 1 per tutti, meno di 1 per un tema dal carattere dei titoli molto largo (Delitto in viaggio, Cinzel tutto maiuscolo, 0.72). Telefono e regia non scalano.
 
 ### Hierarchy
 - **Display** (titoli 700, clamp(56px, 14vh, 190px), 0.95): titolo della scena di narrazione sul proiettore, su due righe al massimo. La scena d'attesa usa clamp(64px, 15vh, 190px).
@@ -437,7 +625,7 @@ Fino alla 1.0 i token avevano i nomi di Halloween. Corrispondenza, una volta per
 
 **The Titoli per i Nomi Rule.** Il carattere dei titoli nomina (scene, casi, sezioni, oggetti). Non porta mai paragrafi, numeri, orari, bottoni o etichette; quelli sono del corpo.
 
-**The Due Righe Rule.** Ogni titolo sta entro due righe, con `text-wrap: balance`. Se non ci sta, si accorcia il titolo, non il corpo.
+**The Due Righe Rule.** Ogni titolo sta entro due righe, con `text-wrap: balance`. Se non ci sta, si accorcia il titolo, non il corpo. Se è il carattere di un tema a essere troppo largo, il tema dichiara `scalaTitoli` nel catalogo; mai regole CSS scritte per un tema.
 
 ## Layout
 
@@ -513,10 +701,10 @@ Il foglio di carta della prova: fondo `carta`, testo `inchiostro`, raggio 2px, p
 Un disco piatto `disco` che cambia posizione e misura tra le scene in 900ms con curva a cassetto; nella rivelazione si svuota in anello (bordo 1.2vh) e il disegno interno si spegne. Il disegno dentro il disco è del tema e sta in un solo componente; il disco e i suoi movimenti no.
 
 ### Strato d'atmosfera (solo proiettore)
-Uno strato a tutto schermo sopra il disco e sotto i testi, vuoto per i temi che non ne hanno. Non riceve tocchi, tace (opacità 0 in 600ms) a schermo nero e sulle scene con immagine o video, e con "riduci movimento" si ferma. Non esiste sul telefono né in regia.
+Uno strato a tutto schermo sopra il disco e sotto i testi, vuoto per i temi che non ne hanno. Non riceve tocchi, tace (opacità 0 in 600ms) a schermo nero e sulle scene con immagine o video, e con "riduci movimento" si ferma. Non esiste sul telefono né in regia. Ogni tema decide dove il suo strato non passa (le luci del Viaggio restano a sinistra del disco, la neve del Natale si ferma sopra la fila delle fasi); solo il Noir si fonde per differenza.
 
 ### Nuvolette
-Frasi brevi di atmosfera che compaiono ogni tanto sui telefoni e sul proiettore. Nuvola `testo-1` con testo `fondo`, raggio 18px, padding 9px 15px, coda a rombo; sotto, una figura da 56px (11vh sul proiettore, dove la nuvola cresce fino a 52px di testo). Entra in 520ms con la curva a cassetto ed esce in 380ms con la curva di uscita. Le frasi le decide la regia per ogni serata e si possono spegnere; se la serata non ne ha, valgono le frasi pronte del tema. Ogni tema ha sei figure disegnate a tinte piatte coi soli ruoli di colore, ciascuna con un piccolo gesto animato che "riduci movimento" ferma.
+Frasi brevi di atmosfera che compaiono ogni tanto sui telefoni e sul proiettore. Nuvola `testo-1` con testo `fondo`, raggio 18px, padding 9px 15px, coda a rombo; sotto, una figura da 56px (11vh sul proiettore, dove la nuvola cresce fino a 52px di testo). Entra in 520ms con la curva a cassetto ed esce in 380ms con la curva di uscita. Le frasi e i tempi (attesa minima e massima tra due nuvolette, quanto resta visibile) li decide la regia per ogni serata, e le nuvolette si possono spegnere; se la serata non ne ha, valgono le frasi pronte del tema. Ogni tema ha sei figure disegnate a tinte piatte coi soli ruoli di colore, ciascuna con un piccolo gesto animato che "riduci movimento" ferma.
 
 ## Do's and Don'ts
 
@@ -529,7 +717,7 @@ Frasi brevi di atmosfera che compaiono ogni tanto sui telefoni e sul proiettore.
 - **Do** garantire obiettivi di tocco di almeno 44px (bottoni e campi 48px, tasti del PIN 64px).
 - **Do** muovere le cose con `--curva-cassetto` (cubic-bezier(0.32, 0.72, 0, 1)) per ciò che entra e `--curva-uscita` (cubic-bezier(0.23, 1, 0.32, 1)) per risposte e pressioni, e ridurre tutto con "riduci movimento".
 - **Do** dimensionare i testi del proiettore in vh perché si leggano dal fondo della sala (corpo almeno 22px, titoli fino a 190px).
-- **Do** aggiungere un tema come una nuova voce del catalogo che dà un valore a tutti i ruoli, due caratteri self-hosted, sei figure e le frasi pronte, l'illustrazione di copertina in `src/app/temi/copertina.ts`, più, se serve, un disegno per il disco e uno strato d'atmosfera; e una nuova sezione qui sotto.
+- **Do** aggiungere un tema come una nuova voce del catalogo che dà un valore a tutti i ruoli, dichiara se è scuro o chiaro (`scuro`) e, se il carattere dei titoli è molto largo, `scalaTitoli`, due caratteri self-hosted, sei figure e le frasi pronte, l'illustrazione di copertina in `src/app/temi/copertina.ts`, più, se serve, un disegno per il disco e uno strato d'atmosfera; e una nuova sezione qui sotto.
 
 ### Don't:
 - **Don't** usare gradienti, aloni o ombre su elementi fermi: il disco è piatto e la profondità è tonale.
@@ -556,7 +744,7 @@ Un nero da sala neutro in tre livelli, un bianco da locandina, un solo giallo co
 - Disco, ceralacca, carta e decoro (`marchio-disco`, `marchio-sigillo`, `marchio-sigillo-luce`, `marchio-sigillo-segno`, `marchio-carta`, `marchio-inchiostro`, `marchio-carta-filetto`, `marchio-decoro`) esistono perché ogni voce del catalogo dà un valore a tutti i ruoli; le pagine del marchio non hanno proiettore né fascicolo, e oggi non li usano.
 
 ### Caratteri
-Limelight (con Georgia, serif) per il marchio, i titoli (h1, h2, h3) e i numeri dei volumi: la scritta sulla porta dell'agenzia investigativa. Ha un solo peso, dichiarato come intervallo 100-900. Source Sans 3 (con system-ui, sans-serif) per tutto il resto, compresi il sottotitolo "Gialli da tavola", gli stati e il colophon delle copertine: tre file, 400 dichiarato come 100-499, 600 come 500-649, 700 come 650-900. Tutti in `public/fonti/`, con `@font-face` in `src/styles.css`.
+Limelight (con Georgia, serif) per il marchio, i titoli (h1, h2, h3) e i numeri dei volumi: la scritta sulla porta dell'agenzia investigativa. Ha un solo peso, dichiarato come intervallo 100-900. Source Sans 3 (con system-ui, sans-serif) per tutto il resto, compresi il sottotitolo "Gialli da tavola", gli stati e il colophon delle copertine: tre file, 400 dichiarato come 100-499, 600 come 500-649, 700 come 650-900. Tutti in `public/fonti/`, con `@font-face` in `src/styles.css`. Limelight appartiene al marchio: nessun tema lo usa, nemmeno il Gatsby, che pure è déco e parla in Federo, così la cornice della collana resta riconoscibile accanto alle copertine dei temi.
 - **Display** (Limelight 400, clamp(40px, 5vw, 56px), 1): il titolo di pagina, "Le tue serate".
 - **Headline** (Limelight 400, 28px, 1): titoli di sezione, "Archiviate".
 - **Marca** (Limelight 400, 26px, 1; 22px sotto i 480px): la scritta nel riquadro nero della testata e il numero del volume sulla fascia della copertina (19px sulle archiviate).
@@ -652,3 +840,137 @@ Figure: cappello, sigaretta, macchina da scrivere, bicchiere, lampione, impronta
 **The Pioggia in Sala Rule.** La pioggia cade solo sul proiettore, mai sul telefono né in regia, e mai sulle scene a schermo nero, con immagine o con video.
 
 **The Argento Non Accento Rule.** La luna è argento: il disco del Noir non prende mai il rossetto, così l'accento resta raro anche quando la luna occupa mezzo schermo.
+
+## Tema: Vittoriano alla Sherlock
+
+Un taccuino d'indagine della Londra vittoriana, carta avorio e inchiostro (id `vittoriano`). È il primo tema chiaro: `scuro: false`, `color-scheme: light`, e la sala legge una pagina stampata invece di uno schermo nero. Rifiuta il cappello da cacciatore e la pipa come clip art e la pergamena bruciacchiata. Struttura e comandi sono quelli di sempre; cambiano colori, caratteri, disco, nuvolette e copertina. Contratto in `.impeccable/surfaces/src-app-temi-vittoriano-ts.md`, schermate in `.impeccable/review/vittoriano/`.
+
+### Colori
+Carta avorio in tre toni, inchiostro seppia per leggere, un solo blu di Prussia per le cose vive, un rosso da correzione per gli errori. Valori nelle chiavi `vittoriano-` del frontmatter.
+- **Carta avorio**, **Avorio velato**, **Avorio bruno** (`vittoriano-fondo`, `vittoriano-fondo-2`, `vittoriano-fondo-3`): si sale di livello scurendo la carta, non schiarendola. Il filetto (`vittoriano-filetto`) è un sabbia caldo.
+- **Inchiostro seppia** (`vittoriano-testo-1`) e **Seppia spenta** (`vittoriano-testo-2`), sopra 5.5:1 su tutti e tre i fondi.
+- **Blu di Prussia** (`vittoriano-accento`): l'unico colore saturo. Sopra il blu il testo è avorio (`vittoriano-su-accento`), l'unico tema in cui `su-accento` è chiaro. **Blu di Prussia acceso** (`vittoriano-accento-chiaro`) per l'hover.
+- **Vetro della lente** (`vittoriano-disco`), un avorio appena più scuro del fondo, con la seppia sopra (`vittoriano-su-disco`). Il disco si distingue dal fondo per l'anello della lente, non per il tono.
+- **Rosso correzione** (`vittoriano-allarme`): errori, e solo errori.
+- **Ceralacca** (`vittoriano-sigillo`, `vittoriano-sigillo-luce`, `vittoriano-sigillo-segno`), la stessa di Halloween: sul telefono è il sigillo rosso su carta avorio.
+- **Carta da lettera** (`vittoriano-carta`), più chiara del fondo, con **inchiostro nero** (`vittoriano-inchiostro`) e filetto carta (`vittoriano-carta-filetto`).
+- **Anello della lente** (`vittoriano-decoro`) coincide con l'inchiostro seppia.
+
+### Caratteri
+IM Fell English (con Georgia, serif) per i titoli: il carattere dei libri stampati a mano, con l'inchiostro che trema sul bordo delle lettere. Ha un solo peso, dichiarato come intervallo 100-900. EB Garamond (con Georgia, serif) per tutto il resto: un Garamond da libro, l'unico corpo con le grazie fra i temi. Tre file, 400 dichiarato come 100-549, 600 come 550-649, 700 come 650-900. Tutti in `public/fonti/`.
+
+### Disco del proiettore
+Una lente d'ingrandimento posata sul taccuino: un anello spesso in `decoro` con un secondo anello sottile all'interno, e solo dentro il vetro le righe del taccuino ingrandite (in `decoro` al 35%) con la riga del margine in `sigillo`; fuori dall'anello resta carta liscia. Un riflesso ad arco in `carta` in alto a sinistra. Il disegno si spegne nel conto alla rovescia, nell'avanzamento e nella rivelazione. Nessuno strato d'atmosfera.
+
+### Nuvolette
+Figure: taccuino (segnalibro in ceralacca), lente, cilindro (fascia in accento), orologio da taschino, calamaio, chiave; ondeggiano o galleggiano piano. Frasi pronte da resoconto vittoriano ("Osservate, non guardate."). Copertina: una pagina a righe con il margine rosso e una lente posata sopra.
+
+### Named Rules
+**The Pagina Chiara Rule.** Il Vittoriano è l'unico tema chiaro. Si sale di livello scurendo la carta (`fondo-2`, `fondo-3`), mai schiarendola fino al bianco; nessun componente presume un fondo scuro, perché ogni colore viene dal suo ruolo.
+
+**The Blu di Prussia Rule.** Il blu di Prussia è l'unico colore saturo del Vittoriano e segna solo cose vive. Sopra, sempre testo avorio.
+
+**The Righe Sotto la Lente Rule.** Le righe del taccuino si vedono solo dentro l'anello della lente. Non diventano un motivo di fondo per il resto della pagina.
+
+## Tema: Delitto in viaggio
+
+Un treno di lusso che corre di notte: livrea blu, ottone, biglietti perforati, l'orologio della stazione (id `viaggio`). Rifiuta il viaggio da agenzia turistica e le valigie con le etichette ovunque. Contratto in `.impeccable/surfaces/src-app-temi-viaggio-ts.md`, schermate in `.impeccable/review/viaggio/`.
+
+### Colori
+Blu notte della livrea in tre toni, testo avorio, ottone per le cose vive, corallo per gli errori, carta da biglietto per i documenti. Valori nelle chiavi `viaggio-` del frontmatter.
+- **Blu livrea**, **Blu velato**, **Blu cabina** (`viaggio-fondo`, `viaggio-fondo-2`, `viaggio-fondo-3`) e un filetto acciaio (`viaggio-filetto`).
+- **Avorio** (`viaggio-testo-1`) e **Grigio fumo blu** (`viaggio-testo-2`).
+- **Ottone** (`viaggio-accento`): l'unico colore saturo; sopra, il blu livrea (`viaggio-su-accento`). **Ottone lucido** (`viaggio-accento-chiaro`) per l'hover.
+- **Quadrante avorio** (`viaggio-disco`) con le **lancette** blu livrea (`viaggio-su-disco`): il disco è avorio, non ottone.
+- **Rosso corallo** (`viaggio-allarme`): solo errori.
+- **Ceralacca bordeaux** (`viaggio-sigillo`, `viaggio-sigillo-luce`, `viaggio-sigillo-segno`).
+- **Carta da biglietto** (`viaggio-carta`), un avorio caldo, con inchiostro scuro (`viaggio-inchiostro`) e filetto carta (`viaggio-carta-filetto`).
+- `viaggio-decoro` coincide con il blu livrea; il quadrante è disegnato in `su-disco`.
+
+### Caratteri
+Cinzel (con Georgia, serif) per i titoli: maiuscole lapidarie da insegna di stazione e da biglietto di prima classe. Due file, 600 dichiarato come 100-649 e 700 come 650-900. Cinzel è tutto maiuscolo e largo, quindi il tema dichiara `scalaTitoli: 0.72`: sul proiettore i titoli delle scene valgono il 72% delle misure comuni (la narrazione è calc(clamp(56px, 14vh, 190px) * 0.72)). Work Sans (con system-ui, sans-serif) per tutto il resto, tre file: 400 come 100-549, 600 come 550-649, 700 come 650-900. Tutti in `public/fonti/`.
+
+### Disco del proiettore
+L'orologio della stazione: il quadrante avorio con sessanta tacche in `su-disco`, dodici spesse e le altre sottili, la lancetta delle ore e quella dei minuti ferme sulle 21.40 e il perno in `accento` cerchiato di `su-disco`. Il disegno si spegne nel conto alla rovescia, nell'avanzamento e nella rivelazione, quando il disco fa già da quadrante.
+
+### Atmosfera
+Le luci di fuori viste dal finestrino: brevi tratti orizzontali in `accento` all'opacità 0.35 che scorrono verso sinistra (480px in 7s), in una fascia bassa alta 9vh, 13vh sopra il fondo dello schermo, quindi sopra la fila delle fasi, e solo a sinistra del disco (la fascia finisce a 42vw dal bordo destro). Nel conto alla rovescia, nell'avanzamento e nella rivelazione le luci si spengono in 600ms. Si ferma con "riduci movimento".
+
+### Nuvolette
+Figure: biglietto (carta), valigia (cinghie in accento), locomotiva (finestrino in accento, sbuffi di fumo), fischietto (in accento), lanterna (fiamma in accento che tremola), tazza (vapore). Frasi pronte da vagone letto ("Prossima fermata: nessuna."). Copertina: l'orologio della stazione sopra due binari d'ottone che fuggono verso l'orizzonte.
+
+### Named Rules
+**The Ottone Rule.** L'ottone è l'unico colore saturo del Viaggio e segna solo cose vive. Sopra, sempre il blu livrea.
+
+**The Maiuscole Ridotte Rule.** Cinzel è tutto maiuscolo: sul proiettore i suoi titoli scendono al 72% con `scalaTitoli`, perché stiano in due righe. Il valore sta nel catalogo, non in regole CSS per tema.
+
+**The Finestrino Rule.** Le luci scorrono solo a sinistra del disco e sopra la fila delle fasi, e si spengono quando il disco fa da quadrante. Non attraversano mai l'orologio né il testo delle fasi.
+
+**The Quadrante Avorio Rule.** Il disco del Viaggio è avorio, non ottone: l'ottone resta raro anche quando l'orologio occupa mezzo schermo; l'unico punto d'ottone nel disco è il perno delle lancette.
+
+## Tema: Anni '20 Gatsby
+
+Uno speakeasy degli anni venti: nero velluto, oro spento, geometrie déco, fumo che sale piano (id `gatsby`). Rifiuta la festa con piume e paillettes e il glitter. Contratto in `.impeccable/surfaces/src-app-temi-gatsby-ts.md`, schermate in `.impeccable/review/gatsby/`.
+
+### Colori
+Nero caldo in tre toni, testo crema, oro champagne per le cose vive, corallo per gli errori, carta crema per i documenti. Valori nelle chiavi `gatsby-` del frontmatter.
+- **Nero velluto**, **Velluto velato**, **Bruno fumo** (`gatsby-fondo`, `gatsby-fondo-2`, `gatsby-fondo-3`): neri con una punta di bruno. Il filetto (`gatsby-filetto`) è un bronzo spento.
+- **Crema** (`gatsby-testo-1`) e **Crema spenta** (`gatsby-testo-2`).
+- **Oro champagne** (`gatsby-accento` e `gatsby-disco`): come in Halloween, il disco e l'accento sono lo stesso colore. Sopra l'oro, sempre il nero velluto (`gatsby-su-accento`, `gatsby-su-disco`). **Oro acceso** (`gatsby-accento-chiaro`) per l'hover.
+- **Corallo** (`gatsby-allarme`): solo errori.
+- **Ceralacca vinaccia** (`gatsby-sigillo`, `gatsby-sigillo-luce`, `gatsby-sigillo-segno`).
+- **Carta crema** (`gatsby-carta`) con inchiostro bruno (`gatsby-inchiostro`) e filetto carta (`gatsby-carta-filetto`).
+- **Oro brunito** (`gatsby-decoro`): i raggi della raggiera dentro il disco d'oro.
+
+### Caratteri
+Federo (con Georgia, serif) per i titoli: un déco geometrico, sottile e alto, da insegna di locale. Ha un solo peso, dichiarato come intervallo 100-900. Josefin Sans (con system-ui, sans-serif) per tutto il resto, una geometrica d'epoca: 400 come 100-549, 600 come 550-649, 700 come 650-900. Tutti in `public/fonti/`. Limelight resta del marchio.
+
+### Disco del proiettore
+Una raggiera déco: sedici raggi in `decoro` che partono dal centro del bordo inferiore del disco e lo attraversano tutto, e sopra tre archi a gradini concentrici in `su-disco`, come il portale di un locale. Il disegno si spegne nel conto alla rovescia, nell'avanzamento e nella rivelazione.
+
+### Atmosfera
+Il fumo che sale piano: quattro volute sottili e irregolari in `testo-1` (tratto 2.4), larghe 7vw e alte 70vh, che salgono di 35vh e svaniscono in 17-26 secondi, sfasate tra loro, con un'opacità massima tra 0.12 e 0.22. Tre stanno a destra, nella zona del disco (62vw, 70vw, 93vw), una sul margine sinistro (3vw). Con "riduci movimento" restano ferme al 60% della loro forza.
+
+### Nuvolette
+Figure: coppa di champagne (in accento, con le bollicine che salgono), grammofono (tromba in accento, disco che gira), bocchino (brace in accento, fumo), carte da gioco (seme in ceralacca), bottiglia (etichetta in accento), filo di perle (pendente in accento). Frasi pronte da locale clandestino ("Il jazz copre ogni rumore."). Copertina: raggiera e arco d'oro su nero, con una bottiglia al centro.
+
+### Named Rules
+**The Oro Champagne Rule.** L'oro champagne è l'unico colore saturo del Gatsby, insieme accento e disco. Se una seconda cosa vuole attenzione, prende la crema, non un altro oro; l'oro brunito vive solo dentro il disco.
+
+**The Fumo Lontano Rule.** Le volute sono poche, irregolari e deboli (opacità massima 0.22), e salgono lontano dai titoli. Mai fumo pieno, mai nebbia che vela il testo.
+
+**The Federo Non Limelight Rule.** Il déco del Gatsby parla in Federo. Limelight è la voce del marchio e non entra in nessun tema.
+
+## Tema: Natale con delitto
+
+Il delitto nella casa di famiglia la sera di Natale: verde abete, luci calde, neve che cade piano (id `natale`). Rifiuta Babbo Natale e le renne da biglietto d'auguri. Contratto in `.impeccable/surfaces/src-app-temi-natale-ts.md`, schermate in `.impeccable/review/natale/`.
+
+### Colori
+Verde abete scuro in tre toni, testo panna, un rosso festivo luminoso per le cose vive, ambra per gli errori, carta panna per i documenti. Valori nelle chiavi `natale-` del frontmatter.
+- **Verde abete**, **Abete velato**, **Abete profondo** (`natale-fondo`, `natale-fondo-2`, `natale-fondo-3`) e un filetto muschio (`natale-filetto`).
+- **Panna** (`natale-testo-1`) e **Grigio salvia** (`natale-testo-2`).
+- **Rosso festa** (`natale-accento`): l'unico colore saturo; sopra, il verde abete (`natale-su-accento`). **Rosso festa acceso** (`natale-accento-chiaro`) per l'hover.
+- **Luna d'inverno** (`natale-disco`), panna, con il verde sopra (`natale-su-disco`): il disco è panna, non rosso.
+- **Ambra** (`natale-allarme`): solo errori. Il rosso qui è festa, quindi l'errore prende l'ambra.
+- **Ceralacca** (`natale-sigillo`, `natale-sigillo-luce`, `natale-sigillo-segno`), la stessa di Halloween.
+- **Carta panna** (`natale-carta`) con inchiostro bruno (`natale-inchiostro`) e filetto carta (`natale-carta-filetto`).
+- `natale-decoro` coincide con il verde abete.
+
+### Caratteri
+Gloock (con Georgia, serif) per i titoli: un serif da titolo ad alto contrasto, caldo e un po' teatrale. Ha un solo peso, dichiarato come intervallo 100-900. Nunito (con system-ui, sans-serif) per tutto il resto, una sans morbida e accogliente: 400 come 100-549, 600 come 550-649, 700 come 650-900. Tutti in `public/fonti/`.
+
+### Disco del proiettore
+Una luna d'inverno: sulla luna panna sorge la sagoma dei tetti in `fondo-2`, con la neve sui colmi in `carta`, tre finestre accese in un giallo caldo e una stella in `fondo` in alto a destra. Il disegno si spegne nel conto alla rovescia, nell'avanzamento e nella rivelazione.
+
+### Atmosfera
+Neve che cade piano: fiocchi tondi bianchi sparsi a caso in due piani (lontano 60s per mattonella all'opacità 0.35, vicino 38s all'opacità 0.6), chiusi in un cielo che si ferma 12vh sopra il fondo dello schermo, quindi sopra la fila delle fasi. Non si fonde per differenza: davanti alla luna panna la neve scompare, come nella realtà. Si ferma con "riduci movimento".
+
+### Nuvolette
+Figure: pallina dell'albero (in accento), regalo (in accento, nastro panna), stella (che brilla), campanella (batacchio in accento), bastoncino di zucchero (strisce in accento), pupazzo di neve (sciarpa in accento). Frasi pronte da cena di famiglia ("Manca un posto a tavola."). Copertina: luna, tetti innevati con le finestre accese e qualche fiocco.
+
+### Named Rules
+**The Rosso Festa Rule.** Il rosso festa è l'unico colore saturo del Natale e segna solo cose vive. Sopra, sempre il verde abete.
+
+**The Ambra Rule.** Nel Natale l'errore è ambra, perché il rosso è già la festa. L'ambra non decora e non è un secondo accento.
+
+**The Neve Sopra le Fasi Rule.** La neve cade solo sul proiettore, in un cielo che si ferma sopra la fila delle fasi, e tace sulle scene a schermo nero, con immagine o con video. Non attraversa il testo delle fasi e non si fonde per differenza.

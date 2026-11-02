@@ -15,6 +15,10 @@ export type Colore = (typeof COLORI)[number];
 export const FIGURE = [
   'fantasma', 'pipistrello', 'ragno', 'zucca', 'occhi', 'candela',
   'cappello', 'sigaretta', 'macchina', 'bicchiere', 'lampione', 'impronta',
+  'taccuino', 'lente', 'cilindro', 'orologio', 'calamaio', 'chiave',
+  'biglietto', 'valigia', 'locomotiva', 'fischietto', 'lanterna', 'tazza',
+  'coppa', 'grammofono', 'bocchino', 'carte', 'bottiglia', 'perle',
+  'pallina', 'regalo', 'stella', 'campanella', 'bastoncino', 'pupazzo',
 ] as const;
 export type Figura = (typeof FIGURE)[number];
 
@@ -27,6 +31,8 @@ export interface Tema {
   colori: Record<Colore, string>;
   titoli: string;
   corpo: string;
+  /** Per caratteri dei titoli molto larghi (maiuscole): riduce i titoli del proiettore perché stiano in due righe. Predefinito 1. */
+  scalaTitoli?: number;
   /** Frasi pronte delle nuvolette, per le serate che non ne hanno di proprie. Solo atmosfera, mai indizi. */
   frasi: readonly string[];
   /** Sei figure che parlano dalle nuvolette. */
@@ -102,6 +108,143 @@ export const TEMI: readonly Tema[] = [
     ],
     figure: ['cappello', 'sigaretta', 'macchina', 'bicchiere', 'lampione', 'impronta'],
   },
+  {
+    id: 'vittoriano',
+    nome: 'Vittoriano alla Sherlock',
+    descrizione: 'Carta avorio, inchiostro e lente: un taccuino della Londra vittoriana.',
+    scuro: false,
+    colori: {
+      fondo: '#f3ead8', 'fondo-2': '#ebe0c9', 'fondo-3': '#e0d3b8', filetto: '#c2b190',
+      'testo-1': '#2a1f17', 'testo-2': '#5e4b3a',
+      accento: '#1f3a5f', 'accento-chiaro': '#2c5282', 'su-accento': '#f8f2e4', disco: '#e6d8b8', 'su-disco': '#2a1f17',
+      sigillo: '#8e1b24', 'sigillo-luce': '#b8323c', 'sigillo-segno': '#e7a39a', allarme: '#a8261b',
+      carta: '#fbf7ee', inchiostro: '#1d1712', 'carta-filetto': '#d9ccb2', decoro: '#2a1f17',
+    },
+    titoli: '"IM Fell English", Georgia, serif',
+    corpo: '"EB Garamond", Georgia, serif',
+    frasi: [
+      'La nebbia sale dal Tamigi.',
+      'Elementare? Non ancora.',
+      'Un dettaglio è sfuggito a tutti.',
+      'Il lampionaio è passato in ritardo.',
+      'Qualcuno ha bussato tre volte.',
+      'La carrozza non si è fermata.',
+      'Un orologio da taschino si è fermato alle undici.',
+      'Nessun indizio è troppo piccolo.',
+      'Il tè si è raffreddato nella tazza.',
+      'Scotland Yard brancola nel buio.',
+      'Una lettera senza firma.',
+      'Il fuoco nel camino si sta spegnendo.',
+      'Osservate, non guardate.',
+      'Big Ben ha suonato la mezzanotte.',
+      'Un passo leggero sulle scale.',
+      'La verità ama nascondersi in vista.',
+    ],
+    figure: ['taccuino', 'lente', 'cilindro', 'orologio', 'calamaio', 'chiave'],
+  },
+  {
+    id: 'viaggio',
+    nome: 'Delitto in viaggio',
+    descrizione: 'Un treno di lusso che corre di notte: livrea blu, ottone e biglietti.',
+    scuro: true,
+    colori: {
+      fondo: '#0e1626', 'fondo-2': '#152036', 'fondo-3': '#1d2a44', filetto: '#33415f',
+      'testo-1': '#eee6d4', 'testo-2': '#a9b0c0',
+      accento: '#c9a24a', 'accento-chiaro': '#ddb85e', 'su-accento': '#0e1626', disco: '#eee6d4', 'su-disco': '#0e1626',
+      sigillo: '#7a1f2a', 'sigillo-luce': '#a3313d', 'sigillo-segno': '#e7a39a', allarme: '#ff7a6b',
+      carta: '#efe4c8', inchiostro: '#1a1410', 'carta-filetto': '#cdbf9f', decoro: '#0e1626',
+    },
+    titoli: '"Cinzel", Georgia, serif',
+    corpo: '"Work Sans", system-ui, sans-serif',
+    scalaTitoli: 0.72,
+    frasi: [
+      'Il treno non si ferma fino all\'alba.',
+      'Qualcuno ha cambiato cabina.',
+      'Il capotreno conta i biglietti due volte.',
+      'Una valigia senza etichetta.',
+      'Prossima fermata: nessuna.',
+      'Il vagone ristorante è chiuso da un\'ora.',
+      'Le tende della cabina 7 sono tirate.',
+      'Il fischio della locomotiva nella notte.',
+      'Fuori, solo neve e binari.',
+      'Un biglietto di sola andata.',
+      'Il controllore ha visto qualcosa.',
+      'La porta tra i vagoni sbatte ancora.',
+      'Tutti hanno un alibi. Troppi.',
+      'Siamo in ritardo di sei minuti.',
+      'Il bagaglio a mano pesa troppo.',
+      'In galleria si spengono le luci.',
+    ],
+    figure: ['biglietto', 'valigia', 'locomotiva', 'fischietto', 'lanterna', 'tazza'],
+  },
+  {
+    id: 'gatsby',
+    nome: "Anni '20 Gatsby",
+    descrizione: 'Uno speakeasy degli anni venti: nero velluto, oro spento, geometrie déco.',
+    scuro: true,
+    colori: {
+      fondo: '#0d0c0a', 'fondo-2': '#171511', 'fondo-3': '#211e18', filetto: '#3b3529',
+      'testo-1': '#f1e7cf', 'testo-2': '#b3a587',
+      accento: '#d6b25e', 'accento-chiaro': '#e6c677', 'su-accento': '#0d0c0a', disco: '#d6b25e', 'su-disco': '#0d0c0a',
+      sigillo: '#7a2030', 'sigillo-luce': '#a3354a', 'sigillo-segno': '#e7a39a', allarme: '#ff7f6e',
+      carta: '#f1e7cf', inchiostro: '#14110c', 'carta-filetto': '#cfc0a0', decoro: '#8f6f2c',
+    },
+    titoli: '"Federo", Georgia, serif',
+    corpo: '"Josefin Sans", system-ui, sans-serif',
+    frasi: [
+      'La parola d\'ordine è cambiata stasera.',
+      'Il proibizionismo non vale qui dentro.',
+      'Il pianista conosce tutti i segreti.',
+      'Un bicchiere lasciato a metà.',
+      'Bussate due volte, poi una.',
+      'Il fumo nasconde molti volti.',
+      'Qualcuno ha pagato in contanti.',
+      'Il jazz copre ogni rumore.',
+      'Una perla è rotolata sotto il tavolo.',
+      'La polizia è stata avvisata. Forse.',
+      'Il proprietario non si fa vedere.',
+      'Champagne per tutti, tranne uno.',
+      'Dietro la libreria c\'è una porta.',
+      'Le carte sono truccate.',
+      'Il grammofono gira a vuoto.',
+      'Stanotte tutti mentono con eleganza.',
+    ],
+    figure: ['coppa', 'grammofono', 'bocchino', 'carte', 'bottiglia', 'perle'],
+  },
+  {
+    id: 'natale',
+    nome: 'Natale con delitto',
+    descrizione: 'Il delitto in casa la sera di Natale: verde abete, luci calde, neve.',
+    scuro: true,
+    colori: {
+      fondo: '#0f1d17', 'fondo-2': '#15261e', 'fondo-3': '#1d3328', filetto: '#2f4a3c',
+      'testo-1': '#f4ecdc', 'testo-2': '#b8c2b4',
+      accento: '#f24b4b', 'accento-chiaro': '#f56b6b', 'su-accento': '#0f1d17', disco: '#f4ecdc', 'su-disco': '#0f1d17',
+      sigillo: '#8e1b24', 'sigillo-luce': '#b8323c', 'sigillo-segno': '#e7a39a', allarme: '#f2c14e',
+      carta: '#fbf4e4', inchiostro: '#1a1410', 'carta-filetto': '#d9ccb2', decoro: '#0f1d17',
+    },
+    titoli: '"Gloock", Georgia, serif',
+    corpo: '"Nunito", system-ui, sans-serif',
+    frasi: [
+      'Un regalo in più sotto l\'albero.',
+      'Chi ha spento le luci dell\'albero?',
+      'La neve ha coperto le impronte.',
+      'Manca un posto a tavola.',
+      'Il panettone è stato tagliato. Da chi?',
+      'Le campane suonano a mezzanotte.',
+      'Un biglietto d\'auguri senza firma.',
+      'Lo zio non è ancora arrivato.',
+      'Il camino è acceso, la porta no.',
+      'Qualcuno ha scartato un regalo in anticipo.',
+      'Fuori nevica sempre più forte.',
+      'La tombola è sospesa.',
+      'Il presepe ha un pastore in meno.',
+      'Nessuno è uscito, eppure.',
+      'Le calze sul camino sono cinque. Eravamo in sei.',
+      'Buon Natale. Forse.',
+    ],
+    figure: ['pallina', 'regalo', 'stella', 'campanella', 'bastoncino', 'pupazzo'],
+  },
 ];
 
 export const PREDEFINITO = TEMI[0];
@@ -140,7 +283,7 @@ export function frasiDaMostrare(tema: string | null | undefined, s: { attivi: bo
 
 /** Le variabili CSS che il tema imposta su <html>. */
 export function variabili(t: Tema): Record<string, string> {
-  const v: Record<string, string> = { '--titoli': t.titoli, '--corpo': t.corpo };
+  const v: Record<string, string> = { '--titoli': t.titoli, '--corpo': t.corpo, '--scala-titoli': String(t.scalaTitoli ?? 1) };
   for (const c of COLORI) v[`--${c}`] = t.colori[c];
   return v;
 }

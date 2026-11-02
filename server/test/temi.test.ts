@@ -36,7 +36,7 @@ test("il marchio non è un tema da scegliere per una serata", () => {
 describe.each([...CATALOGO, MARCHIO].map((t) => [t.nome, t] as const))("%s", (_nome, t) => {
   test("ha tutti i colori e due caratteri", () => {
     for (const c of COLORI) expect(t.colori[c], c).toMatch(/^#[0-9a-f]{6}$/);
-    expect(Object.keys(variabili(t))).toHaveLength(COLORI.length + 2);
+    expect(Object.keys(variabili(t))).toHaveLength(COLORI.length + 3);
     expect(t.titoli).not.toBe(t.corpo);
   });
 

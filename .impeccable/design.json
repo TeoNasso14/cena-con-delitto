@@ -1,6 +1,6 @@
 {
   "schemaVersion": 2,
-  "generatedAt": "2026-11-01T14:57:14+00:00",
+  "generatedAt": "2026-11-02T08:30:00.178Z",
   "title": "Design System: Cena con delitto",
   "extensions": {
     "colorMeta": {
@@ -1029,6 +1029,1374 @@
           "#c9c9c9",
           "#eeeeee"
         ]
+      },
+      "vittoriano-fondo": {
+        "role": "neutral",
+        "displayName": "Vittoriano alla Sherlock, fondo",
+        "theme": "vittoriano",
+        "cssVar": "--fondo",
+        "canonical": "#f3ead8",
+        "oklch": "oklch(93.9% 0.026 84.6)",
+        "tonalRamp": [
+          "#100a01",
+          "#272113",
+          "#413a2b",
+          "#5c5445",
+          "#797161",
+          "#9a9181",
+          "#c5bdab",
+          "#f3ead8"
+        ]
+      },
+      "vittoriano-fondo-2": {
+        "role": "neutral",
+        "displayName": "Vittoriano alla Sherlock, fondo-2",
+        "theme": "vittoriano",
+        "cssVar": "--fondo-2",
+        "canonical": "#ebe0c9",
+        "oklch": "oklch(90.9% 0.033 85.5)",
+        "tonalRamp": [
+          "#110a00",
+          "#29200e",
+          "#423927",
+          "#5e5440",
+          "#7a705c",
+          "#9b917c",
+          "#c7bda6",
+          "#f5ead3"
+        ]
+      },
+      "vittoriano-fondo-3": {
+        "role": "neutral",
+        "displayName": "Vittoriano alla Sherlock, fondo-3",
+        "theme": "vittoriano",
+        "cssVar": "--fondo-3",
+        "canonical": "#e0d3b8",
+        "oklch": "oklch(87.0% 0.039 85.3)",
+        "tonalRamp": [
+          "#120900",
+          "#2a200a",
+          "#443922",
+          "#5f543c",
+          "#7c7058",
+          "#9d9177",
+          "#c9bca2",
+          "#f7eace"
+        ]
+      },
+      "vittoriano-filetto": {
+        "role": "neutral",
+        "displayName": "Vittoriano alla Sherlock, filetto",
+        "theme": "vittoriano",
+        "cssVar": "--filetto",
+        "canonical": "#c2b190",
+        "oklch": "oklch(76.6% 0.049 83.9)",
+        "tonalRamp": [
+          "#150800",
+          "#2d1f02",
+          "#47381b",
+          "#625335",
+          "#7f6f50",
+          "#a19070",
+          "#cdbc9a",
+          "#fbe9c7"
+        ]
+      },
+      "vittoriano-testo-1": {
+        "role": "neutral",
+        "displayName": "Vittoriano alla Sherlock, testo-1",
+        "theme": "vittoriano",
+        "cssVar": "--testo-1",
+        "canonical": "#2a1f17",
+        "oklch": "oklch(25.0% 0.022 57.5)",
+        "tonalRamp": [
+          "#120903",
+          "#2a1f17",
+          "#44382f",
+          "#5f5249",
+          "#7c6f65",
+          "#9d8f85",
+          "#c9bbb0",
+          "#f7e8dd"
+        ]
+      },
+      "vittoriano-testo-2": {
+        "role": "neutral",
+        "displayName": "Vittoriano alla Sherlock, testo-2",
+        "theme": "vittoriano",
+        "cssVar": "--testo-2",
+        "canonical": "#5e4b3a",
+        "oklch": "oklch(42.8% 0.037 63.4)",
+        "tonalRamp": [
+          "#160700",
+          "#2e1e0e",
+          "#483626",
+          "#645140",
+          "#826d5b",
+          "#a38e7b",
+          "#cfb9a6",
+          "#fee7d2"
+        ]
+      },
+      "vittoriano-accento": {
+        "role": "primary",
+        "displayName": "Vittoriano alla Sherlock, accento",
+        "theme": "vittoriano",
+        "cssVar": "--accento",
+        "canonical": "#1f3a5f",
+        "oklch": "oklch(34.7% 0.073 256.7)",
+        "tonalRamp": [
+          "#000829",
+          "#062144",
+          "#203b60",
+          "#3a567d",
+          "#56739c",
+          "#7594bf",
+          "#a0c0ed",
+          "#cceeff"
+        ]
+      },
+      "vittoriano-accento-chiaro": {
+        "role": "primary",
+        "displayName": "Vittoriano alla Sherlock, accento-chiaro",
+        "theme": "vittoriano",
+        "cssVar": "--accento-chiaro",
+        "canonical": "#2c5282",
+        "oklch": "oklch(43.5% 0.091 255.2)",
+        "tonalRamp": [
+          "#000530",
+          "#00204c",
+          "#153b69",
+          "#305687",
+          "#4c73a6",
+          "#6c95c9",
+          "#96c1f8",
+          "#c3efff"
+        ]
+      },
+      "vittoriano-su-accento": {
+        "role": "neutral",
+        "displayName": "Vittoriano alla Sherlock, su-accento",
+        "theme": "vittoriano",
+        "cssVar": "--su-accento",
+        "canonical": "#f8f2e4",
+        "oklch": "oklch(96.2% 0.020 87.5)",
+        "tonalRamp": [
+          "#0f0b03",
+          "#262117",
+          "#3f3a2f",
+          "#5a5549",
+          "#767165",
+          "#979285",
+          "#c3bdb0",
+          "#f1ebdd"
+        ]
+      },
+      "vittoriano-disco": {
+        "role": "tertiary",
+        "displayName": "Vittoriano alla Sherlock, disco",
+        "theme": "vittoriano",
+        "cssVar": "--disco",
+        "canonical": "#e6d8b8",
+        "oklch": "oklch(88.5% 0.045 87.2)",
+        "tonalRamp": [
+          "#130900",
+          "#2b2004",
+          "#45391e",
+          "#605438",
+          "#7d7053",
+          "#9e9173",
+          "#cabc9d",
+          "#f8eaca"
+        ]
+      },
+      "vittoriano-su-disco": {
+        "role": "neutral",
+        "displayName": "Vittoriano alla Sherlock, su-disco",
+        "theme": "vittoriano",
+        "cssVar": "--su-disco",
+        "canonical": "#2a1f17",
+        "oklch": "oklch(25.0% 0.022 57.5)",
+        "tonalRamp": [
+          "#120903",
+          "#2a1f17",
+          "#44382f",
+          "#5f5249",
+          "#7c6f65",
+          "#9d8f85",
+          "#c9bbb0",
+          "#f7e8dd"
+        ]
+      },
+      "vittoriano-sigillo": {
+        "role": "secondary",
+        "displayName": "Vittoriano alla Sherlock, sigillo",
+        "theme": "vittoriano",
+        "cssVar": "--sigillo",
+        "canonical": "#8e1b24",
+        "oklch": "oklch(42.4% 0.150 22.8)",
+        "tonalRamp": [
+          "#2d0000",
+          "#4c0002",
+          "#6c151b",
+          "#8c3435",
+          "#ad5250",
+          "#d2736f",
+          "#ff9e99",
+          "#ffcbc6"
+        ]
+      },
+      "vittoriano-sigillo-luce": {
+        "role": "secondary",
+        "displayName": "Vittoriano alla Sherlock, sigillo-luce",
+        "theme": "vittoriano",
+        "cssVar": "--sigillo-luce",
+        "canonical": "#b8323c",
+        "oklch": "oklch(52.5% 0.170 21.4)",
+        "tonalRamp": [
+          "#2d0000",
+          "#4c0004",
+          "#6c141d",
+          "#8c3437",
+          "#ad5152",
+          "#d27271",
+          "#ff9e9c",
+          "#ffcbc8"
+        ]
+      },
+      "vittoriano-sigillo-segno": {
+        "role": "secondary",
+        "displayName": "Vittoriano alla Sherlock, sigillo-segno",
+        "theme": "vittoriano",
+        "cssVar": "--sigillo-segno",
+        "canonical": "#e7a39a",
+        "oklch": "oklch(77.8% 0.082 27.5)",
+        "tonalRamp": [
+          "#240000",
+          "#410b09",
+          "#5e2722",
+          "#7d423b",
+          "#9c5e57",
+          "#c07f76",
+          "#eeaaa1",
+          "#ffd7cd"
+        ]
+      },
+      "vittoriano-allarme": {
+        "role": "tertiary",
+        "displayName": "Vittoriano alla Sherlock, allarme",
+        "theme": "vittoriano",
+        "cssVar": "--allarme",
+        "canonical": "#a8261b",
+        "oklch": "oklch(48.1% 0.168 29.5)",
+        "tonalRamp": [
+          "#2d0000",
+          "#4c0000",
+          "#6c160f",
+          "#8c352b",
+          "#ac5347",
+          "#d17466",
+          "#ff9f90",
+          "#ffcdbc"
+        ]
+      },
+      "vittoriano-carta": {
+        "role": "neutral",
+        "displayName": "Vittoriano alla Sherlock, carta",
+        "theme": "vittoriano",
+        "cssVar": "--carta",
+        "canonical": "#fbf7ee",
+        "oklch": "oklch(97.7% 0.013 86.8)",
+        "tonalRamp": [
+          "#0d0b06",
+          "#24211b",
+          "#3d3a33",
+          "#58554d",
+          "#757169",
+          "#95928a",
+          "#c1bdb5",
+          "#efebe2"
+        ]
+      },
+      "vittoriano-inchiostro": {
+        "role": "neutral",
+        "displayName": "Vittoriano alla Sherlock, inchiostro",
+        "theme": "vittoriano",
+        "cssVar": "--inchiostro",
+        "canonical": "#1d1712",
+        "oklch": "oklch(21.0% 0.014 61.8)",
+        "tonalRamp": [
+          "#0f0a06",
+          "#27201b",
+          "#403933",
+          "#5b544e",
+          "#78706a",
+          "#99908a",
+          "#c4bcb5",
+          "#f2e9e2"
+        ]
+      },
+      "vittoriano-carta-filetto": {
+        "role": "neutral",
+        "displayName": "Vittoriano alla Sherlock, carta-filetto",
+        "theme": "vittoriano",
+        "cssVar": "--carta-filetto",
+        "canonical": "#d9ccb2",
+        "oklch": "oklch(84.9% 0.038 84.6)",
+        "tonalRamp": [
+          "#120900",
+          "#2a200a",
+          "#443923",
+          "#5f543d",
+          "#7c7058",
+          "#9d9178",
+          "#c9bca3",
+          "#f7eacf"
+        ]
+      },
+      "vittoriano-decoro": {
+        "role": "tertiary",
+        "displayName": "Vittoriano alla Sherlock, decoro",
+        "theme": "vittoriano",
+        "cssVar": "--decoro",
+        "canonical": "#2a1f17",
+        "oklch": "oklch(25.0% 0.022 57.5)",
+        "tonalRamp": [
+          "#120903",
+          "#2a1f17",
+          "#44382f",
+          "#5f5249",
+          "#7c6f65",
+          "#9d8f85",
+          "#c9bbb0",
+          "#f7e8dd"
+        ]
+      },
+      "viaggio-fondo": {
+        "role": "neutral",
+        "displayName": "Delitto in viaggio, fondo",
+        "theme": "viaggio",
+        "cssVar": "--fondo",
+        "canonical": "#0e1626",
+        "oklch": "oklch(20.1% 0.034 263.4)",
+        "tonalRamp": [
+          "#050b1a",
+          "#192132",
+          "#313b4d",
+          "#4b5569",
+          "#677286",
+          "#8793a8",
+          "#b2bed5",
+          "#dfecff"
+        ]
+      },
+      "viaggio-fondo-2": {
+        "role": "neutral",
+        "displayName": "Delitto in viaggio, fondo-2",
+        "theme": "viaggio",
+        "cssVar": "--fondo-2",
+        "canonical": "#152036",
+        "oklch": "oklch(24.5% 0.045 263.3)",
+        "tonalRamp": [
+          "#030a1e",
+          "#162137",
+          "#2e3a52",
+          "#48556f",
+          "#64728d",
+          "#8493af",
+          "#afbedc",
+          "#dcecff"
+        ]
+      },
+      "viaggio-fondo-3": {
+        "role": "neutral",
+        "displayName": "Delitto in viaggio, fondo-3",
+        "theme": "viaggio",
+        "cssVar": "--fondo-3",
+        "canonical": "#1d2a44",
+        "oklch": "oklch(28.7% 0.051 263.3)",
+        "tonalRamp": [
+          "#020920",
+          "#14213a",
+          "#2c3a55",
+          "#465572",
+          "#627290",
+          "#8293b2",
+          "#adbee0",
+          "#daecff"
+        ]
+      },
+      "viaggio-filetto": {
+        "role": "neutral",
+        "displayName": "Delitto in viaggio, filetto",
+        "theme": "viaggio",
+        "cssVar": "--filetto",
+        "canonical": "#33415f",
+        "oklch": "oklch(37.7% 0.055 264.7)",
+        "tonalRamp": [
+          "#020922",
+          "#14203c",
+          "#2c3a57",
+          "#465574",
+          "#627192",
+          "#8292b5",
+          "#acbee2",
+          "#d9ecff"
+        ]
+      },
+      "viaggio-testo-1": {
+        "role": "neutral",
+        "displayName": "Delitto in viaggio, testo-1",
+        "theme": "viaggio",
+        "cssVar": "--testo-1",
+        "canonical": "#eee6d4",
+        "oklch": "oklch(92.6% 0.025 86.9)",
+        "tonalRamp": [
+          "#100a01",
+          "#272113",
+          "#403a2b",
+          "#5b5545",
+          "#787161",
+          "#999281",
+          "#c5bdac",
+          "#f3ead8"
+        ]
+      },
+      "viaggio-testo-2": {
+        "role": "neutral",
+        "displayName": "Delitto in viaggio, testo-2",
+        "theme": "viaggio",
+        "cssVar": "--testo-2",
+        "canonical": "#a9b0c0",
+        "oklch": "oklch(75.7% 0.024 266.9)",
+        "tonalRamp": [
+          "#070b15",
+          "#1c212d",
+          "#353a48",
+          "#4f5563",
+          "#6b7180",
+          "#8b92a2",
+          "#b7bece",
+          "#e4ebfc"
+        ]
+      },
+      "viaggio-accento": {
+        "role": "primary",
+        "displayName": "Delitto in viaggio, accento",
+        "theme": "viaggio",
+        "cssVar": "--accento",
+        "canonical": "#c9a24a",
+        "oklch": "oklch(73.1% 0.115 85.2)",
+        "tonalRamp": [
+          "#1f0100",
+          "#3a1800",
+          "#553200",
+          "#724e00",
+          "#906b00",
+          "#b28c31",
+          "#e0b861",
+          "#ffe68e"
+        ]
+      },
+      "viaggio-accento-chiaro": {
+        "role": "primary",
+        "displayName": "Delitto in viaggio, accento-chiaro",
+        "theme": "viaggio",
+        "cssVar": "--accento-chiaro",
+        "canonical": "#ddb85e",
+        "oklch": "oklch(79.7% 0.117 87.2)",
+        "tonalRamp": [
+          "#1e0100",
+          "#391900",
+          "#543300",
+          "#714f00",
+          "#8f6c00",
+          "#b18d2f",
+          "#deb95f",
+          "#ffe78d"
+        ]
+      },
+      "viaggio-su-accento": {
+        "role": "neutral",
+        "displayName": "Delitto in viaggio, su-accento",
+        "theme": "viaggio",
+        "cssVar": "--su-accento",
+        "canonical": "#0e1626",
+        "oklch": "oklch(20.1% 0.034 263.4)",
+        "tonalRamp": [
+          "#050b1a",
+          "#192132",
+          "#313b4d",
+          "#4b5569",
+          "#677286",
+          "#8793a8",
+          "#b2bed5",
+          "#dfecff"
+        ]
+      },
+      "viaggio-disco": {
+        "role": "tertiary",
+        "displayName": "Delitto in viaggio, disco",
+        "theme": "viaggio",
+        "cssVar": "--disco",
+        "canonical": "#eee6d4",
+        "oklch": "oklch(92.6% 0.025 86.9)",
+        "tonalRamp": [
+          "#100a01",
+          "#272113",
+          "#403a2b",
+          "#5b5545",
+          "#787161",
+          "#999281",
+          "#c5bdac",
+          "#f3ead8"
+        ]
+      },
+      "viaggio-su-disco": {
+        "role": "neutral",
+        "displayName": "Delitto in viaggio, su-disco",
+        "theme": "viaggio",
+        "cssVar": "--su-disco",
+        "canonical": "#0e1626",
+        "oklch": "oklch(20.1% 0.034 263.4)",
+        "tonalRamp": [
+          "#050b1a",
+          "#192132",
+          "#313b4d",
+          "#4b5569",
+          "#677286",
+          "#8793a8",
+          "#b2bed5",
+          "#dfecff"
+        ]
+      },
+      "viaggio-sigillo": {
+        "role": "secondary",
+        "displayName": "Delitto in viaggio, sigillo",
+        "theme": "viaggio",
+        "cssVar": "--sigillo",
+        "canonical": "#7a1f2a",
+        "oklch": "oklch(39.1% 0.125 18.5)",
+        "tonalRamp": [
+          "#2d0000",
+          "#4c0008",
+          "#6b1421",
+          "#8c333b",
+          "#ac5156",
+          "#d17275",
+          "#ff9da0",
+          "#ffcacc"
+        ]
+      },
+      "viaggio-sigillo-luce": {
+        "role": "secondary",
+        "displayName": "Delitto in viaggio, sigillo-luce",
+        "theme": "viaggio",
+        "cssVar": "--sigillo-luce",
+        "canonical": "#a3313d",
+        "oklch": "oklch(48.8% 0.149 18.8)",
+        "tonalRamp": [
+          "#2d0000",
+          "#4c0008",
+          "#6b1420",
+          "#8c333a",
+          "#ac5155",
+          "#d17275",
+          "#ff9d9f",
+          "#ffcacc"
+        ]
+      },
+      "viaggio-sigillo-segno": {
+        "role": "secondary",
+        "displayName": "Delitto in viaggio, sigillo-segno",
+        "theme": "viaggio",
+        "cssVar": "--sigillo-segno",
+        "canonical": "#e7a39a",
+        "oklch": "oklch(77.8% 0.082 27.5)",
+        "tonalRamp": [
+          "#240000",
+          "#410b09",
+          "#5e2722",
+          "#7d423b",
+          "#9c5e57",
+          "#c07f76",
+          "#eeaaa1",
+          "#ffd7cd"
+        ]
+      },
+      "viaggio-allarme": {
+        "role": "tertiary",
+        "displayName": "Delitto in viaggio, allarme",
+        "theme": "viaggio",
+        "cssVar": "--allarme",
+        "canonical": "#ff7a6b",
+        "oklch": "oklch(73.2% 0.165 28.3)",
+        "tonalRamp": [
+          "#2d0000",
+          "#4c0000",
+          "#6c1611",
+          "#8c352d",
+          "#ad5348",
+          "#d17468",
+          "#ff9f92",
+          "#ffccbe"
+        ]
+      },
+      "viaggio-carta": {
+        "role": "neutral",
+        "displayName": "Delitto in viaggio, carta",
+        "theme": "viaggio",
+        "cssVar": "--carta",
+        "canonical": "#efe4c8",
+        "oklch": "oklch(92.0% 0.039 89.1)",
+        "tonalRamp": [
+          "#120a00",
+          "#292109",
+          "#433a22",
+          "#5e543c",
+          "#7b7158",
+          "#9c9177",
+          "#c8bda2",
+          "#f6ebce"
+        ]
+      },
+      "viaggio-inchiostro": {
+        "role": "neutral",
+        "displayName": "Delitto in viaggio, inchiostro",
+        "theme": "viaggio",
+        "cssVar": "--inchiostro",
+        "canonical": "#1a1410",
+        "oklch": "oklch(19.7% 0.013 55.5)",
+        "tonalRamp": [
+          "#0f0a06",
+          "#27201c",
+          "#403934",
+          "#5b544f",
+          "#78706b",
+          "#99908b",
+          "#c4bcb6",
+          "#f2e9e3"
+        ]
+      },
+      "viaggio-carta-filetto": {
+        "role": "neutral",
+        "displayName": "Delitto in viaggio, carta-filetto",
+        "theme": "viaggio",
+        "cssVar": "--carta-filetto",
+        "canonical": "#cdbf9f",
+        "oklch": "oklch(80.8% 0.046 87.2)",
+        "tonalRamp": [
+          "#130900",
+          "#2b2004",
+          "#45391d",
+          "#605437",
+          "#7d7053",
+          "#9e9172",
+          "#cabc9d",
+          "#f8eac9"
+        ]
+      },
+      "viaggio-decoro": {
+        "role": "tertiary",
+        "displayName": "Delitto in viaggio, decoro",
+        "theme": "viaggio",
+        "cssVar": "--decoro",
+        "canonical": "#0e1626",
+        "oklch": "oklch(20.1% 0.034 263.4)",
+        "tonalRamp": [
+          "#050b1a",
+          "#192132",
+          "#313b4d",
+          "#4b5569",
+          "#677286",
+          "#8793a8",
+          "#b2bed5",
+          "#dfecff"
+        ]
+      },
+      "gatsby-fondo": {
+        "role": "neutral",
+        "displayName": "Anni '20 Gatsby, fondo",
+        "theme": "gatsby",
+        "cssVar": "--fondo",
+        "canonical": "#0d0c0a",
+        "oklch": "oklch(15.5% 0.004 84.6)",
+        "tonalRamp": [
+          "#0c0b09",
+          "#23211f",
+          "#3c3a38",
+          "#565552",
+          "#73716f",
+          "#93928f",
+          "#bfbdba",
+          "#ecebe8"
+        ]
+      },
+      "gatsby-fondo-2": {
+        "role": "neutral",
+        "displayName": "Anni '20 Gatsby, fondo-2",
+        "theme": "gatsby",
+        "cssVar": "--fondo-2",
+        "canonical": "#171511",
+        "oklch": "oklch(19.7% 0.008 84.6)",
+        "tonalRamp": [
+          "#0d0b07",
+          "#23211d",
+          "#3d3a36",
+          "#575550",
+          "#74716c",
+          "#94928c",
+          "#c0bdb8",
+          "#eeebe5"
+        ]
+      },
+      "gatsby-fondo-3": {
+        "role": "neutral",
+        "displayName": "Anni '20 Gatsby, fondo-3",
+        "theme": "gatsby",
+        "cssVar": "--fondo-3",
+        "canonical": "#211e18",
+        "oklch": "oklch(23.6% 0.012 84.6)",
+        "tonalRamp": [
+          "#0d0b06",
+          "#24211b",
+          "#3d3a34",
+          "#58554e",
+          "#75716a",
+          "#96928a",
+          "#c1bdb5",
+          "#efebe2"
+        ]
+      },
+      "gatsby-filetto": {
+        "role": "neutral",
+        "displayName": "Anni '20 Gatsby, filetto",
+        "theme": "gatsby",
+        "cssVar": "--filetto",
+        "canonical": "#3b3529",
+        "oklch": "oklch(33.1% 0.022 84.5)",
+        "tonalRamp": [
+          "#0f0a03",
+          "#272116",
+          "#403a2e",
+          "#5b5548",
+          "#787163",
+          "#989183",
+          "#c4bdae",
+          "#f2eadb"
+        ]
+      },
+      "gatsby-testo-1": {
+        "role": "neutral",
+        "displayName": "Anni '20 Gatsby, testo-1",
+        "theme": "gatsby",
+        "cssVar": "--testo-1",
+        "canonical": "#f1e7cf",
+        "oklch": "oklch(93.0% 0.034 88.1)",
+        "tonalRamp": [
+          "#110a00",
+          "#28210e",
+          "#423a26",
+          "#5d5440",
+          "#7a715b",
+          "#9b917b",
+          "#c7bda6",
+          "#f4ead2"
+        ]
+      },
+      "gatsby-testo-2": {
+        "role": "neutral",
+        "displayName": "Anni '20 Gatsby, testo-2",
+        "theme": "gatsby",
+        "cssVar": "--testo-2",
+        "canonical": "#b3a587",
+        "oklch": "oklch(72.6% 0.045 85.9)",
+        "tonalRamp": [
+          "#130900",
+          "#2b2005",
+          "#45391e",
+          "#605438",
+          "#7d7054",
+          "#9e9173",
+          "#cbbc9e",
+          "#f9eaca"
+        ]
+      },
+      "gatsby-accento": {
+        "role": "primary",
+        "displayName": "Anni '20 Gatsby, accento",
+        "theme": "gatsby",
+        "cssVar": "--accento",
+        "canonical": "#d6b25e",
+        "oklch": "oklch(77.8% 0.111 86.5)",
+        "tonalRamp": [
+          "#1e0200",
+          "#381900",
+          "#533400",
+          "#704f00",
+          "#8e6c04",
+          "#b08d37",
+          "#ddb965",
+          "#ffe792"
+        ]
+      },
+      "gatsby-accento-chiaro": {
+        "role": "primary",
+        "displayName": "Anni '20 Gatsby, accento-chiaro",
+        "theme": "gatsby",
+        "cssVar": "--accento-chiaro",
+        "canonical": "#e6c677",
+        "oklch": "oklch(83.7% 0.105 88.1)",
+        "tonalRamp": [
+          "#1c0300",
+          "#361b00",
+          "#513500",
+          "#6d5000",
+          "#8b6d16",
+          "#ad8e3f",
+          "#daba6b",
+          "#ffe898"
+        ]
+      },
+      "gatsby-su-accento": {
+        "role": "neutral",
+        "displayName": "Anni '20 Gatsby, su-accento",
+        "theme": "gatsby",
+        "cssVar": "--su-accento",
+        "canonical": "#0d0c0a",
+        "oklch": "oklch(15.5% 0.004 84.6)",
+        "tonalRamp": [
+          "#0c0b09",
+          "#23211f",
+          "#3c3a38",
+          "#565552",
+          "#73716f",
+          "#93928f",
+          "#bfbdba",
+          "#ecebe8"
+        ]
+      },
+      "gatsby-disco": {
+        "role": "tertiary",
+        "displayName": "Anni '20 Gatsby, disco",
+        "theme": "gatsby",
+        "cssVar": "--disco",
+        "canonical": "#d6b25e",
+        "oklch": "oklch(77.8% 0.111 86.5)",
+        "tonalRamp": [
+          "#1e0200",
+          "#381900",
+          "#533400",
+          "#704f00",
+          "#8e6c04",
+          "#b08d37",
+          "#ddb965",
+          "#ffe792"
+        ]
+      },
+      "gatsby-su-disco": {
+        "role": "neutral",
+        "displayName": "Anni '20 Gatsby, su-disco",
+        "theme": "gatsby",
+        "cssVar": "--su-disco",
+        "canonical": "#0d0c0a",
+        "oklch": "oklch(15.5% 0.004 84.6)",
+        "tonalRamp": [
+          "#0c0b09",
+          "#23211f",
+          "#3c3a38",
+          "#565552",
+          "#73716f",
+          "#93928f",
+          "#bfbdba",
+          "#ecebe8"
+        ]
+      },
+      "gatsby-sigillo": {
+        "role": "secondary",
+        "displayName": "Anni '20 Gatsby, sigillo",
+        "theme": "gatsby",
+        "cssVar": "--sigillo",
+        "canonical": "#7a2030",
+        "oklch": "oklch(39.3% 0.123 14.8)",
+        "tonalRamp": [
+          "#2d0000",
+          "#4c000e",
+          "#6b1426",
+          "#8b333f",
+          "#ac505b",
+          "#d1717b",
+          "#ff9da5",
+          "#ffcad2"
+        ]
+      },
+      "gatsby-sigillo-luce": {
+        "role": "secondary",
+        "displayName": "Anni '20 Gatsby, sigillo-luce",
+        "theme": "gatsby",
+        "cssVar": "--sigillo-luce",
+        "canonical": "#a3354a",
+        "oklch": "oklch(49.5% 0.145 12.9)",
+        "tonalRamp": [
+          "#2c0001",
+          "#4b0010",
+          "#6b1428",
+          "#8b3342",
+          "#ac505d",
+          "#d1717d",
+          "#ff9da8",
+          "#ffcad4"
+        ]
+      },
+      "gatsby-sigillo-segno": {
+        "role": "secondary",
+        "displayName": "Anni '20 Gatsby, sigillo-segno",
+        "theme": "gatsby",
+        "cssVar": "--sigillo-segno",
+        "canonical": "#e7a39a",
+        "oklch": "oklch(77.8% 0.082 27.5)",
+        "tonalRamp": [
+          "#240000",
+          "#410b09",
+          "#5e2722",
+          "#7d423b",
+          "#9c5e57",
+          "#c07f76",
+          "#eeaaa1",
+          "#ffd7cd"
+        ]
+      },
+      "gatsby-allarme": {
+        "role": "tertiary",
+        "displayName": "Anni '20 Gatsby, allarme",
+        "theme": "gatsby",
+        "cssVar": "--allarme",
+        "canonical": "#ff7f6e",
+        "oklch": "oklch(74.0% 0.159 29.2)",
+        "tonalRamp": [
+          "#2d0000",
+          "#4c0000",
+          "#6c1610",
+          "#8c352b",
+          "#ac5347",
+          "#d17466",
+          "#ff9f91",
+          "#ffcdbd"
+        ]
+      },
+      "gatsby-carta": {
+        "role": "neutral",
+        "displayName": "Anni '20 Gatsby, carta",
+        "theme": "gatsby",
+        "cssVar": "--carta",
+        "canonical": "#f1e7cf",
+        "oklch": "oklch(93.0% 0.034 88.1)",
+        "tonalRamp": [
+          "#110a00",
+          "#28210e",
+          "#423a26",
+          "#5d5440",
+          "#7a715b",
+          "#9b917b",
+          "#c7bda6",
+          "#f4ead2"
+        ]
+      },
+      "gatsby-inchiostro": {
+        "role": "neutral",
+        "displayName": "Anni '20 Gatsby, inchiostro",
+        "theme": "gatsby",
+        "cssVar": "--inchiostro",
+        "canonical": "#14110c",
+        "oklch": "oklch(17.9% 0.011 80.5)",
+        "tonalRamp": [
+          "#0e0b06",
+          "#24211c",
+          "#3e3a34",
+          "#58554f",
+          "#75716a",
+          "#96928b",
+          "#c1bdb6",
+          "#efeae3"
+        ]
+      },
+      "gatsby-carta-filetto": {
+        "role": "neutral",
+        "displayName": "Anni '20 Gatsby, carta-filetto",
+        "theme": "gatsby",
+        "cssVar": "--carta-filetto",
+        "canonical": "#cfc0a0",
+        "oklch": "oklch(81.2% 0.046 85.8)",
+        "tonalRamp": [
+          "#140900",
+          "#2c2004",
+          "#45391d",
+          "#615437",
+          "#7e7052",
+          "#9f9172",
+          "#cbbc9c",
+          "#f9eac9"
+        ]
+      },
+      "gatsby-decoro": {
+        "role": "tertiary",
+        "displayName": "Anni '20 Gatsby, decoro",
+        "theme": "gatsby",
+        "cssVar": "--decoro",
+        "canonical": "#8f6f2c",
+        "oklch": "oklch(56.0% 0.093 83.0)",
+        "tonalRamp": [
+          "#1d0300",
+          "#361a00",
+          "#523400",
+          "#6e4f00",
+          "#8c6c29",
+          "#ae8d4b",
+          "#dbb976",
+          "#ffe6a3"
+        ]
+      },
+      "natale-fondo": {
+        "role": "neutral",
+        "displayName": "Natale con delitto, fondo",
+        "theme": "natale",
+        "cssVar": "--fondo",
+        "canonical": "#0f1d17",
+        "oklch": "oklch(21.6% 0.023 165.5)",
+        "tonalRamp": [
+          "#030e09",
+          "#17251f",
+          "#2f3e38",
+          "#4a5a52",
+          "#66766e",
+          "#86978f",
+          "#b1c3ba",
+          "#def0e7"
+        ]
+      },
+      "natale-fondo-2": {
+        "role": "neutral",
+        "displayName": "Natale con delitto, fondo-2",
+        "theme": "natale",
+        "cssVar": "--fondo-2",
+        "canonical": "#15261e",
+        "oklch": "oklch(25.1% 0.028 163.2)",
+        "tonalRamp": [
+          "#020f08",
+          "#15261e",
+          "#2d3f36",
+          "#485a51",
+          "#63776d",
+          "#84988d",
+          "#afc4b9",
+          "#dcf1e6"
+        ]
+      },
+      "natale-fondo-3": {
+        "role": "neutral",
+        "displayName": "Natale con delitto, fondo-3",
+        "theme": "natale",
+        "cssVar": "--fondo-3",
+        "canonical": "#1d3328",
+        "oklch": "oklch(29.9% 0.035 161.6)",
+        "tonalRamp": [
+          "#000f07",
+          "#11271c",
+          "#2a4035",
+          "#445c4f",
+          "#60786b",
+          "#80998c",
+          "#abc5b7",
+          "#d8f3e4"
+        ]
+      },
+      "natale-filetto": {
+        "role": "neutral",
+        "displayName": "Natale con delitto, filetto",
+        "theme": "natale",
+        "cssVar": "--filetto",
+        "canonical": "#2f4a3c",
+        "oklch": "oklch(38.3% 0.041 161.1)",
+        "tonalRamp": [
+          "#001006",
+          "#0d281b",
+          "#264134",
+          "#415d4e",
+          "#5d796a",
+          "#7d9a8a",
+          "#a8c6b5",
+          "#d4f4e2"
+        ]
+      },
+      "natale-testo-1": {
+        "role": "neutral",
+        "displayName": "Natale con delitto, testo-1",
+        "theme": "natale",
+        "cssVar": "--testo-1",
+        "canonical": "#f4ecdc",
+        "oklch": "oklch(94.5% 0.023 84.6)",
+        "tonalRamp": [
+          "#100a02",
+          "#272115",
+          "#403a2d",
+          "#5b5447",
+          "#787163",
+          "#999183",
+          "#c5bdad",
+          "#f2eada"
+        ]
+      },
+      "natale-testo-2": {
+        "role": "neutral",
+        "displayName": "Natale con delitto, testo-2",
+        "theme": "natale",
+        "cssVar": "--testo-2",
+        "canonical": "#b8c2b4",
+        "oklch": "oklch(80.2% 0.022 136.6)",
+        "tonalRamp": [
+          "#070d05",
+          "#1d241a",
+          "#353d32",
+          "#50584c",
+          "#6c7568",
+          "#8c9688",
+          "#b7c1b3",
+          "#e4efe0"
+        ]
+      },
+      "natale-accento": {
+        "role": "primary",
+        "displayName": "Natale con delitto, accento",
+        "theme": "natale",
+        "cssVar": "--accento",
+        "canonical": "#f24b4b",
+        "oklch": "oklch(65.0% 0.204 24.8)",
+        "tonalRamp": [
+          "#2d0000",
+          "#4c0000",
+          "#6c1517",
+          "#8c3432",
+          "#ad524d",
+          "#d2736d",
+          "#ff9e97",
+          "#ffccc3"
+        ]
+      },
+      "natale-accento-chiaro": {
+        "role": "primary",
+        "displayName": "Natale con delitto, accento-chiaro",
+        "theme": "natale",
+        "cssVar": "--accento-chiaro",
+        "canonical": "#f56b6b",
+        "oklch": "oklch(69.7% 0.170 22.5)",
+        "tonalRamp": [
+          "#2d0000",
+          "#4c0003",
+          "#6c151b",
+          "#8c3435",
+          "#ad5150",
+          "#d27270",
+          "#ff9e9a",
+          "#ffcbc6"
+        ]
+      },
+      "natale-su-accento": {
+        "role": "neutral",
+        "displayName": "Natale con delitto, su-accento",
+        "theme": "natale",
+        "cssVar": "--su-accento",
+        "canonical": "#0f1d17",
+        "oklch": "oklch(21.6% 0.023 165.5)",
+        "tonalRamp": [
+          "#030e09",
+          "#17251f",
+          "#2f3e38",
+          "#4a5a52",
+          "#66766e",
+          "#86978f",
+          "#b1c3ba",
+          "#def0e7"
+        ]
+      },
+      "natale-disco": {
+        "role": "tertiary",
+        "displayName": "Natale con delitto, disco",
+        "theme": "natale",
+        "cssVar": "--disco",
+        "canonical": "#f4ecdc",
+        "oklch": "oklch(94.5% 0.023 84.6)",
+        "tonalRamp": [
+          "#100a02",
+          "#272115",
+          "#403a2d",
+          "#5b5447",
+          "#787163",
+          "#999183",
+          "#c5bdad",
+          "#f2eada"
+        ]
+      },
+      "natale-su-disco": {
+        "role": "neutral",
+        "displayName": "Natale con delitto, su-disco",
+        "theme": "natale",
+        "cssVar": "--su-disco",
+        "canonical": "#0f1d17",
+        "oklch": "oklch(21.6% 0.023 165.5)",
+        "tonalRamp": [
+          "#030e09",
+          "#17251f",
+          "#2f3e38",
+          "#4a5a52",
+          "#66766e",
+          "#86978f",
+          "#b1c3ba",
+          "#def0e7"
+        ]
+      },
+      "natale-sigillo": {
+        "role": "secondary",
+        "displayName": "Natale con delitto, sigillo",
+        "theme": "natale",
+        "cssVar": "--sigillo",
+        "canonical": "#8e1b24",
+        "oklch": "oklch(42.4% 0.150 22.8)",
+        "tonalRamp": [
+          "#2d0000",
+          "#4c0002",
+          "#6c151b",
+          "#8c3435",
+          "#ad5250",
+          "#d2736f",
+          "#ff9e99",
+          "#ffcbc6"
+        ]
+      },
+      "natale-sigillo-luce": {
+        "role": "secondary",
+        "displayName": "Natale con delitto, sigillo-luce",
+        "theme": "natale",
+        "cssVar": "--sigillo-luce",
+        "canonical": "#b8323c",
+        "oklch": "oklch(52.5% 0.170 21.4)",
+        "tonalRamp": [
+          "#2d0000",
+          "#4c0004",
+          "#6c141d",
+          "#8c3437",
+          "#ad5152",
+          "#d27271",
+          "#ff9e9c",
+          "#ffcbc8"
+        ]
+      },
+      "natale-sigillo-segno": {
+        "role": "secondary",
+        "displayName": "Natale con delitto, sigillo-segno",
+        "theme": "natale",
+        "cssVar": "--sigillo-segno",
+        "canonical": "#e7a39a",
+        "oklch": "oklch(77.8% 0.082 27.5)",
+        "tonalRamp": [
+          "#240000",
+          "#410b09",
+          "#5e2722",
+          "#7d423b",
+          "#9c5e57",
+          "#c07f76",
+          "#eeaaa1",
+          "#ffd7cd"
+        ]
+      },
+      "natale-allarme": {
+        "role": "tertiary",
+        "displayName": "Natale con delitto, allarme",
+        "theme": "natale",
+        "cssVar": "--allarme",
+        "canonical": "#f2c14e",
+        "oklch": "oklch(83.4% 0.141 85.4)",
+        "tonalRamp": [
+          "#200000",
+          "#3a1700",
+          "#563200",
+          "#734e00",
+          "#916b00",
+          "#b38c2b",
+          "#e1b85c",
+          "#ffe58a"
+        ]
+      },
+      "natale-carta": {
+        "role": "neutral",
+        "displayName": "Natale con delitto, carta",
+        "theme": "natale",
+        "cssVar": "--carta",
+        "canonical": "#fbf4e4",
+        "oklch": "oklch(96.8% 0.022 87.2)",
+        "tonalRamp": [
+          "#0f0a02",
+          "#262115",
+          "#403a2d",
+          "#5b5547",
+          "#777163",
+          "#989283",
+          "#c4bdae",
+          "#f2ebdb"
+        ]
+      },
+      "natale-inchiostro": {
+        "role": "neutral",
+        "displayName": "Natale con delitto, inchiostro",
+        "theme": "natale",
+        "cssVar": "--inchiostro",
+        "canonical": "#1a1410",
+        "oklch": "oklch(19.7% 0.013 55.5)",
+        "tonalRamp": [
+          "#0f0a06",
+          "#27201c",
+          "#403934",
+          "#5b544f",
+          "#78706b",
+          "#99908b",
+          "#c4bcb6",
+          "#f2e9e3"
+        ]
+      },
+      "natale-carta-filetto": {
+        "role": "neutral",
+        "displayName": "Natale con delitto, carta-filetto",
+        "theme": "natale",
+        "cssVar": "--carta-filetto",
+        "canonical": "#d9ccb2",
+        "oklch": "oklch(84.9% 0.038 84.6)",
+        "tonalRamp": [
+          "#120900",
+          "#2a200a",
+          "#443923",
+          "#5f543d",
+          "#7c7058",
+          "#9d9178",
+          "#c9bca3",
+          "#f7eacf"
+        ]
+      },
+      "natale-decoro": {
+        "role": "tertiary",
+        "displayName": "Natale con delitto, decoro",
+        "theme": "natale",
+        "cssVar": "--decoro",
+        "canonical": "#0f1d17",
+        "oklch": "oklch(21.6% 0.023 165.5)",
+        "tonalRamp": [
+          "#030e09",
+          "#17251f",
+          "#2f3e38",
+          "#4a5a52",
+          "#66766e",
+          "#86978f",
+          "#b1c3ba",
+          "#def0e7"
+        ]
       }
     },
     "typographyMeta": {
@@ -1127,6 +2495,86 @@
       "marchio-label": {
         "displayName": "Marchio label",
         "purpose": "Source Sans 3 700 per stato del volume e colophon sulla copertina."
+      },
+      "vittoriano-display": {
+        "displayName": "Vittoriano alla Sherlock, display",
+        "purpose": "Voce tipografica del tema Vittoriano alla Sherlock; famiglia e misure nel frontmatter di DESIGN.md."
+      },
+      "vittoriano-title": {
+        "displayName": "Vittoriano alla Sherlock, title",
+        "purpose": "Voce tipografica del tema Vittoriano alla Sherlock; famiglia e misure nel frontmatter di DESIGN.md."
+      },
+      "vittoriano-body-sala": {
+        "displayName": "Vittoriano alla Sherlock, body-sala",
+        "purpose": "Voce tipografica del tema Vittoriano alla Sherlock; famiglia e misure nel frontmatter di DESIGN.md."
+      },
+      "vittoriano-body": {
+        "displayName": "Vittoriano alla Sherlock, body",
+        "purpose": "Voce tipografica del tema Vittoriano alla Sherlock; famiglia e misure nel frontmatter di DESIGN.md."
+      },
+      "vittoriano-label": {
+        "displayName": "Vittoriano alla Sherlock, label",
+        "purpose": "Voce tipografica del tema Vittoriano alla Sherlock; famiglia e misure nel frontmatter di DESIGN.md."
+      },
+      "viaggio-display": {
+        "displayName": "Delitto in viaggio, display",
+        "purpose": "Voce tipografica del tema Delitto in viaggio; famiglia e misure nel frontmatter di DESIGN.md."
+      },
+      "viaggio-title": {
+        "displayName": "Delitto in viaggio, title",
+        "purpose": "Voce tipografica del tema Delitto in viaggio; famiglia e misure nel frontmatter di DESIGN.md."
+      },
+      "viaggio-body-sala": {
+        "displayName": "Delitto in viaggio, body-sala",
+        "purpose": "Voce tipografica del tema Delitto in viaggio; famiglia e misure nel frontmatter di DESIGN.md."
+      },
+      "viaggio-body": {
+        "displayName": "Delitto in viaggio, body",
+        "purpose": "Voce tipografica del tema Delitto in viaggio; famiglia e misure nel frontmatter di DESIGN.md."
+      },
+      "viaggio-label": {
+        "displayName": "Delitto in viaggio, label",
+        "purpose": "Voce tipografica del tema Delitto in viaggio; famiglia e misure nel frontmatter di DESIGN.md."
+      },
+      "gatsby-display": {
+        "displayName": "Anni '20 Gatsby, display",
+        "purpose": "Voce tipografica del tema Anni '20 Gatsby; famiglia e misure nel frontmatter di DESIGN.md."
+      },
+      "gatsby-title": {
+        "displayName": "Anni '20 Gatsby, title",
+        "purpose": "Voce tipografica del tema Anni '20 Gatsby; famiglia e misure nel frontmatter di DESIGN.md."
+      },
+      "gatsby-body-sala": {
+        "displayName": "Anni '20 Gatsby, body-sala",
+        "purpose": "Voce tipografica del tema Anni '20 Gatsby; famiglia e misure nel frontmatter di DESIGN.md."
+      },
+      "gatsby-body": {
+        "displayName": "Anni '20 Gatsby, body",
+        "purpose": "Voce tipografica del tema Anni '20 Gatsby; famiglia e misure nel frontmatter di DESIGN.md."
+      },
+      "gatsby-label": {
+        "displayName": "Anni '20 Gatsby, label",
+        "purpose": "Voce tipografica del tema Anni '20 Gatsby; famiglia e misure nel frontmatter di DESIGN.md."
+      },
+      "natale-display": {
+        "displayName": "Natale con delitto, display",
+        "purpose": "Voce tipografica del tema Natale con delitto; famiglia e misure nel frontmatter di DESIGN.md."
+      },
+      "natale-title": {
+        "displayName": "Natale con delitto, title",
+        "purpose": "Voce tipografica del tema Natale con delitto; famiglia e misure nel frontmatter di DESIGN.md."
+      },
+      "natale-body-sala": {
+        "displayName": "Natale con delitto, body-sala",
+        "purpose": "Voce tipografica del tema Natale con delitto; famiglia e misure nel frontmatter di DESIGN.md."
+      },
+      "natale-body": {
+        "displayName": "Natale con delitto, body",
+        "purpose": "Voce tipografica del tema Natale con delitto; famiglia e misure nel frontmatter di DESIGN.md."
+      },
+      "natale-label": {
+        "displayName": "Natale con delitto, label",
+        "purpose": "Voce tipografica del tema Natale con delitto; famiglia e misure nel frontmatter di DESIGN.md."
       }
     },
     "shadows": [],
@@ -1219,6 +2667,84 @@
           "impronta"
         ],
         "screenshots": ".impeccable/review/noir/"
+      },
+      {
+        "id": "vittoriano",
+        "name": "Vittoriano alla Sherlock",
+        "default": false,
+        "colorPrefix": "vittoriano-",
+        "titoli": "\"IM Fell English\", Georgia, serif",
+        "corpo": "\"EB Garamond\", Georgia, serif",
+        "disco": "Lente d'ingrandimento sulle righe del taccuino",
+        "atmosfera": "Nessuna",
+        "figure": [
+          "taccuino",
+          "lente",
+          "cilindro",
+          "orologio",
+          "calamaio",
+          "chiave"
+        ],
+        "screenshots": ".impeccable/review/vittoriano/",
+        "scuro": false
+      },
+      {
+        "id": "viaggio",
+        "name": "Delitto in viaggio",
+        "default": false,
+        "colorPrefix": "viaggio-",
+        "titoli": "\"Cinzel\", Georgia, serif",
+        "corpo": "\"Work Sans\", system-ui, sans-serif",
+        "disco": "Orologio di stazione sulle 21.40",
+        "atmosfera": "Luci basse dal finestrino, a sinistra, spente sui quadranti",
+        "figure": [
+          "biglietto",
+          "valigia",
+          "locomotiva",
+          "fischietto",
+          "lanterna",
+          "tazza"
+        ],
+        "screenshots": ".impeccable/review/viaggio/",
+        "scalaTitoli": 0.72
+      },
+      {
+        "id": "gatsby",
+        "name": "Anni '20 Gatsby",
+        "default": false,
+        "colorPrefix": "gatsby-",
+        "titoli": "\"Federo\", Georgia, serif",
+        "corpo": "\"Josefin Sans\", system-ui, sans-serif",
+        "disco": "Raggiera déco con archi a gradini",
+        "atmosfera": "Quattro volute di fumo irregolari, lontane dal testo",
+        "figure": [
+          "coppa",
+          "grammofono",
+          "bocchino",
+          "carte",
+          "bottiglia",
+          "perle"
+        ],
+        "screenshots": ".impeccable/review/gatsby/"
+      },
+      {
+        "id": "natale",
+        "name": "Natale con delitto",
+        "default": false,
+        "colorPrefix": "natale-",
+        "titoli": "\"Gloock\", Georgia, serif",
+        "corpo": "\"Nunito\", system-ui, sans-serif",
+        "disco": "Luna d'inverno con tetti innevati, finestre calde e una stella",
+        "atmosfera": "Neve casuale, sopra la riga delle fasi",
+        "figure": [
+          "pallina",
+          "regalo",
+          "stella",
+          "campanella",
+          "bastoncino",
+          "pupazzo"
+        ],
+        "screenshots": ".impeccable/review/natale/"
       },
       {
         "id": "marchio",

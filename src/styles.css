@@ -6,6 +6,24 @@
 @font-face { font-family: "Barlow"; font-style: normal; font-weight: 700; font-display: swap; src: url("/fonti/barlow-latin-700-normal.woff2") format("woff2"); }
 @font-face { font-family: "Grenze Gotisch"; font-style: normal; font-weight: 500; font-display: swap; src: url("/fonti/grenze-gotisch-latin-500-normal.woff2") format("woff2"); }
 @font-face { font-family: "Grenze Gotisch"; font-style: normal; font-weight: 700; font-display: swap; src: url("/fonti/grenze-gotisch-latin-700-normal.woff2") format("woff2"); }
+/* Vittoriano, Delitto in viaggio, Gatsby, Natale: un carattere per i titoli e uno per il testo, pesi come intervalli. */
+@font-face { font-family: "IM Fell English"; font-style: normal; font-weight: 100 900; font-display: swap; src: url("/fonti/im-fell-english-latin-400-normal.woff2") format("woff2"); }
+@font-face { font-family: "EB Garamond"; font-style: normal; font-weight: 100 549; font-display: swap; src: url("/fonti/eb-garamond-latin-400-normal.woff2") format("woff2"); }
+@font-face { font-family: "EB Garamond"; font-style: normal; font-weight: 550 649; font-display: swap; src: url("/fonti/eb-garamond-latin-600-normal.woff2") format("woff2"); }
+@font-face { font-family: "EB Garamond"; font-style: normal; font-weight: 650 900; font-display: swap; src: url("/fonti/eb-garamond-latin-700-normal.woff2") format("woff2"); }
+@font-face { font-family: "Cinzel"; font-style: normal; font-weight: 100 649; font-display: swap; src: url("/fonti/cinzel-latin-600-normal.woff2") format("woff2"); }
+@font-face { font-family: "Cinzel"; font-style: normal; font-weight: 650 900; font-display: swap; src: url("/fonti/cinzel-latin-700-normal.woff2") format("woff2"); }
+@font-face { font-family: "Work Sans"; font-style: normal; font-weight: 100 549; font-display: swap; src: url("/fonti/work-sans-latin-400-normal.woff2") format("woff2"); }
+@font-face { font-family: "Work Sans"; font-style: normal; font-weight: 550 649; font-display: swap; src: url("/fonti/work-sans-latin-600-normal.woff2") format("woff2"); }
+@font-face { font-family: "Work Sans"; font-style: normal; font-weight: 650 900; font-display: swap; src: url("/fonti/work-sans-latin-700-normal.woff2") format("woff2"); }
+@font-face { font-family: "Federo"; font-style: normal; font-weight: 100 900; font-display: swap; src: url("/fonti/federo-latin-400-normal.woff2") format("woff2"); }
+@font-face { font-family: "Josefin Sans"; font-style: normal; font-weight: 100 549; font-display: swap; src: url("/fonti/josefin-sans-latin-400-normal.woff2") format("woff2"); }
+@font-face { font-family: "Josefin Sans"; font-style: normal; font-weight: 550 649; font-display: swap; src: url("/fonti/josefin-sans-latin-600-normal.woff2") format("woff2"); }
+@font-face { font-family: "Josefin Sans"; font-style: normal; font-weight: 650 900; font-display: swap; src: url("/fonti/josefin-sans-latin-700-normal.woff2") format("woff2"); }
+@font-face { font-family: "Gloock"; font-style: normal; font-weight: 100 900; font-display: swap; src: url("/fonti/gloock-latin-400-normal.woff2") format("woff2"); }
+@font-face { font-family: "Nunito"; font-style: normal; font-weight: 100 549; font-display: swap; src: url("/fonti/nunito-latin-400-normal.woff2") format("woff2"); }
+@font-face { font-family: "Nunito"; font-style: normal; font-weight: 550 649; font-display: swap; src: url("/fonti/nunito-latin-600-normal.woff2") format("woff2"); }
+@font-face { font-family: "Nunito"; font-style: normal; font-weight: 650 900; font-display: swap; src: url("/fonti/nunito-latin-700-normal.woff2") format("woff2"); }
 /* Il marchio, Il Movente. Limelight ha un solo peso; i pesi di Source Sans 3 coprono intervalli per non avere grassetti finti. */
 @font-face { font-family: "Limelight"; font-style: normal; font-weight: 100 900; font-display: swap; src: url("/fonti/limelight-latin-400-normal.woff2") format("woff2"); }
 @font-face { font-family: "Source Sans 3"; font-style: normal; font-weight: 100 499; font-display: swap; src: url("/fonti/source-sans-3-latin-400-normal.woff2") format("woff2"); }
@@ -39,6 +57,7 @@
 
   --titoli: "Grenze Gotisch", Georgia, serif;
   --corpo: "Barlow", system-ui, sans-serif;
+  --scala-titoli: 1;
 
   --curva-uscita: cubic-bezier(0.23, 1, 0.32, 1);
   --curva-cassetto: cubic-bezier(0.32, 0.72, 0, 1);
@@ -142,3 +161,9 @@ textarea.campo { resize: vertical; line-height: 1.45; }
 .r-credenziali dd { margin: 0; font-size: 20px; font-weight: 700; letter-spacing: 0.02em; user-select: all; word-break: break-all; }
 .r-credenziali p { font-size: 14px; }
 .r-credenziali .bottone { border-color: var(--inchiostro); color: var(--inchiostro); justify-self: start; }
+
+/* Stampa (biglietti per i tavoli): solo il contenuto, su carta bianca. */
+@media print {
+  body { background: #ffffff; }
+  .menu, app-firma, .avviso-regia, .archiviata { display: none !important; }
+}
