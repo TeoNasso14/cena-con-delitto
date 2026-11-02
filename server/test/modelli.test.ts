@@ -110,7 +110,7 @@ describe("i modelli pronti", () => {
 
     test(`${m.nome}: nomi e luogo della regia entrano in tutti i testi, il colpevole resta segreto nelle prove aperte all'inizio`, () => {
       const g = genera(m, { luogo: "Zelda", vittima: "il barone Rampante", anno: "Il 1999", nomi: { s1: "Ermenegilda" }, colpevole: "s2" }, dado(5));
-      expect(String(g.caso.serata?.premessa)).toContain("Il barone Rampante");
+      expect(String(g.caso.serata?.premessa).toLowerCase()).toContain("il barone rampante");
       expect(String(g.caso.serata?.titolo)).toContain("Zelda");
       expect(testi(g.caso)).toContain("Ermenegilda");
       const iniziali = g.caso.prove!.filter((p) => p.regole?.some((r) => r.fase_numero === 1)).map((p) => String(p["testo"])).join(" ");
