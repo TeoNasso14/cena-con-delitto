@@ -77,6 +77,7 @@ Lavoro fatto sul ramo `develop`, senza pubblicare la 1.1 da sola (scelta di Teo)
 ## Dopo la 2.0.0 (stesso giorno)
 - **Quattro temi** con Impeccable, dopo un'intervista di una domanda per tema: Vittoriano chiaro (primo tema chiaro), treno di lusso notturno, speakeasy, Natale caldo. La revisione ha tolto la pipa e la piuma (rifiutate dai contratti), reso irregolari fumo e neve, spento le luci del treno sul quadrante; per Cinzel, largo e maiuscolo, i temi possono ridurre i titoli del proiettore.
 - **2.1**: invitati con vincoli e sorteggio bilanciato; biglietti per tavolo con QR. Le password non si possono rileggere, quindi i biglietti le rinnovano; le credenziali del QR stanno dopo il `#` e non arrivano al server.
+- **Manuale della regia** (Claude Docs) aggiornato alla 2.2: accesso con invito, le tue serate e il tema, invitati e biglietti, Strumenti.
 - **2.2**: caso completo con allegati, assemblato dal browser per il limite di grandezza delle risposte delle Netlify Functions. Il tempo reale vero richiederebbe un servizio esterno: al suo posto un controllo leggero della versione, che porta gli aggiornamenti a circa un secondo.
 
 ## Stato alla 2.0.0
