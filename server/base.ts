@@ -98,7 +98,39 @@ export async function migra(db: Db) {
 
 /** Segnala ai telefoni e al proiettore che qualcosa è cambiato. */
 export async function tocca(db: Db, serataId: number) {
-  await db.q("UPDATE serata SET versione = versione + 1, aggiornata = NOW() WHERE id = $1", [serataId]);
+  const r = await db.uno<{ versione: string }>("UPDATE serata SET versione = versione + 1, aggiornata = NOW() WHERE id = $1 RETURNING versione", [serataId]);
+  if (r) await annunciaVersione(serataId, r.versione);
+}
+
+/* ---------- Tempo reale (Ably): solo il numero di versione, mai contenuti ---------- */
+
+const ABLY = "https://main.realtime.ably.net";
+/** La rete verso Ably: i test la sostituiscono con una finta. */
+export const tempoReale = { rete: (u: string, i: RequestInit) => fetch(u, i) };
+export const canaleSerata = (sid: number) => `movente-serata-${sid}`;
+export const ablyBase = ABLY;
+
+export function chiaveAbly() {
+  const k = env("ABLY_API_KEY");
+  return k && /^[^.:\s]+\.[^.:\s]+:\S+$/.test(k) ? k : null;
+}
+export const autorizzazioneAbly = (k: string) => `Basic ${Buffer.from(k).toString("base64")}`;
+
+/** Pubblica la nuova versione sul canale della serata. Se Ably non risponde in fretta, i browser se ne accorgono col controllo di sempre. */
+async function annunciaVersione(sid: number, versione: string) {
+  const k = chiaveAbly();
+  if (!k) return;
+  try {
+    const r = await tempoReale.rete(`${ABLY}/channels/${encodeURIComponent(canaleSerata(sid))}/messages`, {
+      method: "POST",
+      headers: { authorization: autorizzazioneAbly(k), "content-type": "application/json" },
+      body: JSON.stringify({ name: "versione", data: String(versione) }),
+      signal: AbortSignal.timeout(1500),
+    });
+    if (!r.ok) console.warn(`Ably ha risposto ${r.status} alla pubblicazione`);
+  } catch (e) {
+    console.warn("Ably non raggiungibile", e);
+  }
 }
 
 /* ---------- Errori e risposte ---------- */

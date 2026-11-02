@@ -6,6 +6,11 @@ import * as S from "./squadra.ts";
 import * as SE from "./serate.ts";
 import * as AD from "./admin.ts";
 import * as IN from "./invitati.ts";
+import * as AI from "./aiuti.ts";
+import * as PG from "./prova-generale.ts";
+import { controllo } from "./controllo.ts";
+import { resoconto } from "./resoconto.ts";
+import { token as tokenTempoReale } from "./tempo-reale.ts";
 import { statoSchermo } from "./schermo.ts";
 
 type Gestore = (req: Request, db: Db, p: Record<string, string>) => Promise<Response> | Response;
@@ -19,6 +24,7 @@ const rotte: Array<[string, RegExp, Gestore]> = [
   ["POST", /^\/api\/uscita$/, () => A.esci()],
   ["GET", /^\/api\/io$/, (r, db) => A.io(r, db)],
   ["GET", /^\/api\/versione$/, (r, db) => A.versione(r, db)],
+  ["GET", /^\/api\/tempo-reale$/, (r, db) => tokenTempoReale(r, db)],
   ["GET", /^\/api\/admin$/, (r, db) => AD.tutto(r, db)],
   ["POST", /^\/api\/admin\/inviti$/, (r, db) => AD.invita(r, db)],
   ["POST", /^\/api\/admin\/inviti\/(?<id>\d+)\/revoca$/, (r, db, p) => AD.revoca(r, db, n(p.id))],
@@ -38,6 +44,7 @@ const rotte: Array<[string, RegExp, Gestore]> = [
   ["POST", /^\/api\/squadra\/codice$/, (r, db) => S.pin(r, db)],
   ["PUT", /^\/api\/squadra\/taccuino$/, (r, db) => S.taccuino(r, db)],
   ["POST", /^\/api\/squadra\/accusa$/, (r, db) => S.accusa(r, db)],
+  ["POST", /^\/api\/squadra\/aiuto$/, (r, db) => AI.chiedi(r, db)],
 
   ["GET", /^\/api\/schermo\/stato$/, (r, db) => statoSchermo(r, db)],
   ["GET", /^\/api\/file\/(?<key>[A-Za-z0-9_-]+)$/, (r, db, p) => F.servi(r, db, p.key)],
@@ -85,6 +92,13 @@ const rotte: Array<[string, RegExp, Gestore]> = [
   ["DELETE", /^\/api\/regia\/vincoli\/(?<id>\d+)$/, (r, db, p) => IN.eliminaVincolo(r, db, n(p.id))],
   ["POST", /^\/api\/regia\/sorteggio$/, (r, db) => IN.sorteggia(r, db)],
   ["POST", /^\/api\/regia\/biglietti$/, (r, db) => IN.biglietti(r, db)],
+  ["PUT", /^\/api\/regia\/ambiente$/, (r, db) => R.ambiente(r, db)],
+  ["PUT", /^\/api\/regia\/aiuti$/, (r, db) => AI.impostazioni(r, db)],
+  ["PUT", /^\/api\/regia\/aiuti\/(?<id>\d+)$/, (r, db, p) => AI.rispondi(r, db, n(p.id))],
+  ["GET", /^\/api\/regia\/controllo$/, (r, db) => controllo(r, db)],
+  ["GET", /^\/api\/regia\/resoconto$/, (r, db) => resoconto(r, db)],
+  ["POST", /^\/api\/regia\/prova-generale$/, (r, db) => PG.apri(r, db)],
+  ["POST", /^\/api\/regia\/prova-generale\/ricomincia$/, (r, db) => PG.ricomincia(r, db)],
   ["POST", /^\/api\/regia\/nascondi-soluzione$/, (r, db) => R.nascondiSoluzione(r, db)],
   ["POST", /^\/api\/regia\/azzera$/, (r, db) => R.azzera(r, db)],
   ["GET", /^\/api\/regia\/esporta$/, (r, db) => R.esporta(r, db)],

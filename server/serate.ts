@@ -78,10 +78,10 @@ export async function duplica(req: Request, db: Db, id: number) {
       await t.q("UPDATE serata SET sfondo_key = $1 WHERE id = $2", [nuovaChiave(o.sfondo_key), sid]);
       await t.q("INSERT INTO fase (serata_id, numero, nome, durata_minuti) SELECT $2, numero, nome, durata_minuti FROM fase WHERE serata_id = $1", [id, sid]);
       await t.q("INSERT INTO sussurro (serata_id, testo, ordine) SELECT $2, testo, ordine FROM sussurro WHERE serata_id = $1", [id, sid]);
-      for (const p of await t.q<{ nome: string; ruolo: string; scheda: string; note_regia: string; foto_key: string | null; ordine: number }>(
-        "SELECT nome, ruolo, scheda, note_regia, foto_key, ordine FROM personaggio WHERE serata_id = $1 ORDER BY id", [id])) {
-        await t.q("INSERT INTO personaggio (serata_id, nome, ruolo, scheda, note_regia, foto_key, ordine) VALUES ($1,$2,$3,$4,$5,$6,$7)",
-          [sid, p.nome, p.ruolo, p.scheda, p.note_regia, nuovaChiave(p.foto_key), p.ordine]);
+      for (const p of await t.q<{ nome: string; ruolo: string; scheda: string; note_regia: string; foto_key: string | null; ordine: number; copione: string }>(
+        "SELECT nome, ruolo, scheda, note_regia, foto_key, ordine, copione FROM personaggio WHERE serata_id = $1 ORDER BY id", [id])) {
+        await t.q("INSERT INTO personaggio (serata_id, nome, ruolo, scheda, note_regia, foto_key, ordine, copione) VALUES ($1,$2,$3,$4,$5,$6,$7,$8)",
+          [sid, p.nome, p.ruolo, p.scheda, p.note_regia, nuovaChiave(p.foto_key), p.ordine, p.copione]);
       }
       const cartella = new Map<number, number>();
       for (const c of await t.q<{ id: number; nome: string; ordine: number; visibile: boolean }>(

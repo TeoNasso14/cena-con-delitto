@@ -34,7 +34,7 @@ export async function tutto(req: Request, db: Db) {
        (SELECT COALESCE(json_agg(sb.prova_id), '[]'::json) FROM sblocco sb WHERE sb.squadra_id = sq.id) AS prove_aperte,
        (SELECT COALESCE(json_agg(pm.prova_id), '[]'::json) FROM prova_mostrata pm WHERE pm.squadra_id = sq.id) AS prove_mostrate
      FROM squadra sq LEFT JOIN account a ON a.squadra_id = sq.id
-     WHERE sq.serata_id = $1 ORDER BY sq.id`,
+     WHERE sq.serata_id = $1 AND NOT sq.prova ORDER BY sq.id`,
     [sid],
   );
   const schermi = await db.q(
@@ -59,7 +59,7 @@ export async function tutto(req: Request, db: Db) {
   );
   const accuse = await db.q(
     `SELECT a.*, sq.nome AS squadra FROM accusa a JOIN squadra sq ON sq.id = a.squadra_id
-     WHERE sq.serata_id = $1 ORDER BY a.consegnata_alle`,
+     WHERE sq.serata_id = $1 AND NOT sq.prova ORDER BY a.consegnata_alle`,
     [sid],
   );
   const eventi = await db.q(
@@ -67,11 +67,17 @@ export async function tutto(req: Request, db: Db) {
     [sid],
   );
   const sussurri = (await db.q<{ testo: string }>("SELECT testo FROM sussurro WHERE serata_id = $1 ORDER BY ordine, id", [sid])).map((r) => r.testo);
-  const invitati = await db.q("SELECT id, nome, squadra_id FROM invitato WHERE serata_id = $1 ORDER BY ordine, id", [sid]);
+  const invitati = await db.q("SELECT id, nome, squadra_id, personaggio_id FROM invitato WHERE serata_id = $1 ORDER BY ordine, id", [sid]);
+  const aiuti = await db.q(
+    `SELECT a.id, a.squadra_id, sq.nome AS squadra, sq.colore, sq.prova AS di_prova, p.numero AS prova, a.domanda, a.stato, a.risposta, a.penalita, a.chiesto, a.risposto
+     FROM aiuto a JOIN squadra sq ON sq.id = a.squadra_id LEFT JOIN prova p ON p.id = a.prova_id
+     WHERE a.serata_id = $1 ORDER BY a.chiesto DESC LIMIT 100`,
+    [sid],
+  );
   const vincoli = await db.q("SELECT id, a, b, tipo FROM vincolo WHERE serata_id = $1 ORDER BY id", [sid]);
   return json({
     io: { username: u.username },
-    serata, sussurri, invitati, vincoli, fasi, totaleProve: totale?.n ?? 0, squadre, schermi, personaggi, prove, cartelle, scene, annunci, accuse, eventi,
+    serata, sussurri, invitati, vincoli, aiuti, fasi, totaleProve: totale?.n ?? 0, squadre, schermi, personaggi, prove, cartelle, scene, annunci, accuse, eventi,
   });
 }
 
@@ -219,12 +225,15 @@ function datiPersonaggio(b: Record<string, unknown>) {
   ];
 }
 
+/** Cosa sa solo chi interpreta il personaggio: va sulla sua scheda stampata, mai ai telefoni delle squadre. */
+const copione = (b: Record<string, unknown>) => testo(b.copione ?? "", "copione", { max: 8000, vuoto: true });
+
 export async function creaPersonaggio(req: Request, db: Db) {
   const u = await regia(req, db);
   const b = await corpo(req);
   const r = await db.uno<{ id: number }>(
-    "INSERT INTO personaggio (serata_id, nome, ruolo, scheda, note_regia, foto_key, ordine) VALUES ($1,$2,$3,$4,$5,$6,$7) RETURNING id",
-    [u.serata_id, ...datiPersonaggio(b)],
+    "INSERT INTO personaggio (serata_id, nome, ruolo, scheda, note_regia, foto_key, ordine, copione) VALUES ($1,$2,$3,$4,$5,$6,$7,$8) RETURNING id",
+    [u.serata_id, ...datiPersonaggio(b), copione(b)],
   );
   await tocca(db, u.serata_id);
   return json({ id: r!.id }, 201);
@@ -238,6 +247,8 @@ export async function modificaPersonaggio(req: Request, db: Db, id: number) {
     "UPDATE personaggio SET nome=$1, ruolo=$2, scheda=$3, note_regia=$4, foto_key=$5, ordine=$6 WHERE id=$7",
     [...datiPersonaggio(b), id],
   );
+  // Il copione si cambia solo se arriva: chi non lo manda non lo cancella.
+  if (b.copione !== undefined) await db.q("UPDATE personaggio SET copione = $1 WHERE id = $2", [copione(b), id]);
   await tocca(db, u.serata_id);
   return json({ ok: true });
 }
@@ -570,7 +581,7 @@ export async function consegna(req: Request, db: Db) {
   const provaId = intero(b.prova_id, "prova");
   await proprio(db, "prova", provaId, u.serata_id);
   const squadre = b.squadra_id == null
-    ? await db.q<{ id: number }>("SELECT id FROM squadra WHERE serata_id = $1", [u.serata_id])
+    ? await db.q<{ id: number }>("SELECT id FROM squadra WHERE serata_id = $1 AND NOT prova", [u.serata_id])
     : [{ id: intero(b.squadra_id, "squadra") }];
   const esiti = { aperta: 0, mostrata: 0, gia: 0 };
   const anche = new Set<number>();
@@ -632,7 +643,7 @@ export async function rivela(req: Request, db: Db) {
   );
   if (!s?.colpevole) throw new Errore(409, "Prima scrivi la soluzione in Il caso: colpevole, movente e arma.");
   const accuse = await db.q<{ squadra_id: number; colpevole: string; movente: string; arma: string; punteggio: number | null }>(
-    "SELECT a.* FROM accusa a JOIN squadra sq ON sq.id = a.squadra_id WHERE sq.serata_id = $1",
+    "SELECT a.* FROM accusa a JOIN squadra sq ON sq.id = a.squadra_id WHERE sq.serata_id = $1 AND NOT sq.prova",
     [u.serata_id],
   );
   for (const a of accuse) {
@@ -723,6 +734,19 @@ export async function sussurri(req: Request, db: Db) {
   return json({ ok: true });
 }
 
+/** Suoni d'ambiente del proiettore: accesi o spenti, e il volume da 0 a 100. */
+export async function ambiente(req: Request, db: Db) {
+  const u = await regia(req, db);
+  const b = await corpo<{ attivo?: boolean; volume?: number }>(req);
+  if (b.attivo !== undefined) {
+    if (typeof b.attivo !== "boolean") throw new Errore(400, "Valore non valido.");
+    await db.q("UPDATE serata SET ambiente_attivo = $1 WHERE id = $2", [b.attivo, u.serata_id]);
+  }
+  if (b.volume !== undefined) await db.q("UPDATE serata SET ambiente_volume = $1 WHERE id = $2", [intero(b.volume, "volume", { min: 0, max: 100 }), u.serata_id]);
+  await tocca(db, u.serata_id);
+  return json({ ok: true });
+}
+
 /* ---------- Strumenti ---------- */
 
 export async function azzera(req: Request, db: Db) {
@@ -756,7 +780,7 @@ export async function esporta(req: Request, db: Db) {
   // Formato 2: con le chiavi degli allegati, che il browser della regia scarica e mette nel file (vedi Strumenti).
   const serata = await db.uno("SELECT titolo, premessa, colpevole, movente, arma, tema, sfondo_key, sfondo_opacita, sussurri_attivi, sussurri_attesa_min, sussurri_attesa_max, sussurri_durata FROM serata WHERE id = $1", [sid]);
   const fasi = await db.q("SELECT numero, nome, durata_minuti FROM fase WHERE serata_id = $1 ORDER BY numero", [sid]);
-  const personaggi = await db.q("SELECT nome, ruolo, scheda, note_regia, ordine, foto_key FROM personaggio WHERE serata_id = $1 ORDER BY ordine, id", [sid]);
+  const personaggi = await db.q("SELECT nome, ruolo, scheda, note_regia, copione, ordine, foto_key FROM personaggio WHERE serata_id = $1 ORDER BY ordine, id", [sid]);
   const sussurri = (await db.q<{ testo: string }>("SELECT testo FROM sussurro WHERE serata_id = $1 ORDER BY ordine, id", [sid])).map((r) => r.testo);
   const prove = await db.q<{ id: number; numero: number }>(
     `SELECT p.id, p.numero, p.titolo, p.tipo, p.testo, p.nota_sigillo, p.titolo_visibile, p.in_elenco, p.allegato_key, p.allegato_tipo, c.nome AS cartella
@@ -847,8 +871,8 @@ export async function importa(req: Request, db: Db) {
       ]);
     }
     for (const p of c.personaggi ?? []) {
-      await t.q("INSERT INTO personaggio (serata_id, nome, ruolo, scheda, note_regia, ordine, foto_key) VALUES ($1,$2,$3,$4,$5,$6,$7)", [
-        sid, testo(p.nome, "nome", { max: 80 }), String(p.ruolo ?? ""), String(p.scheda ?? ""), String(p.note_regia ?? ""), Number(p.ordine ?? 0), chiave(p.foto_key),
+      await t.q("INSERT INTO personaggio (serata_id, nome, ruolo, scheda, note_regia, ordine, foto_key, copione) VALUES ($1,$2,$3,$4,$5,$6,$7,$8)", [
+        sid, testo(p.nome, "nome", { max: 80 }), String(p.ruolo ?? ""), String(p.scheda ?? ""), String(p.note_regia ?? ""), Number(p.ordine ?? 0), chiave(p.foto_key), String(p.copione ?? "").slice(0, 8000),
       ]);
     }
     for (const sc of c.scene ?? []) {

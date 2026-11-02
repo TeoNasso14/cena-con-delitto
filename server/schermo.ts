@@ -12,9 +12,9 @@ export async function costruisciSchermo(db: Db, sid: number) {
   const s = await db.uno<{
     titolo: string; stato: string; fase_corrente: number; scena_in_onda: number | null; schermo_nero: boolean;
     versione: string; rivelata: boolean; colpevole: string; movente: string; arma: string;
-    sfondo_key: string | null; sfondo_opacita: number; tema: string; sussurri_attivi: boolean;
+    sfondo_key: string | null; sfondo_opacita: number; tema: string; sussurri_attivi: boolean; ambiente_attivo: boolean; ambiente_volume: number;
   }>(
-    "SELECT titolo, stato, fase_corrente, scena_in_onda, schermo_nero, versione, rivelata, colpevole, movente, arma, sfondo_key, sfondo_opacita, tema, sussurri_attivi FROM serata WHERE id = $1",
+    "SELECT titolo, stato, fase_corrente, scena_in_onda, schermo_nero, versione, rivelata, colpevole, movente, arma, sfondo_key, sfondo_opacita, tema, sussurri_attivi, ambiente_attivo, ambiente_volume FROM serata WHERE id = $1",
     [sid],
   );
   const fase = await faseInfo(db, sid, s!.fase_corrente);
@@ -29,6 +29,7 @@ export async function costruisciSchermo(db: Db, sid: number) {
     versione: s!.versione,
     tema: s!.tema,
     sussurri: await sussurriDi(db, sid, s!.sussurri_attivi),
+    ambiente: { attivo: s!.ambiente_attivo, volume: s!.ambiente_volume },
     titolo: s!.titolo,
     stato: s!.stato,
     schermoNero: s!.schermo_nero,
@@ -58,7 +59,7 @@ export async function costruisciSchermo(db: Db, sid: number) {
     out.squadre = await db.q(
       `SELECT sq.nome, sq.colore, COUNT(sb.prova_id)::int AS aperte
        FROM squadra sq LEFT JOIN sblocco sb ON sb.squadra_id = sq.id
-       WHERE sq.serata_id = $1 GROUP BY sq.id ORDER BY aperte DESC, sq.nome`,
+       WHERE sq.serata_id = $1 AND NOT sq.prova GROUP BY sq.id ORDER BY aperte DESC, sq.nome`,
       [sid],
     );
     const t = await db.uno<{ n: number }>("SELECT COUNT(*)::int AS n FROM prova WHERE serata_id = $1", [sid]);
@@ -75,10 +76,12 @@ export async function costruisciSchermo(db: Db, sid: number) {
     out.rivelata = s!.rivelata;
     if (s!.rivelata) {
       out.soluzione = { colpevole: s!.colpevole, movente: s!.movente, arma: s!.arma };
+      // Punteggio netto: quello dell'accusa meno le penalità degli aiuti.
       out.vincitori = await db.q(
         `SELECT sq.nome, a.consegnata_alle FROM accusa a JOIN squadra sq ON sq.id = a.squadra_id
-         WHERE sq.serata_id = $1 AND a.punteggio IS NOT NULL AND a.punteggio > 0
-         ORDER BY a.punteggio DESC, a.consegnata_alle ASC`,
+         CROSS JOIN LATERAL (SELECT COALESCE(SUM(x.penalita), 0) AS p FROM aiuto x WHERE x.squadra_id = sq.id AND x.stato = 'dato') pen
+         WHERE sq.serata_id = $1 AND NOT sq.prova AND a.punteggio IS NOT NULL AND a.punteggio - pen.p > 0
+         ORDER BY a.punteggio - pen.p DESC, a.consegnata_alle ASC`,
         [sid],
       );
     }

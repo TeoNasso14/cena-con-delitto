@@ -33,14 +33,22 @@ export async function aggiungi(req: Request, db: Db) {
 export async function modifica(req: Request, db: Db, id: number) {
   const u = await regia(req, db);
   await invitatoDellaSerata(db, id, u.serata_id);
-  const b = await corpo<{ nome?: string; squadra_id?: number | null }>(req);
+  const b = await corpo<{ nome?: string; squadra_id?: number | null; personaggio_id?: number | null }>(req);
   if (b.nome !== undefined) await db.q("UPDATE invitato SET nome = $1 WHERE id = $2", [testo(b.nome, "nome", { max: 80 }), id]);
   if (b.squadra_id !== undefined) {
     if (b.squadra_id !== null) {
-      const sq = await db.uno("SELECT id FROM squadra WHERE id = $1 AND serata_id = $2", [intero(b.squadra_id, "squadra"), u.serata_id]);
+      const sq = await db.uno("SELECT id FROM squadra WHERE id = $1 AND serata_id = $2 AND NOT prova", [intero(b.squadra_id, "squadra"), u.serata_id]);
       if (!sq) throw new Errore(404, "Squadra non trovata.");
     }
     await db.q("UPDATE invitato SET squadra_id = $1 WHERE id = $2", [b.squadra_id, id]);
+  }
+  // Il personaggio che interpreta, facoltativo: si può giocare con i personaggi come terze persone.
+  if (b.personaggio_id !== undefined) {
+    if (b.personaggio_id !== null) {
+      const p = await db.uno("SELECT id FROM personaggio WHERE id = $1 AND serata_id = $2", [intero(b.personaggio_id, "personaggio"), u.serata_id]);
+      if (!p) throw new Errore(404, "Personaggio non trovato.");
+    }
+    await db.q("UPDATE invitato SET personaggio_id = $1 WHERE id = $2", [b.personaggio_id, id]);
   }
   await tocca(db, u.serata_id);
   return json({ ok: true });
@@ -126,7 +134,7 @@ export async function sorteggia(req: Request, db: Db) {
   const u = await regia(req, db);
   const sid = u.serata_id;
   const persone = (await db.q<{ id: number }>("SELECT id FROM invitato WHERE serata_id = $1", [sid])).map((r) => r.id);
-  const squadre = (await db.q<{ id: number }>("SELECT id FROM squadra WHERE serata_id = $1 ORDER BY id", [sid])).map((r) => r.id);
+  const squadre = (await db.q<{ id: number }>("SELECT id FROM squadra WHERE serata_id = $1 AND NOT prova ORDER BY id", [sid])).map((r) => r.id);
   if (squadre.length < 2) throw new Errore(400, "Per il sorteggio servono almeno due squadre: creale in Squadre e accessi.");
   if (!persone.length) throw new Errore(400, "Aggiungi prima gli invitati.");
   const vincoli = await db.q<{ a: number; b: number; tipo: "divisi" | "insieme" }>("SELECT a, b, tipo FROM vincolo WHERE serata_id = $1", [sid]);
@@ -151,17 +159,18 @@ export async function biglietti(req: Request, db: Db) {
   if (b.conferma !== true) throw new Errore(400, "Preparare i biglietti cambia le password delle squadre: conferma per continuare.");
   const squadre = await db.q<{ id: number; nome: string; colore: string; account_id: number; username: string }>(
     `SELECT sq.id, sq.nome, sq.colore, a.id AS account_id, a.username FROM squadra sq JOIN account a ON a.squadra_id = sq.id
-     WHERE sq.serata_id = $1 ORDER BY sq.id`,
+     WHERE sq.serata_id = $1 AND NOT sq.prova ORDER BY sq.id`,
     [sid],
   );
   if (!squadre.length) throw new Errore(400, "Non ci sono squadre: creale in Squadre e accessi.");
-  const invitati = await db.q<{ nome: string; squadra_id: number | null }>("SELECT nome, squadra_id FROM invitato WHERE serata_id = $1 ORDER BY ordine, id", [sid]);
+  const invitati = await db.q<{ nome: string; squadra_id: number | null; personaggio: string | null }>(
+    "SELECT i.nome, i.squadra_id, p.nome AS personaggio FROM invitato i LEFT JOIN personaggio p ON p.id = i.personaggio_id WHERE i.serata_id = $1 ORDER BY i.ordine, i.id", [sid]);
   const s = await db.uno<{ titolo: string; slug: string }>("SELECT titolo, slug FROM serata WHERE id = $1", [sid]);
   const fogli = [];
   for (const sq of squadre) {
     const password = passwordLeggibile();
     await db.q("UPDATE account SET password_hash = $1, versione_token = versione_token + 1 WHERE id = $2", [await hashPassword(password), sq.account_id]);
-    fogli.push({ squadra: sq.nome, colore: sq.colore, username: sq.username, password, componenti: invitati.filter((i) => i.squadra_id === sq.id).map((i) => i.nome) });
+    fogli.push({ squadra: sq.nome, colore: sq.colore, username: sq.username, password, componenti: invitati.filter((i) => i.squadra_id === sq.id).map((i) => (i.personaggio ? `${i.nome}, nel ruolo di ${i.personaggio}` : i.nome)) });
   }
   await db.q("INSERT INTO evento (serata_id, tipo, testo) VALUES ($1, 'regia', 'Biglietti per tavolo preparati: password delle squadre rinnovate')", [sid]);
   return json({ titolo: s!.titolo, slug: s!.slug, biglietti: fogli });

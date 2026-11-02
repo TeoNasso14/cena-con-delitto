@@ -1,5 +1,7 @@
 import { utente } from "./accesso.ts";
 import { corpo, Db, Errore, json, testo, tocca } from "./base.ts";
+import { aiutiDi } from "./aiuti.ts";
+import { classifica } from "./resoconto.ts";
 import { bloccoPin, motivoSigillo, PIN_ERRORI_MAX, prontaPerCodice, provaPin, Regola, regolePerSquadra } from "./motore.ts";
 
 interface Prova {
@@ -34,8 +36,8 @@ export async function stato(req: Request, db: Db) {
   const serata = await db.uno<{
     titolo: string; premessa: string; stato: string; fase_corrente: number; versione: string; rivelata: boolean; tema: string; sussurri_attivi: boolean;
   }>("SELECT titolo, premessa, stato, fase_corrente, versione, rivelata, tema, sussurri_attivi FROM serata WHERE id = $1", [sid]);
-  const squadra = await db.uno<{ nome: string; colore: string; taccuino: string }>(
-    "SELECT nome, colore, taccuino FROM squadra WHERE id = $1",
+  const squadra = await db.uno<{ nome: string; colore: string; taccuino: string; prova: boolean }>(
+    "SELECT nome, colore, taccuino, prova FROM squadra WHERE id = $1",
     [sqId],
   );
   const prove = await db.q<Prova>(
@@ -88,8 +90,11 @@ export async function stato(req: Request, db: Db) {
     };
   });
 
-  const personaggi = await db.q<{ id: number; nome: string; ruolo: string; scheda: string; foto_key: string | null }>(
-    "SELECT id, nome, ruolo, scheda, foto_key FROM personaggio WHERE serata_id = $1 ORDER BY ordine, id",
+  // Il copione e le note di regia non si leggono mai qui: restano a chi interpreta e alla regia.
+  const personaggi = await db.q<{ id: number; nome: string; ruolo: string; scheda: string; foto_key: string | null; interpretato_da: string[] | null }>(
+    `SELECT p.id, p.nome, p.ruolo, p.scheda, p.foto_key,
+       (SELECT json_agg(i.nome ORDER BY i.ordine, i.id) FROM invitato i WHERE i.personaggio_id = p.id) AS interpretato_da
+     FROM personaggio p WHERE p.serata_id = $1 ORDER BY p.ordine, p.id`,
     [sid],
   );
   const annunci = await db.q<{ id: number; testo: string; ora: Date }>(
@@ -112,18 +117,24 @@ export async function stato(req: Request, db: Db) {
     personaggi: personaggi.map((p) => ({
       id: p.id, nome: p.nome, ruolo: p.ruolo, scheda: p.scheda,
       foto: p.foto_key ? `/api/file/${encodeURIComponent(p.foto_key)}` : null,
+      interpretatoDa: p.interpretato_da ?? [],
     })),
     annunci,
     accusa: accusa ?? null,
     codici: { bloccatoPer: blocco.secondi, tentativiRimasti: Math.max(0, PIN_ERRORI_MAX - blocco.errori) },
     sussurri: await sussurriDi(db, sid, serata!.sussurri_attivi),
+    aiuti: await aiutiDi(db, sid, sqId),
+    // Dopo la rivelazione, la classifica della serata (senza la prova generale).
+    classifica: serata!.rivelata ? await classifica(db, sid) : null,
   });
 }
 
 export async function pin(req: Request, db: Db) {
   const u = await utente(req, db, ["squadra"]);
-  const s = await db.uno<{ stato: string }>("SELECT stato FROM serata WHERE id = $1", [u.serata_id]);
-  if (s?.stato !== "in_corso") throw new Errore(409, "La serata non è in corso: i sigilli sono fermi.", "serata_ferma");
+  const s = await db.uno<{ stato: string; prova: boolean }>(
+    "SELECT se.stato, sq.prova FROM serata se JOIN squadra sq ON sq.id = $2 WHERE se.id = $1", [u.serata_id, u.squadra_id]);
+  // La prova generale prova i codici anche prima che la serata cominci.
+  if (s?.stato !== "in_corso" && !s?.prova) throw new Errore(409, "La serata non è in corso: i sigilli sono fermi.", "serata_ferma");
   const b = await corpo<{ codice?: string }>(req);
   const codice = testo(b.codice, "codice", { max: 32 });
   const esito = await db.transazione((t) => provaPin(t, u.serata_id, u.squadra_id!, codice));

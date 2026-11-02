@@ -28,8 +28,14 @@ const FINESTRA_MIN = 10;
 const scaduta = () => new Errore(401, "La sessione è scaduta. Accedi di nuovo.", "non_autenticato");
 
 async function persona(req: Request, db: Db): Promise<Persona> {
-  const s = leggiSessione(tokenDaRichiesta(req));
+  // La prova generale della regia viaggia nell'intestazione x-anteprima (vedi prova-generale.ts) e vale solo per quella squadra.
+  const anteprima = req.headers.get("x-anteprima");
+  const s = leggiSessione(anteprima ?? tokenDaRichiesta(req));
   if (!s) throw new Errore(401, "Accedi per continuare.", "non_autenticato");
+  if (anteprima) {
+    const ok = s.k !== "u" && s.r === "squadra" && await db.uno("SELECT 1 FROM account a JOIN squadra sq ON sq.id = a.squadra_id WHERE a.id = $1 AND sq.prova", [s.a]);
+    if (!ok) throw scaduta();
+  }
   if (s.k === "u") {
     const p = await db.uno<{ id: number; username: string; admin: boolean; stato: string; versione_token: number }>(
       "SELECT id, username, admin, stato, versione_token FROM utente WHERE id = $1",
@@ -213,7 +219,7 @@ export async function io(req: Request, db: Db) {
   if (p.tipo === "utente") return json({ ruolo: "regia", username: p.username, admin: p.admin, squadra: null });
   const u = p.u;
   const sq = u.squadra_id
-    ? await db.uno<{ nome: string; colore: string }>("SELECT nome, colore FROM squadra WHERE id = $1", [u.squadra_id])
+    ? await db.uno<{ nome: string; colore: string; prova: boolean }>("SELECT nome, colore, prova FROM squadra WHERE id = $1", [u.squadra_id])
     : undefined;
   // Lo slug serve a "Esci", che riporta squadre e proiettore alla pagina d'accesso della loro serata.
   const se = await db.uno<{ slug: string }>("SELECT slug FROM serata WHERE id = $1", [u.serata_id]);
@@ -259,7 +265,7 @@ export async function mieSerate(req: Request, db: Db) {
   const u = await utenteSenzaSerata(req, db);
   const serate = await db.q(
     `SELECT id, titolo, slug, tema, stato, archiviata, creata, aggiornata,
-       (SELECT COUNT(*)::int FROM squadra sq WHERE sq.serata_id = serata.id) AS squadre
+       (SELECT COUNT(*)::int FROM squadra sq WHERE sq.serata_id = serata.id AND NOT sq.prova) AS squadre
      FROM serata WHERE proprietario_id = $1 ORDER BY archiviata, aggiornata DESC, id DESC`,
     [u.id],
   );

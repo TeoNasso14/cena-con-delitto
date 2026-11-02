@@ -462,4 +462,35 @@ ALTER TABLE serata ADD COLUMN IF NOT EXISTS sussurri_attesa_max INTEGER NOT NULL
 ALTER TABLE serata ADD COLUMN IF NOT EXISTS sussurri_durata INTEGER NOT NULL DEFAULT 10;
 `,
   },
+  {
+    // 2.3: prova generale, personaggi interpretati dagli invitati, aiuti a richiesta, suoni d'ambiente del proiettore.
+    nome: "20261102100000_versione_2_3",
+    sql: String.raw`
+-- La squadra della prova generale: nascosta a elenchi, proiettore, sorteggio, biglietti e resoconto.
+ALTER TABLE squadra ADD COLUMN IF NOT EXISTS prova BOOLEAN NOT NULL DEFAULT FALSE;
+
+-- Chi interpreta un personaggio (facoltativo) e cosa sa solo lui.
+ALTER TABLE invitato ADD COLUMN IF NOT EXISTS personaggio_id INTEGER REFERENCES personaggio(id) ON DELETE SET NULL;
+ALTER TABLE personaggio ADD COLUMN IF NOT EXISTS copione TEXT NOT NULL DEFAULT '';
+
+CREATE TABLE IF NOT EXISTS aiuto (
+  id         SERIAL PRIMARY KEY,
+  serata_id  INTEGER NOT NULL REFERENCES serata(id) ON DELETE CASCADE,
+  squadra_id INTEGER NOT NULL REFERENCES squadra(id) ON DELETE CASCADE,
+  prova_id   INTEGER REFERENCES prova(id) ON DELETE SET NULL,
+  domanda    TEXT NOT NULL DEFAULT '',
+  stato      TEXT NOT NULL DEFAULT 'attesa' CHECK (stato IN ('attesa', 'dato', 'rifiutato')),
+  risposta   TEXT NOT NULL DEFAULT '',
+  penalita   INTEGER NOT NULL DEFAULT 0,
+  chiesto    TIMESTAMPTZ NOT NULL DEFAULT NOW(),
+  risposto   TIMESTAMPTZ
+);
+CREATE INDEX IF NOT EXISTS aiuto_serata ON aiuto (serata_id, chiesto);
+
+ALTER TABLE serata ADD COLUMN IF NOT EXISTS aiuti_attivi BOOLEAN NOT NULL DEFAULT FALSE;
+ALTER TABLE serata ADD COLUMN IF NOT EXISTS aiuti_max INTEGER NOT NULL DEFAULT 3;
+ALTER TABLE serata ADD COLUMN IF NOT EXISTS ambiente_attivo BOOLEAN NOT NULL DEFAULT FALSE;
+ALTER TABLE serata ADD COLUMN IF NOT EXISTS ambiente_volume INTEGER NOT NULL DEFAULT 50;
+`,
+  },
 ];
