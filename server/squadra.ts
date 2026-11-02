@@ -19,9 +19,12 @@ export async function faseInfo(db: Db, serataId: number, numero: number) {
 
 /** Frasi delle nuvolette. Spente: elenco vuoto. Accese senza frasi: il client usa quelle del tema. */
 export async function sussurriDi(db: Db, serataId: number, attivi: boolean) {
-  if (!attivi) return { attivi, frasi: [] as string[] };
+  const t = await db.uno<{ sussurri_attesa_min: number; sussurri_attesa_max: number; sussurri_durata: number }>(
+    "SELECT sussurri_attesa_min, sussurri_attesa_max, sussurri_durata FROM serata WHERE id = $1", [serataId]);
+  const tempi = { attesa: [t!.sussurri_attesa_min, t!.sussurri_attesa_max] as [number, number], durata: t!.sussurri_durata };
+  if (!attivi) return { attivi, frasi: [] as string[], ...tempi };
   const righe = await db.q<{ testo: string }>("SELECT testo FROM sussurro WHERE serata_id = $1 ORDER BY ordine, id", [serataId]);
-  return { attivi, frasi: righe.map((r) => r.testo) };
+  return { attivi, frasi: righe.map((r) => r.testo), ...tempi };
 }
 
 export async function stato(req: Request, db: Db) {

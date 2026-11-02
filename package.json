@@ -1,6 +1,6 @@
 {
   "name": "cena-con-delitto",
-  "version": "2.0.0",
+  "version": "2.2.0",
   "type": "module",
   "scripts": {
     "ng": "ng",
@@ -23,6 +23,7 @@
     "@netlify/blobs": "^11.1.6",
     "@netlify/functions": "^6.0.3",
     "pg": "^8.23.1",
+    "qrcode-generator": "^2.0.4",
     "rxjs": "~7.8.0",
     "tslib": "^2.3.0"
   },

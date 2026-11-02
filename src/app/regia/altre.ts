@@ -259,6 +259,7 @@ export class SceneRegia {
                 <div>
                   <h3><span class="pallino" [style.background]="q.colore"></span>{{ q.nome }}</h3>
                   <p>Accesso: <strong>{{ q.username }}</strong>. {{ q.ultimo_accesso ? 'Entrata alle ' + ora(q.ultimo_accesso) : 'Non ancora entrata' }}. {{ q.aperte }} prove aperte.</p>
+                  @if (componenti(q.id); as c) { @if (c.length) { <p>Componenti: {{ c.join(', ') }}.</p> } }
                 </div>
                 <div class="righe">
                   <button class="bottone bottone--piccolo" type="button" (click)="password(q.account_id!, 'Nuova password per ' + q.nome)">Nuova password</button>
@@ -277,6 +278,7 @@ export class SquadreRegia {
   private api = inject(Api);
   readonly indirizzo = () => `${location.origin}/s/${this.st.t()!.serata.slug}`;
   readonly indirizzoCopiato = signal(false);
+  componenti(squadra: number) { return (this.st.t()?.invitati ?? []).filter((i) => i.squadra_id === squadra).map((i) => i.nome); }
   async copiaIndirizzo() {
     try {
       await navigator.clipboard.writeText(this.indirizzo());
@@ -400,6 +402,34 @@ export class AccuseRegia {
   }
 }
 
+/* ---------- Caso in un file, allegati compresi ---------- */
+
+type Riga = Record<string, unknown>;
+interface CasoFile { serata?: Riga; personaggi?: Riga[]; prove?: Riga[]; scene?: Riga[]; allegati?: Record<string, { tipo: string; dati: string }>; [k: string]: unknown }
+
+/** Tutte le chiavi degli allegati citate nel caso: sfondo, foto dei personaggi, allegati di prove e scene. */
+function chiaviAllegati(c: CasoFile): string[] {
+  const k = [c.serata?.['sfondo_key'], ...(c.personaggi ?? []).map((p) => p['foto_key']), ...(c.prove ?? []).map((p) => p['allegato_key']), ...(c.scene ?? []).map((s) => s['allegato_key'])];
+  return [...new Set(k.filter((x): x is string => typeof x === 'string' && !!x))];
+}
+
+function sostituisciChiavi(c: CasoFile, nuova: (k: string | null) => string | null) {
+  const v = (x: unknown) => nuova(typeof x === 'string' ? x : null);
+  if (c.serata) c.serata['sfondo_key'] = v(c.serata['sfondo_key']);
+  for (const p of c.personaggi ?? []) p['foto_key'] = v(p['foto_key']);
+  for (const p of c.prove ?? []) p['allegato_key'] = v(p['allegato_key']);
+  for (const s of c.scene ?? []) s['allegato_key'] = v(s['allegato_key']);
+}
+
+function inBase64(blob: Blob): Promise<string> {
+  return new Promise((ok, no) => {
+    const r = new FileReader();
+    r.onload = () => ok(String(r.result).split(',')[1] ?? '');
+    r.onerror = () => no(r.error);
+    r.readAsDataURL(blob);
+  });
+}
+
 /* ---------- Strumenti ---------- */
 
 @Component({
@@ -408,6 +438,7 @@ export class AccuseRegia {
   changeDetection: ChangeDetectionStrategy.OnPush,
   styles: `
     .in-alto { margin-bottom: 32px; }
+    .tempi { display: grid; grid-template-columns: repeat(auto-fit, minmax(150px, 1fr)); gap: 12px; align-items: end; }
     .temi { list-style: none; margin: 0; padding: 0; display: grid; grid-template-columns: repeat(auto-fill, minmax(220px, 1fr)); gap: 12px; }
     .tema { width: 100%; height: 100%; display: grid; align-content: start; gap: 6px; padding: 10px 10px 14px; text-align: left; border-radius: 14px;
       border: 1px solid transparent; background: var(--fondo-2); color: var(--testo-1); font: inherit; cursor: pointer; }
@@ -449,6 +480,12 @@ export class AccuseRegia {
         <label class="etichetta" for="su-frasi">Frasi della serata <small>Una per riga. Se lasci vuoto, compaiono le {{ temaInUso().frasi.length }} frasi pronte del tema.</small>
           <textarea id="su-frasi" name="su-frasi" class="campo" rows="10" [(ngModel)]="frasi"></textarea>
         </label>
+        <div class="tempi">
+          <label class="etichetta" for="su-min">Attesa minima <small>secondi tra una nuvoletta e l'altra</small><input id="su-min" name="su-min" class="campo" type="number" min="5" max="600" [(ngModel)]="attesaMin"></label>
+          <label class="etichetta" for="su-max">Attesa massima <small>secondi</small><input id="su-max" name="su-max" class="campo" type="number" min="5" max="600" [(ngModel)]="attesaMax"></label>
+          <label class="etichetta" for="su-dur">Resta visibile <small>secondi</small><input id="su-dur" name="su-dur" class="campo" type="number" min="3" max="60" [(ngModel)]="durata"></label>
+          <button class="bottone" type="button" (click)="salvaTempi()">Salva i tempi</button>
+        </div>
         <div class="r-azioni">
           <button class="bottone bottone--pieno" type="button" [disabled]="!frasiCambiate()" (click)="salvaFrasi()">Salva le frasi</button>
           <button class="bottone" type="button" (click)="frasiDelTema()">Metti le frasi pronte del tema</button>
@@ -483,7 +520,7 @@ export class AccuseRegia {
         <section class="r-blocco">
           <h2>Salva o carica il caso</h2>
           <div class="r-scheda r-modulo">
-            <p class="secondario">Scarica il caso in un file per tenerne una copia o riusarlo un'altra sera: contiene trama, fasi, personaggi, prove con i loro codici e scene. Non contiene squadre, accessi e allegati.</p>
+            <p class="secondario">Scarica il caso in un file per tenerne una copia o riusarlo un'altra sera: contiene trama, fasi, personaggi, prove con i loro codici, scene, tema, nuvolette e tutti gli allegati (foto, audio, video). Non contiene squadre, accessi e invitati.</p>
             <button class="bottone" type="button" style="justify-self:start" (click)="esporta()">Scarica il caso</button>
             <p class="secondario">Puoi anche caricare un caso da file: sostituisce quello attuale.</p>
             <label class="bottone bottone--piccolo" for="imp-file" style="justify-self:start; cursor:pointer">Carica un caso da file</label>
@@ -515,6 +552,12 @@ export class Strumenti {
   readonly temi = TEMI;
   readonly temaInUso = () => temaDa(this.st.t()?.serata.tema);
   frasi = (this.st.t()?.sussurri ?? []).join('\n');
+  attesaMin = this.st.t()?.serata.sussurri_attesa_min ?? 20;
+  attesaMax = this.st.t()?.serata.sussurri_attesa_max ?? 45;
+  durata = this.st.t()?.serata.sussurri_durata ?? 10;
+  salvaTempi() {
+    this.st.fai(() => this.api.put('/api/regia/sussurri', { attesa_min: Number(this.attesaMin), attesa_max: Number(this.attesaMax), durata: Number(this.durata) }), 'Tempi delle nuvolette salvati');
+  }
   username = this.st.t()?.io.username ?? '';
   attuale = '';
   nuova = '';
@@ -543,8 +586,19 @@ export class Strumenti {
     this.st.fai(() => this.api.put('/api/regia/tema', { tema: id }), 'Tema della serata cambiato');
   }
   async esporta() {
-    const dati = await this.st.fai(() => this.api.get('/api/regia/esporta'));
+    const dati = await this.st.fai(() => this.api.get<CasoFile>('/api/regia/esporta'));
     if (!dati) return;
+    // Gli allegati li scarica il browser, uno alla volta: una risposta unica dal server sarebbe troppo grande.
+    const chiavi = chiaviAllegati(dati);
+    if (chiavi.length) this.st.dimmi(`Metto nel file ${chiavi.length === 1 ? '1 allegato' : chiavi.length + ' allegati'}…`);
+    const allegati: Record<string, { tipo: string; dati: string }> = {};
+    for (const k of chiavi) {
+      const r = await fetch(`/api/file/${encodeURIComponent(k)}`, { credentials: 'same-origin' }).catch(() => null);
+      if (!r?.ok) continue;
+      const blob = await r.blob();
+      allegati[k] = { tipo: blob.type || r.headers.get('content-type') || 'application/octet-stream', dati: await inBase64(blob) };
+    }
+    if (chiavi.length) dati.allegati = allegati;
     const url = URL.createObjectURL(new Blob([JSON.stringify(dati, null, 2)], { type: 'application/json' }));
     const a = document.createElement('a');
     a.href = url;
@@ -562,7 +616,24 @@ export class Strumenti {
     }
   }
   async importa() {
-    const ok = await this.st.fai(() => this.api.post('/api/regia/importa', { conferma: this.confImporta, caso: this.daImportare() }), 'Caso caricato');
+    const caso = structuredClone(this.daImportare()) as CasoFile;
+    // Prima si ricaricano gli allegati in questa serata, poi il caso con le chiavi nuove.
+    if (caso?.allegati) {
+      const nuove = new Map<string, string>();
+      const voci = Object.entries(caso.allegati);
+      this.st.dimmi(`Carico ${voci.length === 1 ? '1 allegato' : voci.length + ' allegati'}…`);
+      for (const [vecchia, a] of voci) {
+        try {
+          const blob = await (await fetch(`data:${a.tipo};base64,${a.dati}`)).blob();
+          nuove.set(vecchia, (await this.api.carica(new File([blob], 'allegato', { type: a.tipo }))).key);
+        } catch {
+          this.st.dimmi('Un allegato non si è caricato: il caso arriva senza quel file.', true);
+        }
+      }
+      sostituisciChiavi(caso, (k) => (k ? nuove.get(k) ?? null : null));
+      delete caso.allegati;
+    }
+    const ok = await this.st.fai(() => this.api.post('/api/regia/importa', { conferma: this.confImporta, caso }), 'Caso caricato');
     if (ok) { this.daImportare.set(null); this.confImporta = ''; }
   }
   async azzera() {

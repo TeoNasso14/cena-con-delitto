@@ -74,6 +74,11 @@ Lavoro fatto sul ramo `develop`, senza pubblicare la 1.1 da sola (scelta di Teo)
 - Nome scelto tra tre proposte: Il Movente, con il sottotitolo "Gialli da tavola". Carattere dei titoli cercato in tre giri (più particolare, poi gotico, poi da detective): Limelight, la scritta sulla porta a vetri dell'agenzia. Testi in Source Sans 3.
 - Limelight in piccolo fa leggere la G come una C: il marchio lo usa solo in grande. Per il futuro tema Gatsby servirà un altro carattere.
 
+## Dopo la 2.0.0 (stesso giorno)
+- **Quattro temi** con Impeccable, dopo un'intervista di una domanda per tema: Vittoriano chiaro (primo tema chiaro), treno di lusso notturno, speakeasy, Natale caldo. La revisione ha tolto la pipa e la piuma (rifiutate dai contratti), reso irregolari fumo e neve, spento le luci del treno sul quadrante; per Cinzel, largo e maiuscolo, i temi possono ridurre i titoli del proiettore.
+- **2.1**: invitati con vincoli e sorteggio bilanciato; biglietti per tavolo con QR. Le password non si possono rileggere, quindi i biglietti le rinnovano; le credenziali del QR stanno dopo il `#` e non arrivano al server.
+- **2.2**: caso completo con allegati, assemblato dal browser per il limite di grandezza delle risposte delle Netlify Functions. Il tempo reale vero richiederebbe un servizio esterno: al suo posto un controllo leggero della versione, che porta gli aggiornamenti a circa un secondo.
+
 ## Stato alla 2.0.0
 - Tutto su `develop`, non ancora unito in `main` né pubblicato. Al passaggio l'organizzatrice rientra una volta con le sue credenziali, e Teo crea l'amministrazione da `/avvio`.
 - Restano: Vittoriano, Delitto in viaggio, Gatsby, Natale; invitati e sorteggio (2.1); caso completo con allegati (2.2); tempo reale; il manuale della regia su Claude Docs da aggiornare.

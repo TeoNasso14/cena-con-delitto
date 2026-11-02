@@ -3,9 +3,6 @@ import { Figura as NomeFigura, temaDa } from '../temi/catalogo';
 import { Figura } from '../temi/figura';
 
 const PRIMA = 10_000;
-const ATTESA_MIN = 20_000;
-const ATTESA_MAX = 45_000;
-const DURATA = 10_000;
 
 /** Nuvolette inquietanti che compaiono ogni tanto in basso, sui telefoni delle squadre. */
 @Component({
@@ -52,6 +49,9 @@ export class Sussurri {
   readonly frasi = input<readonly string[]>([]);
   /** Le figure che parlano dalla nuvoletta cambiano col tema. */
   readonly tema = input<string | undefined>();
+  /** Tempi decisi dalla regia, in secondi: attesa tra due nuvolette (da min a max) e durata. */
+  readonly attesa = input<readonly [number, number]>([20, 45]);
+  readonly durata = input(10);
   readonly frase = signal<string | null>(null);
   readonly figura = signal<NomeFigura>('fantasma');
   readonly uscita = signal(false);
@@ -89,7 +89,7 @@ export class Sussurri {
     this.uscita.set(false);
     this.figura.set(figure[this.ultimaFigura]);
     this.frase.set(frasi[this.ultimaFrase]);
-    this.timer = setTimeout(() => this.chiudi(), DURATA);
+    this.timer = setTimeout(() => this.chiudi(), this.durata() * 1000);
   }
 
   chiudi() {
@@ -98,7 +98,8 @@ export class Sussurri {
     this.uscita.set(true);
     this.timer = setTimeout(() => {
       this.frase.set(null);
-      this.programma(ATTESA_MIN + Math.random() * (ATTESA_MAX - ATTESA_MIN));
+      const [min, max] = this.attesa();
+      this.programma((min + Math.random() * (max - min)) * 1000);
     }, 400);
   }
 }

@@ -5,6 +5,7 @@ import * as R from "./regia.ts";
 import * as S from "./squadra.ts";
 import * as SE from "./serate.ts";
 import * as AD from "./admin.ts";
+import * as IN from "./invitati.ts";
 import { statoSchermo } from "./schermo.ts";
 
 type Gestore = (req: Request, db: Db, p: Record<string, string>) => Promise<Response> | Response;
@@ -17,6 +18,7 @@ const rotte: Array<[string, RegExp, Gestore]> = [
   ["POST", /^\/api\/accesso$/, (r, db) => A.accedi(r, db)],
   ["POST", /^\/api\/uscita$/, () => A.esci()],
   ["GET", /^\/api\/io$/, (r, db) => A.io(r, db)],
+  ["GET", /^\/api\/versione$/, (r, db) => A.versione(r, db)],
   ["GET", /^\/api\/admin$/, (r, db) => AD.tutto(r, db)],
   ["POST", /^\/api\/admin\/inviti$/, (r, db) => AD.invita(r, db)],
   ["POST", /^\/api\/admin\/inviti\/(?<id>\d+)\/revoca$/, (r, db, p) => AD.revoca(r, db, n(p.id))],
@@ -76,6 +78,13 @@ const rotte: Array<[string, RegExp, Gestore]> = [
   ["PUT", /^\/api\/regia\/sfondo$/, (r, db) => R.sfondo(r, db)],
   ["PUT", /^\/api\/regia\/tema$/, (r, db) => R.tema(r, db)],
   ["PUT", /^\/api\/regia\/sussurri$/, (r, db) => R.sussurri(r, db)],
+  ["POST", /^\/api\/regia\/invitati$/, (r, db) => IN.aggiungi(r, db)],
+  ["PUT", /^\/api\/regia\/invitati\/(?<id>\d+)$/, (r, db, p) => IN.modifica(r, db, n(p.id))],
+  ["DELETE", /^\/api\/regia\/invitati\/(?<id>\d+)$/, (r, db, p) => IN.elimina(r, db, n(p.id))],
+  ["POST", /^\/api\/regia\/vincoli$/, (r, db) => IN.aggiungiVincolo(r, db)],
+  ["DELETE", /^\/api\/regia\/vincoli\/(?<id>\d+)$/, (r, db, p) => IN.eliminaVincolo(r, db, n(p.id))],
+  ["POST", /^\/api\/regia\/sorteggio$/, (r, db) => IN.sorteggia(r, db)],
+  ["POST", /^\/api\/regia\/biglietti$/, (r, db) => IN.biglietti(r, db)],
   ["POST", /^\/api\/regia\/nascondi-soluzione$/, (r, db) => R.nascondiSoluzione(r, db)],
   ["POST", /^\/api\/regia\/azzera$/, (r, db) => R.azzera(r, db)],
   ["GET", /^\/api\/regia\/esporta$/, (r, db) => R.esporta(r, db)],

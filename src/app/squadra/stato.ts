@@ -1,5 +1,5 @@
 import { inject, Injectable, signal } from '@angular/core';
-import { Api, ripeti } from '../api';
+import { Api, seguiVersione } from '../api';
 import { applicaTema } from '../temi/applica';
 
 export interface ProvaAperta {
@@ -22,7 +22,7 @@ export interface StatoSquadra {
   annunci: Array<{ id: number; testo: string; ora: string }>;
   accusa: { colpevole: string; movente: string; arma: string; spiegazione: string; consegnata_alle: string } | null;
   codici: { bloccatoPer: number; tentativiRimasti: number };
-  sussurri: { attivi: boolean; frasi: string[] };
+  sussurri: { attivi: boolean; frasi: string[]; attesa: [number, number]; durata: number };
 }
 
 export type EsitoCodice =
@@ -43,7 +43,7 @@ export class StatoSquadraService {
 
   avvia() {
     this.ferma?.();
-    this.ferma = ripeti(() => this.aggiorna(), 4000);
+    this.ferma = seguiVersione(this.api, () => this.aggiorna());
   }
   arresta() {
     this.ferma?.();

@@ -216,6 +216,16 @@ export class AccessoSerata implements OnInit {
       this.serata.set(s);
     } catch (e) {
       this.errore.set(e instanceof ErroreApi ? e.message : 'La serata non si apre. Riprova tra poco.');
+      return;
+    }
+    // Il QR del biglietto porta le credenziali dopo il #: entra da solo e le toglie subito dall'indirizzo.
+    const entra = /^#entra=(.+)$/.exec(location.hash)?.[1];
+    if (entra) {
+      history.replaceState(null, '', location.pathname);
+      const [u, ...p] = decodeURIComponent(entra).split(':');
+      this.username = u;
+      this.password = p.join(':');
+      if (this.serata()?.aperta) await this.entra();
     }
   }
 

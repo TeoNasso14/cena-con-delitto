@@ -244,6 +244,16 @@ export async function cambiaPasswordRegia(req: Request, db: Db) {
   return json({ ok: true, username }, 200, { "set-cookie": cookieSessione(token) });
 }
 
+/**
+ * Il numero di versione della serata, e nient'altro: telefoni, proiettore e regia lo chiedono spesso
+ * e scaricano lo stato completo solo quando cambia (vedi seguiVersione in src/app/api.ts).
+ */
+export async function versione(req: Request, db: Db) {
+  const u = await utente(req, db, ["squadra", "schermo", "regia"]);
+  const s = await db.uno<{ versione: string }>("SELECT versione FROM serata WHERE id = $1", [u.serata_id]);
+  return json({ versione: s!.versione });
+}
+
 /** Le serate dell'utente, per scegliere su quale lavorare. */
 export async function mieSerate(req: Request, db: Db) {
   const u = await utenteSenzaSerata(req, db);

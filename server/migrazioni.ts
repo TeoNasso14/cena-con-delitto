@@ -433,4 +433,33 @@ UPDATE serata SET slug = x.slug FROM (
 ) x WHERE serata.id = x.id;
 `,
   },
+  {
+    // 2.1: invitati della serata con i vincoli per il sorteggio delle squadre, e tempi delle nuvolette decisi dalla regia.
+    nome: "20261101210000_invitati_e_tempi_nuvolette",
+    sql: String.raw`
+CREATE TABLE IF NOT EXISTS invitato (
+  id         SERIAL PRIMARY KEY,
+  serata_id  INTEGER NOT NULL REFERENCES serata(id) ON DELETE CASCADE,
+  nome       TEXT NOT NULL,
+  squadra_id INTEGER REFERENCES squadra(id) ON DELETE SET NULL,
+  ordine     INTEGER NOT NULL DEFAULT 0,
+  creato     TIMESTAMPTZ NOT NULL DEFAULT NOW()
+);
+CREATE INDEX IF NOT EXISTS invitato_serata ON invitato (serata_id, ordine);
+
+-- Due invitati da tenere in squadre diverse o nella stessa squadra.
+CREATE TABLE IF NOT EXISTS vincolo (
+  id        SERIAL PRIMARY KEY,
+  serata_id INTEGER NOT NULL REFERENCES serata(id) ON DELETE CASCADE,
+  a         INTEGER NOT NULL REFERENCES invitato(id) ON DELETE CASCADE,
+  b         INTEGER NOT NULL REFERENCES invitato(id) ON DELETE CASCADE,
+  tipo      TEXT NOT NULL CHECK (tipo IN ('divisi', 'insieme')),
+  UNIQUE (a, b)
+);
+
+ALTER TABLE serata ADD COLUMN IF NOT EXISTS sussurri_attesa_min INTEGER NOT NULL DEFAULT 20;
+ALTER TABLE serata ADD COLUMN IF NOT EXISTS sussurri_attesa_max INTEGER NOT NULL DEFAULT 45;
+ALTER TABLE serata ADD COLUMN IF NOT EXISTS sussurri_durata INTEGER NOT NULL DEFAULT 10;
+`,
+  },
 ];

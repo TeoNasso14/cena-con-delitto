@@ -86,6 +86,28 @@ export class Api {
   }
 }
 
+/**
+ * Quasi tempo reale senza servizi esterni: ogni `ogni` ms chiede solo il numero di versione della serata
+ * e chiama `carica` quando cambia, oppure comunque ogni `comunque` ms (orari, ultimi accessi).
+ */
+export function seguiVersione(api: Api, carica: () => Promise<unknown>, ogni = 1500, comunque = 15000): () => void {
+  let nota: string | null = null;
+  let ultima = 0;
+  return ripeti(async () => {
+    let v: string | null = null;
+    try {
+      v = (await api.get<{ versione: string }>('/api/versione')).versione;
+    } catch {
+      // Senza risposta si prova comunque lo stato completo: è lì che arrivano gli errori da mostrare.
+    }
+    if (v === null || v !== nota || Date.now() - ultima > comunque) {
+      await carica();
+      nota = v;
+      ultima = Date.now();
+    }
+  }, ogni);
+}
+
 /** Ripete una funzione a intervalli, si ferma quando la scheda è nascosta e riparte subito quando torna visibile. */
 export function ripeti(fn: () => Promise<unknown>, ms: number): () => void {
   let fermo = false;

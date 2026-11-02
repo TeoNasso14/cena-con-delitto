@@ -36,6 +36,8 @@ export const routes: Routes = [
           { path: 'personaggi', loadComponent: () => import('./regia/caso').then((m) => m.PersonaggiRegia), title: 'Regia, personaggi' },
           { path: 'prove', loadComponent: () => import('./regia/prove').then((m) => m.ProveRegia), title: 'Regia, prove e codici' },
           { path: 'squadre', loadComponent: () => import('./regia/altre').then((m) => m.SquadreRegia), title: 'Regia, squadre e accessi' },
+          { path: 'invitati', loadComponent: () => import('./regia/invitati').then((m) => m.InvitatiRegia), title: 'Regia, invitati' },
+          { path: 'biglietti', loadComponent: () => import('./regia/invitati').then((m) => m.BigliettiRegia), title: 'Regia, biglietti per i tavoli' },
           { path: 'accuse', loadComponent: () => import('./regia/altre').then((m) => m.AccuseRegia), title: 'Regia, accuse' },
           { path: 'strumenti', loadComponent: () => import('./regia/altre').then((m) => m.Strumenti), title: 'Regia, strumenti' },
         ],

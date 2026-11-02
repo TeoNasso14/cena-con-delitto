@@ -3,6 +3,7 @@ import { afterAll, beforeAll, describe, expect, test } from "vitest";
 import { apriDb, Db, hashPassword, migra } from "../base.ts";
 import { rispostaFile } from "../file.ts";
 import { combacia } from "../regia.ts";
+import { distribuisci } from "../invitati.ts";
 import { gestisci } from "../router.ts";
 
 process.env.SESSION_SECRET = "segreto-di-prova-lungo-almeno-trentadue-caratteri";
@@ -540,7 +541,7 @@ test("la regia decide le frasi delle nuvolette e le può spegnere", async () => 
   });
   // una serata nuova non ha frasi proprie: il client userà quelle del tema
   let ora = await leggi();
-  expect(ora.squadra.sussurri).toEqual({ attivi: true, frasi: [] });
+  expect(ora.squadra.sussurri).toMatchObject({ attivi: true, frasi: [] });
   expect(ora.regia).toEqual([]);
 
   expect((await chiama("PUT", "/api/regia/sussurri", { frasi: ["Uno"] }, corvi)).stato).toBe(403);
@@ -553,19 +554,19 @@ test("la regia decide le frasi delle nuvolette e le può spegnere", async () => 
   ora = await leggi();
   expect(Number(ora.squadra.versione)).toBeGreaterThan(versione);
   expect(ora.regia).toEqual(["Il gatto vi guarda.", "Mezzanotte."]);
-  expect(ora.squadra.sussurri).toEqual({ attivi: true, frasi: ["Il gatto vi guarda.", "Mezzanotte."] });
+  expect(ora.squadra.sussurri).toMatchObject({ attivi: true, frasi: ["Il gatto vi guarda.", "Mezzanotte."] });
   expect(ora.schermo).toEqual(ora.squadra.sussurri);
 
   // spente: le squadre non ricevono frasi, la regia le ritrova
   await chiama("PUT", "/api/regia/sussurri", { attivi: false }, regia);
   ora = await leggi();
-  expect(ora.squadra.sussurri).toEqual({ attivi: false, frasi: [] });
-  expect(ora.schermo).toEqual({ attivi: false, frasi: [] });
+  expect(ora.squadra.sussurri).toMatchObject({ attivi: false, frasi: [] });
+  expect(ora.schermo).toMatchObject({ attivi: false, frasi: [] });
   expect(ora.regia).toEqual(["Il gatto vi guarda.", "Mezzanotte."]);
 
   // riaccese e svuotate: si torna alle frasi del tema
   await chiama("PUT", "/api/regia/sussurri", { attivi: true, frasi: [] }, regia);
-  expect((await leggi()).squadra.sussurri).toEqual({ attivi: true, frasi: [] });
+  expect((await leggi()).squadra.sussurri).toMatchObject({ attivi: true, frasi: [] });
 });
 
 test("amministrazione: account, inviti, sospensione, password dimenticata", async () => {
@@ -620,6 +621,126 @@ test("amministrazione: account, inviti, sospensione, password dimenticata", asyn
   expect((await chiama("POST", "/api/accesso", { username: "sandro", password: "nuova-password-di-marta" })).stato).toBe(200);
 });
 
+test("versione della serata per il quasi tempo reale", async () => {
+  const v1 = (await chiama("GET", "/api/versione", undefined, corvi)).dati.versione;
+  expect((await chiama("GET", "/api/versione", undefined, schermo)).dati.versione).toBe(v1);
+  expect((await chiama("GET", "/api/versione", undefined, regia)).dati.versione).toBe(v1);
+  expect((await chiama("GET", "/api/versione")).stato).toBe(401);
+  await chiama("POST", "/api/regia/annunci", { testo: "Prova di versione" }, regia);
+  expect(Number((await chiama("GET", "/api/versione", undefined, corvi)).dati.versione)).toBeGreaterThan(Number(v1));
+});
+
+test("tempi delle nuvolette decisi dalla regia", async () => {
+  let s = (await chiama("GET", "/api/squadra/stato", undefined, corvi)).dati.sussurri;
+  expect(s).toMatchObject({ attesa: [20, 45], durata: 10 });
+  expect((await chiama("PUT", "/api/regia/sussurri", { attesa_min: 60, attesa_max: 30 }, regia)).stato).toBe(400);
+  expect((await chiama("PUT", "/api/regia/sussurri", { durata: 1 }, regia)).stato).toBe(400);
+  expect((await chiama("PUT", "/api/regia/sussurri", { attesa_min: 30, attesa_max: 90, durata: 8 }, regia)).stato).toBe(200);
+  s = (await chiama("GET", "/api/schermo/stato", undefined, schermo)).dati.sussurri;
+  expect(s).toMatchObject({ attesa: [30, 90], durata: 8 });
+  expect((await chiama("GET", "/api/regia", undefined, regia)).dati.serata).toMatchObject({ sussurri_attesa_min: 30, sussurri_attesa_max: 90, sussurri_durata: 8 });
+});
+
+test("invitati, vincoli, sorteggio e biglietti per tavolo", async () => {
+  const nomi = ["Ali", "Mela", "Ludo", "Sasso", "Losco", "Tenca", "Pietro", "Sara", "Giulia"];
+  expect((await chiama("POST", "/api/regia/invitati", { nomi: [...nomi.slice(0, 5), "  ", ...nomi.slice(5)] }, regia)).dati).toEqual({ aggiunti: 9 });
+  expect((await chiama("POST", "/api/regia/invitati", { nomi: ["X"] }, corvi)).stato).toBe(403);
+  let t = (await chiama("GET", "/api/regia", undefined, regia)).dati;
+  expect(t.invitati.map((i: any) => i.nome)).toEqual(nomi);
+  const id = (n: string) => t.invitati.find((i: any) => i.nome === n).id;
+  // vincoli tra invitati della stessa serata
+  await chiama("POST", "/api/regia/vincoli", { a: id("Ali"), b: id("Mela"), tipo: "divisi" }, regia);
+  await chiama("POST", "/api/regia/vincoli", { a: id("Pietro"), b: id("Sara"), tipo: "insieme" }, regia);
+  expect((await chiama("POST", "/api/regia/vincoli", { a: id("Ali"), b: id("Ali"), tipo: "divisi" }, regia)).stato).toBe(400);
+  const altra = await db.uno<{ id: number }>("INSERT INTO invitato (serata_id, nome) SELECT id, 'Estraneo' FROM serata WHERE id <> $1 LIMIT 1 RETURNING id", [serataRegia]);
+  if (altra) expect((await chiama("POST", "/api/regia/vincoli", { a: id("Ali"), b: altra.id, tipo: "divisi" }, regia)).stato).toBe(404);
+
+  // sorteggio sulle squadre della serata
+  const squadre = (await chiama("GET", "/api/regia", undefined, regia)).dati.squadre.map((s: any) => s.id);
+  expect(squadre.length).toBeGreaterThanOrEqual(2);
+  for (let giro = 0; giro < 5; giro++) {
+    expect((await chiama("POST", "/api/regia/sorteggio", {}, regia)).stato).toBe(200);
+    t = (await chiama("GET", "/api/regia", undefined, regia)).dati;
+    const dove = new Map(t.invitati.map((i: any) => [i.nome, i.squadra_id]));
+    expect([...dove.values()].every((s) => squadre.includes(s))).toBe(true);
+    expect(dove.get("Ali")).not.toBe(dove.get("Mela"));
+    expect(dove.get("Pietro")).toBe(dove.get("Sara"));
+    const conta = squadre.map((s: number) => [...dove.values()].filter((x) => x === s).length);
+    expect(Math.max(...conta) - Math.min(...conta)).toBeLessThanOrEqual(1);
+  }
+  // spostamento a mano
+  await chiama("PUT", `/api/regia/invitati/${id("Giulia")}`, { squadra_id: null }, regia);
+  t = (await chiama("GET", "/api/regia", undefined, regia)).dati;
+  expect(t.invitati.find((i: any) => i.nome === "Giulia").squadra_id).toBeNull();
+
+  // vincoli impossibili: chi sta insieme a qualcuno da cui deve stare diviso
+  await chiama("POST", "/api/regia/vincoli", { a: id("Ali"), b: id("Pietro"), tipo: "insieme" }, regia);
+  await chiama("POST", "/api/regia/vincoli", { a: id("Mela"), b: id("Sara"), tipo: "insieme" }, regia);
+  await chiama("POST", "/api/regia/vincoli", { a: id("Pietro"), b: id("Mela"), tipo: "insieme" }, regia);
+  expect((await chiama("POST", "/api/regia/sorteggio", {}, regia)).stato).toBe(409);
+
+  // biglietti: password nuove per tutte le squadre, sessioni vecchie chiuse
+  expect((await chiama("POST", "/api/regia/biglietti", {}, regia)).stato).toBe(400);
+  const prima = (await chiama("GET", "/api/squadra/stato", undefined, corvi)).stato;
+  expect(prima).toBe(200);
+  const b = (await chiama("POST", "/api/regia/biglietti", { conferma: true }, regia)).dati;
+  expect(b.slug).toBe("la-notte-di-villa-corvina");
+  expect(b.biglietti.length).toBe(squadre.length);
+  expect((await chiama("GET", "/api/squadra/stato", undefined, corvi)).stato).toBe(401);
+  const primo = b.biglietti[0];
+  const entra = await chiama("POST", "/api/accesso", { username: primo.username, password: primo.password, slug: b.slug });
+  expect(entra.dati).toEqual({ ruolo: "squadra" });
+  corvi = entra.cookie!;
+  expect(b.biglietti.flatMap((x: any) => x.componenti).length).toBe(8);
+});
+
+test("caso completo in un file: chiavi degli allegati e importazione in un'altra serata", async () => {
+  const e = (await chiama("GET", "/api/regia/esporta", undefined, regia)).dati;
+  expect(e.formato).toBe("cena-con-delitto/2");
+  expect(Array.isArray(e.sussurri)).toBe(true);
+  expect(e.serata).toHaveProperty("sfondo_key");
+  expect(e.prove[0]).toHaveProperty("allegato_key");
+  // una serata nuova, con un suo allegato già ricaricato (come fa il browser della regia)
+  const b = (await chiama("POST", "/api/regia/serate", { titolo: "Copia da file" }, regia)).dati;
+  const file = await gestisci(new Request("https://cena.test/api/regia/allegati", {
+    method: "POST", headers: { cookie: regia, "x-serata": String(b.id), "content-type": "image/png" }, body: new Uint8Array([1, 2, 3]),
+  }), db);
+  const { key } = (await file.json()) as { key: string };
+  const caso = structuredClone(e);
+  caso.serata.sfondo_key = key;
+  caso.prove[0].allegato_key = `s${serataRegia}-di-un-altra-serata`;
+  caso.prove[0].allegato_tipo = "image/png";
+  caso.sussurri = ["Una frase dal file."];
+  expect((await chiama("POST", "/api/regia/importa", { conferma: "SOSTITUISCI", caso }, regia, b.id)).stato).toBe(200);
+  const t = (await chiama("GET", "/api/regia", undefined, regia, b.id)).dati;
+  expect(t.serata.sfondo_key).toBe(key);
+  expect(t.prove.find((p: any) => p.numero === caso.prove[0].numero).allegato_key).toBeNull();
+  expect(t.sussurri).toEqual(["Una frase dal file."]);
+  expect(t.serata.tema).toBe(e.serata.tema);
+  expect(t.prove.length).toBe(e.prove.length);
+  await chiama("POST", `/api/regia/serate/${b.id}/elimina`, { conferma: e.serata.titolo }, regia);
+  expect((await chiama("GET", "/api/regia", undefined, regia, b.id)).stato).toBe(404);
+});
+
+test("distribuisci: squadre bilanciate e vincoli rispettati, o null se impossibile", () => {
+  let seme = 7;
+  const caso = () => ((seme = (seme * 9301 + 49297) % 233280) / 233280);
+  const persone = Array.from({ length: 14 }, (_, i) => i + 1);
+  const vincoli = [{ a: 1, b: 2, tipo: "divisi" as const }, { a: 3, b: 4, tipo: "insieme" as const }, { a: 4, b: 5, tipo: "insieme" as const }, { a: 5, b: 6, tipo: "divisi" as const }];
+  for (let i = 0; i < 50; i++) {
+    const m = distribuisci(persone, [10, 20, 30], vincoli, caso)!;
+    expect(m.get(1)).not.toBe(m.get(2));
+    expect(new Set([m.get(3), m.get(4), m.get(5)]).size).toBe(1);
+    expect(m.get(5)).not.toBe(m.get(6));
+    const conta = [10, 20, 30].map((s) => [...m.values()].filter((x) => x === s).length);
+    expect(Math.max(...conta) - Math.min(...conta)).toBeLessThanOrEqual(1);
+  }
+  expect(distribuisci([1, 2], [10, 20], [{ a: 1, b: 2, tipo: "insieme" }, { a: 2, b: 1, tipo: "divisi" }])).toBeNull();
+  // un blocco "insieme" troppo grande per squadre bilanciate
+  expect(distribuisci([1, 2, 3, 4], [10, 20], [{ a: 1, b: 2, tipo: "insieme" }, { a: 2, b: 3, tipo: "insieme" }])).toBeNull();
+  expect(distribuisci([1, 2, 3], [10], [])).toBeNull();
+});
+
 test("confronto delle risposte", () => {
   expect(combacia("la Governante!", "Governante")).toBe(true);
   expect(combacia("Il maggiordomo", "La governante")).toBe(false);
@@ -661,6 +782,9 @@ describe("2.0: più regie e più serate", () => {
     const u = await d2.uno<{ id: number; admin: boolean; password_hash: string }>("SELECT id, admin, password_hash FROM utente WHERE username = 'organizza'");
     expect(u).toMatchObject({ admin: false, password_hash: hash });
     expect(await d2.uno("SELECT proprietario_id, slug, tema FROM serata WHERE id = $1", [s!.id])).toEqual({ proprietario_id: u!.id, slug: "villa-corvina-halloween", tema: "noir" });
+    // 2.1: tempi delle nuvolette di sempre, nessun invitato
+    expect(await d2.uno("SELECT sussurri_attesa_min, sussurri_attesa_max, sussurri_durata FROM serata WHERE id = $1", [s!.id])).toEqual({ sussurri_attesa_min: 20, sussurri_attesa_max: 45, sussurri_durata: 10 });
+    expect((await d2.uno<{ n: number }>("SELECT COUNT(*)::int AS n FROM invitato"))!.n).toBe(0);
     expect((await d2.uno<{ attivo: boolean }>("SELECT attivo FROM account WHERE username = 'organizza'"))!.attivo).toBe(false);
     // entra con le credenziali di sempre e ritrova la sua serata
     const rg = await chiama2("POST", "/api/accesso", { username: "organizza", password: "password-della-regia" });

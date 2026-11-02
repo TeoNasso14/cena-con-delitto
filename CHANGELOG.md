@@ -1,5 +1,28 @@
 # Registro delle versioni
 
+## 2.2.0
+
+### Caso completo in un file
+- "Scarica il caso" in Strumenti mette nel file anche foto, audio e video, oltre a tema, nuvolette e sfondo (formato `cena-con-delitto/2`). Il browser della regia scarica gli allegati uno alla volta, perché una risposta unica sarebbe troppo grande per una Netlify Function.
+- "Carica un caso da file" ricarica prima gli allegati nella serata, poi il caso con le chiavi nuove. I file del formato 1 si caricano ancora.
+
+### Aggiornamenti più rapidi
+- Telefoni, proiettore e regia chiedono spesso solo il numero di versione della serata (`/api/versione`) e scaricano lo stato completo quando cambia: gli aggiornamenti arrivano in circa un secondo (il proiettore controlla ogni secondo, gli altri ogni secondo e mezzo), con meno carico sul database. Senza servizi esterni: una connessione aperta vera richiederebbe un servizio a parte.
+
+## 2.1.0
+
+### Temi
+- Quattro temi nuovi, disegnati con la skill Impeccable: **Vittoriano alla Sherlock** (il primo tema chiaro: carta avorio, inchiostro, una lente sul proiettore), **Delitto in viaggio** (treno di lusso notturno: livrea blu, ottone, orologio di stazione, luci dal finestrino), **Anni '20 Gatsby** (speakeasy: nero, oro, raggiera déco, fumo lento), **Natale con delitto** (verde abete, rosso festivo, luna con i tetti innevati, neve).
+- Ogni tema può ridurre i titoli del proiettore (`scalaTitoli`) quando il suo carattere è molto largo.
+
+### Invitati e squadre
+- Nuova pagina della regia, **Invitati**: elenco degli invitati (anche incollato, uno per riga), vincoli "divisa da" e "insieme a", sorteggio delle squadre bilanciato che rispetta i vincoli, spostamenti a mano.
+- In Squadre e accessi ogni squadra mostra i suoi componenti.
+- **Biglietti per i tavoli**, da stampare: nome della squadra, componenti, credenziali e un QR che fa entrare direttamente. Le password vengono rinnovate quando si preparano (sono salvate solo come impronta); le credenziali del QR stanno dopo il `#` dell'indirizzo e non arrivano al server.
+
+### Nuvolette
+- La regia decide anche ogni quanto compaiono e quanto restano visibili.
+
 ## 2.0.0
 
 Più regie e più serate, temi della serata, nuvolette decise dalla regia, marchio dell'applicazione. Comprende quella che era stata pensata come 1.1 (temi e nuvolette), che non è uscita da sola.

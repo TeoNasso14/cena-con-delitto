@@ -6,7 +6,7 @@ Sito per cene con delitto, in tre superfici sincronizzate per ogni serata:
 - **Proiettore** (`/schermo`): la narrazione della serata, le fasi, il conto alla rovescia, le squadre a confronto, la rivelazione.
 - **Regia** (`/regia/s/<id>`): il caso, le fasi, i personaggi, le prove con le loro regole di sblocco, le scene, le squadre con i loro accessi, la diretta.
 
-Ogni serata ha un tema (Halloween classico, Noir anni '40) che veste telefoni, proiettore e regia di quella serata. Le pagine fuori da una serata (accesso della regia, elenco delle serate, amministrazione, inviti) hanno il marchio dell'applicazione, Il Movente.
+Ogni serata ha un tema (Halloween classico, Noir anni '40, Vittoriano alla Sherlock, Delitto in viaggio, Anni '20 Gatsby, Natale con delitto) che veste telefoni, proiettore e regia di quella serata. Le pagine fuori da una serata (accesso della regia, elenco delle serate, amministrazione, inviti) hanno il marchio dell'applicazione, Il Movente.
 
 Il contenuto dei casi vive solo nel database e lo inserisce la regia: nel codice c'è soltanto un caso dimostrativo finto (`esempi/caso-dimostrativo.json`).
 
@@ -33,10 +33,19 @@ Ogni prova ha zero o più "modi" per aprirsi. Un modo è un insieme di condizion
 
 Modi diversi sono alternative, e ognuno può valere per tutte le squadre o per una sola. La regia può sempre consegnare una prova a mano. I codici si verificano sul server: 5 errori in 5 minuti fermano la squadra per 2 minuti.
 
+## Invitati, squadre e biglietti
+
+- In Regia, Invitati: elenco degli invitati (anche incollato, uno per riga), vincoli "divisa da" e "insieme a", sorteggio bilanciato delle squadre, spostamenti a mano.
+- Biglietti per i tavoli: un foglio da stampare per squadra con componenti, credenziali e un QR che fa entrare direttamente. Prepararli rinnova le password delle squadre.
+
+## Caso in un file
+
+Strumenti, "Scarica il caso": un file con tutto il caso, allegati compresi, da tenere o da caricare in un'altra serata ("Carica un caso da file"). Squadre, accessi e invitati restano fuori.
+
 ## Temi e nuvolette
 
 - Il tema si sceglie in Regia, Strumenti: cambia colori, caratteri, disegno nel disco del proiettore, atmosfera (la pioggia del Noir), figure e frasi pronte delle nuvolette. Catalogo in `src/app/temi/catalogo.ts`, regole visive in `DESIGN.md`.
-- Le frasi delle nuvolette le decide la regia per ogni serata (Strumenti, Nuvolette), e si possono spegnere. Una serata senza frasi proprie usa quelle pronte del suo tema.
+- Le frasi delle nuvolette, ogni quanto compaiono e quanto restano visibili le decide la regia per ogni serata (Strumenti, Nuvolette), e si possono spegnere. Una serata senza frasi proprie usa quelle pronte del suo tema.
 
 ## Stack
 
@@ -80,5 +89,5 @@ In locale gli allegati restano in memoria e si perdono al riavvio.
 ## Prima della serata
 
 - Crea la serata dall'elenco (o duplicane una), scegli il tema in Strumenti, carica il caso (a mano o da Strumenti, "Carica un caso da file").
-- Crea le squadre e l'accesso del proiettore, stampa le credenziali e l'indirizzo della serata per i tavoli.
+- Crea le squadre e l'accesso del proiettore, inserisci gli invitati e sorteggia le squadre, stampa i biglietti per i tavoli.
 - Fai una prova generale, poi Regia, Strumenti, "Azzera la serata".

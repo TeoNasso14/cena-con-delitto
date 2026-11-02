@@ -29,12 +29,12 @@ Per uccidere il server locale: `pkill -f "[s]cripts/locale.ts"` (le parentesi ev
   - `migrazioni.ts`: schema, applicato a runtime con lock consultivo.
   - `file.ts`: allegati su Netlify Blobs, serviti con Range e solo a chi può vederli; la serata sta nella chiave (`s<id>-`).
   - `accesso.ts`: sessioni di due tipi (utente: regia e amministrazione, tabella `utente`; partecipante: squadre e proiettore, tabella `account`). `utente()` restituisce sempre chi chiama con la sua `serata_id`: per la regia arriva dall'intestazione `x-serata`, controllata sul proprietario.
-  - `serate.ts` (crea, duplica, archivia, elimina), `admin.ts` (inviti, sospensione, password).
+  - `serate.ts` (crea, duplica, archivia, elimina), `admin.ts` (inviti, sospensione, password), `invitati.ts` (invitati, vincoli, sorteggio con `distribuisci`, biglietti per tavolo).
 - Database: Postgres esterno (Neon). In locale e nei test: `@netlify/database-dev`.
-- Aggiornamenti: polling (proiettore 2 s, telefoni e regia 4 s) sul campo `serata.versione`, aumentato da `tocca()`.
+- Aggiornamenti: `seguiVersione` in `src/app/api.ts` chiede `/api/versione` (proiettore ogni 1 s, telefoni e regia ogni 1,5 s) e scarica lo stato completo quando `serata.versione` cambia (la aumenta `tocca()`), o comunque ogni 15 s.
 
 ## Pubblicare
 Netlify, sito `cena-con-delitto` (id `00a1ac5d-8403-4f32-bc71-2e3bbdd49fd1`). Build e cartella in `netlify.toml`. Piano gratuito: le variabili d'ambiente vanno salvate non segrete e con ambito "all".
 
 ## Prossimi rilasci
-Vedi docs/ROADMAP.md. Fatti nella 2.0: temi, nuvolette dalla regia, marchio, più regie e serate, amministrazione, accesso per serata. Prossimi: gli altri temi (Vittoriano, Delitto in viaggio, Gatsby, Natale), invitati con sorteggio squadre e QR (2.1), caso completo con allegati (2.2), tempo reale.
+Vedi docs/ROADMAP.md. Fatti: 2.0 (marchio, più regie e serate, amministrazione, accesso per serata, temi Halloween e Noir, nuvolette dalla regia), 2.1 (quattro temi nuovi, invitati, sorteggio, biglietti con QR, tempi delle nuvolette), 2.2 (caso completo con allegati, aggiornamenti in circa un secondo). Aperti: tempo reale vero con un servizio esterno (da decidere), manuale della regia su Claude Docs.

@@ -1,6 +1,6 @@
 import { ChangeDetectionStrategy, Component, computed, effect, ElementRef, inject, OnDestroy, OnInit, signal, viewChild } from '@angular/core';
 import { Router } from '@angular/router';
-import { Api, ora, ripeti } from '../api';
+import { Api, ora, seguiVersione } from '../api';
 import { Sessione } from '../sessione';
 import { Sussurri } from '../squadra/sussurri';
 import { Atmosfera } from '../temi/atmosfera';
@@ -21,7 +21,7 @@ interface StatoSchermo {
   fase: { numero: number; nome: string | null; avviata: string | null; durataMinuti: number | null; elenco: Array<{ numero: number; nome: string }> };
   scena: Scena;
   sfondo: { url: string; opacita: number } | null;
-  sussurri: { attivi: boolean; frasi: string[] };
+  sussurri: { attivi: boolean; frasi: string[]; attesa: [number, number]; durata: number };
 }
 
 @Component({
@@ -84,13 +84,14 @@ export class Schermo implements OnInit, OnDestroy {
   }
 
   ngOnInit() {
-    this.ferma = ripeti(async () => {
+    // Il proiettore è la superficie più attesa in sala: chiede la versione ogni secondo.
+    this.ferma = seguiVersione(this.api, async () => {
       const t0 = Date.now();
       const s = await this.api.get<StatoSchermo>('/api/schermo/stato');
       this.scarto = new Date(s.adesso).getTime() - (t0 + Date.now()) / 2;
       this.s.set(s);
       applicaTema(s.tema);
-    }, 2000);
+    }, 1000);
     this.orologio = setInterval(() => this.adesso.set(Date.now()), 1000);
     navigator.wakeLock?.request('screen').catch(() => undefined);
   }
