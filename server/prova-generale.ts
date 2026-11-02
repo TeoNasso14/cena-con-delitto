@@ -48,7 +48,7 @@ export async function ricomincia(req: Request, db: Db) {
   const u = await utente(req, db, ["regia"]);
   const c = await squadraDiProva(db, u.serata_id);
   await db.transazione(async (t) => {
-    for (const tab of ["sblocco", "prova_mostrata", "tentativo_pin", "accusa", "aiuto"]) await t.q(`DELETE FROM ${tab} WHERE squadra_id = $1`, [c.id]);
+    for (const tab of ["sblocco", "prova_mostrata", "tentativo_pin", "accusa", "aiuto", "voto"]) await t.q(`DELETE FROM ${tab} WHERE squadra_id = $1`, [c.id]);
     await t.q("DELETE FROM evento WHERE squadra_id = $1", [c.id]);
     await t.q("UPDATE squadra SET taccuino = '' WHERE id = $1", [c.id]);
   });

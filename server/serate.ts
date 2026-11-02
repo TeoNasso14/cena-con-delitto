@@ -78,6 +78,7 @@ export async function duplica(req: Request, db: Db, id: number) {
       await t.q("UPDATE serata SET sfondo_key = $1 WHERE id = $2", [nuovaChiave(o.sfondo_key), sid]);
       await t.q("INSERT INTO fase (serata_id, numero, nome, durata_minuti) SELECT $2, numero, nome, durata_minuti FROM fase WHERE serata_id = $1", [id, sid]);
       await t.q("INSERT INTO sussurro (serata_id, testo, ordine) SELECT $2, testo, ordine FROM sussurro WHERE serata_id = $1", [id, sid]);
+      await t.q("INSERT INTO premio (serata_id, nome, candidati, ordine) SELECT $2, nome, candidati, ordine FROM premio WHERE serata_id = $1", [id, sid]);
       for (const p of await t.q<{ nome: string; ruolo: string; scheda: string; note_regia: string; foto_key: string | null; ordine: number; copione: string }>(
         "SELECT nome, ruolo, scheda, note_regia, foto_key, ordine, copione FROM personaggio WHERE serata_id = $1 ORDER BY id", [id])) {
         await t.q("INSERT INTO personaggio (serata_id, nome, ruolo, scheda, note_regia, foto_key, ordine, copione) VALUES ($1,$2,$3,$4,$5,$6,$7,$8)",

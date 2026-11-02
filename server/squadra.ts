@@ -1,6 +1,7 @@
 import { utente } from "./accesso.ts";
 import { corpo, Db, Errore, json, testo, tocca } from "./base.ts";
 import { aiutiDi } from "./aiuti.ts";
+import { dispositivoDa, premiPerTelefono } from "./premi.ts";
 import { classifica } from "./resoconto.ts";
 import { bloccoPin, motivoSigillo, PIN_ERRORI_MAX, prontaPerCodice, provaPin, Regola, regolePerSquadra } from "./motore.ts";
 
@@ -124,6 +125,7 @@ export async function stato(req: Request, db: Db) {
     codici: { bloccatoPer: blocco.secondi, tentativiRimasti: Math.max(0, PIN_ERRORI_MAX - blocco.errori) },
     sussurri: await sussurriDi(db, sid, serata!.sussurri_attivi),
     aiuti: await aiutiDi(db, sid, sqId),
+    premi: await premiPerTelefono(db, sid, dispositivoDa(req)),
     // Dopo la rivelazione, la classifica della serata (senza la prova generale).
     classifica: serata!.rivelata ? await classifica(db, sid) : null,
   });

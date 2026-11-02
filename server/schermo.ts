@@ -1,6 +1,7 @@
 import { utente } from "./accesso.ts";
 import { Db, json } from "./base.ts";
 import { faseInfo, sussurriDi } from "./squadra.ts";
+import { premiRivelati } from "./premi.ts";
 
 /** Stato del proiettore: solo ciò che la regia ha mandato in onda. */
 export async function statoSchermo(req: Request, db: Db) {
@@ -72,6 +73,7 @@ export async function costruisciSchermo(db: Db, sid: number) {
     );
     out.annuncio = a?.testo ?? "";
   }
+  if (scena.tipo === "premi") out.premi = await premiRivelati(db, sid);
   if (scena.tipo === "rivelazione") {
     out.rivelata = s!.rivelata;
     if (s!.rivelata) {

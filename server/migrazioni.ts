@@ -534,4 +534,44 @@ CREATE TABLE IF NOT EXISTS allegato (
 CREATE INDEX IF NOT EXISTS allegato_serata ON allegato (serata_id);
 `,
   },
+  {
+    // 3.0: inviti agli ospiti (link personale, conferma di presenza) e votazioni con premi.
+    nome: "20261102180000_inviti_e_premi",
+    sql: String.raw`
+ALTER TABLE serata ADD COLUMN IF NOT EXISTS cena_quando TIMESTAMPTZ;
+ALTER TABLE serata ADD COLUMN IF NOT EXISTS cena_dove TEXT NOT NULL DEFAULT '';
+ALTER TABLE serata ADD COLUMN IF NOT EXISTS dress_code TEXT NOT NULL DEFAULT '';
+ALTER TABLE serata ADD COLUMN IF NOT EXISTS nota_invito TEXT NOT NULL DEFAULT '';
+
+-- Il link personale dell'ospite: apre solo la sua pagina d'invito, non la serata.
+ALTER TABLE invitato ADD COLUMN IF NOT EXISTS token TEXT;
+CREATE UNIQUE INDEX IF NOT EXISTS invitato_token ON invitato (token);
+ALTER TABLE invitato ADD COLUMN IF NOT EXISTS presenza TEXT CHECK (presenza IN ('si', 'no', 'forse'));
+ALTER TABLE invitato ADD COLUMN IF NOT EXISTS nota_ospite TEXT NOT NULL DEFAULT '';
+ALTER TABLE invitato ADD COLUMN IF NOT EXISTS risposto TIMESTAMPTZ;
+
+CREATE TABLE IF NOT EXISTS premio (
+  id         SERIAL PRIMARY KEY,
+  serata_id  INTEGER NOT NULL REFERENCES serata(id) ON DELETE CASCADE,
+  nome       TEXT NOT NULL,
+  candidati  TEXT NOT NULL CHECK (candidati IN ('invitati', 'personaggi', 'squadre')),
+  stato      TEXT NOT NULL DEFAULT 'preparato' CHECK (stato IN ('preparato', 'aperto', 'chiuso', 'rivelato')),
+  ordine     INTEGER NOT NULL DEFAULT 0,
+  rivelato   TIMESTAMPTZ
+);
+-- Un voto per telefono e per premio: il telefono si riconosce da un identificativo casuale del browser.
+CREATE TABLE IF NOT EXISTS voto (
+  premio_id   INTEGER NOT NULL REFERENCES premio(id) ON DELETE CASCADE,
+  dispositivo TEXT NOT NULL,
+  squadra_id  INTEGER NOT NULL REFERENCES squadra(id) ON DELETE CASCADE,
+  candidato   INTEGER NOT NULL,
+  ora         TIMESTAMPTZ NOT NULL DEFAULT NOW(),
+  PRIMARY KEY (premio_id, dispositivo)
+);
+
+-- Scena nuova del proiettore: i premi rivelati.
+ALTER TABLE scena DROP CONSTRAINT IF EXISTS scena_tipo_check;
+ALTER TABLE scena ADD CONSTRAINT scena_tipo_check CHECK (tipo IN ('narrazione', 'immagine', 'video', 'audio', 'conto', 'avanzamento', 'annuncio', 'rivelazione', 'attesa', 'premi'));
+`,
+  },
 ];

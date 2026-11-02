@@ -7,6 +7,8 @@ import * as SE from "./serate.ts";
 import * as AD from "./admin.ts";
 import * as IN from "./invitati.ts";
 import * as AI from "./aiuti.ts";
+import * as OS from "./ospiti.ts";
+import * as PR from "./premi.ts";
 import * as PG from "./prova-generale.ts";
 import { controllo } from "./controllo.ts";
 import { resoconto } from "./resoconto.ts";
@@ -34,6 +36,8 @@ const rotte: Array<[string, RegExp, Gestore]> = [
   ["POST", /^\/api\/admin\/utenti\/(?<id>\d+)\/elimina$/, (r, db, p) => AD.elimina(r, db, n(p.id))],
   ["POST", /^\/api\/admin\/utenti\/(?<id>\d+)\/trasferisci$/, (r, db, p) => AD.trasferisci(r, db, n(p.id))],
   ["POST", /^\/api\/admin\/allegati\/misura$/, (r, db) => AD.misura(r, db)],
+  ["GET", /^\/api\/ospite\/(?<token>[A-Za-z0-9_-]{20,64})$/, (r, db, p) => OS.pagina(r, db, p.token)],
+  ["POST", /^\/api\/ospite\/(?<token>[A-Za-z0-9_-]{20,64})$/, (r, db, p) => OS.rispondi(r, db, p.token)],
   ["GET", /^\/api\/invito\/(?<token>[A-Za-z0-9_-]{20,64})$/, (r, db, p) => AD.leggiInvito(r, db, p.token)],
   ["POST", /^\/api\/invito\/(?<token>[A-Za-z0-9_-]{20,64})$/, (r, db, p) => AD.usaInvito(r, db, p.token)],
   ["GET", /^\/api\/regia\/serate$/, (r, db) => A.mieSerate(r, db)],
@@ -48,6 +52,7 @@ const rotte: Array<[string, RegExp, Gestore]> = [
   ["PUT", /^\/api\/squadra\/taccuino$/, (r, db) => S.taccuino(r, db)],
   ["POST", /^\/api\/squadra\/accusa$/, (r, db) => S.accusa(r, db)],
   ["POST", /^\/api\/squadra\/aiuto$/, (r, db) => AI.chiedi(r, db)],
+  ["POST", /^\/api\/squadra\/voto$/, (r, db) => PR.vota(r, db)],
 
   ["GET", /^\/api\/schermo\/stato$/, (r, db) => statoSchermo(r, db)],
   ["GET", /^\/api\/file\/(?<key>[A-Za-z0-9_-]+)$/, (r, db, p) => F.servi(r, db, p.key)],
@@ -95,6 +100,12 @@ const rotte: Array<[string, RegExp, Gestore]> = [
   ["DELETE", /^\/api\/regia\/vincoli\/(?<id>\d+)$/, (r, db, p) => IN.eliminaVincolo(r, db, n(p.id))],
   ["POST", /^\/api\/regia\/sorteggio$/, (r, db) => IN.sorteggia(r, db)],
   ["POST", /^\/api\/regia\/biglietti$/, (r, db) => IN.biglietti(r, db)],
+  ["PUT", /^\/api\/regia\/invito-ospiti$/, (r, db) => OS.dettagli(r, db)],
+  ["POST", /^\/api\/regia\/invitati\/link$/, (r, db) => OS.linkPerTutti(r, db)],
+  ["POST", /^\/api\/regia\/invitati\/(?<id>\d+)\/link$/, (r, db, p) => OS.link(r, db, n(p.id))],
+  ["POST", /^\/api\/regia\/premi$/, (r, db) => PR.crea(r, db)],
+  ["PUT", /^\/api\/regia\/premi\/(?<id>\d+)$/, (r, db, p) => PR.modifica(r, db, n(p.id))],
+  ["DELETE", /^\/api\/regia\/premi\/(?<id>\d+)$/, (r, db, p) => PR.elimina(r, db, n(p.id))],
   ["PUT", /^\/api\/regia\/ambiente$/, (r, db) => R.ambiente(r, db)],
   ["PUT", /^\/api\/regia\/aiuti$/, (r, db) => AI.impostazioni(r, db)],
   ["PUT", /^\/api\/regia\/aiuti\/(?<id>\d+)$/, (r, db, p) => AI.rispondi(r, db, n(p.id))],

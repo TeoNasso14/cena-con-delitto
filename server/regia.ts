@@ -1,11 +1,12 @@
 import { utente, Utente } from "./accesso.ts";
 import { corpo, Db, Errore, hashPassword, intero, json, passwordLeggibile, slug, testo, tocca } from "./base.ts";
 import { consegnaDallaRegia, normalizzaPin, propagaTutte } from "./motore.ts";
+import { premiDellaRegia } from "./premi.ts";
 
 const regia = (req: Request, db: Db) => utente(req, db, ["regia"]);
 
 const TIPI_PROVA = ["documento", "oggetto", "testimonianza", "foto", "audio", "video"];
-const TIPI_SCENA = ["narrazione", "immagine", "video", "audio", "conto", "avanzamento", "annuncio", "rivelazione", "attesa"];
+const TIPI_SCENA = ["narrazione", "immagine", "video", "audio", "conto", "avanzamento", "annuncio", "rivelazione", "attesa", "premi"];
 /** Gli stessi id del catalogo in src/app/temi/catalogo.ts: un test controlla che coincidano. */
 export const TEMI = ["halloween", "noir", "vittoriano", "viaggio", "gatsby", "natale"];
 
@@ -67,7 +68,8 @@ export async function tutto(req: Request, db: Db) {
     [sid],
   );
   const sussurri = (await db.q<{ testo: string }>("SELECT testo FROM sussurro WHERE serata_id = $1 ORDER BY ordine, id", [sid])).map((r) => r.testo);
-  const invitati = await db.q("SELECT id, nome, squadra_id, personaggio_id FROM invitato WHERE serata_id = $1 ORDER BY ordine, id", [sid]);
+  const invitati = await db.q("SELECT id, nome, squadra_id, personaggio_id, token, presenza, nota_ospite, risposto FROM invitato WHERE serata_id = $1 ORDER BY ordine, id", [sid]);
+  const premi = await premiDellaRegia(db, sid);
   const aiuti = await db.q(
     `SELECT a.id, a.squadra_id, sq.nome AS squadra, sq.colore, sq.prova AS di_prova, p.numero AS prova, a.domanda, a.stato, a.risposta, a.penalita, a.chiesto, a.risposto
      FROM aiuto a JOIN squadra sq ON sq.id = a.squadra_id LEFT JOIN prova p ON p.id = a.prova_id
@@ -77,7 +79,7 @@ export async function tutto(req: Request, db: Db) {
   const vincoli = await db.q("SELECT id, a, b, tipo FROM vincolo WHERE serata_id = $1 ORDER BY id", [sid]);
   return json({
     io: { username: u.username },
-    serata, sussurri, invitati, vincoli, aiuti, fasi, totaleProve: totale?.n ?? 0, squadre, schermi, personaggi, prove, cartelle, scene, annunci, accuse, eventi,
+    serata, sussurri, invitati, vincoli, aiuti, premi, fasi, totaleProve: totale?.n ?? 0, squadre, schermi, personaggi, prove, cartelle, scene, annunci, accuse, eventi,
   });
 }
 
@@ -762,6 +764,8 @@ export async function azzera(req: Request, db: Db) {
     await t.q("UPDATE squadra SET taccuino = '' WHERE serata_id = $1", [sid]);
     await t.q("DELETE FROM annuncio WHERE serata_id = $1", [sid]);
     await t.q("DELETE FROM aiuto WHERE serata_id = $1", [sid]);
+    await t.q("DELETE FROM voto WHERE premio_id IN (SELECT id FROM premio WHERE serata_id = $1)", [sid]);
+    await t.q("UPDATE premio SET stato = 'preparato', rivelato = NULL WHERE serata_id = $1", [sid]);
     await t.q("DELETE FROM evento WHERE serata_id = $1", [sid]);
     await t.q("UPDATE fase SET avviata_alle = NULL WHERE serata_id = $1", [sid]);
     await t.q("UPDATE scena SET in_onda_dal = NULL WHERE serata_id = $1", [sid]);
@@ -799,11 +803,12 @@ export async function esporta(req: Request, db: Db) {
   );
   const scene = await db.q("SELECT ordine, tipo, titolo, testo, fase_numero, avvio_automatico, allegato_key, allegato_tipo FROM scena WHERE serata_id = $1 ORDER BY ordine, id", [sid]);
   const righe = await db.q<{ nome: string; visibile: boolean }>("SELECT nome, visibile FROM cartella WHERE serata_id = $1 ORDER BY ordine, id", [sid]);
+  const premi = await db.q("SELECT nome, candidati FROM premio WHERE serata_id = $1 ORDER BY ordine, id", [sid]);
   const cartelle = righe.map((c) => c.nome);
   const cartelle_visibili = righe.filter((c) => c.visibile).map((c) => c.nome);
   return json({
     formato: "cena-con-delitto/2",
-    serata, fasi, personaggi, scene, cartelle, cartelle_visibili, sussurri,
+    serata, fasi, personaggi, scene, cartelle, cartelle_visibili, sussurri, premi,
     prove: prove.map(({ id, ...p }) => ({
       ...p,
       regole: regole.filter((r) => r.prova_id === id).map((r) => ({
@@ -822,6 +827,7 @@ export async function importa(req: Request, db: Db) {
       formato?: string; serata?: Record<string, unknown>; fasi?: Array<Record<string, unknown>>; personaggi?: Array<Record<string, unknown>>; cartelle?: unknown[]; cartelle_visibili?: unknown[];
       scene?: Array<Record<string, unknown>>;
       sussurri?: unknown[];
+      premi?: Array<{ nome?: unknown; candidati?: unknown }>;
       prove?: Array<Record<string, unknown> & { regole?: Array<{ tipo: string; pin?: string; prova_richiesta?: number; fase_numero?: number; gruppo?: number }> }>;
     };
   }>(req);
@@ -859,6 +865,13 @@ export async function importa(req: Request, db: Db) {
       const [mn, mx, du] = [Number(s.sussurri_attesa_min), Number(s.sussurri_attesa_max), Number(s.sussurri_durata)];
       if ([mn, mx, du].every(Number.isInteger) && mn >= 5 && mx <= 600 && mn <= mx && du >= 3 && du <= 60) {
         await t.q("UPDATE serata SET sussurri_attesa_min = $1, sussurri_attesa_max = $2, sussurri_durata = $3 WHERE id = $4", [mn, mx, du, sid]);
+      }
+      if (Array.isArray(c.premi)) {
+        await t.q("DELETE FROM premio WHERE serata_id = $1", [sid]);
+        for (const [i, p] of c.premi.entries()) {
+          if (typeof p?.nome !== "string" || !["invitati", "personaggi", "squadre"].includes(String(p.candidati))) continue;
+          await t.q("INSERT INTO premio (serata_id, nome, candidati, ordine) VALUES ($1, $2, $3, $4)", [sid, p.nome.trim().slice(0, 80), p.candidati, i + 1]);
+        }
       }
       if (Array.isArray(c.sussurri)) {
         await t.q("DELETE FROM sussurro WHERE serata_id = $1", [sid]);
