@@ -13,11 +13,20 @@ import { RegiaStato } from './stato';
   imports: [FormsModule, RouterLink, Icona],
   changeDetection: ChangeDetectionStrategy.OnPush,
   styles: `
-    .invitato { grid-template-columns: minmax(0, 1fr) minmax(140px, 220px) auto; }
-    .invitato select { min-height: 40px; }
+    /* Una riga per invitato, con divisori: densità da strumento, anche a 390 px. */
+    .gruppo { display: grid; gap: 6px; }
+    .gruppo h3 { display: flex; align-items: center; gap: 8px; font: 600 16px/1.2 var(--corpo); padding: 6px 2px; }
+    .gruppo h3 span { color: var(--testo-2); font-weight: 400; }
+    .pallino { width: 12px; height: 12px; border-radius: 50%; flex: none; }
+    .righe-invitati { list-style: none; margin: 0; padding: 0; background: var(--fondo-2); border-radius: 14px; }
+    .invitato { display: grid; grid-template-columns: minmax(0, 1fr) minmax(110px, 200px) auto; gap: 8px; align-items: center; padding: 8px 10px 8px 14px; }
+    .invitato + .invitato { border-top: 1px solid var(--fondo-3); }
+    .invitato .nome { font-weight: 600; overflow-wrap: anywhere; }
+    .invitato select { min-height: 40px; padding-top: 6px; padding-bottom: 6px; }
+    .invitato .bottone { min-height: 40px; padding: 0 12px; }
     .vincolo { grid-template-columns: minmax(0, 1fr) auto; }
     .riga-vincolo { display: grid; grid-template-columns: minmax(0, 1fr) auto minmax(0, 1fr); gap: 10px; align-items: end; }
-    @media (max-width: 560px) { .invitato, .riga-vincolo { grid-template-columns: minmax(0, 1fr); } }
+    @media (max-width: 560px) { .riga-vincolo { grid-template-columns: minmax(0, 1fr); } }
     .aiuto { font-size: 14px; color: var(--testo-2); }
     .sotto { margin-bottom: 24px; }
     .a-sinistra { justify-self: start; }
@@ -29,7 +38,7 @@ import { RegiaStato } from './stato';
       <div><h1>Invitati</h1><p>Chi viene alla serata. Scrivi i nomi, metti i vincoli (chi tenere diviso, chi insieme) e sorteggia le squadre. Poi prepara i biglietti per i tavoli.</p></div>
       <div class="r-azioni">
         <button class="bottone bottone--pieno" type="button" [disabled]="t.squadre.length < 2 || !t.invitati.length" (click)="sorteggia()">Sorteggia le squadre</button>
-        <a class="bottone" [routerLink]="st.base() + '/biglietti'">Biglietti per i tavoli</a>
+        <a class="bottone" [routerLink]="st.base() + '/invitati/biglietti'">Biglietti per i tavoli</a>
       </div>
     </header>
     @if (t.squadre.length < 2) {
@@ -45,18 +54,24 @@ import { RegiaStato } from './stato';
             </label>
             <button class="bottone a-sinistra" type="submit" [disabled]="!nuovi.trim()"><app-icona nome="piu" />Aggiungi</button>
           </form>
-          <ul class="r-elenco">
-            @for (i of t.invitati; track i.id) {
-              <li class="r-voce invitato">
-                <h3>{{ i.nome }}</h3>
-                <select class="campo" [attr.aria-label]="'Squadra di ' + i.nome" [ngModel]="i.squadra_id" (ngModelChange)="sposta(i.id, $event)">
-                  <option [ngValue]="null">Nessuna squadra</option>
-                  @for (q of t.squadre; track q.id) { <option [ngValue]="q.id">{{ q.nome }}</option> }
-                </select>
-                <button class="bottone bottone--piccolo bottone--pericolo" type="button" [attr.aria-label]="'Togli ' + i.nome" (click)="togli(i.id)">Togli</button>
-              </li>
-            } @empty { <li class="r-vuoto">Nessun invitato. Scrivili qui sopra, uno per riga.</li> }
-          </ul>
+          @if (!t.invitati.length) { <p class="r-vuoto">Nessun invitato. Scrivili qui sopra, uno per riga.</p> }
+          @for (g of gruppi(); track g.id) {
+            <section class="gruppo" [attr.aria-label]="g.nome">
+              <h3>@if (g.colore) { <i class="pallino" [style.background]="g.colore" aria-hidden="true"></i> }{{ g.nome }} <span>{{ g.persone.length }}</span></h3>
+              <ul class="righe-invitati">
+                @for (i of g.persone; track i.id) {
+                  <li class="invitato">
+                    <span class="nome">{{ i.nome }}</span>
+                    <select class="campo" [attr.aria-label]="'Squadra di ' + i.nome" [ngModel]="i.squadra_id" (ngModelChange)="sposta(i.id, $event)">
+                      <option [ngValue]="null">Nessuna squadra</option>
+                      @for (q of t.squadre; track q.id) { <option [ngValue]="q.id">{{ q.nome }}</option> }
+                    </select>
+                    <button class="bottone bottone--piccolo bottone--pericolo" type="button" [attr.aria-label]="'Togli ' + i.nome" (click)="togli(i.id)">Togli</button>
+                  </li>
+                }
+              </ul>
+            </section>
+          }
         </section>
       </div>
       <div class="r-colonna">
@@ -67,8 +82,8 @@ import { RegiaStato } from './stato';
               <label class="etichetta" for="va">Persona
                 <select id="va" name="va" class="campo" [(ngModel)]="a"><option [ngValue]="null">Scegli</option>@for (i of t.invitati; track i.id) { <option [ngValue]="i.id">{{ i.nome }}</option> }</select>
               </label>
-              <label class="etichetta" for="vt">Va
-                <select id="vt" name="vt" class="campo" [(ngModel)]="tipo"><option value="divisi">divisa da</option><option value="insieme">insieme a</option></select>
+              <label class="etichetta" for="vt"><span class="sr">Tipo di vincolo</span>
+                <select id="vt" name="vt" class="campo" [(ngModel)]="tipo"><option value="divisi">deve stare divisa da</option><option value="insieme">deve stare insieme a</option></select>
               </label>
               <label class="etichetta" for="vb">Persona
                 <select id="vb" name="vb" class="campo" [(ngModel)]="b"><option [ngValue]="null">Scegli</option>@for (i of t.invitati; track i.id) { <option [ngValue]="i.id">{{ i.nome }}</option> }</select>
@@ -79,7 +94,7 @@ import { RegiaStato } from './stato';
           <ul class="r-elenco">
             @for (v of t.vincoli; track v.id) {
               <li class="r-voce vincolo">
-                <p><strong>{{ nome(v.a) }}</strong> {{ v.tipo === 'divisi' ? 'divisa da' : 'insieme a' }} <strong>{{ nome(v.b) }}</strong></p>
+                <p><strong>{{ nome(v.a) }}</strong> {{ v.tipo === 'divisi' ? 'deve stare divisa da' : 'deve stare insieme a' }} <strong>{{ nome(v.b) }}</strong></p>
                 <button class="bottone bottone--piccolo" type="button" (click)="togliVincolo(v.id)">Togli</button>
               </li>
             } @empty { <li class="r-vuoto">Nessun vincolo: il sorteggio fa squadre bilanciate a caso.</li> }
@@ -93,6 +108,14 @@ import { RegiaStato } from './stato';
 export class InvitatiRegia {
   readonly st = inject(RegiaStato);
   private api = inject(Api);
+  /** Gli invitati divisi per squadra, nell'ordine delle squadre; chi non ha squadra in fondo. */
+  readonly gruppi = computed(() => {
+    const t = this.st.t();
+    if (!t) return [];
+    const g = t.squadre.map((q) => ({ id: q.id, nome: q.nome, colore: q.colore as string | null, persone: t.invitati.filter((i) => i.squadra_id === q.id) }));
+    const senza = t.invitati.filter((i) => !t.squadre.some((q) => q.id === i.squadra_id));
+    return [...g.filter((x) => x.persone.length), ...(senza.length ? [{ id: 0, nome: 'Senza squadra', colore: null, persone: senza }] : [])];
+  });
   nuovi = '';
   a: number | null = null;
   b: number | null = null;
@@ -138,27 +161,32 @@ function percorsoQr(testo: string) {
     .a-sinistra { justify-self: start; }
     .sotto { margin-bottom: 20px; }
     .fogli { display: grid; grid-template-columns: repeat(auto-fill, minmax(300px, 1fr)); gap: 20px; }
-    .biglietto { display: grid; gap: 12px; padding: 20px; background: var(--carta); color: var(--inchiostro); border: 1px solid var(--carta-filetto); border-radius: 2px; break-inside: avoid; }
-    .biglietto h2 { display: flex; align-items: center; gap: 10px; font: 700 26px/1.1 var(--titoli); }
+    /* Il biglietto è l'oggetto della serata: carta, un filetto del tema in cima, credenziali grandi come nel riquadro delle credenziali. */
+    .biglietto { display: grid; gap: 12px; padding: 20px; background: var(--carta); color: var(--inchiostro); border: 1px solid var(--carta-filetto); border-top: 4px solid var(--accento); border-radius: 2px; break-inside: avoid; }
+    .biglietto h2 { display: flex; align-items: center; gap: 10px; font: 700 32px/1.05 var(--titoli); text-wrap: balance; }
     .biglietto h2 span { width: 16px; height: 16px; border-radius: 50%; flex: none; border: 1px solid var(--inchiostro); }
     .biglietto .serata { font-size: 14px; }
     .biglietto ul { margin: 0; padding-left: 18px; font-size: 15px; }
     .biglietto dl { margin: 0; display: grid; grid-template-columns: auto 1fr; gap: 4px 12px; font-size: 15px; }
     .biglietto dt { font-weight: 700; }
-    .biglietto dd { margin: 0; font-weight: 700; letter-spacing: 0.02em; overflow-wrap: anywhere; }
+    .biglietto dd { margin: 0; font-size: 20px; font-weight: 700; letter-spacing: 0.02em; overflow-wrap: anywhere; user-select: all; }
+    .biglietto dt { align-self: center; }
     .qr { width: 150px; height: 150px; justify-self: start; }
     .indirizzo { font-size: 13px; overflow-wrap: anywhere; }
     @media print {
       .no-stampa { display: none !important; }
       .fogli { grid-template-columns: repeat(2, 1fr); }
-      .biglietto { border-color: #999; }
+      .biglietto { border-color: #999; border-top-color: #000; }
     }
   `,
   template: `
     @let t = st.t()!;
     <header class="r-testa no-stampa">
       <div><h1>Biglietti per i tavoli</h1><p>Un biglietto per squadra: nome, componenti, credenziali e un QR che fa entrare direttamente. Si stampano da qui.</p></div>
-      @if (fogli()) { <button class="bottone bottone--pieno" type="button" (click)="stampa()">Stampa</button> }
+      <div class="r-azioni">
+        <a class="bottone" [routerLink]="st.base() + '/invitati'">Torna agli invitati</a>
+        @if (fogli()) { <button class="bottone bottone--pieno" type="button" (click)="stampa()">Stampa</button> }
+      </div>
     </header>
 
     @if (!fogli()) {
@@ -171,7 +199,7 @@ function percorsoQr(testo: string) {
         }
       </section>
     } @else {
-      <p class="secondario no-stampa sotto">Queste password si vedono solo adesso: stampa prima di lasciare la pagina.</p>
+      <p class="avviso no-stampa sotto" role="status">Queste password si vedono solo adesso: stampa prima di lasciare la pagina.</p>
       <div class="fogli">
         @for (f of fogli(); track f.username) {
           <article class="biglietto">

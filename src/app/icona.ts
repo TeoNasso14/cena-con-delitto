@@ -15,6 +15,7 @@ import { ChangeDetectionStrategy, Component, input } from '@angular/core';
         @case ('foto') { <rect x="3" y="5" width="18" height="14" rx="1.5"/><circle cx="9" cy="10" r="2"/><path d="M21 16l-5-5-8 8"/> }
         @case ('audio') { <path d="M4 10v4h4l5 4V6L8 10z"/><path d="M16 9a4 4 0 0 1 0 6M18.5 6.5a7.5 7.5 0 0 1 0 11"/> }
         @case ('video') { <rect x="3" y="6" width="13" height="12" rx="1.5"/><path d="M16 10l5-3v10l-5-3"/> }
+        @case ('invitati') { <circle cx="8" cy="8" r="3"/><path d="M3 19c.6-3 2.6-4.8 5-4.8s4.4 1.8 5 4.8"/><path d="M15 7h6M15 11h6M15 15h4"/> }
         @case ('volti') { <circle cx="9" cy="8" r="3.2"/><path d="M3 20c.8-3.4 3.2-5.4 6-5.4s5.2 2 6 5.4"/><circle cx="17" cy="9" r="2.4"/><path d="M16 14.6c2.4.2 4.2 2 5 5"/> }
         @case ('taccuino') { <path d="M6 3h12v18H6z"/><path d="M9 8h6M9 12h6M9 16h3"/> }
         @case ('accusa') { <path d="M5 20 15 10"/><path d="M13 4l7 7-3 3-7-7z"/><path d="M3 21h8"/> }

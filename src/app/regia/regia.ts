@@ -46,7 +46,7 @@ import { Firma } from '../firma';
       <a routerLink="personaggi" routerLinkActive="attiva" ariaCurrentWhenActive="page"><app-icona nome="volti" />Personaggi</a>
       <a routerLink="prove" routerLinkActive="attiva" ariaCurrentWhenActive="page"><app-icona nome="prove" />Prove e codici</a>
       <a routerLink="squadre" routerLinkActive="attiva" ariaCurrentWhenActive="page"><app-icona nome="squadre" />Squadre e accessi</a>
-      <a routerLink="invitati" routerLinkActive="attiva" ariaCurrentWhenActive="page"><app-icona nome="volti" />Invitati</a>
+      <a routerLink="invitati" routerLinkActive="attiva" ariaCurrentWhenActive="page"><app-icona nome="invitati" />Invitati</a>
       <a routerLink="accuse" routerLinkActive="attiva" ariaCurrentWhenActive="page"><app-icona nome="accusa" />Accuse e verdetto</a>
       <a routerLink="strumenti" routerLinkActive="attiva" ariaCurrentWhenActive="page"><app-icona nome="strumenti" />Strumenti</a>
       <div class="fondo"><button type="button" (click)="sessione.esci()"><app-icona nome="esci" />Esci</button></div>

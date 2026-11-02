@@ -118,7 +118,9 @@ button:disabled { cursor: not-allowed; }
   background: var(--fondo); padding: 10px 14px; font-size: 16px; font-weight: 400;
 }
 .campo::placeholder { color: var(--testo-2); opacity: 1; }
-select.campo { appearance: none; }
+/* La freccia dice che è una scelta: grigio medio, leggibile sui temi chiari e scuri. */
+select.campo { appearance: none; padding-right: 40px; background-repeat: no-repeat; background-position: right 14px center; background-size: 14px 14px;
+  background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 24 24' fill='none' stroke='%238c8c8c' stroke-width='2.4' stroke-linecap='round' stroke-linejoin='round'%3E%3Cpath d='M6 9l6 6 6-6'/%3E%3C/svg%3E"); }
 textarea.campo { resize: vertical; line-height: 1.45; }
 .etichetta { display: grid; gap: 6px; font-weight: 600; font-size: 15px; }
 .etichetta small { font-weight: 400; color: var(--testo-2); font-size: 14px; }
