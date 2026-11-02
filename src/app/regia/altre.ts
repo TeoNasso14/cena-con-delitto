@@ -6,6 +6,7 @@ import { Allegato } from './allegato';
 import { temaDa, TEMI } from '../temi/catalogo';
 import { RegiaStato, ScenaR, TIPI_SCENA } from './stato';
 import { Controllo } from './aiuti';
+import { PremiRegia } from './premi';
 
 /* ---------- Scene del proiettore ---------- */
 
@@ -338,7 +339,7 @@ export class SquadreRegia {
 
 @Component({
   selector: 'app-accuse-regia',
-  imports: [FormsModule],
+  imports: [FormsModule, PremiRegia],
   changeDetection: ChangeDetectionStrategy.OnPush,
   styles: `
     .accusa { display: grid; gap: 10px; }
@@ -351,7 +352,7 @@ export class SquadreRegia {
   template: `
     @let t = st.t()!;
     <header class="r-testa">
-      <div><h1>Accuse e verdetto</h1><p>Ogni squadra consegna una sola accusa. Quando riveli, il sito assegna i punti confrontando le risposte con la soluzione: 2 per il colpevole, 1 per il movente, 1 per l'arma. Puoi correggerli a mano prima o dopo.</p></div>
+      <div><h1>Accuse e verdetto</h1><p>Ogni squadra consegna una sola accusa. Quando riveli, il sito assegna i punti confrontando le risposte con la soluzione: 2 per il colpevole, 1 per il movente, 1 per l'arma. Puoi correggerli a mano prima o dopo. Più sotto, i premi votati dai telefoni.</p></div>
       <div class="r-azioni">
         @if (t.serata.rivelata) {
           <span class="r-pillola r-pillola--accento">Soluzione rivelata</span>
@@ -391,6 +392,7 @@ export class SquadreRegia {
         } @empty { <p class="r-vuoto">Nessuna accusa consegnata.</p> }
       </section>
     </div>
+    <div style="margin-top:32px"><app-premi /></div>
   `,
 })
 export class AccuseRegia {

@@ -5,12 +5,13 @@ import { Api, ora } from '../api';
 import { Icona } from '../icona';
 import { RegiaStato, SquadraR, TIPI_SCENA } from './stato';
 import { AiutiDiretta, Controllo, ProvaGenerale } from './aiuti';
+import { PremiRegia } from './premi';
 
 interface EsitoConsegna { aperta: number; mostrata: number; gia: number; catena?: number[] }
 
 @Component({
   selector: 'app-diretta',
-  imports: [FormsModule, RouterLink, Icona, AiutiDiretta, Controllo, ProvaGenerale],
+  imports: [FormsModule, RouterLink, Icona, AiutiDiretta, Controllo, ProvaGenerale, PremiRegia],
   changeDetection: ChangeDetectionStrategy.OnPush,
   styles: `
     .rivela { display: flex; flex-wrap: wrap; gap: 10px; align-items: center; padding-top: 4px; }
@@ -162,6 +163,7 @@ interface EsitoConsegna { aperta: number; mostrata: number; gia: number; catena?
 
       <div class="r-colonna">
         <app-aiuti-diretta />
+        @if (t.premi.length) { <app-premi [compatto]="true" /> }
         <section class="r-blocco" aria-labelledby="t-squadre">
           <h2 id="t-squadre">Le squadre</h2>
           @for (q of t.squadre; track q.id) {

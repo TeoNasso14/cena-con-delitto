@@ -7,6 +7,7 @@ export const routes: Routes = [
   { path: 'regia/accedi', loadComponent: () => import('./pagine/accesso').then((m) => m.AccessoRegia), title: 'Entra nella regia, Il Movente' },
   { path: 's/:slug', loadComponent: () => import('./pagine/accesso').then((m) => m.AccessoSerata), title: 'Entra nella serata' },
   { path: 'avvio', loadComponent: () => import('./pagine/accesso').then((m) => m.Avvio), title: 'Primo avvio, Il Movente' },
+  { path: 'ospite/:token', loadComponent: () => import('./pagine/ospite').then((m) => m.OspiteVista), title: 'Il tuo invito' },
   { path: 'invito/:token', loadComponent: () => import('./pagine/invito').then((m) => m.InvitoVista), title: 'Il tuo accesso, Il Movente' },
   { path: 'admin', canMatch: [soloAdmin], loadComponent: () => import('./pagine/admin').then((m) => m.AdminVista), title: 'Amministrazione, Il Movente' },
   {

@@ -34,6 +34,18 @@ function anteprimaIniziale(): string | null {
   }
 }
 
+/** Un identificativo casuale del browser, per contare un voto per telefono. Non è un segreto e non identifica la persona. */
+function dispositivo(): string {
+  const k = 'cena-dispositivo';
+  try {
+    let d = localStorage.getItem(k);
+    if (!d) { d = crypto.randomUUID().replace(/-/g, ''); localStorage.setItem(k, d); }
+    return d;
+  } catch {
+    return (window as unknown as { __disp?: string }).__disp ??= crypto.randomUUID().replace(/-/g, '');
+  }
+}
+
 /** Chiave della serata aperta dalla regia: per scheda, così due schede possono stare su due serate. */
 const SERATA = 'cena-serata';
 
@@ -76,7 +88,7 @@ export class Api {
   private intestazioni(): Record<string, string> {
     const s = this.serata();
     const a = this.anteprima();
-    return { ...(s ? { 'x-serata': String(s) } : {}), ...(a ? { 'x-anteprima': a } : {}) };
+    return { ...(s ? { 'x-serata': String(s) } : {}), ...(a ? { 'x-anteprima': a } : {}), 'x-dispositivo': dispositivo() };
   }
 
   async chiama<T>(metodo: string, path: string, corpo?: unknown): Promise<T> {

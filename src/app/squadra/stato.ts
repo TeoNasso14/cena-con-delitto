@@ -27,6 +27,8 @@ export interface StatoSquadra {
     attivi: boolean; max: number; usati: number;
     richieste: Array<{ id: number; prova: number | null; domanda: string; stato: 'attesa' | 'dato' | 'rifiutato'; risposta: string; penalita: number; chiesto: string }>;
   };
+  /** Premi aperti al voto: un voto per telefono, si può cambiare finché il voto è aperto. */
+  premi: Array<{ id: number; nome: string; candidati: Array<{ id: number; nome: string; colore: string | null }>; mio: number | null }>;
   /** Dopo la rivelazione: le squadre in ordine di punteggio netto. */
   classifica: Array<{ nome: string; colore: string; aperte: number; netto: number | null }> | null;
 }

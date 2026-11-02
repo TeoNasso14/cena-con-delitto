@@ -32,7 +32,7 @@ export async function premiDellaRegia(db: Db, sid: number) {
   for (const p of premi) {
     const voti = await conteggi(db, p.id);
     const candidati = (await candidatiDi(db, sid, p.candidati)).map((c) => ({ ...c, voti: voti.get(c.id) ?? 0 }));
-    out.push({ ...p, candidati, votanti: [...voti.values()].reduce((a, b) => a + b, 0) });
+    out.push({ ...p, tipo: p.candidati, candidati, votanti: [...voti.values()].reduce((a, b) => a + b, 0) });
   }
   return out;
 }

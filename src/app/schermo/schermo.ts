@@ -16,6 +16,7 @@ interface Scena {
   annuncio?: string; rivelata?: boolean;
   soluzione?: { colpevole: string; movente: string; arma: string };
   vincitori?: Array<{ nome: string; consegnata_alle: string }>;
+  premi?: Array<{ nome: string; voti: number; vincitori: Array<{ nome: string; colore: string | null }> }>;
 }
 interface StatoSchermo {
   versione: string; tema: string; titolo: string; stato: string; schermoNero: boolean; adesso: string;
@@ -128,6 +129,13 @@ export class Schermo implements OnInit, OnDestroy {
     const n = this.s()?.fase.numero ?? 0;
     return numero < n ? 'passata' : numero === n ? 'corrente' : '';
   }
+
+  /** L'ultimo premio rivelato va in grande, quelli di prima sotto. */
+  readonly premi = computed(() => {
+    const p = this.s()?.scena.premi ?? [];
+    return { ultimo: p.at(-1) ?? null, prima: p.slice(0, -1) };
+  });
+  nomi(v: Array<{ nome: string }>) { return v.map((x) => x.nome).join(' e '); }
 
   nomiVincitori() {
     return (this.s()?.scena.vincitori ?? []).map((v) => v.nome).join(', ');

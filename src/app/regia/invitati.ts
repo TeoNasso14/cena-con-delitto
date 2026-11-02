@@ -5,12 +5,13 @@ import qrcode from 'qrcode-generator';
 import { Api } from '../api';
 import { Icona } from '../icona';
 import { RegiaStato } from './stato';
+import { InvitiOspiti } from './ospiti';
 
 /* ---------- Invitati, vincoli e sorteggio delle squadre ---------- */
 
 @Component({
   selector: 'app-invitati-regia',
-  imports: [FormsModule, RouterLink, Icona],
+  imports: [FormsModule, RouterLink, Icona, InvitiOspiti],
   changeDetection: ChangeDetectionStrategy.OnPush,
   styles: `
     /* Una riga per invitato, con divisori: densità da strumento, anche a 390 px. */
@@ -113,6 +114,7 @@ import { RegiaStato } from './stato';
           }
           <p class="aiuto">Il sorteggio fa squadre della stessa grandezza (al massimo una persona di differenza) e rispetta tutti i vincoli. Puoi rifarlo quante volte vuoi e poi spostare qualcuno a mano.</p>
         </section>
+        <app-inviti-ospiti />
       </div>
     </div>
   `,

@@ -2,6 +2,7 @@ import { ChangeDetectionStrategy, Component, computed, ElementRef, HostListener,
 import { ErroreApi, ora } from '../api';
 import { Icona, Sigillo } from '../icona';
 import { AiutiSquadra } from './aiuti';
+import { VotiSquadra } from './voti';
 import { Prova, ProvaAperta, StatoSquadraService } from './stato';
 
 const TIPO: Record<string, string> = {
@@ -10,7 +11,7 @@ const TIPO: Record<string, string> = {
 
 @Component({
   selector: 'app-prove',
-  imports: [Icona, Sigillo, AiutiSquadra],
+  imports: [Icona, Sigillo, AiutiSquadra, VotiSquadra],
   changeDetection: ChangeDetectionStrategy.OnPush,
   styleUrl: './prove.css',
   templateUrl: './prove.html',

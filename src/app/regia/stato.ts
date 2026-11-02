@@ -9,7 +9,11 @@ export interface ScenaR { id: number; ordine: number; tipo: string; titolo: stri
 export interface PersonaggioR { id: number; nome: string; ruolo: string; scheda: string; note_regia: string; copione: string; foto_key: string | null; ordine: number }
 export interface SquadraR { id: number; nome: string; colore: string; account_id: number | null; username: string | null; ultimo_accesso: string | null; aperte: number; ultima_prova: string | null; codici_sbagliati: number; prove_aperte: number[]; prove_mostrate?: number[] }
 export interface Fase { numero: number; nome: string; durata_minuti: number | null; avviata_alle: string | null }
-export interface Serata { id: number; titolo: string; premessa: string; stato: 'bozza' | 'in_corso' | 'in_pausa' | 'chiusa'; fase_corrente: number; scena_in_onda: number | null; schermo_nero: boolean; colpevole: string; movente: string; arma: string; rivelata: boolean; sfondo_key: string | null; sfondo_opacita: number; tema: string; sussurri_attivi: boolean; slug: string; archiviata: boolean; sussurri_attesa_min: number; sussurri_attesa_max: number; sussurri_durata: number; versione: string; aiuti_attivi: boolean; aiuti_max: number; ambiente_attivo: boolean; ambiente_volume: number }
+export interface Serata { id: number; titolo: string; premessa: string; stato: 'bozza' | 'in_corso' | 'in_pausa' | 'chiusa'; fase_corrente: number; scena_in_onda: number | null; schermo_nero: boolean; colpevole: string; movente: string; arma: string; rivelata: boolean; sfondo_key: string | null; sfondo_opacita: number; tema: string; sussurri_attivi: boolean; slug: string; archiviata: boolean; sussurri_attesa_min: number; sussurri_attesa_max: number; sussurri_durata: number; versione: string; aiuti_attivi: boolean; aiuti_max: number; ambiente_attivo: boolean; ambiente_volume: number; cena_quando: string | null; cena_dove: string; dress_code: string; nota_invito: string }
+export interface PremioR {
+  id: number; nome: string; candidati: Array<{ id: number; nome: string; colore: string | null; voti: number }>; tipo: 'invitati' | 'personaggi' | 'squadre';
+  stato: 'preparato' | 'aperto' | 'chiuso' | 'rivelato'; ordine: number; votanti: number;
+}
 export interface AiutoR { id: number; squadra_id: number; squadra: string; colore: string; di_prova: boolean; prova: number | null; domanda: string; stato: 'attesa' | 'dato' | 'rifiutato'; risposta: string; penalita: number; chiesto: string; risposto: string | null }
 export interface Problema { livello: 'errore' | 'avviso'; dove: 'caso' | 'prove' | 'scene' | 'squadre' | 'invitati' | 'personaggi'; testo: string }
 export interface AccusaR { squadra_id: number; squadra: string; colpevole: string; movente: string; arma: string; spiegazione: string; consegnata_alle: string; punteggio: number | null }
@@ -19,7 +23,8 @@ export interface Tutto {
   serata: Serata;
   /** Frasi delle nuvolette scritte dalla regia; vuoto vuol dire quelle pronte del tema. */
   sussurri: string[];
-  invitati: Array<{ id: number; nome: string; squadra_id: number | null; personaggio_id: number | null }>;
+  invitati: Array<{ id: number; nome: string; squadra_id: number | null; personaggio_id: number | null; token: string | null; presenza: 'si' | 'no' | 'forse' | null; nota_ospite: string; risposto: string | null }>;
+  premi: PremioR[];
   aiuti: AiutoR[];
   vincoli: Array<{ id: number; a: number; b: number; tipo: 'divisi' | 'insieme' }>;
   fasi: Fase[];
@@ -40,7 +45,7 @@ export const TIPI_PROVA: Record<string, string> = {
 };
 export const TIPI_SCENA: Record<string, string> = {
   narrazione: 'Narrazione', immagine: 'Immagine', video: 'Video', audio: 'Audio con testo', conto: 'Conto alla rovescia',
-  avanzamento: 'Squadre a confronto', annuncio: 'Ultimo annuncio', rivelazione: 'Rivelazione', attesa: 'Attesa',
+  avanzamento: 'Squadre a confronto', annuncio: 'Ultimo annuncio', rivelazione: 'Rivelazione', attesa: 'Attesa', premi: 'Premi',
 };
 
 @Injectable({ providedIn: 'root' })

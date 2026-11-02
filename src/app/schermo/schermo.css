@@ -10,7 +10,7 @@
 
 [data-scena="conto"] .luna { left: 50%; transform: translate(-50%, -54%); width: 74vh; height: 74vh; }
 [data-scena="avanzamento"] .luna { left: 87vw; top: 74%; width: 34vh; height: 34vh; transform: translate(-50%, -50%); }
-[data-scena="rivelazione"] .luna { left: 50%; top: 47%; width: 84vh; height: 84vh; transform: translate(-50%, -50%); background: var(--fondo); border-width: 1.2vh; }
+[data-scena="rivelazione"] .luna, [data-scena="premi"] .luna { left: 50%; top: 47%; width: 84vh; height: 84vh; transform: translate(-50%, -50%); background: var(--fondo); border-width: 1.2vh; }
 [data-scena="immagine"] .luna, [data-scena="video"] .luna, [data-scena="nero"] .luna { opacity: 0; }
 [data-scena="nero"] .testa, [data-scena="nero"] .fasi { opacity: 0; }
 
@@ -63,3 +63,5 @@
 .fasi .corrente::before { background: var(--accento); }
 
 .attiva { position: absolute; z-index: 3; right: 2vw; bottom: 2vh; min-height: 44px; padding: 0 18px; border-radius: 999px; border: 1px solid var(--filetto); background: var(--fondo); color: var(--testo-2); font-size: 15px; }
+
+.altri-premi { list-style: none; margin: 1vh 0 0; padding: 0; display: grid; gap: 0.6vh; font-size: 2.4vh; color: var(--testo-2); max-width: 70vh; }

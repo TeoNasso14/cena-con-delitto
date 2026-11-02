@@ -84,6 +84,20 @@
             }
           </section>
         }
+        @case ('premi') {
+          <section class="scena rivelazione premi">
+            @if (premi().ultimo; as p) {
+              <h1 class="titolo">{{ p.vincitori.length ? nomi(p.vincitori) : 'Nessun voto' }}</h1>
+              <p class="vince">{{ p.nome }}{{ p.voti ? ', ' + (p.voti === 1 ? '1 voto' : p.voti + ' voti') : '' }}</p>
+              @if (premi().prima.length) {
+                <ul class="altri-premi">@for (q of premi().prima; track q.nome) { <li>{{ q.nome }}: {{ q.vincitori.length ? nomi(q.vincitori) : 'nessun voto' }}</li> }</ul>
+              }
+            } @else {
+              <h1 class="titolo">{{ sc.titolo || 'I premi della serata' }}</h1>
+              <p class="vince">Si contano i voti.</p>
+            }
+          </section>
+        }
         @default {
           <section class="scena attesa">
             <h1 class="titolo">{{ st.titolo }}</h1>
