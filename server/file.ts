@@ -34,6 +34,16 @@ export async function copiaAllegato(db: Db, key: string, serataId: number): Prom
   return nuova;
 }
 
+/** Copia un allegato in un modello salvato: vive con il modello e torna in una serata solo quando se ne crea una. */
+export async function copiaInModello(db: Db, key: string, modelloId: number): Promise<string | null> {
+  const r = await archivio().getWithMetadata(key, { type: "arrayBuffer" });
+  if (!r) return null;
+  const nuova = `m${modelloId}-${randomBytes(12).toString("base64url")}`;
+  await archivio().set(nuova, r.data as ArrayBuffer, { metadata: r.metadata as Record<string, string> });
+  await registra(db, nuova, null, (r.data as ArrayBuffer).byteLength, String((r.metadata as Record<string, unknown>)?.tipo ?? ""));
+  return nuova;
+}
+
 /** Cancella gli allegati di una serata eliminata. */
 export async function eliminaAllegati(db: Db, keys: string[]) {
   for (const k of keys) await archivio().delete(k);

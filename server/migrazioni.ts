@@ -574,4 +574,19 @@ ALTER TABLE scena DROP CONSTRAINT IF EXISTS scena_tipo_check;
 ALTER TABLE scena ADD CONSTRAINT scena_tipo_check CHECK (tipo IN ('narrazione', 'immagine', 'video', 'audio', 'conto', 'avanzamento', 'annuncio', 'rivelazione', 'attesa', 'premi'));
 `,
   },
+  {
+    // 3.0: modelli di caso salvati dalle regie (quelli pronti stanno nel codice, in server/modelli).
+    nome: "20261102200000_modelli",
+    sql: String.raw`
+CREATE TABLE IF NOT EXISTS modello (
+  id              SERIAL PRIMARY KEY,
+  proprietario_id INTEGER NOT NULL REFERENCES utente(id) ON DELETE CASCADE,
+  nome            TEXT NOT NULL,
+  descrizione     TEXT NOT NULL DEFAULT '',
+  dati            JSONB NOT NULL,
+  creato          TIMESTAMPTZ NOT NULL DEFAULT NOW()
+);
+CREATE INDEX IF NOT EXISTS modello_proprietario ON modello (proprietario_id);
+`,
+  },
 ];

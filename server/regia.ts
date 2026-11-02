@@ -781,7 +781,11 @@ export async function azzera(req: Request, db: Db) {
 
 export async function esporta(req: Request, db: Db) {
   const u = await regia(req, db);
-  const sid = u.serata_id;
+  return json(await casoDellaSerata(db, u.serata_id));
+}
+
+/** Il caso di una serata nel formato dei file: per scaricarlo e per salvarlo come modello. */
+export async function casoDellaSerata(db: Db, sid: number) {
   // Formato 2: con le chiavi degli allegati, che il browser della regia scarica e mette nel file (vedi Strumenti).
   const serata = await db.uno("SELECT titolo, premessa, colpevole, movente, arma, tema, sfondo_key, sfondo_opacita, sussurri_attivi, sussurri_attesa_min, sussurri_attesa_max, sussurri_durata FROM serata WHERE id = $1", [sid]);
   const fasi = await db.q("SELECT numero, nome, durata_minuti FROM fase WHERE serata_id = $1 ORDER BY numero", [sid]);
@@ -806,8 +810,8 @@ export async function esporta(req: Request, db: Db) {
   const premi = await db.q("SELECT nome, candidati FROM premio WHERE serata_id = $1 ORDER BY ordine, id", [sid]);
   const cartelle = righe.map((c) => c.nome);
   const cartelle_visibili = righe.filter((c) => c.visibile).map((c) => c.nome);
-  return json({
-    formato: "cena-con-delitto/2",
+  return {
+    formato: "cena-con-delitto/2" as const,
     serata, fasi, personaggi, scene, cartelle, cartelle_visibili, sussurri, premi,
     prove: prove.map(({ id, ...p }) => ({
       ...p,
@@ -816,29 +820,36 @@ export async function esporta(req: Request, db: Db) {
         fase_numero: r.fase_numero, gruppo: r.gruppo,
       })),
     })),
-  });
+  };
+}
+
+/** Un caso nel formato dei file esportati: lo scrivono l'importazione e i modelli di caso. */
+export interface CasoFile {
+  formato?: string; serata?: Record<string, unknown>; fasi?: Array<Record<string, unknown>>; personaggi?: Array<Record<string, unknown>>; cartelle?: unknown[]; cartelle_visibili?: unknown[];
+  scene?: Array<Record<string, unknown>>;
+  sussurri?: unknown[];
+  premi?: Array<{ nome?: unknown; candidati?: unknown }>;
+  prove?: Array<Record<string, unknown> & { regole?: Array<{ tipo: string; pin?: string | null; prova_richiesta?: number | null; fase_numero?: number | null; gruppo?: number }> }>;
 }
 
 export async function importa(req: Request, db: Db) {
   const u = await regia(req, db);
-  const b = await corpo<{
-    conferma?: string;
-    caso?: {
-      formato?: string; serata?: Record<string, unknown>; fasi?: Array<Record<string, unknown>>; personaggi?: Array<Record<string, unknown>>; cartelle?: unknown[]; cartelle_visibili?: unknown[];
-      scene?: Array<Record<string, unknown>>;
-      sussurri?: unknown[];
-      premi?: Array<{ nome?: unknown; candidati?: unknown }>;
-      prove?: Array<Record<string, unknown> & { regole?: Array<{ tipo: string; pin?: string; prova_richiesta?: number; fase_numero?: number; gruppo?: number }> }>;
-    };
-  }>(req);
+  const b = await corpo<{ conferma?: string; caso?: CasoFile }>(req);
   if (b.conferma !== "SOSTITUISCI") throw new Errore(400, "Per sostituire il caso scrivi SOSTITUISCI.");
   const c = b.caso;
   if (!c || (c.formato !== "cena-con-delitto/1" && c.formato !== "cena-con-delitto/2")) throw new Errore(400, "Il file non è un caso esportato da questo sito.");
-  const sid = u.serata_id;
-  // Gli allegati arrivano già ricaricati in questa serata dal browser: si accettano solo chiavi di questa serata.
+  await db.transazione((t) => scriviCaso(t, u.serata_id, c));
+  await evento(db, u.serata_id, "Caso importato da file");
+  await tocca(db, u.serata_id);
+  return json({ ok: true });
+}
+
+/** Sostituisce il caso di una serata con quello dato. Da chiamare dentro una transazione. */
+export async function scriviCaso(t: Db, sid: number, c: CasoFile) {
+  // Gli allegati arrivano già ricaricati in questa serata: si accettano solo chiavi di questa serata.
   const chiave = (v: unknown) => (typeof v === "string" && v.startsWith(`s${sid}-`) ? v : null);
   const tipoFile = (k: string | null, v: unknown) => (k && typeof v === "string" ? v.slice(0, 80) : null);
-  await db.transazione(async (t) => {
+  {
     await t.q("UPDATE serata SET scena_in_onda = NULL WHERE id = $1", [sid]);
     for (const tab of ["prova", "personaggio", "scena", "fase", "cartella"]) await t.q(`DELETE FROM ${tab} WHERE serata_id = $1`, [sid]);
     const cartellaDi = new Map<string, number>();
@@ -916,8 +927,5 @@ export async function importa(req: Request, db: Db) {
         );
       }
     }
-  });
-  await evento(db, sid, "Caso importato da file");
-  await tocca(db, sid);
-  return json({ ok: true });
+  }
 }

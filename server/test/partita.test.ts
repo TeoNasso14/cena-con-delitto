@@ -578,7 +578,7 @@ test("amministrazione: account, inviti, sospensione, password dimenticata", asyn
   expect(r.serate).toBeGreaterThan(0);
   // solo account e numeri: nessun campo delle serate
   // Solo dati dell'account e numeri (3.0: serate per stato, squadre, ultima partita, spazio), mai contenuti delle serate.
-  expect(Object.keys(r).sort()).toEqual(["admin", "archiviate", "chiuse", "creato", "email", "id", "in_corso", "in_preparazione", "nome", "serate", "spazio", "squadre", "stato", "ultima_partita", "ultimo_accesso", "username"]);
+  expect(Object.keys(r).sort()).toEqual(["admin", "archiviate", "chiuse", "creato", "email", "id", "in_corso", "in_preparazione", "modelli", "nome", "serate", "spazio", "squadre", "stato", "ultima_partita", "ultimo_accesso", "username"]);
   // l'amministrazione non apre le serate di nessuno
   expect((await chiama("GET", "/api/regia", undefined, admin, serataRegia)).stato).toBe(403);
 

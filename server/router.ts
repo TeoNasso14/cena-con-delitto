@@ -7,6 +7,7 @@ import * as SE from "./serate.ts";
 import * as AD from "./admin.ts";
 import * as IN from "./invitati.ts";
 import * as AI from "./aiuti.ts";
+import * as MO from "./modelli.ts";
 import * as OS from "./ospiti.ts";
 import * as PR from "./premi.ts";
 import * as PG from "./prova-generale.ts";
@@ -43,6 +44,10 @@ const rotte: Array<[string, RegExp, Gestore]> = [
   ["GET", /^\/api\/regia\/serate$/, (r, db) => A.mieSerate(r, db)],
   ["POST", /^\/api\/regia\/serate$/, (r, db) => SE.crea(r, db)],
   ["PUT", /^\/api\/regia\/serate\/(?<id>\d+)$/, (r, db, p) => SE.modifica(r, db, n(p.id))],
+  ["POST", /^\/api\/regia\/serate\/da-modello$/, (r, db) => MO.creaSerata(r, db)],
+  ["GET", /^\/api\/regia\/modelli$/, (r, db) => MO.elenco(r, db)],
+  ["POST", /^\/api\/regia\/modelli$/, (r, db) => MO.salva(r, db)],
+  ["DELETE", /^\/api\/regia\/modelli\/(?<id>\d+)$/, (r, db, p) => MO.elimina(r, db, n(p.id))],
   ["POST", /^\/api\/regia\/serate\/(?<id>\d+)\/duplica$/, (r, db, p) => SE.duplica(r, db, n(p.id))],
   ["POST", /^\/api\/regia\/serate\/(?<id>\d+)\/archivia$/, (r, db, p) => SE.archivia(r, db, n(p.id))],
   ["POST", /^\/api\/regia\/serate\/(?<id>\d+)\/elimina$/, (r, db, p) => SE.elimina(r, db, n(p.id))],

@@ -1,0 +1,143 @@
+import type { Modello } from "./tipo.ts";
+
+/*
+ * La villa in campagna: una cena di famiglia, un testamento da cambiare, un morto in biblioteca.
+ * Quattro colpevoli possibili (s1-s4). Le prove che cambiano col colpevole hanno la stessa chiave
+ * (referto, traccia, movente, conferma): ne resta una sola, e catene e codici funzionano per tutti.
+ */
+export const villa: Modello = {
+  id: "villa",
+  nome: "Il testamento della villa",
+  descrizione: "Una cena di famiglia in una villa di campagna. Il padrone di casa voleva cambiare il testamento il giorno dopo: lo trovano morto in biblioteca prima del caffè.",
+  temi: ["giallo", "vittoriano", "natale", "halloween", "noir"],
+  titolo: "Il testamento di villa {luogo}",
+  premessa: "{anno}. {vittima} ha riunito la famiglia a villa {luogo} per annunciare un nuovo testamento, da firmare l'indomani. Alle undici lo trovano morto in biblioteca, la porta chiusa. Nessuno ha lasciato la villa. Scoprite chi è stato, perché e con che cosa.",
+  segnaposto: {
+    luogo: { etichetta: "Nome della villa", proposte: { "*": ["Corvina", "dei Cipressi", "Malaspina"], vittoriano: ["Blackwood", "Ashcombe"], natale: ["delle Nevi", "Ginepro"], giallo: ["Ardenza", "Le Querce"] } },
+    vittima: { etichetta: "La vittima", proposte: { "*": ["il conte Ettore Malvezzi", "l'avvocato Arturo Ferri"], vittoriano: ["Sir Edmund Hale"], giallo: ["il commendator Bruno Ardenza"] } },
+    anno: { etichetta: "Anno o stagione", proposte: { "*": ["Autunno 1932"], vittoriano: ["Inverno 1889"], natale: ["La vigilia di Natale del 1951"], giallo: ["Estate 1974"], noir: ["Novembre 1946"] } },
+  },
+  minimo: 4,
+  sospetti: [
+    {
+      chiave: "s1", ruolo: "Il nipote",
+      nomi: { "*": ["Tommaso", "Filippo", "Leone"], vittoriano: ["Henry", "Arthur"], giallo: ["Massimo", "Gianni"] },
+      scheda: "Nipote prediletto di {vittima}, elegante e sempre al verde. Da anni vive dell'assegno dello zio.",
+      copione: "Hai debiti di gioco e lo zio lo sapeva, ma non lo hai ucciso: alle dieci e mezza eri in veranda a fumare. Ammetti i debiti solo se ti mettono alle strette.",
+      colpevole: { movente: "I debiti di gioco: il nuovo testamento lo lasciava senza un soldo", arma: "Il veleno nel bicchiere di porto", copione: "Sei stato tu. Il nuovo testamento ti lasciava senza niente e i creditori non aspettano. Hai versato il veleno nel porto dello zio mentre la cuoca era in dispensa. Dì che eri in veranda a fumare: nessuno può smentirti, tranne il mozzicone che non hai mai acceso." },
+    },
+    {
+      chiave: "s2", ruolo: "La governante",
+      nomi: { "*": ["Agata", "Marta", "Ines"], vittoriano: ["Mrs. Pratt", "Mrs. Hollis"], giallo: ["Rosaria", "Iole"] },
+      scheda: "Da trent'anni manda avanti la villa. Conosce ogni chiave, ogni porta e ogni segreto della famiglia.",
+      copione: "Sai che {vittima} voleva cambiare il testamento e che tutti ne avevano paura. Alle dieci e mezza eri in cucina a sistemare l'argenteria. Racconti volentieri i pettegolezzi, mai i tuoi.",
+      colpevole: { movente: "La vendetta: dopo trent'anni stava per licenziarla e cacciarla dalla villa", arma: "Il candeliere d'argento della biblioteca", copione: "Sei stata tu. Dopo trent'anni ti avrebbe cacciata come un cane: te l'aveva detto quel pomeriggio. L'hai colpito con il candeliere e hai chiuso la biblioteca con la tua chiave. Dì che eri in cucina con l'argenteria, e lucida bene quel candeliere se te lo nominano." },
+    },
+    {
+      chiave: "s3", ruolo: "Il medico di famiglia",
+      nomi: { "*": ["dottor Valli", "dottor Serra"], vittoriano: ["Dr. Moran", "Dr. Finch"], giallo: ["dottor Ruggeri"] },
+      scheda: "Cura la famiglia da vent'anni e siede sempre accanto a {vittima}. Porta con sé la sua borsa anche a cena.",
+      copione: "Hai visitato {vittima} il giorno prima: cuore stanco, niente di grave. Alle dieci e mezza giocavi a carte in salotto. Se ti chiedono della borsa, dì che non la perdi mai di vista.",
+      colpevole: { movente: "Il ricatto: la vittima sapeva di un suo errore che era costato la vita a un paziente", arma: "Una dose letale di sonnifero nella tisana", copione: "Sei stato tu. Lui sapeva di quel paziente morto per colpa tua e ti ricattava da un anno. Hai sciolto il sonnifero della tua borsa nella tisana della sera. Dì che giocavi a carte: è vero, ma sei uscito dieci minuti per prendere la borsa." },
+    },
+    {
+      chiave: "s4", ruolo: "La seconda moglie",
+      nomi: { "*": ["Bianca", "Livia", "Elena"], vittoriano: ["Lady Constance", "Lady Margaret"], giallo: ["Simona", "Loredana"] },
+      scheda: "Sposata con {vittima} da due anni, molto più giovane di lui. La famiglia non l'ha mai accettata.",
+      copione: "Sai che tuo marito voleva cambiare il testamento ma credi che fosse a tuo favore. Alle dieci e mezza eri in camera con il mal di testa. Difendi il tuo matrimonio con chiunque.",
+      colpevole: { movente: "Il nuovo testamento: lui aveva scoperto l'amante e la escludeva da tutto", arma: "Il tagliacarte d'argento della scrivania", copione: "Sei stata tu. Lui aveva scoperto il tuo amante e domani ti avrebbe tolto tutto. Avete litigato in biblioteca e hai afferrato il tagliacarte. Dì che eri in camera con il mal di testa, ma la cameriera ti ha vista sulle scale." },
+    },
+    {
+      chiave: "s5", ruolo: "Il giardiniere",
+      nomi: { "*": ["Bruno", "Gino"], vittoriano: ["Old Tom"], giallo: ["Sauro"] },
+      scheda: "Cura la serra e il parco. Di poche parole, entra in casa solo dalla porta della serra.",
+      copione: "Hai comprato veleno per topi la settimana scorsa: in serra ce ne sono tanti. Alle dieci e mezza chiudevi la serra. Ti offendi se qualcuno ti accusa.",
+    },
+    {
+      chiave: "s6", ruolo: "Il notaio",
+      nomi: { "*": ["notaio Ferretti", "notaio Landi"], vittoriano: ["Mr. Crane"], giallo: ["notaio Benassi"] },
+      scheda: "Amico di famiglia, è arrivato con la bozza del nuovo testamento nella cartella di cuoio.",
+      copione: "Conosci il contenuto del nuovo testamento ma hai promesso di tacere. Se insistono, dì solo che «qualcuno a questo tavolo ci avrebbe perso molto».",
+    },
+    {
+      chiave: "s7", ruolo: "La cuoca",
+      nomi: { "*": ["Teresa", "Nunzia"], vittoriano: ["Mrs. Doyle"], giallo: ["Pina"] },
+      scheda: "Ai fornelli da quando la villa era piena di ospiti. Vede passare tutti, dalla cucina.",
+      copione: "Alle dieci hai preparato il vassoio della sera per {vittima}: porto e tisana. Lo hai lasciato in corridoio per due minuti mentre prendevi lo zucchero. Hai visto passare qualcuno ma non hai visto bene chi.",
+    },
+    {
+      chiave: "s8", ruolo: "Il colonnello",
+      nomi: { "*": ["colonnello Rinaldi", "colonnello Gatti"], vittoriano: ["Colonel Ashby"], giallo: ["colonnello Marini"] },
+      scheda: "Vecchio compagno d'armi di {vittima}. Racconta battaglie, beve molto e perde sempre a carte.",
+      copione: "Doveva a {vittima} una grossa somma persa a carte e oggi lui te l'ha chiesta indietro. Alle dieci e mezza giocavi a carte con il medico. Non hai ucciso nessuno, ma ti agiti quando si parla di soldi.",
+    },
+  ],
+  fasi: [
+    { nome: "L'arrivo", minuti: 20 },
+    { nome: "Le indagini", minuti: 35 },
+    { nome: "Le confessioni", minuti: 30 },
+    { nome: "La verità", minuti: 15 },
+  ],
+  cartelle: ["La villa", "Gli indizi"],
+  prove: [
+    { chiave: "lettera", titolo: "La lettera di convocazione", tipo: "documento", fase: 1, modi: [{ fase: 1 }], inElenco: true, cartella: "La villa",
+      testo: "«Domani, alla presenza del notaio, firmerò un nuovo testamento. Vi voglio tutti a cena stasera: è giusto che lo sappiate da me. Qualcuno sarà sorpreso.» Firmato: {vittima}." },
+    { chiave: "pianta", titolo: "La pianta della villa", tipo: "documento", fase: 1, modi: [{ fase: 1 }], inElenco: true, cartella: "La villa",
+      testo: "La biblioteca ha due porte: una sul corridoio, una sulla serra. Chiave del corridoio: solo il padrone e la governante. Sul retro, a matita, un numero cerchiato due volte: {codice:referto}." },
+    // Il referto cambia col colpevole.
+    { chiave: "referto", per: "s1", titolo: "Il referto del medico condotto", tipo: "documento", fase: 2, modi: [{ codice: true }, { fase: 3 }], indizio: "Il codice è sul retro della pianta della villa", cartella: "Gli indizi",
+      testo: "Nessuna ferita. Labbra bluastre, odore di mandorle amare: avvelenamento. Morte tra le 22:15 e le 22:45. Sul tavolino un bicchiere di porto quasi vuoto. Annotato a margine: campione n. {codice:traccia}." },
+    { chiave: "referto", per: "s2", titolo: "Il referto del medico condotto", tipo: "documento", fase: 2, modi: [{ codice: true }, { fase: 3 }], indizio: "Il codice è sul retro della pianta della villa", cartella: "Gli indizi",
+      testo: "Un colpo alla nuca con un oggetto pesante dal bordo ornato. Morte tra le 22:15 e le 22:45. La porta sul corridoio era chiusa a chiave dall'esterno. Annotato a margine: reperto n. {codice:traccia}." },
+    { chiave: "referto", per: "s3", titolo: "Il referto del medico condotto", tipo: "documento", fase: 2, modi: [{ codice: true }, { fase: 3 }], indizio: "Il codice è sul retro della pianta della villa", cartella: "Gli indizi",
+      testo: "Nessuna ferita, pupille strettissime, respiro cessato nel sonno: una dose enorme di sonnifero. Morte tra le 22:15 e le 22:45. Sul tavolino una tazza di tisana. Annotato a margine: campione n. {codice:traccia}." },
+    { chiave: "referto", per: "s4", titolo: "Il referto del medico condotto", tipo: "documento", fase: 2, modi: [{ codice: true }, { fase: 3 }], indizio: "Il codice è sul retro della pianta della villa", cartella: "Gli indizi",
+      testo: "Una ferita sottile e profonda al petto, una lama corta e stretta. Morte tra le 22:15 e le 22:45. Segni di colluttazione accanto alla scrivania. Annotato a margine: reperto n. {codice:traccia}." },
+    // La traccia: l'oggetto che lega l'arma al colpevole.
+    { chiave: "traccia", per: "s1", titolo: "Il mozzicone in veranda", tipo: "oggetto", fase: 2, modi: [{ codice: true, dopo: "referto" }, { fase: 3 }], indizio: "Il codice è scritto sul referto", cartella: "Gli indizi",
+      testo: "In veranda, dove {s1} giura di aver fumato dalle dieci e mezza, un solo mozzicone: intero, mai acceso. Nel taschino della sua giacca, una boccetta vuota senza etichetta. Dentro la boccetta, un biglietto arrotolato: {codice:movente}." },
+    { chiave: "traccia", per: "s2", titolo: "Il candeliere lucidato", tipo: "oggetto", fase: 2, modi: [{ codice: true, dopo: "referto" }, { fase: 3 }], indizio: "Il codice è scritto sul referto", cartella: "Gli indizi",
+      testo: "Dei due candelieri della biblioteca, uno è stato lucidato da poco: l'altro è coperto di polvere. Nella cucina, tra l'argenteria, uno straccio con una macchia scura. Inciso sotto la base: {codice:movente}." },
+    { chiave: "traccia", per: "s3", titolo: "La borsa del medico", tipo: "oggetto", fase: 2, modi: [{ codice: true, dopo: "referto" }, { fase: 3 }], indizio: "Il codice è scritto sul referto", cartella: "Gli indizi",
+      testo: "Nella borsa di {s3}, il flacone di sonnifero: ieri era pieno, oggi è a metà. Il registro della borsa, firmato di suo pugno, porta la data di ieri. Sull'etichetta del flacone, il numero di lotto: {codice:movente}." },
+    { chiave: "traccia", per: "s4", titolo: "Il tagliacarte", tipo: "oggetto", fase: 2, modi: [{ codice: true, dopo: "referto" }, { fase: 3 }], indizio: "Il codice è scritto sul referto", cartella: "Gli indizi",
+      testo: "Il tagliacarte d'argento manca dalla scrivania. Lo ritrovano in camera di {s4}, avvolto in un fazzoletto ricamato con le sue iniziali. Sul manico, inciso: {codice:movente}." },
+    // Il movente.
+    { chiave: "movente", per: "s1", titolo: "Le cambiali", tipo: "documento", fase: 3, modi: [{ codice: true, dopo: "traccia" }, { fase: 4 }], indizio: "Il codice è dentro la traccia", cartella: "Gli indizi",
+      testo: "Un pacco di cambiali firmate da {s1}, per somme enormi, tutte in scadenza questo mese. Con la bozza del nuovo testamento, appuntata con uno spillo: «Al nipote, nulla. Che impari.» [[Sul retro dell'ultima: {codice:conferma}.]]" },
+    { chiave: "movente", per: "s2", titolo: "La lettera di licenziamento", tipo: "documento", fase: 3, modi: [{ codice: true, dopo: "traccia" }, { fase: 4 }], indizio: "Il codice è dentro la traccia", cartella: "Gli indizi",
+      testo: "«Dopo trent'anni i suoi servizi non sono più necessari. Lasci la villa entro la fine del mese.» Firmata da {vittima}, datata oggi. Strappata e poi rimessa insieme con cura. [[In un angolo: {codice:conferma}.]]" },
+    { chiave: "movente", per: "s3", titolo: "La cartella clinica", tipo: "documento", fase: 3, modi: [{ codice: true, dopo: "traccia" }, { fase: 4 }], indizio: "Il codice è dentro la traccia", cartella: "Gli indizi",
+      testo: "Nella cassaforte di {vittima}, la cartella di un paziente morto due anni fa, con la diagnosi sbagliata firmata da {s3}. Un appunto: «Ogni mese, il solito.» [[Sulla copertina: {codice:conferma}.]]" },
+    { chiave: "movente", per: "s4", titolo: "Le lettere d'amore", tipo: "documento", fase: 3, modi: [{ codice: true, dopo: "traccia" }, { fase: 4 }], indizio: "Il codice è dentro la traccia", cartella: "Gli indizi",
+      testo: "Un fascio di lettere d'amore per {s4}, firmate con una sola iniziale. Non sono di suo marito. Nella bozza del testamento: «Alla moglie, solo ciò che la legge impone.» [[Sul nastro che le lega: {codice:conferma}.]]" },
+    // La conferma, solo a difficoltà alta.
+    { chiave: "conferma", per: "s1", difficolta: 3, titolo: "La ricevuta del farmacista", tipo: "documento", fase: 3, modi: [{ codice: true, dopo: "movente" }], cartella: "Gli indizi",
+      testo: "Una ricevuta di tre giorni fa: cianuro, «per i topi della cantina». Il nome sul registro è falso, ma la calligrafia è quella delle cambiali." },
+    { chiave: "conferma", per: "s2", difficolta: 3, titolo: "La chiave del corridoio", tipo: "oggetto", fase: 3, modi: [{ codice: true, dopo: "movente" }], cartella: "Gli indizi",
+      testo: "Le chiavi della biblioteca sono due. Quella del padrone era nella sua tasca. L'altra, nel mazzo della governante, ha ancora un filo di polvere d'argento." },
+    { chiave: "conferma", per: "s3", difficolta: 3, titolo: "La partita interrotta", tipo: "testimonianza", fase: 3, modi: [{ codice: true, dopo: "movente" }], cartella: "Gli indizi",
+      testo: "Il segnapunti della partita a carte: alle 22:20 una mano saltata, dieci minuti senza punti. Chi è uscito in quella mano ha lasciato le carte coperte sul tavolo: quelle di {s3}." },
+    { chiave: "conferma", per: "s4", difficolta: 3, titolo: "La cameriera sulle scale", tipo: "testimonianza", fase: 3, modi: [{ codice: true, dopo: "movente" }], cartella: "Gli indizi",
+      testo: "«Alle dieci e mezza ho visto la signora scendere le scale in fretta, senza scarpe. Diceva di avere mal di testa, ma aveva le guance rosse come dopo una lite.»" },
+    // Testimoni e false piste, con i sospetti in gioco.
+    { chiave: "cuoca", sospetto: "s7", titolo: "La testimonianza della cuoca", tipo: "testimonianza", fase: 2, modi: [{ fase: 2 }], cartella: "La villa",
+      testo: "{s7}: «Alle dieci ho preparato il vassoio della sera, porto e tisana. L'ho lasciato in corridoio due minuti per prendere lo zucchero. Quando sono tornata il vassoio era già sparito.»" },
+    { chiave: "serra", sospetto: "s5", falsa: true, titolo: "Il veleno per topi della serra", tipo: "oggetto", fase: 2, modi: [{ fase: 2 }], cartella: "Gli indizi",
+      testo: "In serra, una scatola di veleno per topi aperta da poco, comprata da {s5}. La polvere però è grigia e non profuma di niente." },
+    { chiave: "notaio", sospetto: "s6", titolo: "La bozza del notaio", tipo: "documento", fase: 3, modi: [{ fase: 3 }], cartella: "La villa",
+      testo: "La bozza del nuovo testamento, portata da {s6}: molte righe cancellate, molti nomi ridotti a «nulla». In fondo, l'ultima frase: «Chi mi ha tradito lo sa.»" },
+    { chiave: "carte", sospetto: "s8", falsa: true, titolo: "Il debito del colonnello", tipo: "documento", fase: 3, modi: [{ fase: 3 }], cartella: "Gli indizi",
+      testo: "Un biglietto di {vittima} a {s8}: «Entro domenica, o lo saprà tutto il circolo.» La cifra è alta, ma al circolo dicono che il colonnello aveva appena vinto." },
+  ],
+  scene: [
+    { tipo: "attesa", titolo: "", testo: "", fase: null },
+    { tipo: "narrazione", titolo: "Villa {luogo}", testo: "{anno}. La famiglia è riunita per una cena che nessuno voleva. {vittima} ha qualcosa da annunciare.", fase: 1, automatica: true },
+    { tipo: "narrazione", titolo: "Un grido dalla biblioteca", testo: "Alle undici la governante trova {vittima} senza vita. La porta era chiusa. Nessuno ha lasciato la villa.", fase: 2, automatica: true },
+    { tipo: "conto", titolo: "alla fine delle indagini", testo: "", fase: 2 },
+    { tipo: "narrazione", titolo: "Le confessioni", testo: "È il momento di parlare. Ognuno ha qualcosa da nascondere, ma uno solo ha ucciso.", fase: 3, automatica: true },
+    { tipo: "avanzamento", titolo: "", testo: "", fase: 3 },
+    { tipo: "narrazione", titolo: "La verità", testo: "Consegnate le vostre accuse: chi, perché, con che cosa.", fase: 4, automatica: true },
+    { tipo: "rivelazione", titolo: "Chi ha ucciso {vittima}?", testo: "", fase: null },
+  ],
+};

@@ -45,6 +45,7 @@ export async function tutto(req: Request, db: Db) {
        COUNT(s.id) FILTER (WHERE NOT s.archiviata AND s.stato IN ('in_corso', 'in_pausa'))::int AS in_corso,
        COUNT(s.id) FILTER (WHERE NOT s.archiviata AND s.stato = 'chiusa')::int AS chiuse,
        COUNT(s.id) FILTER (WHERE s.archiviata)::int AS archiviate,
+       (SELECT COUNT(*)::int FROM modello m WHERE m.proprietario_id = u.id) AS modelli,
        (SELECT COUNT(*)::int FROM squadra q JOIN serata x ON x.id = q.serata_id WHERE x.proprietario_id = u.id AND NOT q.prova) AS squadre,
        (SELECT MAX(f.avviata_alle) FROM fase f JOIN serata x ON x.id = f.serata_id WHERE x.proprietario_id = u.id) AS ultima_partita,
        (SELECT COALESCE(SUM(a.byte), 0)::bigint FROM allegato a JOIN serata x ON x.id = a.serata_id WHERE x.proprietario_id = u.id) AS spazio
@@ -96,11 +97,11 @@ export async function misura(req: Request, db: Db) {
 export async function elimina(req: Request, db: Db, id: number) {
   const u = await admin(req, db);
   const b = await corpo<{ conferma?: string }>(req);
-  const p = await db.uno<{ username: string; admin: boolean; serate: number }>(
-    "SELECT username, admin, (SELECT COUNT(*)::int FROM serata WHERE proprietario_id = utente.id) AS serate FROM utente WHERE id = $1", [id]);
+  const p = await db.uno<{ username: string; admin: boolean; serate: number; modelli: number }>(
+    "SELECT username, admin, (SELECT COUNT(*)::int FROM serata WHERE proprietario_id = utente.id) AS serate, (SELECT COUNT(*)::int FROM modello WHERE proprietario_id = utente.id) AS modelli FROM utente WHERE id = $1", [id]);
   if (!p) throw new Errore(404, "Account non trovato.");
   if (id === u.id || p.admin) throw new Errore(400, "L'amministrazione non si elimina da qui.");
-  if (p.serate) throw new Errore(409, "Questo account ha ancora serate: passale prima a un'altra regia.", "ha_serate");
+  if (p.serate || p.modelli) throw new Errore(409, "Questo account ha ancora serate o modelli: passali prima a un'altra regia.", "ha_serate");
   if (b.conferma !== p.username) throw new Errore(400, `Per eliminare l'account scrivi il suo nome utente, ${p.username}.`);
   const nome = await chi(db, id);
   await db.q("DELETE FROM utente WHERE id = $1", [id]);
@@ -119,6 +120,7 @@ export async function trasferisci(req: Request, db: Db, id: number) {
   if (!da || !verso) throw new Errore(404, "Account non trovato.");
   if (verso.admin) throw new Errore(400, "L'amministrazione non gestisce serate.");
   const r = await db.q("UPDATE serata SET proprietario_id = $1 WHERE proprietario_id = $2 RETURNING id", [a, id]);
+  await db.q("UPDATE modello SET proprietario_id = $1 WHERE proprietario_id = $2", [a, id]);
   await annota(db, u, `${r.length === 1 ? "1 serata passata" : `${r.length} serate passate`} a ${await chi(db, a)}`, await chi(db, id));
   return json({ ok: true, serate: r.length });
 }
