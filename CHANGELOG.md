@@ -2,6 +2,12 @@
 
 ## 2.2.0
 
+### Controlli automatici
+- Su GitHub, a ogni push su `main` e `develop` e a ogni pull request: controllo dei tipi del server, partita completa di prova, build del sito (`.github/workflows/controlli.yml`).
+
+### Invitati e biglietti, rifiniture
+- Invitati raggruppati per squadra, con colore e numero; vincoli scritti come frase ("deve stare divisa da", "insieme a"). I biglietti hanno una pagina propria, con il ritorno agli invitati, e credenziali più grandi e facili da copiare.
+
 ### Caso completo in un file
 - "Scarica il caso" in Strumenti mette nel file anche foto, audio e video, oltre a tema, nuvolette e sfondo (formato `cena-con-delitto/2`). Il browser della regia scarica gli allegati uno alla volta, perché una risposta unica sarebbe troppo grande per una Netlify Function.
 - "Carica un caso da file" ricarica prima gli allegati nella serata, poi il caso con le chiavi nuove. I file del formato 1 si caricano ancora.
