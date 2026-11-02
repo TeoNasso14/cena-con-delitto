@@ -753,7 +753,7 @@ describe("2.0: più regie e più serate", () => {
     const altro = new NetlifyDB();
     const d2 = apriDb(await altro.start());
     // Database fermo alla 1.1: tutte le migrazioni prima della 2.0.
-    const fino = MIGRAZIONI.findIndex((m) => m.nome === "20261101180000_utenti_e_serate");
+    const fino = MIGRAZIONI.findIndex((m) => m.nome === "20261101175900_copia_prima_della_2_0");
     await d2.q("CREATE TABLE migrazione (nome TEXT PRIMARY KEY, applicata TIMESTAMPTZ NOT NULL DEFAULT NOW())");
     for (const m of MIGRAZIONI.slice(0, fino)) {
       await d2.q(m.sql);
@@ -781,6 +781,9 @@ describe("2.0: più regie e più serate", () => {
     // l'organizzatrice è un utente regia, non amministratore, proprietario della sua serata
     const u = await d2.uno<{ id: number; admin: boolean; password_hash: string }>("SELECT id, admin, password_hash FROM utente WHERE username = 'organizza'");
     expect(u).toMatchObject({ admin: false, password_hash: hash });
+    // la copia di sicurezza ha i dati di prima del passaggio, con l'account regia della 1.x ancora attivo
+    expect(await d2.uno("SELECT username, ruolo FROM copia_prima_della_2_0.account WHERE ruolo = 'regia'")).toEqual({ username: "organizza", ruolo: "regia" });
+    expect((await d2.uno<{ n: number }>("SELECT COUNT(*)::int AS n FROM copia_prima_della_2_0.prova"))!.n).toBe(1);
     expect(await d2.uno("SELECT proprietario_id, slug, tema FROM serata WHERE id = $1", [s!.id])).toEqual({ proprietario_id: u!.id, slug: "villa-corvina-halloween", tema: "noir" });
     // 2.1: tempi delle nuvolette di sempre, nessun invitato
     expect(await d2.uno("SELECT sussurri_attesa_min, sussurri_attesa_max, sussurri_durata FROM serata WHERE id = $1", [s!.id])).toEqual({ sussurri_attesa_min: 20, sussurri_attesa_max: 45, sussurri_durata: 10 });

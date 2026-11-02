@@ -368,6 +368,22 @@ WHERE NOT EXISTS (SELECT 1 FROM sussurro x WHERE x.serata_id = s.id);
 `,
   },
   {
+    // Copia di sicurezza prima della 2.0: tutte le tabelle, così com'erano, nello schema copia_prima_della_2_0.
+    // Sta prima della 2.0 di proposito: sul sito vero gira subito prima del passaggio. Non tocca le tabelle in uso;
+    // sui database già passati alla 2.0 copia lo stato di quel momento, e non serve a nulla di più.
+    nome: "20261101175900_copia_prima_della_2_0",
+    sql: String.raw`
+CREATE SCHEMA IF NOT EXISTS copia_prima_della_2_0;
+DO $$
+DECLARE t record;
+BEGIN
+  FOR t IN SELECT table_name FROM information_schema.tables WHERE table_schema = 'public' AND table_type = 'BASE TABLE' LOOP
+    EXECUTE format('CREATE TABLE IF NOT EXISTS copia_prima_della_2_0.%I AS TABLE public.%I', t.table_name, t.table_name);
+  END LOOP;
+END $$;
+`,
+  },
+  {
     // 2.0: più regie e più serate. Le persone (amministrazione e regia) stanno in utente; squadre e proiettore restano in account,
     // con il nome utente unico dentro la serata. L'account regia della 1.x diventa un utente regia proprietario della sua serata
     // e resta in account, disattivato. L'amministratore nasce dopo, con SETUP_CODE.
