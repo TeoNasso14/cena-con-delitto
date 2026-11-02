@@ -1,5 +1,21 @@
 # Registro delle versioni
 
+## 2.3.0
+
+### Prima della serata
+- **Controllo del caso** (Strumenti, e in diretta finché la serata è in preparazione): errori e avvisi prima che succedano. Prove che per una squadra non si aprono mai (catene circolari, fasi che non esistono, due codici nello stesso modo), soluzione incompleta, colpevole che non è tra i personaggi, file mancanti, scene legate a fasi inesistenti, più scene automatiche nella stessa fase, nessuna scena di rivelazione, nessun proiettore.
+- **Prova generale** (in diretta): il telefono di una squadra nascosta in un'altra scheda, per provare codici, catene e aiuti come li vedranno gli invitati. I codici funzionano anche prima dell'inizio; la prova generale non compare su proiettore, elenchi, sorteggio, biglietti, accuse e resoconto, e non cambia nessuna password. "Ricomincia da capo" cancella solo i suoi progressi.
+- **Personaggi agli invitati**, facoltativi: in Invitati ogni persona può interpretare un personaggio. I telefoni mostrano "interpretato da", i biglietti scrivono il ruolo accanto al nome, e "Schede per chi interpreta" stampa per ognuno il personaggio con quello che sa solo lui (campo nuovo "Per chi lo interpreta", mai mandato ai telefoni). Senza assegnazioni si gioca come prima.
+
+### Durante la serata
+- **Aiuti a richiesta**: la squadra chiede un aiuto dal telefono (al massimo 3 di serie, uno alla volta, anche su una prova precisa); la regia risponde in diretta con una penalità facoltativa, tolta dal punteggio dell'accusa. Un aiuto senza risposta non si conta. Spenti di serie, si accendono in Strumenti o in diretta.
+- **Suoni d'ambiente** sul proiettore, generati nel browser per ogni tema (vento, pioggia, pendolo, treno, disco, camino), con volume e un abbassamento automatico durante le scene con audio o video. Spenti di serie.
+- **Tempo reale** con Ably, se `ABLY_API_KEY` è impostata: i cambi arrivano subito e il controllo della versione rallenta a ogni 10 secondi. Passa solo il numero di versione, con un token che permette di ascoltare un solo canale. Senza chiave tutto resta come nella 2.2.
+
+### Dopo la serata
+- **Resoconto** (nuova voce della regia, da mostrare o stampare): classifica con il punteggio netto, numeri squadra per squadra (prove e come si sono aperte, codici sbagliati, aiuti, tempi, accusa), chi ha aperto ogni prova e quando. Dopo la rivelazione i telefoni vedono la classifica nella pagina dell'accusa.
+- Sul proiettore vince chi ha il punteggio netto più alto, penalità comprese.
+
 ## 2.2.0
 
 ### Controlli automatici

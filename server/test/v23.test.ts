@@ -68,6 +68,8 @@ describe("controllo del caso", () => {
 
   test("un caso sano non ha errori", () => {
     const d = base();
+    // il colpevole può essere scritto con il ruolo del personaggio
+    d.personaggi = [{ id: 1, nome: "Agata Morelli", ruolo: "La governante" }];
     d.prove = [prova(1, [r({ tipo: "fase", fase_numero: 1 })]), prova(2, [r({ tipo: "prova", prova_richiesta_id: 1 }), r({ pin: "ABC" })])];
     expect(controlla(d)).toEqual([]);
   });
@@ -109,7 +111,7 @@ describe("controllo del caso", () => {
     const testi = controlla(d).map((p) => `${p.livello}: ${p.testo}`);
     expect(testi).toEqual(expect.arrayContaining([
       "avviso: Manca il movente nella soluzione: nessuna squadra prenderà il punto del movente.",
-      "avviso: Il colpevole della soluzione non corrisponde a nessun personaggio: controlla che il nome sia scritto come nei personaggi.",
+      "avviso: Il colpevole della soluzione non corrisponde a nessun personaggio: controlla che sia scritto come il nome o il ruolo di un personaggio.",
       "avviso: La prova 1 non ha regole: la può consegnare solo la regia, a mano.",
       "avviso: La prova 1 è di tipo foto ma non ha un file.",
       "avviso: Non c'è una scena di rivelazione: quando riveli la soluzione il proiettore non la mostra.",
@@ -179,6 +181,15 @@ describe("prova generale", () => {
     // una seconda apertura usa la stessa squadra
     await chiama("POST", "/api/regia/prova-generale", {}, regia);
     expect((await db.uno<{ n: number }>("SELECT COUNT(*)::int AS n FROM squadra WHERE serata_id = $1 AND prova", [sid]))!.n).toBe(1);
+  });
+
+  test("nata dopo l'avvio di una fase, riceve le prove di quella fase", async () => {
+    await chiama("POST", "/api/regia/fase", { numero: 1 }, regia);
+    await db.q("DELETE FROM sblocco WHERE squadra_id = (SELECT id FROM squadra WHERE serata_id = $1 AND prova)", [sid]);
+    await chiama("POST", "/api/regia/prova-generale", {}, regia);
+    const st = (await chiama("GET", "/api/squadra/stato", undefined, undefined, anteprima())).dati;
+    expect(st.prove.filter((p: any) => p.aperta).map((p: any) => p.numero)).toEqual([1]);
+    await chiama("POST", "/api/regia/azzera", { conferma: "AZZERA" }, regia);
   });
 
   test("codici anche a serata ferma, solo per la prova generale", async () => {

@@ -38,6 +38,8 @@ export const routes: Routes = [
           { path: 'squadre', loadComponent: () => import('./regia/altre').then((m) => m.SquadreRegia), title: 'Regia, squadre e accessi' },
           { path: 'invitati', loadComponent: () => import('./regia/invitati').then((m) => m.InvitatiRegia), title: 'Regia, invitati' },
           { path: 'invitati/biglietti', loadComponent: () => import('./regia/invitati').then((m) => m.BigliettiRegia), title: 'Regia, biglietti per i tavoli' },
+          { path: 'invitati/schede', loadComponent: () => import('./regia/invitati').then((m) => m.SchedeRegia), title: 'Regia, schede per chi interpreta' },
+          { path: 'resoconto', loadComponent: () => import('./regia/resoconto').then((m) => m.ResocontoRegia), title: 'Regia, resoconto' },
           { path: 'accuse', loadComponent: () => import('./regia/altre').then((m) => m.AccuseRegia), title: 'Regia, accuse' },
           { path: 'strumenti', loadComponent: () => import('./regia/altre').then((m) => m.Strumenti), title: 'Regia, strumenti' },
         ],

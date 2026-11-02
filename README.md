@@ -38,6 +38,15 @@ Modi diversi sono alternative, e ognuno può valere per tutte le squadre o per u
 - In Regia, Invitati: elenco degli invitati (anche incollato, uno per riga), vincoli "divisa da" e "insieme a", sorteggio bilanciato delle squadre, spostamenti a mano.
 - Biglietti per i tavoli: un foglio da stampare per squadra con componenti, credenziali e un QR che fa entrare direttamente. Prepararli rinnova le password delle squadre.
 
+## Prima, durante e dopo la serata
+
+- **Controllo del caso** (Strumenti): prove che non si aprirebbero mai, soluzione incompleta, file mancanti, scene sbagliate.
+- **Prova generale** (In diretta): il telefono di una squadra nascosta, in un'altra scheda. Non compare da nessuna parte e non cambia password.
+- **Personaggi agli invitati** (Invitati, facoltativo): chi interpreta chi, con le schede da stampare per ognuno.
+- **Aiuti** (Strumenti o In diretta): le squadre chiedono, la regia risponde con una penalità facoltativa.
+- **Suoni d'ambiente** (Strumenti): il sottofondo del tema sul proiettore.
+- **Resoconto**: classifica e numeri della serata, da mostrare o stampare. I telefoni vedono la classifica dopo la rivelazione.
+
 ## Caso in un file
 
 Strumenti, "Scarica il caso": un file con tutto il caso, allegati compresi, da tenere o da caricare in un'altra serata ("Carica un caso da file"). Squadre, accessi e invitati restano fuori.
@@ -62,6 +71,7 @@ Strumenti, "Scarica il caso": un file con tutto il caso, allegati compresi, da t
    - `SETUP_CODE`: il codice per creare l'amministrazione al primo avvio.
    - `CENA_DB_URL`: l'indirizzo di un database Postgres (per esempio Neon gratuito, con `sslmode=require`).
    - `CENA_DB_MAX`: connessioni per istanza, 3 va bene.
+   - `ABLY_API_KEY` (facoltativa): la chiave di un'app Ably per il tempo reale (piano gratuito). Serve una chiave con i permessi "publish" e "subscribe"; meglio un'app Ably diversa per prove e sito vero. Senza, telefoni e proiettore controllano la versione ogni secondo o due.
 3. Pubblica. Alla prima richiesta il sito crea o aggiorna le tabelle.
 4. Apri `/avvio` e crea l'amministrazione con il `SETUP_CODE`.
 5. Da `/admin` crea un invito per ogni regia e mandale il link.
@@ -90,4 +100,5 @@ In locale gli allegati restano in memoria e si perdono al riavvio.
 
 - Crea la serata dall'elenco (o duplicane una), scegli il tema in Strumenti, carica il caso (a mano o da Strumenti, "Carica un caso da file").
 - Crea le squadre e l'accesso del proiettore, inserisci gli invitati e sorteggia le squadre, stampa i biglietti per i tavoli.
-- Fai una prova generale, poi Regia, Strumenti, "Azzera la serata".
+- Guarda il controllo del caso in Strumenti e sistema gli errori.
+- Fai una prova generale da In diretta, poi Regia, Strumenti, "Azzera la serata".

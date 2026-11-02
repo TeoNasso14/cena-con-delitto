@@ -80,6 +80,14 @@ Lavoro fatto sul ramo `develop`, senza pubblicare la 1.1 da sola (scelta di Teo)
 - **Manuale della regia** (Claude Docs) aggiornato alla 2.2: accesso con invito, le tue serate e il tema, invitati e biglietti, Strumenti.
 - **2.2**: caso completo con allegati, assemblato dal browser per il limite di grandezza delle risposte delle Netlify Functions. Il tempo reale vero richiederebbe un servizio esterno: al suo posto un controllo leggero della versione, che porta gli aggiornamenti a circa un secondo.
 
+## La 2.3 (2 novembre 2026)
+- Prima di pubblicare la 2.2 Teo ha chiesto di aggiungere tutto il resto e rilasciare insieme, poi passare alla 3.0. Controlli automatici su GitHub (tipi, test, build) aggiunti nello stesso giro.
+- **Personaggi agli invitati facoltativi**: si può giocare con i personaggi come terze persone. Il copione per chi interpreta non arriva mai ai telefoni.
+- **Prova generale** senza toccare la serata vera: una squadra nascosta, guidata dalla regia in un'altra scheda con un token nell'intestazione, perché un cookie avrebbe sostituito quello della regia. Le fasi restano quelle vere: dopo la prova si azzera.
+- **Aiuti** spenti di serie, con penalità facoltativa tolta dal punteggio dell'accusa; un aiuto senza risposta non si conta.
+- **Suoni d'ambiente** generati nel browser (nessun file, nessuna licenza), spenti di serie.
+- **Tempo reale** con Ably, scelto per il piano gratuito e perché il browser ascolta con EventSource senza librerie. Passa solo il numero di versione. Senza chiave resta il controllo della 2.2.
+
 ## Stato alla 2.0.0
 - Tutto su `develop`, non ancora unito in `main` né pubblicato. Al passaggio l'organizzatrice rientra una volta con le sue credenziali, e Teo crea l'amministrazione da `/avvio`.
 - Restano: Vittoriano, Delitto in viaggio, Gatsby, Natale; invitati e sorteggio (2.1); caso completo con allegati (2.2); tempo reale; il manuale della regia su Claude Docs da aggiornare.

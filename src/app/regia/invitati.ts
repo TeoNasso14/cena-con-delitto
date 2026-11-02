@@ -20,6 +20,8 @@ import { RegiaStato } from './stato';
     .pallino { width: 12px; height: 12px; border-radius: 50%; flex: none; }
     .righe-invitati { list-style: none; margin: 0; padding: 0; background: var(--fondo-2); border-radius: 14px; }
     .invitato { display: grid; grid-template-columns: minmax(0, 1fr) minmax(110px, 200px) auto; gap: 8px; align-items: center; padding: 8px 10px 8px 14px; }
+    .con-personaggi .invitato { grid-template-columns: minmax(0, 1fr) minmax(110px, 180px) minmax(110px, 180px) auto; }
+    @media (max-width: 640px) { .con-personaggi .invitato { grid-template-columns: minmax(0, 1fr) minmax(0, 1fr) auto; } .con-personaggi .invitato .nome { grid-column: 1 / -1; } }
     .invitato + .invitato { border-top: 1px solid var(--fondo-3); }
     .invitato .nome { font-weight: 600; overflow-wrap: anywhere; }
     .invitato select { min-height: 40px; padding-top: 6px; padding-bottom: 6px; }
@@ -39,6 +41,7 @@ import { RegiaStato } from './stato';
       <div class="r-azioni">
         <button class="bottone bottone--pieno" type="button" [disabled]="t.squadre.length < 2 || !t.invitati.length" (click)="sorteggia()">Sorteggia le squadre</button>
         <a class="bottone" [routerLink]="st.base() + '/invitati/biglietti'">Biglietti per i tavoli</a>
+        @if (interpreti()) { <a class="bottone" [routerLink]="st.base() + '/invitati/schede'">Schede per chi interpreta</a> }
       </div>
     </header>
     @if (t.squadre.length < 2) {
@@ -58,7 +61,7 @@ import { RegiaStato } from './stato';
           @for (g of gruppi(); track g.id) {
             <section class="gruppo" [attr.aria-label]="g.nome">
               <h3>@if (g.colore) { <i class="pallino" [style.background]="g.colore" aria-hidden="true"></i> }{{ g.nome }} <span>{{ g.persone.length }}</span></h3>
-              <ul class="righe-invitati">
+              <ul class="righe-invitati" [class.con-personaggi]="t.personaggi.length">
                 @for (i of g.persone; track i.id) {
                   <li class="invitato">
                     <span class="nome">{{ i.nome }}</span>
@@ -66,6 +69,12 @@ import { RegiaStato } from './stato';
                       <option [ngValue]="null">Nessuna squadra</option>
                       @for (q of t.squadre; track q.id) { <option [ngValue]="q.id">{{ q.nome }}</option> }
                     </select>
+                    @if (t.personaggi.length) {
+                      <select class="campo" [attr.aria-label]="'Personaggio interpretato da ' + i.nome" [ngModel]="i.personaggio_id" (ngModelChange)="interpreta(i.id, $event)">
+                        <option [ngValue]="null">Nessuno</option>
+                        @for (p of t.personaggi; track p.id) { <option [ngValue]="p.id">{{ p.nome }}</option> }
+                      </select>
+                    }
                     <button class="bottone bottone--piccolo bottone--pericolo" type="button" [attr.aria-label]="'Togli ' + i.nome" (click)="togli(i.id)">Togli</button>
                   </li>
                 }
@@ -99,6 +108,9 @@ import { RegiaStato } from './stato';
               </li>
             } @empty { <li class="r-vuoto">Nessun vincolo: il sorteggio fa squadre bilanciate a caso.</li> }
           </ul>
+          @if (t.personaggi.length) {
+            <p class="aiuto">Personaggi: se vuoi, ogni invitato ne interpreta uno. Sui telefoni compare "interpretato da", e in "Schede per chi interpreta" stampi a ognuno il suo personaggio con quello che sa. Puoi anche lasciarli tutti senza: i personaggi restano persone del racconto.</p>
+          }
           <p class="aiuto">Il sorteggio fa squadre della stessa grandezza (al massimo una persona di differenza) e rispetta tutti i vincoli. Puoi rifarlo quante volte vuoi e poi spostare qualcuno a mano.</p>
         </section>
       </div>
@@ -127,6 +139,8 @@ export class InvitatiRegia {
     const ok = await this.st.fai(() => this.api.post('/api/regia/invitati', { nomi }), nomi.length === 1 ? 'Invitato aggiunto' : `${nomi.length} invitati aggiunti`);
     if (ok) this.nuovi = '';
   }
+  readonly interpreti = computed(() => !!this.st.t()?.invitati.some((i) => i.personaggio_id !== null));
+  interpreta(id: number, personaggio_id: number | null) { this.st.fai(() => this.api.put(`/api/regia/invitati/${id}`, { personaggio_id })); }
   sposta(id: number, squadra_id: number | null) { this.st.fai(() => this.api.put(`/api/regia/invitati/${id}`, { squadra_id })); }
   togli(id: number) { this.st.fai(() => this.api.del(`/api/regia/invitati/${id}`)); }
   async vincola() {
@@ -231,5 +245,65 @@ export class BigliettiRegia {
     const base = `${location.origin}/s/${r.slug}#entra=`;
     this.fogli.set(r.biglietti.map((b) => ({ ...b, qr: percorsoQr(base + encodeURIComponent(`${b.username}:${b.password}`)) })));
   }
+  stampa() { window.print(); }
+}
+
+/* ---------- Schede per chi interpreta un personaggio, da stampare e consegnare prima della cena ---------- */
+
+@Component({
+  selector: 'app-schede-regia',
+  imports: [RouterLink],
+  changeDetection: ChangeDetectionStrategy.OnPush,
+  styles: `
+    .fogli { display: grid; grid-template-columns: repeat(auto-fill, minmax(320px, 1fr)); gap: 20px; }
+    .scheda { display: grid; gap: 10px; align-content: start; padding: 22px; background: var(--carta); color: var(--inchiostro); border: 1px solid var(--carta-filetto); border-top: 4px solid var(--accento); border-radius: 2px; break-inside: avoid; }
+    .per { font-size: 14px; }
+    .scheda h2 { font: 700 30px/1.05 var(--titoli); text-wrap: balance; }
+    .ruolo { font-weight: 700; }
+    .scheda h3 { font: 700 15px/1.2 var(--corpo); margin-top: 6px; padding-top: 10px; border-top: 1px solid var(--carta-filetto); }
+    .testo { font-size: 15px; white-space: pre-line; }
+    .segreto { font-size: 13px; font-style: italic; }
+    @media print {
+      .no-stampa { display: none !important; }
+      .fogli { grid-template-columns: repeat(2, 1fr); }
+      .scheda { border-color: #999; border-top-color: #000; }
+    }
+  `,
+  template: `
+    @let t = st.t()!;
+    <header class="r-testa no-stampa">
+      <div><h1>Schede per chi interpreta</h1><p>Una scheda per ogni invitato che interpreta un personaggio: chi è, cosa sanno tutti e cosa sa solo lui. Stampale e consegnale prima della cena, piegate.</p></div>
+      <div class="r-azioni">
+        <a class="bottone" [routerLink]="st.base() + '/invitati'">Torna agli invitati</a>
+        @if (schede().length) { <button class="bottone bottone--pieno" type="button" (click)="stampa()">Stampa</button> }
+      </div>
+    </header>
+    @if (!schede().length) {
+      <p class="r-vuoto">Nessun invitato interpreta un personaggio. Sceglilo in <a [routerLink]="st.base() + '/invitati'">Invitati</a>, accanto a ogni nome.</p>
+    }
+    <div class="fogli">
+      @for (s of schede(); track s.id) {
+        <article class="scheda">
+          <p class="per">Per {{ s.invitato }}{{ s.squadra ? ', squadra ' + s.squadra : '' }}. {{ t.serata.titolo }}</p>
+          <h2>{{ s.p.nome }}</h2>
+          @if (s.p.ruolo) { <p class="ruolo">{{ s.p.ruolo }}</p> }
+          @if (s.p.scheda) { <h3>Cosa sanno tutti</h3><p class="testo">{{ s.p.scheda }}</p> }
+          @if (s.p.copione) { <h3>Cosa sai solo tu</h3><p class="testo">{{ s.p.copione }}</p> }
+          @else { <p class="segreto">Nessun segreto scritto per questo personaggio: improvvisa restando nella parte.</p> }
+        </article>
+      }
+    </div>
+  `,
+})
+export class SchedeRegia {
+  readonly st = inject(RegiaStato);
+  readonly schede = computed(() => {
+    const t = this.st.t();
+    if (!t) return [];
+    return t.invitati
+      .filter((i) => i.personaggio_id !== null)
+      .map((i) => ({ id: i.id, invitato: i.nome, squadra: t.squadre.find((q) => q.id === i.squadra_id)?.nome ?? null, p: t.personaggi.find((p) => p.id === i.personaggio_id)! }))
+      .filter((s) => s.p);
+  });
   stampa() { window.print(); }
 }

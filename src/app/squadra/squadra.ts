@@ -47,6 +47,9 @@ import { frasiDaMostrare } from '../temi/catalogo';
           <button class="esci" type="button" aria-label="Esci" (click)="sessione.esci()"><app-icona nome="esci" /></button>
         </div>
       </header>
+      @if (s?.squadra?.prova) {
+        <p class="avviso ferma" role="status">Prova generale: vedi la serata come una squadra. I codici funzionano anche prima dell'inizio e nessuno vede questi progressi. Per ricominciare, usa la regia.</p>
+      }
       @if (s && s.serata.stato === 'in_pausa') { <p class="avviso ferma" role="status">La regia ha messo in pausa la serata. I sigilli si riaprono quando riparte.</p> }
       @if (st.errore() && !s) { <p class="avviso avviso--errore ferma" role="alert">{{ st.errore() }}</p> }
       <router-outlet />

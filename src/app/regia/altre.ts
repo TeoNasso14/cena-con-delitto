@@ -5,6 +5,7 @@ import { Icona } from '../icona';
 import { Allegato } from './allegato';
 import { temaDa, TEMI } from '../temi/catalogo';
 import { RegiaStato, ScenaR, TIPI_SCENA } from './stato';
+import { Controllo } from './aiuti';
 
 /* ---------- Scene del proiettore ---------- */
 
@@ -383,6 +384,9 @@ export class SquadreRegia {
               <label class="etichetta" [for]="'pt-' + a.squadra_id">Punti<input #p class="campo" type="number" min="0" max="1000" [id]="'pt-' + a.squadra_id" [value]="a.punteggio ?? ''" placeholder="Da dare"></label>
               <button class="bottone bottone--piccolo" type="submit">Salva i punti</button>
             </form>
+            @if (penalita(a.squadra_id); as pen) {
+              <p class="secondario" style="font-size:14px">Aiuti: {{ pen === 1 ? '1 punto' : pen + ' punti' }} di penalità, tolti dal punteggio{{ a.punteggio !== null ? ': netto ' + (a.punteggio - pen) : '' }}.</p>
+            }
           </div>
         } @empty { <p class="r-vuoto">Nessuna accusa consegnata.</p> }
       </section>
@@ -394,6 +398,9 @@ export class AccuseRegia {
   private api = inject(Api);
   readonly ora = ora;
   readonly conferma = signal(false);
+  penalita(squadra: number) {
+    return (this.st.t()?.aiuti ?? []).filter((x) => x.squadra_id === squadra && x.stato === 'dato').reduce((n, x) => n + x.penalita, 0);
+  }
   nascondi() { this.st.fai(() => this.api.post('/api/regia/nascondi-soluzione'), 'Soluzione nascosta: il proiettore torna all\'attesa'); }
   rivela() { this.conferma.set(false); this.st.fai(() => this.api.post('/api/regia/rivela'), 'Soluzione rivelata'); }
   punti(id: number, v: string) {
@@ -432,9 +439,15 @@ function inBase64(blob: Blob): Promise<string> {
 
 /* ---------- Strumenti ---------- */
 
+/** Il nome dei suoni d'ambiente per tema, come li genera src/app/schermo/ambiente.ts. */
+const SUONI: Record<string, string> = {
+  halloween: 'vento tra gli alberi', noir: 'pioggia sulla città', vittoriano: 'pendolo e pioggia lontana',
+  viaggio: 'treno in corsa', gatsby: 'fruscio di un disco', natale: 'fuoco nel camino',
+};
+
 @Component({
   selector: 'app-strumenti',
-  imports: [FormsModule],
+  imports: [FormsModule, Controllo],
   changeDetection: ChangeDetectionStrategy.OnPush,
   styles: `
     .in-alto { margin-bottom: 32px; }
@@ -453,7 +466,12 @@ function inBase64(blob: Blob): Promise<string> {
   `,
   template: `
     @let t = st.t()!;
-    <header class="r-testa"><div><h1>Strumenti</h1><p>Tema e nuvolette, accesso della regia, stato della serata, salvataggio del caso e ripartenza da zero.</p></div></header>
+    <header class="r-testa"><div><h1>Strumenti</h1><p>Controllo del caso, tema, nuvolette, suoni e aiuti, accesso della regia, stato della serata, salvataggio del caso e ripartenza da zero.</p></div></header>
+    <section class="r-blocco in-alto" id="controllo">
+      <h2>Controllo del caso</h2>
+      <p class="secondario">Prima della serata: prove che non si aprirebbero mai, soluzione incompleta, file mancanti. Si aggiorna da solo a ogni modifica.</p>
+      <app-controllo />
+    </section>
     <section class="r-blocco in-alto">
       <h2>Tema della serata</h2>
       <p class="secondario">Colori, caratteri e decorazioni di telefoni, proiettore e regia. Cambia per tutti entro pochi secondi, anche a serata in corso.</p>
@@ -492,6 +510,30 @@ function inBase64(blob: Blob): Promise<string> {
         </div>
       </div>
     </section>
+    <div class="r-colonne in-alto">
+      <section class="r-colonna r-blocco">
+        <h2>Suoni d'ambiente</h2>
+        <div class="r-scheda r-modulo">
+          <p class="secondario">Sul proiettore, un sottofondo del tema: {{ suono() }}. Si abbassa da solo durante le scene con audio o video. Se il computer del proiettore blocca l'audio, sullo schermo compare "Tocca per il suono".</p>
+          <label class="r-check" for="amb-acceso"><input id="amb-acceso" type="checkbox" [checked]="t.serata.ambiente_attivo" (change)="ambiente({ attivo: $any($event.target).checked })">Suoni accesi</label>
+          <label class="etichetta" for="amb-vol">Volume <small>{{ volume }} su 100</small>
+            <input id="amb-vol" name="amb-vol" type="range" min="0" max="100" step="5" [(ngModel)]="volume" (change)="ambiente({ volume: +volume })">
+          </label>
+        </div>
+      </section>
+      <section class="r-colonna r-blocco">
+        <h2>Aiuti</h2>
+        <div class="r-scheda r-modulo">
+          <p class="secondario">Le squadre chiedono un aiuto dal telefono, uno alla volta; rispondi in diretta e, se vuoi, togli qualche punto all'accusa. Un aiuto a cui non rispondi non si conta.</p>
+          <label class="r-check" for="aiu-acc"><input id="aiu-acc" type="checkbox" [checked]="t.serata.aiuti_attivi" (change)="aiuti({ attivi: $any($event.target).checked })">Aiuti accesi</label>
+          <label class="etichetta" for="aiu-max">Aiuti per squadra
+            <select id="aiu-max" name="aiu-max" class="campo" [ngModel]="t.serata.aiuti_max" (ngModelChange)="aiuti({ max: +$event })">
+              @for (n of [1, 2, 3, 4, 5, 6, 8, 10]; track n) { <option [ngValue]="n">{{ n }}</option> }
+            </select>
+          </label>
+        </div>
+      </section>
+    </div>
     <div class="r-colonne">
       <div class="r-colonna">
         <section class="r-blocco">
@@ -534,7 +576,7 @@ function inBase64(blob: Blob): Promise<string> {
         <section class="r-blocco">
           <h2>Ricomincia da zero</h2>
           <div class="r-scheda r-modulo">
-            <p class="secondario">Cancella prove aperte, codici tentati, accuse, annunci e registro. Restano il caso, le squadre e i loro accessi. Utile dopo le prove generali.</p>
+            <p class="secondario">Cancella prove aperte, codici tentati, accuse, aiuti, annunci e registro. Restano il caso, le squadre e i loro accessi. Utile dopo le prove generali.</p>
             <label class="etichetta" for="az-conf">Scrivi AZZERA per confermare<input id="az-conf" name="az-conf" class="campo" [(ngModel)]="confAzzera"></label>
             <button class="bottone bottone--pericolo" type="button" style="justify-self:start" [disabled]="confAzzera !== 'AZZERA'" (click)="azzera()">Azzera la serata</button>
           </div>
@@ -551,6 +593,14 @@ export class Strumenti {
   readonly ordineStati = ['bozza', 'in_corso', 'in_pausa', 'chiusa'];
   readonly temi = TEMI;
   readonly temaInUso = () => temaDa(this.st.t()?.serata.tema);
+  readonly suono = () => SUONI[this.st.t()?.serata.tema ?? 'halloween'] ?? SUONI['halloween'];
+  volume = this.st.t()?.serata.ambiente_volume ?? 50;
+  ambiente(b: { attivo?: boolean; volume?: number }) {
+    this.st.fai(() => this.api.put('/api/regia/ambiente', b), b.attivo === undefined ? 'Volume salvato' : b.attivo ? 'Suoni accesi sul proiettore' : 'Suoni spenti');
+  }
+  aiuti(b: { attivi?: boolean; max?: number }) {
+    this.st.fai(() => this.api.put('/api/regia/aiuti', b), b.attivi === undefined ? 'Numero di aiuti salvato' : b.attivi ? 'Aiuti accesi' : 'Aiuti spenti');
+  }
   frasi = (this.st.t()?.sussurri ?? []).join('\n');
   attesaMin = this.st.t()?.serata.sussurri_attesa_min ?? 20;
   attesaMax = this.st.t()?.serata.sussurri_attesa_max ?? 45;

@@ -14,15 +14,21 @@ export interface StatoSquadra {
   tema: string;
   serata: { titolo: string; premessa: string; stato: string; rivelata: boolean };
   fase: { numero: number; nome: string | null; totale: number };
-  squadra: { nome: string; colore: string; taccuino: string };
+  squadra: { nome: string; colore: string; taccuino: string; prova?: boolean };
   prove: Prova[];
   /** Solo le cartelle che la regia ha reso visibili alle squadre. */
   cartelle?: Array<{ id: number; nome: string }>;
-  personaggi: Array<{ id: number; nome: string; ruolo: string; scheda: string; foto: string | null }>;
+  personaggi: Array<{ id: number; nome: string; ruolo: string; scheda: string; foto: string | null; interpretatoDa?: string[] }>;
   annunci: Array<{ id: number; testo: string; ora: string }>;
   accusa: { colpevole: string; movente: string; arma: string; spiegazione: string; consegnata_alle: string } | null;
   codici: { bloccatoPer: number; tentativiRimasti: number };
   sussurri: { attivi: boolean; frasi: string[]; attesa: [number, number]; durata: number };
+  aiuti: {
+    attivi: boolean; max: number; usati: number;
+    richieste: Array<{ id: number; prova: number | null; domanda: string; stato: 'attesa' | 'dato' | 'rifiutato'; risposta: string; penalita: number; chiesto: string }>;
+  };
+  /** Dopo la rivelazione: le squadre in ordine di punteggio netto. */
+  classifica: Array<{ nome: string; colore: string; aperte: number; netto: number | null }> | null;
 }
 
 export type EsitoCodice =

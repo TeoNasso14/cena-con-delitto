@@ -7,6 +7,7 @@ import { Atmosfera } from '../temi/atmosfera';
 import { Decoro } from '../temi/decoro';
 import { applicaTema } from '../temi/applica';
 import { frasiDaMostrare } from '../temi/catalogo';
+import { Ambiente } from './ambiente';
 
 interface Scena {
   id?: number; tipo: string; titolo: string; testo: string;
@@ -22,6 +23,7 @@ interface StatoSchermo {
   scena: Scena;
   sfondo: { url: string; opacita: number } | null;
   sussurri: { attivi: boolean; frasi: string[]; attesa: [number, number]; durata: number };
+  ambiente?: { attivo: boolean; volume: number };
 }
 
 @Component({
@@ -44,6 +46,7 @@ export class Schermo implements OnInit, OnDestroy {
   private ferma?: () => void;
   private orologio?: ReturnType<typeof setInterval>;
   private media = viewChild<ElementRef<HTMLMediaElement>>('media');
+  private ambiente = new Ambiente();
 
   readonly frasi = computed(() => frasiDaMostrare(this.s()?.tema, this.s()?.sussurri));
 
@@ -72,6 +75,16 @@ export class Schermo implements OnInit, OnDestroy {
     effect(() => {
       if (this.api.sessioneScaduta()) this.router.navigateByUrl(this.sessione.paginaAccesso());
     });
+    // Suoni d'ambiente: partono dopo il tocco che sblocca l'audio, e si abbassano sotto le scene con audio o video.
+    effect(() => {
+      const s = this.s();
+      this.ambiente.aggiorna({
+        acceso: this.attivo() && !!s?.ambiente?.attivo,
+        tema: s?.tema ?? 'halloween',
+        volume: s?.ambiente?.volume ?? 0,
+        abbassa: ['audio', 'video'].includes(this.tipo()),
+      });
+    });
     let ultimaScena: number | undefined;
     effect(() => {
       // Il media riparte da capo solo quando cambia la scena, non a ogni aggiornamento dello stato.
@@ -99,6 +112,7 @@ export class Schermo implements OnInit, OnDestroy {
   ngOnDestroy() {
     this.ferma?.();
     clearInterval(this.orologio);
+    this.ambiente.spegni();
   }
 
   attiva() {

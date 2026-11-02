@@ -38,6 +38,8 @@ async function squadraDiProva(db: Db, sid: number) {
 export async function apri(req: Request, db: Db) {
   const u = await utente(req, db, ["regia"]);
   const c = await squadraDiProva(db, u.serata_id);
+  // Una squadra nata dopo l'avvio delle fasi riceve subito le prove che si aprono da sole, come le altre.
+  await propaga(db, u.serata_id, c.id);
   return json({ token: firmaSessione({ a: c.account_id, r: "squadra", v: c.versione_token }) });
 }
 

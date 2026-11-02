@@ -35,6 +35,15 @@ export class Sessione {
   }
 
   async esci() {
+    // La prova generale non ha un cookie suo: uscire vuol dire lasciare l'anteprima, non chiudere la sessione della regia.
+    if (this.api.anteprima()) {
+      this.api.lasciaAnteprima();
+      this.io.set(null);
+      this.caricato = false;
+      window.close();
+      await this.router.navigateByUrl('/regia');
+      return;
+    }
     const dove = this.paginaAccesso();
     await this.api.post('/api/uscita').catch(() => undefined);
     this.api.scegliSerata(null);

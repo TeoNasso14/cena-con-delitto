@@ -4,12 +4,13 @@ import { RouterLink } from '@angular/router';
 import { Api, ora } from '../api';
 import { Icona } from '../icona';
 import { RegiaStato, SquadraR, TIPI_SCENA } from './stato';
+import { AiutiDiretta, Controllo, ProvaGenerale } from './aiuti';
 
 interface EsitoConsegna { aperta: number; mostrata: number; gia: number; catena?: number[] }
 
 @Component({
   selector: 'app-diretta',
-  imports: [FormsModule, RouterLink, Icona],
+  imports: [FormsModule, RouterLink, Icona, AiutiDiretta, Controllo, ProvaGenerale],
   changeDetection: ChangeDetectionStrategy.OnPush,
   styles: `
     .rivela { display: flex; flex-wrap: wrap; gap: 10px; align-items: center; padding-top: 4px; }
@@ -68,6 +69,8 @@ interface EsitoConsegna { aperta: number; mostrata: number; gia: number; catena?
         }
       </div>
     </header>
+
+    @if (s.stato === 'bozza') { <app-controllo [breve]="true" /> }
 
     <div class="r-colonne">
       <div class="r-colonna">
@@ -154,9 +157,11 @@ interface EsitoConsegna { aperta: number; mostrata: number; gia: number; catena?
             <button class="bottone" type="submit" [disabled]="!annuncio.trim()">Manda l'annuncio</button>
           </form>
         </section>
+        <app-prova-generale />
       </div>
 
       <div class="r-colonna">
+        <app-aiuti-diretta />
         <section class="r-blocco" aria-labelledby="t-squadre">
           <h2 id="t-squadre">Le squadre</h2>
           @for (q of t.squadre; track q.id) {

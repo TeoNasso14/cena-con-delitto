@@ -2,11 +2,12 @@
 
 Proposta di architettura concordata il 1 novembre 2026. Realizzata nella 2.0 sul ramo `develop` (piani di dettaglio in docs/PIANO-1.1.md e docs/PIANO-2.0.md); le differenze rispetto a questa proposta sono segnate sotto.
 
-## Stato (2 novembre 2026)
+## Stato (2 novembre 2026, 2.3)
 - **Fatto nella 2.0**: temi della serata (Halloween classico, Noir anni '40), nuvolette dalla regia, marchio Il Movente per le pagine fuori dalle serate, amministrazione con inviti, più serate per regia, accesso per serata a tema, accesso della regia.
 - **Differenze dalla proposta**: l'account regia della 1.0 è diventato una regia normale (non amministratore); l'accesso della regia non ha un aspetto neutro ma il marchio Il Movente.
 - **Fatto poi**: 2.1 (Vittoriano, Delitto in viaggio, Gatsby, Natale; invitati, sorteggio con vincoli, biglietti con QR; tempi delle nuvolette), 2.2 (caso completo con allegati; aggiornamenti in circa un secondo con il controllo della versione).
-- **Aperto**: tempo reale vero (WebSocket o simili) richiede un servizio esterno, da scegliere con Teo. I controlli automatici su GitHub ci sono (`.github/workflows/controlli.yml`: tipi, test e build a ogni push su main e develop). Il manuale della regia su Claude Docs è aggiornato alla 2.2.
+- **2.3 fatta** (vedi docs/PIANO-2.3.md): controllo del caso, personaggi agli invitati, resoconto, aiuti, prova generale, suoni d'ambiente, tempo reale con Ably (attivo quando c'è `ABLY_API_KEY`).
+- **Prossimo**: la 3.0. I controlli automatici su GitHub ci sono (`.github/workflows/controlli.yml`: tipi, test e build a ogni push su main e develop). Il manuale della regia su Claude Docs è aggiornato alla 2.2.
 
 ## Tre livelli di utenti
 1. **Amministrazione** (Teo): una dashboard `/admin` per creare, sospendere e riattivare gli account regia, e vedere quante serate ha ciascuno. Non vede il contenuto delle serate.

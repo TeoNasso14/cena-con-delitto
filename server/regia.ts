@@ -761,6 +761,7 @@ export async function azzera(req: Request, db: Db) {
     await t.q("DELETE FROM accusa WHERE squadra_id IN (SELECT id FROM squadra WHERE serata_id = $1)", [sid]);
     await t.q("UPDATE squadra SET taccuino = '' WHERE serata_id = $1", [sid]);
     await t.q("DELETE FROM annuncio WHERE serata_id = $1", [sid]);
+    await t.q("DELETE FROM aiuto WHERE serata_id = $1", [sid]);
     await t.q("DELETE FROM evento WHERE serata_id = $1", [sid]);
     await t.q("UPDATE fase SET avviata_alle = NULL WHERE serata_id = $1", [sid]);
     await t.q("UPDATE scena SET in_onda_dal = NULL WHERE serata_id = $1", [sid]);

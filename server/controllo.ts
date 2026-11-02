@@ -18,7 +18,7 @@ export interface DatiCaso {
   prove: Array<{ id: number; numero: number; tipo: string; testo: string; allegato_key: string | null; regole: RegolaC[] }>;
   squadre: Array<{ id: number; nome: string }>;
   schermi: number;
-  personaggi: Array<{ id: number; nome: string }>;
+  personaggi: Array<{ id: number; nome: string; ruolo?: string }>;
   scene: Array<{ tipo: string; titolo: string; allegato_key: string | null; fase_numero: number | null; avvio_automatico: boolean }>;
   invitati: Array<{ nome: string; personaggio_id: number | null }>;
 }
@@ -70,8 +70,8 @@ export function controlla(d: DatiCaso): Problema[] {
   if (!d.serata.colpevole.trim()) errore("caso", "Manca il colpevole nella soluzione: la rivelazione non può partire.");
   if (!d.serata.movente.trim()) avviso("caso", "Manca il movente nella soluzione: nessuna squadra prenderà il punto del movente.");
   if (!d.serata.arma.trim()) avviso("caso", "Manca l'arma nella soluzione: nessuna squadra prenderà il punto dell'arma.");
-  if (d.serata.colpevole.trim() && d.personaggi.length && !d.personaggi.some((p) => combacia(p.nome, d.serata.colpevole))) {
-    avviso("caso", "Il colpevole della soluzione non corrisponde a nessun personaggio: controlla che il nome sia scritto come nei personaggi.");
+  if (d.serata.colpevole.trim() && d.personaggi.length && !d.personaggi.some((p) => combacia(p.nome, d.serata.colpevole) || (!!p.ruolo && combacia(p.ruolo, d.serata.colpevole)))) {
+    avviso("caso", "Il colpevole della soluzione non corrisponde a nessun personaggio: controlla che sia scritto come il nome o il ruolo di un personaggio.");
   }
   if (!d.fasi.length) avviso("caso", "Non ci sono fasi: le prove che si aprono con una fase restano chiuse.");
   if (!d.prove.length) avviso("prove", "Non ci sono prove.");
@@ -134,7 +134,7 @@ export async function controllo(req: Request, db: Db) {
   );
   const squadre = await db.q<{ id: number; nome: string }>("SELECT id, nome FROM squadra WHERE serata_id = $1 AND NOT prova ORDER BY id", [sid]);
   const schermi = await db.uno<{ n: number }>("SELECT COUNT(*)::int AS n FROM account WHERE serata_id = $1 AND ruolo = 'schermo'", [sid]);
-  const personaggi = await db.q<{ id: number; nome: string }>("SELECT id, nome FROM personaggio WHERE serata_id = $1", [sid]);
+  const personaggi = await db.q<{ id: number; nome: string; ruolo: string }>("SELECT id, nome, ruolo FROM personaggio WHERE serata_id = $1", [sid]);
   const scene = await db.q<DatiCaso["scene"][number]>("SELECT tipo, titolo, allegato_key, fase_numero, avvio_automatico FROM scena WHERE serata_id = $1 ORDER BY ordine, id", [sid]);
   const invitati = await db.q<DatiCaso["invitati"][number]>("SELECT nome, personaggio_id FROM invitato WHERE serata_id = $1 ORDER BY ordine, id", [sid]);
   return json({ problemi: controlla({ serata: serata!, fasi, prove, squadre, schermi: schermi?.n ?? 0, personaggi, scene, invitati }) });

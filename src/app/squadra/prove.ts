@@ -1,6 +1,7 @@
 import { ChangeDetectionStrategy, Component, computed, ElementRef, HostListener, inject, signal, viewChild } from '@angular/core';
 import { ErroreApi, ora } from '../api';
 import { Icona, Sigillo } from '../icona';
+import { AiutiSquadra } from './aiuti';
 import { Prova, ProvaAperta, StatoSquadraService } from './stato';
 
 const TIPO: Record<string, string> = {
@@ -9,7 +10,7 @@ const TIPO: Record<string, string> = {
 
 @Component({
   selector: 'app-prove',
-  imports: [Icona, Sigillo],
+  imports: [Icona, Sigillo, AiutiSquadra],
   changeDetection: ChangeDetectionStrategy.OnPush,
   styleUrl: './prove.css',
   templateUrl: './prove.html',
@@ -74,7 +75,7 @@ export class ProveVista {
   private chiudiBtn = viewChild<ElementRef<HTMLButtonElement>>('chiudiBtn');
 
   readonly bloccato = computed(() => (this.st.stato()?.codici.bloccatoPer ?? 0) > 0);
-  readonly fermo = computed(() => this.st.stato()?.serata.stato !== 'in_corso');
+  readonly fermo = computed(() => this.st.stato()?.serata.stato !== 'in_corso' && !this.st.stato()?.squadra.prova);
 
   nuova(p: Prova) {
     return p.aperta && !this.st.viste().has(p.id);

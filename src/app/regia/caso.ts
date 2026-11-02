@@ -114,6 +114,7 @@ export class CasoVista implements OnInit {
           </div>
           <label class="etichetta" for="p-scheda">Scheda pubblica<textarea id="p-scheda" name="p-scheda" class="campo" rows="4" [(ngModel)]="scelto.scheda"></textarea></label>
           <label class="etichetta" for="p-note">Note di regia <small>Solo per te.</small><textarea id="p-note" name="p-note" class="campo" rows="4" [(ngModel)]="scelto.note_regia"></textarea></label>
+          <label class="etichetta" for="p-copione">Per chi lo interpreta <small>Facoltativo. Se un invitato interpreta questo personaggio (lo scegli in Invitati), lo trova sulla sua scheda stampata: cosa sa, cosa nasconde, cosa deve dire. Le squadre non lo vedono.</small><textarea id="p-copione" name="p-copione" class="campo" rows="5" [(ngModel)]="scelto.copione"></textarea></label>
           <app-allegato etichetta="Ritratto" campo="p-foto" accetta="image/*" [(chiave)]="scelto.foto_key" />
           <div class="r-azioni">
             <button class="bottone bottone--pieno" type="submit">Salva</button>
@@ -134,7 +135,7 @@ export class PersonaggiRegia {
   scelto: (Omit<PersonaggioR, 'id'> & { id?: number }) | null = null;
   conferma = false;
 
-  nuovo() { this.conferma = false; this.scelto = { nome: '', ruolo: '', scheda: '', note_regia: '', foto_key: null, ordine: this.st.t()!.personaggi.length }; }
+  nuovo() { this.conferma = false; this.scelto = { nome: '', ruolo: '', scheda: '', note_regia: '', copione: '', foto_key: null, ordine: this.st.t()!.personaggi.length }; }
   modifica(p: PersonaggioR) { this.conferma = false; this.scelto = { ...p }; }
   async salva() {
     const p = this.scelto!;

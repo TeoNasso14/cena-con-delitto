@@ -20,6 +20,7 @@ const BASE = `
     h2 { font-family: var(--titoli); font-size: 24px; line-height: 1.05; }
     .ruolo { color: var(--accento); font-weight: 600; font-size: 15px; margin-top: 2px; }
     .scheda { color: var(--testo-1); font-size: 15px; margin-top: 8px; white-space: pre-line; }
+    .interprete { color: var(--testo-2); font-size: 14px; margin-top: 2px; }
   `,
   template: `
     <h1>I personaggi</h1>
@@ -31,6 +32,7 @@ const BASE = `
           <div>
             <h2>{{ p.nome }}</h2>
             @if (p.ruolo) { <p class="ruolo">{{ p.ruolo }}</p> }
+            @if (p.interpretatoDa?.length) { <p class="interprete">Interpretato da {{ p.interpretatoDa!.join(', ') }}</p> }
             @if (p.scheda) { <p class="scheda">{{ p.scheda }}</p> }
           </div>
         </article>
@@ -111,6 +113,15 @@ export class TaccuinoVista implements OnDestroy {
     .verbale dd { margin: 0; font-size: 17px; white-space: pre-line; }
     .conferma { display: grid; gap: 12px; padding: 16px; background: var(--fondo-2); border-radius: 14px; }
     .azioni { display: flex; gap: 10px; flex-wrap: wrap; }
+    .classifica { margin-top: 28px; display: grid; gap: 12px; }
+    .classifica h2 { font-family: var(--titoli); font-size: 28px; line-height: 1.05; }
+    .classifica ol { list-style: none; margin: 0; padding: 0; display: grid; gap: 8px; }
+    .classifica li { display: grid; grid-template-columns: 28px 12px minmax(0, 1fr) auto; align-items: center; gap: 10px; padding: 12px 14px; border-radius: 2px; background: var(--fondo-2); }
+    .classifica li.nostra { outline: 2px solid var(--accento); outline-offset: -2px; }
+    .classifica .pos { font-family: var(--titoli); font-size: 22px; color: var(--testo-2); }
+    .classifica .pallino { width: 12px; height: 12px; border-radius: 50%; }
+    .classifica .nome { font-weight: 600; overflow: hidden; text-overflow: ellipsis; white-space: nowrap; }
+    .classifica .punti { color: var(--testo-2); font-size: 14px; text-align: right; }
   `,
   template: `
     @let s = st.stato();
@@ -150,6 +161,21 @@ export class TaccuinoVista implements OnDestroy {
           </div>
         }
       </form>
+    }
+    @if (s?.classifica; as cl) {
+      <section class="classifica" aria-labelledby="titolo-classifica">
+        <h2 id="titolo-classifica">La classifica</h2>
+        <ol>
+          @for (c of cl; track c.nome; let i = $index) {
+            <li [class.nostra]="c.nome === s?.squadra?.nome">
+              <span class="pos">{{ i + 1 }}</span>
+              <span class="pallino" [style.background]="c.colore" aria-hidden="true"></span>
+              <span class="nome">{{ c.nome }}</span>
+              <span class="punti">{{ c.netto === null ? 'senza accusa' : c.netto === 1 ? '1 punto' : c.netto + ' punti' }}, {{ c.aperte }} prove</span>
+            </li>
+          }
+        </ol>
+      </section>
     }
   `,
 })
