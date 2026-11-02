@@ -159,6 +159,30 @@ export class Ambiente {
         this.fondo('marrone', 'lowpass', 120, 0.7, 0.15);
         this.ogni((t) => { if (caso() < 0.6) this.colpo(t + caso() * 0.1, 1500 + caso() * 5000, 0.008, 0.15 + caso() * 0.25, 'highpass', 0.7); });
         break;
+      case 'giallo': { // orologio a muro e un giradischi che gira a vuoto in un'altra stanza
+        this.fondo('rosa', 'highpass', 3200, 0.5, 0.05);
+        this.fondo('marrone', 'lowpass', 160, 0.7, 0.2);
+        let prossimo = this.ctx!.currentTime + 0.5;
+        this.ogni((t) => {
+          while (prossimo < t + 0.3) { this.colpo(prossimo, 1900, 0.04, 0.22, 'bandpass', 10); prossimo += 1; }
+          if (caso() < 0.3) this.colpo(t + caso() * 0.1, 1500 + caso() * 4000, 0.008, 0.08 + caso() * 0.12, 'highpass', 0.7);
+        });
+        break;
+      }
+      case 'nilo': { // acqua lungo lo scafo e la ruota del battello, lenta
+        this.fondo('rosa', 'bandpass', 900, 0.5, 0.35, 300, 0.09);
+        this.fondo('marrone', 'lowpass', 220, 0.7, 0.3, 40, 0.15);
+        let prossimo = this.ctx!.currentTime + 0.6;
+        this.ogni((t) => {
+          while (prossimo < t + 0.3) { this.colpo(prossimo, 420, 0.22, 0.22, 'lowpass', 1); prossimo += 0.85 + caso() * 0.05; }
+        });
+        break;
+      }
+      case 'venezia': // candele che crepitano e il brusio di una sala lontana
+        this.fondo('marrone', 'bandpass', 420, 0.8, 0.45, 90, 0.13);
+        this.fondo('rosa', 'bandpass', 1100, 1.4, 0.07, 280, 0.21);
+        this.ogni((t) => { if (caso() < 0.12) this.colpo(t + caso() * 0.1, 1800 + caso() * 3000, 0.012, 0.08 + caso() * 0.14, 'bandpass', 3); });
+        break;
       case 'natale': // fuoco nel camino
         this.fondo('marrone', 'lowpass', 500, 0.7, 0.55, 150, 0.3);
         this.ogni((t) => {

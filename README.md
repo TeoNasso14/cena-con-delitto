@@ -6,7 +6,7 @@ Sito per cene con delitto, in tre superfici sincronizzate per ogni serata:
 - **Proiettore** (`/schermo`): la narrazione della serata, le fasi, il conto alla rovescia, le squadre a confronto, la rivelazione.
 - **Regia** (`/regia/s/<id>`): il caso, le fasi, i personaggi, le prove con le loro regole di sblocco, le scene, le squadre con i loro accessi, la diretta.
 
-Ogni serata ha un tema (Halloween classico, Noir anni '40, Vittoriano alla Sherlock, Delitto in viaggio, Anni '20 Gatsby, Natale con delitto) che veste telefoni, proiettore e regia di quella serata. Le pagine fuori da una serata (accesso della regia, elenco delle serate, amministrazione, inviti) hanno il marchio dell'applicazione, Il Movente.
+Ogni serata ha un tema (Halloween classico, Noir anni '40, Vittoriano alla Sherlock, Delitto in viaggio, Anni '20 Gatsby, Natale con delitto, Giallo all'italiana, Crociera sul Nilo, Carnevale di Venezia) che veste telefoni, proiettore e regia di quella serata. Le pagine fuori da una serata (accesso della regia, elenco delle serate, amministrazione, inviti) hanno il marchio dell'applicazione, Il Movente.
 
 Il contenuto dei casi vive solo nel database e lo inserisce la regia: nel codice c'è soltanto un caso dimostrativo finto (`esempi/caso-dimostrativo.json`).
 
@@ -46,6 +46,12 @@ Modi diversi sono alternative, e ognuno può valere per tutte le squadre o per u
 - **Aiuti** (Strumenti o In diretta): le squadre chiedono, la regia risponde con una penalità facoltativa.
 - **Suoni d'ambiente** (Strumenti): il sottofondo del tema sul proiettore.
 - **Resoconto**: classifica e numeri della serata, da mostrare o stampare. I telefoni vedono la classifica dopo la rivelazione.
+
+## Modelli, inviti e premi
+
+- **Da un modello** (Le tue serate): una serata nuova da un caso pronto, scegliendo colpevole (anche a sorte), nomi, luogo, sospetti, fasi e difficoltà. **Salva come modello** (Strumenti) trasforma una serata in un modello privato.
+- **Inviti agli ospiti** (Invitati): un link personale per ogni invitato, con i dettagli della cena, il suo personaggio e la conferma di presenza.
+- **Premi** (Accuse e verdetto): ogni telefono vota, il vincitore va sul proiettore con la scena "Premi".
 
 ## Caso in un file
 

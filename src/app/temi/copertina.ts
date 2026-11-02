@@ -52,6 +52,27 @@ import { ChangeDetectionStrategy, Component, input } from '@angular/core';
           <g fill="#ffc86b"><rect x="30" y="138" width="12" height="14"/><rect x="112" y="118" width="14" height="16"/></g>
           <g fill="#ffffff"><circle cx="24" cy="30" r="2"/><circle cx="70" cy="56" r="2"/><circle cx="96" cy="20" r="2"/><circle cx="182" cy="96" r="2"/></g>
         }
+        @case ('giallo') {
+          <rect width="200" height="180" fill="#a6a84a"/>
+          <g fill="none" stroke="#8d8f39" stroke-width="4"><circle cx="30" cy="30" r="20"/><circle cx="110" cy="30" r="20"/><circle cx="190" cy="30" r="20"/><circle cx="70" cy="70" r="20"/><circle cx="150" cy="70" r="20"/></g>
+          <rect y="142" width="200" height="38" fill="#20150d"/>
+          <path d="M56 86c0-16 20-24 44-24s44 8 44 24v8h-18v-8H74v8H56z" fill="#20150d"/><path d="M74 96h52l14 46H60z" fill="#e8762a"/>
+          <circle cx="100" cy="118" r="16" fill="#20150d"/><circle cx="100" cy="118" r="6" fill="#f4e6cf"/>
+        }
+        @case ('nilo') {
+          <rect width="200" height="180" fill="#f4e4c6"/><circle cx="108" cy="88" r="46" fill="#e58a2b"/>
+          <rect y="112" width="200" height="68" fill="#0b6a6b"/>
+          <g stroke="#f4e4c6" stroke-width="3" stroke-linecap="round"><path d="M84 124h48M96 138h22M70 152h34M122 152h30"/></g>
+          <g fill="#2a1a0c"><path d="M28 106h82l-8 9H36z"/><rect x="38" y="94" width="62" height="12"/><rect x="62" y="74" width="9" height="20"/>
+            <path d="M156 114c4-22 5-38 2-56l5-1c4 20 3 38-2 57z"/><path d="M160 58c-10-13-24-14-36-5 13-2 24 0 36 5zM160 58c9-14 26-15 38-3-14-3-26-2-38 3zM160 58c-11-1-21 5-25 20 7-11 14-16 25-20zM160 58c11-1 22 7 26 21-7-11-15-17-26-21z"/></g>
+        }
+        @case ('venezia') {
+          <rect width="200" height="180" fill="#2a0a14"/><circle cx="100" cy="86" r="62" fill="#d9b15a"/>
+          <path d="M58 180c4-44 18-68 42-68s38 24 42 68z" fill="#1f0710"/>
+          <path d="M60 78c-12-6-18-16-20-26 12 5 32 8 60 8s48-3 60-8c-2 10-8 20-20 26z" fill="#1f0710"/>
+          <path d="M74 62c0-14 11-24 26-24s26 10 26 24c0 16-3 26-8 34l-10 17c-4 4-12 4-16 0l-10-17c-5-8-8-18-8-34z" fill="#f6ecd8"/>
+          <path d="M82 66c4-4 11-4 14 0-3 4-10 4-14 0zM104 66c3-4 10-4 14 0-4 4-11 4-14 0z" fill="#1f0710"/>
+        }
         @default {
           <!-- Una busta sigillata: il caso ancora da aprire, finché il tema non ha la sua copertina. -->
           <rect width="200" height="180" fill="#242424"/>

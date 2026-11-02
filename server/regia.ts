@@ -8,7 +8,7 @@ const regia = (req: Request, db: Db) => utente(req, db, ["regia"]);
 const TIPI_PROVA = ["documento", "oggetto", "testimonianza", "foto", "audio", "video"];
 const TIPI_SCENA = ["narrazione", "immagine", "video", "audio", "conto", "avanzamento", "annuncio", "rivelazione", "attesa", "premi"];
 /** Gli stessi id del catalogo in src/app/temi/catalogo.ts: un test controlla che coincidano. */
-export const TEMI = ["halloween", "noir", "vittoriano", "viaggio", "gatsby", "natale"];
+export const TEMI = ["halloween", "noir", "vittoriano", "viaggio", "gatsby", "natale", "giallo", "nilo", "venezia"];
 
 async function evento(db: Db, sid: number, testoEvento: string, tipo = "regia", squadraId: number | null = null) {
   await db.q("INSERT INTO evento (serata_id, squadra_id, tipo, testo) VALUES ($1, $2, $3, $4)", [sid, squadraId, tipo, testoEvento]);

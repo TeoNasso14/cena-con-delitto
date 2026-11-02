@@ -1,5 +1,27 @@
 # Registro delle versioni
 
+## 3.0.0
+
+### Modelli di caso
+- **Una serata da un modello** (Le tue serate, "Da un modello"): tre casi pronti, il testamento della villa, l'ultima notte a bordo, il ballo delle maschere. Dopo la creazione è una serata come le altre, modificabile in tutto.
+- **Personalizzabili**: colpevole a sorte tra quattro (ognuno con movente, arma e prove suoi) o scelto dalla regia; nomi, luogo, vittima e anno, che cambiano in tutti i testi; da 4 a 8 sospetti; 3 o 4 fasi e la loro durata; tre difficoltà (indizi sui sigilli a facile, false piste da media, una prova in più a difficile). I codici sono nuovi a ogni serata.
+- **Salva come modello** (Strumenti): una serata diventa un modello privato. Nomi, luogo e vittima si possono cambiare, i codici si rigenerano anche dentro i testi, gli allegati restano con il modello anche se la serata viene eliminata.
+
+### Inviti agli ospiti
+- Ogni invitato ha un link personale con data, ora, luogo, dress code (con un suggerimento per tema) e note, nella veste del tema. Se interpreta un personaggio trova la sua scheda e quello che sa solo lui.
+- **Conferma di presenza**: ci sarò, forse, non ci sarò, con una nota per allergie e intolleranze. La regia vede risposte e conteggi in Invitati. Il link non fa entrare nella serata.
+
+### Votazioni e premi
+- La regia prepara i premi in Accuse e verdetto (si vota tra invitati, personaggi o squadre), apre e chiude il voto anche dalla diretta. Vota ogni telefono, una volta per premio, e può cambiare idea finché il voto è aperto. Il vincitore va sul proiettore con la nuova scena "Premi".
+
+### Amministrazione
+- **Stato del sito**: versione, aggiornamenti del database, tempo reale, totali, spazio degli allegati. **Numeri per account**: serate per stato, modelli, squadre, ultima partita, spazio.
+- **Registro** di tutte le azioni dell'amministrazione.
+- **Eliminare** un account senza serate né modelli e **passare** serate e modelli a un'altra regia, senza vederli. Da qui continuano a non uscire contenuti delle serate.
+
+### Temi
+- Tre temi nuovi: **Giallo all'italiana** (villa di provincia anni '70, carta da parati e telefono a disco), **Crociera sul Nilo** (il secondo tema chiaro: sole basso sul fiume, battello e palma), **Carnevale di Venezia** (velluto bordeaux, oro e una bauta). Ognuno con suoni d'ambiente, figure e frasi proprie.
+
 ## 2.3.0
 
 ### Prima della serata

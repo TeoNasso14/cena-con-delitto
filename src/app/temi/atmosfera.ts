@@ -46,7 +46,15 @@ import { ChangeDetectionStrategy, Component, input } from '@angular/core';
     .neve--vicina { bottom: -1000px; --passo: 1000px; animation-duration: 38s; opacity: 0.6; }
     .neve--lontana { bottom: -900px; --passo: 900px; animation-duration: 60s; opacity: 0.35; }
 
+    /* Giallo: la macchia di luce di un lampadario che oscilla piano, come se qualcuno lo avesse appena urtato. */
+    .lampadario { position: absolute; left: 4vw; top: -16vh; width: 58vw; height: 62vh; border-radius: 50%; background: var(--accento); opacity: 0.04; animation: oscilla 11s ease-in-out infinite alternate; }
+    @keyframes oscilla { from { transform: translateX(-5vw) scaleX(0.94); } to { transform: translateX(7vw) scaleX(1.05); } }
+    /* Venezia: poche faville dorate che salgono dalle candele, irregolari, lontane dalla colonna del testo. */
+    .favilla { position: absolute; bottom: 12vh; width: 0.7vh; height: 0.7vh; border-radius: 50%; background: var(--accento-chiaro); opacity: 0; animation: sale-favilla linear infinite; }
+    @keyframes sale-favilla { 0% { opacity: 0; transform: translate(0, 0); } 12% { opacity: 0.8; } 55% { transform: translate(var(--verso), -40vh); opacity: 0.55; } 100% { opacity: 0; transform: translate(0, -74vh); } }
+
     @media (prefers-reduced-motion: reduce) {
+      .lampadario, .favilla { animation: none; }
       .piano, .nastro, .neve { animation: none; }
       .voluta { animation: none; opacity: calc(var(--forza) * 0.6); }
     }
@@ -69,6 +77,10 @@ import { ChangeDetectionStrategy, Component, input } from '@angular/core';
             </svg>
           </div>
         </div>
+      }
+      @case ('giallo') { <div class="lampadario"></div> }
+      @case ('venezia') {
+        @for (f of faville; track $index) { <i class="favilla" [style.left.vw]="f[0]" [style.--verso]="f[1] + 'vw'" [style.animation-duration.s]="f[2]" [style.animation-delay.s]="-f[3]"></i> }
       }
       @case ('gatsby') {
         <div class="voluta voluta--1"><svg viewBox="0 0 100 700" preserveAspectRatio="none"><path d="M40 700c-30-80 40-120 10-200s30-140 0-230" fill="none" stroke="var(--testo-1)" stroke-width="2.4" stroke-linecap="round"/></svg></div>
@@ -133,4 +145,6 @@ import { ChangeDetectionStrategy, Component, input } from '@angular/core';
 })
 export class Atmosfera {
   readonly tema = input<string | undefined>();
+  /** Sinistra, deriva, durata, ritardo: a destra e all'estremo sinistro, mai sulla colonna del testo. */
+  readonly faville = [[3, 1.2, 19, 2], [58, -1.5, 23, 9], [66, 2, 17, 4], [74, -2, 26, 15], [83, 1.5, 21, 7], [91, -1, 18, 12], [96, 1, 29, 21], [7, -1, 24, 16]];
 }

@@ -110,7 +110,7 @@ describe("i modelli pronti", () => {
 
     test(`${m.nome}: nomi e luogo della regia entrano in tutti i testi, il colpevole resta segreto nelle prove aperte all'inizio`, () => {
       const g = genera(m, { luogo: "Zelda", vittima: "il barone Rampante", anno: "Il 1999", nomi: { s1: "Ermenegilda" }, colpevole: "s2" }, dado(5));
-      expect(String(g.caso.serata?.premessa)).toContain("il barone Rampante");
+      expect(String(g.caso.serata?.premessa)).toContain("Il barone Rampante");
       expect(String(g.caso.serata?.titolo)).toContain("Zelda");
       expect(testi(g.caso)).toContain("Ermenegilda");
       const iniziali = g.caso.prove!.filter((p) => p.regole?.some((r) => r.fase_numero === 1)).map((p) => String(p["testo"])).join(" ");
@@ -275,7 +275,12 @@ describe("le API dei modelli", () => {
   }, 60_000);
 });
 
-test("i temi consigliati dei modelli sono temi del catalogo, o temi in arrivo", () => {
-  const inArrivo = ["giallo", "nilo", "venezia"];
-  for (const m of MODELLI) for (const t of m.temi) expect([...TEMI, ...inArrivo]).toContain(t);
+test("i temi consigliati dei modelli sono temi del catalogo", () => {
+  for (const m of MODELLI) for (const t of m.temi) expect(TEMI).toContain(t);
+});
+
+test("un nome all'inizio di frase prende la maiuscola", () => {
+  const g = genera(MODELLI[0], { vittima: "il conte Rossi", anno: "Il 1932", colpevole: "s1" }, dado(3));
+  expect(String(g.caso.serata?.premessa)).toContain("Il 1932. Il conte Rossi ha riunito");
+  expect(String(g.caso.scene?.find((s) => s["tipo"] === "rivelazione")?.["titolo"])).toBe("Chi ha ucciso il conte Rossi?");
 });

@@ -116,6 +116,63 @@ colors:
   natale-inchiostro: "#1a1410"
   natale-carta-filetto: "#d9ccb2"
   natale-decoro: "#0f1d17"
+  giallo-fondo: "#20150d"
+  giallo-fondo-2: "#2b1d12"
+  giallo-fondo-3: "#38271a"
+  giallo-filetto: "#5a4029"
+  giallo-testo-1: "#f4e6cf"
+  giallo-testo-2: "#c9b292"
+  giallo-accento: "#e8762a"
+  giallo-accento-chiaro: "#f09152"
+  giallo-su-accento: "#1c1108"
+  giallo-disco: "#a6a84a"
+  giallo-su-disco: "#1c1108"
+  giallo-sigillo: "#7d2a14"
+  giallo-sigillo-luce: "#a8431f"
+  giallo-sigillo-segno: "#f0c39a"
+  giallo-allarme: "#ff8a66"
+  giallo-carta: "#f4e6cf"
+  giallo-inchiostro: "#20150d"
+  giallo-carta-filetto: "#cdb796"
+  giallo-decoro: "#8d8f39"
+  nilo-fondo: "#f4e4c6"
+  nilo-fondo-2: "#ecd7b0"
+  nilo-fondo-3: "#e3c998"
+  nilo-filetto: "#b9975f"
+  nilo-testo-1: "#2a1a0c"
+  nilo-testo-2: "#5c4326"
+  nilo-accento: "#0b6a6b"
+  nilo-accento-chiaro: "#0d7778"
+  nilo-su-accento: "#fff8e8"
+  nilo-disco: "#e58a2b"
+  nilo-su-disco: "#2a1a0c"
+  nilo-sigillo: "#8e3a14"
+  nilo-sigillo-luce: "#b5521f"
+  nilo-sigillo-segno: "#f6d9ae"
+  nilo-allarme: "#a8260f"
+  nilo-carta: "#fbf3e0"
+  nilo-inchiostro: "#2a1a0c"
+  nilo-carta-filetto: "#d9c49a"
+  nilo-decoro: "#c86f1c"
+  venezia-fondo: "#2a0a14"
+  venezia-fondo-2: "#37101c"
+  venezia-fondo-3: "#471725"
+  venezia-filetto: "#6e2f3f"
+  venezia-testo-1: "#f6ecd8"
+  venezia-testo-2: "#d6bfa8"
+  venezia-accento: "#d9b15a"
+  venezia-accento-chiaro: "#e6c677"
+  venezia-su-accento: "#1f0710"
+  venezia-disco: "#d9b15a"
+  venezia-su-disco: "#1f0710"
+  venezia-sigillo: "#8a6a1f"
+  venezia-sigillo-luce: "#b08a32"
+  venezia-sigillo-segno: "#f6ecd8"
+  venezia-allarme: "#ffb08a"
+  venezia-carta: "#f6ecd8"
+  venezia-inchiostro: "#1f0710"
+  venezia-carta-filetto: "#d3bf9f"
+  venezia-decoro: "#b08a32"
   marchio-fondo: "#141414"
   marchio-fondo-2: "#1c1c1c"
   marchio-fondo-3: "#242424"
@@ -542,7 +599,7 @@ components:
 
 **Creative North Star: "La sala di proiezione e il fascicolo"**
 
-La serata è un film proiettato in sala, e le prove sono i file di un videogioco investigativo. Il film cambia genere col tema della serata: Halloween classico (il predefinito), Noir anni '40, Vittoriano alla Sherlock, Delitto in viaggio, Anni '20 Gatsby e Natale con delitto, domani altri. Il tema veste colori, caratteri, il disegno nel disco del proiettore, lo strato d'atmosfera della sala e le figure delle nuvolette. Struttura, componenti, forme, movimento e comandi restano gli stessi per tutti i temi: chi gioca riconosce lo strumento anche quando il film cambia.
+La serata è un film proiettato in sala, e le prove sono i file di un videogioco investigativo. Il film cambia genere col tema della serata: Halloween classico (il predefinito), Noir anni '40, Vittoriano alla Sherlock, Delitto in viaggio, Anni '20 Gatsby, Natale con delitto, Giallo all'italiana, Crociera sul Nilo e Carnevale di Venezia, domani altri. Il tema veste colori, caratteri, il disegno nel disco del proiettore, lo strato d'atmosfera della sala e le figure delle nuvolette. Struttura, componenti, forme, movimento e comandi restano gli stessi per tutti i temi: chi gioca riconosce lo strumento anche quando il film cambia.
 
 Le tre superfici parlano la stessa lingua con densità diverse. Il proiettore è scena pura: titoli enormi, testo grande leggibile dal fondo della sala, il disco come scenografia che cambia posto e misura da scena a scena. Il telefono e la regia sono strumenti: ereditano fondo, testo, accento e titoli del tema, ma con misura, con obiettivi di tocco ampi e una gerarchia che si legge al buio con un'occhiata.
 
@@ -974,3 +1031,69 @@ Figure: pallina dell'albero (in accento), regalo (in accento, nastro panna), ste
 **The Ambra Rule.** Nel Natale l'errore è ambra, perché il rosso è già la festa. L'ambra non decora e non è un secondo accento.
 
 **The Neve Sopra le Fasi Rule.** La neve cade solo sul proiettore, in un cielo che si ferma sopra la fila delle fasi, e tace sulle scene a schermo nero, con immagine o con video. Non attraversa il testo delle fasi e non si fonde per differenza.
+
+## Tema: Giallo all'italiana
+
+Il giallo di provincia degli anni '70, in un salotto borghese (id `giallo`). Rifiuta sangue, lame e horror. Contratto in `.impeccable/surfaces/src-app-temi-giallo-ts.md`, schermate in `.impeccable/review/giallo/`.
+
+### Colori
+Marrone tabacco in tre toni (`giallo-fondo`, `giallo-fondo-2`, `giallo-fondo-3`), testo crema, arancio Settanta (`giallo-accento`) per le cose vive, verde oliva (`giallo-disco`) solo per il disco, carta crema per i documenti.
+
+### Caratteri
+Caprasimo (con Georgia, serif) per i titoli: morbida e grassa come le insegne degli anni '70; un solo peso. Hanken Grotesk (con system-ui, sans-serif) per il resto, 400, 600 e 700.
+
+### Disco del proiettore
+Un tondo di carta da parati a cerchi concentrici in `decoro` e punti in `accento`, con un telefono a disco sul mobile in `fondo` e `accento`. Si spegne nel conto alla rovescia, nell'avanzamento e nella rivelazione.
+
+### Atmosfera
+Una macchia di luce piatta, in accento all'opacità 0.04, che oscilla in 11s come un lampadario urtato. Con "riduci movimento" sta ferma.
+
+### Nuvolette
+Figure: telefono, guanto, lampada, bicchiere, sigaretta, chiave. Frasi da salotto di provincia, mai sangue.
+
+### Named Rules
+**The Salotto Rule.** Il Giallo resta in salotto: telefoni, tende, posacenere. Lame e sangue non entrano nei disegni né nelle frasi.
+
+## Tema: Crociera sul Nilo
+
+Il ponte di un battello a vapore al tramonto, come un manifesto di viaggio anni '30 (id `nilo`). Secondo tema chiaro dopo il Vittoriano. Rifiuta faraoni dorati e geroglifici da parco a tema. Contratto in `.impeccable/surfaces/src-app-temi-nilo-ts.md`, schermate in `.impeccable/review/nilo/`.
+
+### Colori
+Sabbia in tre toni (`nilo-fondo`, `nilo-fondo-2`, `nilo-fondo-3`), testo bruno, turchese profondo (`nilo-accento`) per le cose vive, ocra (`nilo-disco`) per il sole, un rosso mattone (`nilo-allarme`) per gli errori.
+
+### Caratteri
+Bevan (con Georgia, serif) per i titoli: un'egiziana pesante da manifesto, un solo peso, ridotta a 0.8 sul proiettore (`scalaTitoli`). Cabin (con system-ui, sans-serif) per il resto, 400, 600 e 700.
+
+### Disco del proiettore
+Il sole basso tagliato dal fiume in `accento`, con battello e palma in silhouette `testo-1`. I riflessi sull'acqua respirano in 8.5s, irregolari; con "riduci movimento" stanno fermi. Si spegne come gli altri.
+
+### Atmosfera
+Nessuno strato a tutto schermo: la vita sta dentro il disco, perché sulla sabbia i riflessi non avrebbero senso.
+
+### Nuvolette
+Figure: palma, battello, scarabeo, valigia, tazza, lente. Frasi da crociera, tè e telegrammi.
+
+### Named Rules
+**The Riflessi Nell'Acqua Rule.** I riflessi vivono solo nell'acqua del disco, mai fuori.
+
+## Tema: Carnevale di Venezia
+
+Un ballo in maschera in un palazzo del Settecento (id `venezia`). Rifiuta coriandoli e colori da festa per bambini. Contratto in `.impeccable/surfaces/src-app-temi-venezia-ts.md`, schermate in `.impeccable/review/venezia/`.
+
+### Colori
+Bordeaux velluto in tre toni (`venezia-fondo`, `venezia-fondo-2`, `venezia-fondo-3`), testo avorio, oro (`venezia-accento`, `venezia-disco`) per le cose vive e per il disco, salmone chiaro (`venezia-allarme`) per gli errori perché il fondo è già rosso. Il sigillo è oro antico (`venezia-sigillo`).
+
+### Caratteri
+Bodoni Moda (con Georgia, serif) per i titoli, peso 600: italiano e del periodo giusto; da usare grande, le sue linee sottili non reggono i corpi piccoli. Alegreya Sans (con system-ui, sans-serif) per il resto, 400 e 700.
+
+### Disco del proiettore
+Una bauta: tricorno e mantello in `fondo`, maschera bianca in `carta` con il suo mento sporgente, profili in `decoro`. Si spegne come gli altri.
+
+### Atmosfera
+Otto faville dorate che salgono dalle candele con durate e derive diverse, solo a destra e all'estremo sinistro, mai sulla colonna del testo. Con "riduci movimento" spariscono.
+
+### Nuvolette
+Figure: maschera, ventaglio, gondola, candela, coppa, carte. Frasi da ballo in maschera.
+
+### Named Rules
+**The Oro Non Rosso Rule.** A Venezia il rosso è il fondo: ciò che è vivo è oro, l'errore è salmone chiaro.

@@ -33,6 +33,17 @@
 @font-face { font-family: "League Gothic"; font-style: normal; font-weight: 100 900; font-display: swap; src: url("/fonti/league-gothic-latin-400-normal.woff2") format("woff2"); }
 @font-face { font-family: "Courier Prime"; font-style: normal; font-weight: 100 599; font-display: swap; src: url("/fonti/courier-prime-latin-400-normal.woff2") format("woff2"); }
 @font-face { font-family: "Courier Prime"; font-style: normal; font-weight: 600 900; font-display: swap; src: url("/fonti/courier-prime-latin-700-normal.woff2") format("woff2"); }
+@font-face { font-family: "Caprasimo"; font-style: normal; font-weight: 100 900; font-display: swap; src: url("/fonti/caprasimo-latin-400-normal.woff2") format("woff2"); }
+@font-face { font-family: "Hanken Grotesk"; font-style: normal; font-weight: 100 549; font-display: swap; src: url("/fonti/hanken-grotesk-latin-400-normal.woff2") format("woff2"); }
+@font-face { font-family: "Hanken Grotesk"; font-style: normal; font-weight: 550 649; font-display: swap; src: url("/fonti/hanken-grotesk-latin-600-normal.woff2") format("woff2"); }
+@font-face { font-family: "Hanken Grotesk"; font-style: normal; font-weight: 650 900; font-display: swap; src: url("/fonti/hanken-grotesk-latin-700-normal.woff2") format("woff2"); }
+@font-face { font-family: "Bevan"; font-style: normal; font-weight: 100 900; font-display: swap; src: url("/fonti/bevan-latin-400-normal.woff2") format("woff2"); }
+@font-face { font-family: "Cabin"; font-style: normal; font-weight: 100 549; font-display: swap; src: url("/fonti/cabin-latin-400-normal.woff2") format("woff2"); }
+@font-face { font-family: "Cabin"; font-style: normal; font-weight: 550 649; font-display: swap; src: url("/fonti/cabin-latin-600-normal.woff2") format("woff2"); }
+@font-face { font-family: "Cabin"; font-style: normal; font-weight: 650 900; font-display: swap; src: url("/fonti/cabin-latin-700-normal.woff2") format("woff2"); }
+@font-face { font-family: "Bodoni Moda"; font-style: normal; font-weight: 100 900; font-display: swap; src: url("/fonti/bodoni-moda-latin-600-normal.woff2") format("woff2"); }
+@font-face { font-family: "Alegreya Sans"; font-style: normal; font-weight: 100 599; font-display: swap; src: url("/fonti/alegreya-sans-latin-400-normal.woff2") format("woff2"); }
+@font-face { font-family: "Alegreya Sans"; font-style: normal; font-weight: 600 900; font-display: swap; src: url("/fonti/alegreya-sans-latin-700-normal.woff2") format("woff2"); }
 
 :root {
   --fondo: #0e0b14;

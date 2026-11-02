@@ -283,6 +283,69 @@ import { Figura as NomeFigura } from './catalogo';
           <ellipse cx="27" cy="44" rx="17" ry="3" fill="var(--testo-2)"/>
         </svg>
       }
+      @case ('telefono') {
+        <svg viewBox="0 0 56 56"><g class="f-galleggia">
+          <path d="M8 18c0-6 9-9 20-9s20 3 20 9v3h-10v-4H18v4H8z" fill="var(--testo-1)"/>
+          <path d="M18 22h20l7 20H11z" fill="var(--accento)"/>
+          <circle cx="28" cy="33" r="7" fill="var(--fondo)"/><circle cx="28" cy="33" r="2.4" fill="var(--testo-1)"/>
+        </g></svg>
+      }
+      @case ('guanto') {
+        <svg viewBox="0 0 56 56"><g class="f-galleggia" fill="none" stroke="var(--testo-2)" stroke-linecap="round">
+          <path stroke-width="5" d="M20 28V12M27 27V9M34 28V11M41 30V16M14 34l-5-8"/>
+          <path stroke-width="16" d="M21 36h13"/>
+          <path stroke-width="5" d="M18 49h20" stroke="var(--accento)"/>
+        </g></svg>
+      }
+      @case ('lampada') {
+        <svg viewBox="0 0 56 56">
+          <path class="bagliore" d="M18 10h20l7 18H11z" fill="var(--accento)"/>
+          <path d="M28 28v16M18 47h20" stroke="var(--testo-1)" stroke-width="3" stroke-linecap="round"/>
+        </svg>
+      }
+      @case ('palma') {
+        <svg viewBox="0 0 56 56"><g class="f-galleggia">
+          <path d="M26 20c3 10 4 20 2 30" fill="none" stroke="var(--testo-2)" stroke-width="4" stroke-linecap="round"/>
+          <g fill="var(--accento)"><path d="M26 20C20 11 11 11 4 18c8-2 15-1 22 2z"/><path d="M26 20c5-9 15-11 25-5-9-1-17 1-25 5z"/><path d="M26 20C22 13 22 7 27 3c0 6 1 11-1 17z"/><path d="M26 20c-7 1-13 6-14 15 4-7 8-11 14-15z"/><path d="M26 20c7 0 14 5 16 14-5-7-10-11-16-14z"/></g>
+        </g></svg>
+      }
+      @case ('battello') {
+        <svg viewBox="0 0 56 56"><g class="f-galleggia">
+          <path d="M6 36h44l-5 10H11z" fill="var(--testo-1)"/>
+          <path d="M14 26h28v10H14z" fill="var(--testo-2)"/><path d="M12 26h32M18 26v10M26 26v10M34 26v10" stroke="var(--fondo)" stroke-width="1.6"/>
+          <path d="M32 26V12h6v14z" fill="var(--accento)"/>
+        </g><g fill="var(--testo-2)"><circle class="f-sale" cx="35" cy="8" r="2"/><circle class="f-sale due" cx="39" cy="5" r="1.6"/></g></svg>
+      }
+      @case ('scarabeo') {
+        <svg viewBox="0 0 56 56"><g class="f-galleggia">
+          <path d="M14 22l-7-5M12 30H5M14 38l-7 5M42 22l7-5M44 30h7M42 38l7 5" stroke="var(--testo-2)" stroke-width="2.4" stroke-linecap="round"/>
+          <circle cx="28" cy="13" r="6" fill="var(--testo-1)"/>
+          <ellipse cx="28" cy="31" rx="15" ry="17" fill="var(--accento)"/>
+          <path d="M28 15v33" stroke="var(--fondo)" stroke-width="2"/>
+        </g></svg>
+      }
+      @case ('maschera') {
+        <svg viewBox="0 0 56 56"><g class="f-galleggia">
+          <path d="M4 20c8 2 14 3 24 3s16-1 24-3c1 12-5 22-14 22-5 0-7-3-10-6-3 3-5 6-10 6-9 0-15-10-14-22z" fill="var(--carta)"/>
+          <path d="M12 28c3-3 8-3 11 0-3 3-8 3-11 0zM33 28c3-3 8-3 11 0-3 3-8 3-11 0z" fill="var(--fondo)"/>
+          <path d="M4 20C3 15 6 11 10 11M52 20c1-5-2-9-6-9" fill="none" stroke="var(--accento)" stroke-width="2.4" stroke-linecap="round"/>
+        </g></svg>
+      }
+      @case ('ventaglio') {
+        <svg viewBox="0 0 56 56"><g class="f-galleggia">
+          <path d="M28 46L5 22C11 12 19 8 28 8s17 4 23 14z" fill="var(--accento)"/>
+          <path d="M28 46L17 13M28 46V8M28 46l11-33" stroke="var(--fondo)" stroke-width="1.8"/>
+          <circle cx="28" cy="46" r="3" fill="var(--testo-1)"/>
+        </g></svg>
+      }
+      @case ('gondola') {
+        <svg viewBox="0 0 56 56"><g class="f-galleggia">
+          <path d="M3 30c8 9 30 12 43 3 3-2 5-6 6-14-3 5-5 8-9 9-12 4-27 4-40 2z" fill="var(--testo-1)"/>
+          <path d="M50 21l3-7M47 14h7M47 18h6" stroke="var(--accento)" stroke-width="2" stroke-linecap="round"/>
+          <path d="M20 26V8" stroke="var(--testo-2)" stroke-width="2.4" stroke-linecap="round"/>
+          <path d="M6 44h14M26 47h18" stroke="var(--accento)" stroke-width="2.4" stroke-linecap="round"/>
+        </g></svg>
+      }
       @case ('coppa') {
         <svg viewBox="0 0 56 56">
           <g fill="var(--accento)"><circle class="f-sale" cx="24" cy="16" r="1.6"/><circle class="f-sale due" cx="31" cy="13" r="1.4"/></g>

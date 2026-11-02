@@ -11,6 +11,9 @@ const DRESS: Record<string, string> = {
   viaggio: 'Elegante da vagone letto: abito da sera, cappotto lungo, una valigia piccola.',
   gatsby: "Anni '20: frange, piume, perle, papillon e bretelle.",
   natale: 'Elegante e caldo: un maglione bello o un abito scuro, con un dettaglio rosso o verde.',
+  giallo: "Anni '70 di provincia: colori caldi, pantaloni a zampa, foulard, occhiali grandi.",
+  nilo: "Da crociera anni '30: lino chiaro, cappello di paglia, foulard, abito da sera per il tramonto.",
+  venezia: "Maschera obbligatoria: velluto, oro e nero, un mantello se ce l'hai.",
 };
 
 type Presenza = 'si' | 'no' | 'forse' | null;

@@ -88,6 +88,12 @@ Lavoro fatto sul ramo `develop`, senza pubblicare la 1.1 da sola (scelta di Teo)
 - **Suoni d'ambiente** generati nel browser (nessun file, nessuna licenza), spenti di serie.
 - **Tempo reale** con Ably, scelto per il piano gratuito e perché il browser ascolta con EventSource senza librerie. Passa solo il numero di versione. Senza chiave resta il controllo della 2.2.
 
+## La 3.0 (2 novembre 2026)
+- Teo ha chiesto più numeri nell'amministrazione, senza contenuti, e ha scelto per la 3.0: tre temi nuovi, modelli di caso "altamente personalizzabili", inviti agli ospiti con tutto (data, conferma, personaggio, dress code), premi con un voto per telefono.
+- **Modelli**: il colpevole a sorte risolve anche il problema di Teo che gioca: i modelli stanno nel codice e chi li legge conosce le piste, ma non quale uscirà. Le prove che cambiano col colpevole condividono la stessa chiave, così catene e codici valgono per tutti. I test giocano ogni combinazione usando solo i codici trovati nelle prove.
+- **Temi**, direzioni scelte da Teo: Giallo "provincia elegante", Nilo "ponte al tramonto", Venezia "ballo in maschera". Sul Nilo i riflessi sono stati spostati dentro il disco, perché sulla sabbia sembravano righe sparse.
+- **Copia di sicurezza prima della 2.0**: la migrazione `copia_prima_della_2_0` è stata inserita prima di quella della 2.0 perché girasse sul sito vero prima del passaggio. Il rilascio della 2.3 è andato a buon fine.
+
 ## Stato alla 2.0.0
 - Tutto su `develop`, non ancora unito in `main` né pubblicato. Al passaggio l'organizzatrice rientra una volta con le sue credenziali, e Teo crea l'amministrazione da `/avvio`.
 - Restano: Vittoriano, Delitto in viaggio, Gatsby, Natale; invitati e sorteggio (2.1); caso completo con allegati (2.2); tempo reale; il manuale della regia su Claude Docs da aggiornare.

@@ -8,7 +8,8 @@ Proposta di architettura concordata il 1 novembre 2026. Realizzata nella 2.0 sul
 - **Fatto poi**: 2.1 (Vittoriano, Delitto in viaggio, Gatsby, Natale; invitati, sorteggio con vincoli, biglietti con QR; tempi delle nuvolette), 2.2 (caso completo con allegati; aggiornamenti in circa un secondo con il controllo della versione).
 - **Pubblicate il 2 novembre 2026** la 2.0, 2.1, 2.2 e 2.3 insieme (`main` = `develop`). Prima del passaggio il sito ha copiato le tabelle della 1.x nello schema `copia_prima_della_2_0`. Restano da fare: l'amministrazione da `/avvio` e il primo rientro dell'organizzatrice da `/regia/accedi`.
 - **2.3 fatta** (vedi docs/PIANO-2.3.md): controllo del caso, personaggi agli invitati, resoconto, aiuti, prova generale, suoni d'ambiente, tempo reale con Ably (attivo quando c'è `ABLY_API_KEY`).
-- **Prossimo**: la 3.0. I controlli automatici su GitHub ci sono (`.github/workflows/controlli.yml`: tipi, test e build a ogni push su main e develop). Il manuale della regia su Claude Docs è aggiornato alla 2.2.
+- **3.0 fatta su `develop`, non ancora pubblicata** (vedi docs/PIANO-3.0.md): amministrazione con più numeri, inviti agli ospiti, votazioni e premi, modelli di caso, tre temi nuovi.
+- I controlli automatici su GitHub ci sono (`.github/workflows/controlli.yml`: tipi, test e build a ogni push su main e develop). Il manuale della regia su Claude Docs è aggiornato alla 3.0.
 
 ## Tre livelli di utenti
 1. **Amministrazione** (Teo): una dashboard `/admin` per creare, sospendere e riattivare gli account regia, e vedere quante serate ha ciascuno. Non vede il contenuto delle serate.

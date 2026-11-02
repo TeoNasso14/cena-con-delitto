@@ -94,11 +94,15 @@ export function genera(m: Modello, s: Scelte = {}, caso: () => number = Math.ran
     return out;
   };
 
+  // Un nome all'inizio di frase ("{vittima} ha...") prende la maiuscola. I modelli salvati restano come li ha scritti la regia.
+  const frase = (t: string) => (m.privato ? t : t.replace(/(^|[.!?:]\s+|«)(\p{Ll})/gu, (_, a: string, b: string) => a + b.toUpperCase()));
+  const testoDi = (t: string) => frase(sost(t));
+
   const caso2: CasoFile = {
     formato: "cena-con-delitto/2",
     serata: {
       titolo: (s.titolo?.trim() || sost(m.titolo)).slice(0, 120),
-      premessa: sost(m.premessa),
+      premessa: testoDi(m.premessa),
       colpevole: nomi[colpevole.chiave],
       movente: sost(colpevole.colpevole!.movente),
       arma: sost(colpevole.colpevole!.arma),
@@ -111,8 +115,8 @@ export function genera(m: Modello, s: Scelte = {}, caso: () => number = Math.ran
       durata_minuti: s.minuti === undefined ? f.minuti : s.minuti,
     })),
     personaggi: sospetti.map((x, i) => ({
-      nome: nomi[x.chiave], ruolo: x.ruolo, scheda: sost(x.scheda), ordine: i,
-      copione: sost(x.chiave === colpevole!.chiave ? x.colpevole!.copione : x.copione),
+      nome: nomi[x.chiave], ruolo: x.ruolo, scheda: testoDi(x.scheda), ordine: i,
+      copione: testoDi(x.chiave === colpevole!.chiave ? x.colpevole!.copione : x.copione),
       note_regia: x.noteRegia ? sost(x.noteRegia) : x.chiave === colpevole!.chiave ? "Il colpevole." : "",
       foto_key: x.foto ?? null,
     })),
@@ -120,14 +124,14 @@ export function genera(m: Modello, s: Scelte = {}, caso: () => number = Math.ran
     cartelle_visibili: m.cartelleVisibili ?? m.cartelle ?? [],
     premi: m.premi ?? [],
     prove: prove.map((p) => ({
-      numero: numero.get(p.chiave), titolo: sost(p.titolo), tipo: p.tipo, testo: sost(p.testo),
+      numero: numero.get(p.chiave), titolo: frase(sost(p.titolo)), tipo: p.tipo, testo: testoDi(p.testo),
       nota_sigillo: (difficolta === 1 || m.privato) && p.indizio ? sost(p.indizio) : "",
       titolo_visibile: p.titoloVisibile ?? false, in_elenco: p.inElenco ?? false, cartella: p.cartella ?? null,
       allegato_key: p.allegato ?? null, allegato_tipo: p.allegatoTipo ?? null,
       regole: regole(p),
     })),
     scene: m.scene.map((x, i) => ({
-      ordine: i, tipo: x.tipo, titolo: sost(x.titolo), testo: sost(x.testo),
+      ordine: i, tipo: x.tipo, titolo: frase(sost(x.titolo)), testo: testoDi(x.testo),
       fase_numero: x.fase === null ? null : fase(x.fase), avvio_automatico: !!x.automatica && (x.fase === null || x.fase <= nFasi),
       allegato_key: x.allegato ?? null, allegato_tipo: x.allegatoTipo ?? null,
     })),

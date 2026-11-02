@@ -445,6 +445,7 @@ function inBase64(blob: Blob): Promise<string> {
 const SUONI: Record<string, string> = {
   halloween: 'vento tra gli alberi', noir: 'pioggia sulla città', vittoriano: 'pendolo e pioggia lontana',
   viaggio: 'treno in corsa', gatsby: 'fruscio di un disco', natale: 'fuoco nel camino',
+  giallo: 'orologio a muro e giradischi', nilo: 'acqua e ruota del battello', venezia: 'candele e sala in festa',
 };
 
 @Component({
