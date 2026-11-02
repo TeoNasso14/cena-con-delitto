@@ -27,6 +27,7 @@ export const routes: Routes = [
     canMatch: [soloPer('regia')],
     children: [
       { path: '', loadComponent: () => import('./regia/serate').then((m) => m.SerateVista), title: 'Le tue serate' },
+      { path: 'modelli', loadComponent: () => import('./regia/modelli').then((m) => m.ModelliVista), title: 'Una serata da un modello' },
       {
         path: 's/:serata',
         loadComponent: () => import('./regia/regia').then((m) => m.RegiaShell),

@@ -90,7 +90,12 @@ interface SerataElenco {
     <main class="pagina">
       <div class="apertura">
         <div><h1>Le tue serate</h1><p>Ogni serata ha il suo caso, le sue squadre e il suo indirizzo per entrare.</p></div>
-        @if (!nuova()) { <button class="bottone bottone--pieno" type="button" (click)="nuova.set(true)">Nuova serata</button> }
+        @if (!nuova()) {
+          <div class="r-azioni">
+            <a class="bottone" routerLink="/regia/modelli">Da un modello</a>
+            <button class="bottone bottone--pieno" type="button" (click)="nuova.set(true)">Nuova serata</button>
+          </div>
+        }
       </div>
 
       @if (errore()) { <p class="avviso avviso--errore" role="alert">{{ errore() }}</p> }

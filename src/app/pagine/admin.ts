@@ -9,7 +9,7 @@ import { Testata } from './testata';
 
 interface Utente {
   id: number; username: string; nome: string; email: string | null; admin: boolean; stato: 'attivo' | 'sospeso'; ultimo_accesso: string | null; creato: string;
-  serate: number; in_preparazione: number; in_corso: number; chiuse: number; archiviate: number; squadre: number; ultima_partita: string | null; spazio: number;
+  serate: number; modelli: number; in_preparazione: number; in_corso: number; chiuse: number; archiviate: number; squadre: number; ultima_partita: string | null; spazio: number;
 }
 interface Sito {
   versione: string; database: { ultimaMigrazione: string | null; migrazioni: number }; tempoReale: boolean; serate: number; squadre: number;
@@ -162,8 +162,8 @@ interface Link { per: string; url: string; scade: string; tipo: 'regia' | 'passw
                         @if (u.stato === 'attivo') { <button class="bottone bottone--pericolo" type="button" [disabled]="occupato()" (click)="sospendi(u, true)">Sospendi</button> }
                         @else { <button class="bottone" type="button" [disabled]="occupato()" (click)="sospendi(u, false)">Riattiva</button> }
                       }
-                      @if (!u.admin && u.serate && riceventi(u).length) { <button class="bottone" type="button" [disabled]="occupato()" (click)="apri('passa', u)">Passa le serate</button> }
-                      @if (!u.admin && !u.serate && u.id !== v.io.id) { <button class="bottone bottone--pericolo" type="button" [disabled]="occupato()" (click)="apri('elimina', u)">Elimina</button> }
+                      @if (!u.admin && (u.serate || u.modelli) && riceventi(u).length) { <button class="bottone" type="button" [disabled]="occupato()" (click)="apri('passa', u)">Passa le serate</button> }
+                      @if (!u.admin && !u.serate && !u.modelli && u.id !== v.io.id) { <button class="bottone bottone--pericolo" type="button" [disabled]="occupato()" (click)="apri('elimina', u)">Elimina</button> }
                     </div>
                   </td>
                 </tr>
@@ -171,7 +171,7 @@ interface Link { per: string; url: string; scade: string; tipo: 'regia' | 'passw
                   <tr class="azione-riga"><td colspan="5">
                     @if (azione()!.tipo === 'passa') {
                       <form class="azione" (ngSubmit)="passa(u)">
-                        <label class="etichetta" for="passa-a">Passa {{ u.serate === 1 ? 'la sua serata' : 'le sue ' + u.serate + ' serate' }} a <small>Cambia solo chi le gestisce: tu non le vedi.</small>
+                        <label class="etichetta" for="passa-a">Passa {{ u.serate === 1 ? 'la sua serata' : 'le sue ' + u.serate + ' serate' }}{{ u.modelli ? ' e i suoi modelli' : '' }} a <small>Cambia solo chi le gestisce: tu non le vedi.</small>
                           <select id="passa-a" name="passa-a" class="campo" [(ngModel)]="ricevente" required>
                             <option [ngValue]="null" disabled>Scegli l'account</option>
                             @for (x of riceventi(u); track x.id) { <option [ngValue]="x.id">{{ x.nome || x.username }} ({{ x.username }})</option> }

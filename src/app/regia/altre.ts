@@ -576,6 +576,17 @@ const SUONI: Record<string, string> = {
           </div>
         </section>
         <section class="r-blocco">
+          <h2>Salva come modello</h2>
+          <form class="r-scheda r-modulo" (ngSubmit)="salvaModello()">
+            <p class="secondario">Per riusare questa serata cambiando nomi e luogo. I nomi dei personaggi diventano modificabili, i codici si rigenerano a ogni serata nuova e gli allegati restano con il modello. Il colpevole resta lo stesso. Lo trovi nelle tue serate, in "Da un modello".</p>
+            <label class="etichetta" for="mo-nome">Nome del modello<input id="mo-nome" name="mo-nome" class="campo" maxlength="80" [(ngModel)]="modelloNome"></label>
+            <label class="etichetta" for="mo-desc">Descrizione <small>Facoltativa.</small><input id="mo-desc" name="mo-desc" class="campo" maxlength="400" [(ngModel)]="modelloDesc"></label>
+            <label class="etichetta" for="mo-luogo">Il luogo, come è scritto nei testi <small>Facoltativo: sarà modificabile in ogni serata nuova.</small><input id="mo-luogo" name="mo-luogo" class="campo" maxlength="80" [(ngModel)]="modelloLuogo"></label>
+            <label class="etichetta" for="mo-vittima">La vittima, come è scritta nei testi <small>Facoltativa, come il luogo.</small><input id="mo-vittima" name="mo-vittima" class="campo" maxlength="80" [(ngModel)]="modelloVittima"></label>
+            <button class="bottone" type="submit" style="justify-self:start" [disabled]="!modelloNome.trim()">Salva come modello</button>
+          </form>
+        </section>
+        <section class="r-blocco">
           <h2>Ricomincia da zero</h2>
           <div class="r-scheda r-modulo">
             <p class="secondario">Cancella prove aperte, codici tentati, accuse, aiuti, annunci e registro. Restano il caso, le squadre e i loro accessi. Utile dopo le prove generali.</p>
@@ -595,6 +606,14 @@ export class Strumenti {
   readonly ordineStati = ['bozza', 'in_corso', 'in_pausa', 'chiusa'];
   readonly temi = TEMI;
   readonly temaInUso = () => temaDa(this.st.t()?.serata.tema);
+  modelloNome = '';
+  modelloDesc = '';
+  modelloLuogo = '';
+  modelloVittima = '';
+  async salvaModello() {
+    const ok = await this.st.fai(() => this.api.post('/api/regia/modelli', { nome: this.modelloNome, descrizione: this.modelloDesc, luogo: this.modelloLuogo, vittima: this.modelloVittima }), 'Modello salvato: lo trovi in "Da un modello"');
+    if (ok) { this.modelloNome = this.modelloDesc = this.modelloLuogo = this.modelloVittima = ''; }
+  }
   readonly suono = () => SUONI[this.st.t()?.serata.tema ?? 'halloween'] ?? SUONI['halloween'];
   volume = this.st.t()?.serata.ambiente_volume ?? 50;
   ambiente(b: { attivo?: boolean; volume?: number }) {
